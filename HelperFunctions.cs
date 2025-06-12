@@ -318,13 +318,11 @@ public class HelperFunctions : MonoBehaviour
 
                 if (y == 0 && piece.color == 1 || y == 9 && piece.color == -1) crossedBackRank = true;
 
-                // Wrap through wall
                 if (x < 1) x = 8;
                 if (x > 8) x = 1;
                 if (y < 1) y = 8;
                 if (y > 8) y = 1;
 
-                // If we looped back to the start, stop
                 if (x == fromX && y == fromY) break;
 
                 if (x == toX && y == toY)
@@ -426,11 +424,6 @@ public class HelperFunctions : MonoBehaviour
     }
     public static bool attacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
     {
-        //if (checkState(piece, "Portal")) //TODO FIX LATER isJump
-        //{
-        //    return !pieceIsNull && pieceIsDiffColour;
-        //}
-
         return !jump && !pieceIsNull && pieceIsDiffColour;
     }
     public static bool oneTimeMovesComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
@@ -811,6 +804,7 @@ public class HelperFunctions : MonoBehaviour
     {
 
         piece.disabled = true;
+        piece.coords = new int[] { -1, -1 };
         GameObject gp = new GameObject();
         gp.AddComponent<RectTransform>();
         movePieceNoImage(piece, gp);

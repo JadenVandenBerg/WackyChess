@@ -35,6 +35,7 @@ public class gameBot : MonoBehaviour
 
         moveSound = GetComponent<AudioSource>();
 
+
         pawn = new Pawn(1, false);
         pawn2 = new Pawn(1, false);
         pawn3 = new Pawn(1, false);

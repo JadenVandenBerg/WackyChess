@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class SidePanelAdjust : MonoBehaviour
 {
@@ -165,7 +166,18 @@ public class SidePanelAdjust : MonoBehaviour
 
         foreach (Sprite sprite in squareImages)
         {
-            GameObject imgObj = new GameObject("Image", typeof(Image));
+            GameObject imgObj = new GameObject(sprite.name, typeof(Image));
+
+            //Add event handler
+            EventTrigger e = imgObj.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerClick;
+            entry.callback.AddListener((eventData) =>
+            {
+                HelperFunctions.clickedSidePanel(eventData, this);
+            });
+            e.triggers.Add(entry);
+
             imgObj.transform.SetParent(imageGridTransform, false);
             Image img = imgObj.GetComponent<Image>();
             img.sprite = sprite;

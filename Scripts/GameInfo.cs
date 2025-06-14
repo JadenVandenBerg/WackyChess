@@ -7,9 +7,13 @@ using UnityEngine;
 public static class gameData
 {
     public static GameObject selected { get; set; } = null;
+    public static Piece selectedPiece { get; set; } = null;
+    public static Piece selectedToMovePiece { get; set; } = null;
     public static Dictionary<GameObject, Piece> piecesDict { get; set; } = new Dictionary<GameObject, Piece>();
     public static GameObject board { get; set; }
     public static bool isSelected { get; set; } = false;
+    public static bool selectedFromPanel { get; set; } = false;
+    public static bool refreshedSinceClick { get; set; } = false;
     public static int turn { get; set; } = 1;
     public static bool readyToMove { get; set; } = false;
     public static GameObject selectedToMove { get; set; }
@@ -32,6 +36,7 @@ public static class gameData
     public static Piece bestMovePiece { get; set; } = null;
     public static int[] bestMoveCoords { get; set; } = new int[] { 0, 0 };
     public static int forceStayTurn { get; set; } = 0;
+    public static List<List<List<GameObject>>> boardGrid { get; set; } = new List<List<List<GameObject>>>();
 }
 
 public static class tempInfo

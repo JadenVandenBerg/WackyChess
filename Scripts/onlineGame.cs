@@ -40,6 +40,8 @@ public class onlineGame : MonoBehaviour
         moveSound = GetComponent<AudioSource>();
         photonView = GetComponent<PhotonView>();
 
+        gameData.boardGrid = HelperFunctions.initBoardGrid();
+
         pawn = new SinisterMinisterQueen(1, true);
         pawn2 = new Man(1, true);
         pawn3 = new Pawn(1, true);
@@ -113,7 +115,7 @@ public class onlineGame : MonoBehaviour
         gameData.piecesDict.Add(bKnight2.go, bKnight2);
 
         initPiece(pawn, new int[] { 1, 2 });
-        initPiece(pawn2, new int[] { 2, 2 });
+        initPiece(pawn2, new int[] { 1, 2 });
         initPiece(pawn3, new int[] { 3, 2 });
         initPiece(pawn4, new int[] { 4, 2 });
         initPiece(pawn5, new int[] { 5, 2 });
@@ -148,6 +150,41 @@ public class onlineGame : MonoBehaviour
         initPiece(bQueen, new int[] { 4, 8 });
         initPiece(bKing, new int[] { 5, 8 });
 
+        //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
+        pawn.name = "w_p1";
+        pawn2.name = "w_p2";
+        pawn3.name = "w_p3";
+        pawn4.name = "w_p4";
+        pawn5.name = "w_p5";
+        pawn6.name = "w_p6";
+        pawn7.name = "w_p7";
+        pawn8.name = "w_p8";
+        wRook.name = "w_r1";
+        wRook2.name = "w_r2";
+        wBishop.name = "w_b1";
+        wBishop2.name = "w_b2";
+        wKnight.name = "w_n1";
+        wKnight2.name = "w_n2";
+        wKing.name = "w_k1";
+        wQueen.name = "w_q1";
+
+        bpawn.name = "b_p1";
+        bpawn2.name = "b_p2";
+        bpawn3.name = "b_p3";
+        bpawn4.name = "b_p4";
+        bpawn5.name = "b_p5";
+        bpawn6.name = "b_p6";
+        bpawn7.name = "b_p7";
+        bpawn8.name = "b_p8";
+        bRook.name = "b_r1";
+        bRook2.name = "b_r2";
+        bBishop.name = "b_b1";
+        bBishop2.name = "b_b2";
+        bKnight.name = "b_n1";
+        bKnight2.name = "b_n2";
+        bKing.name = "b_k1";
+        bQueen.name = "b_q1";
+
         gameData.whiteRooks.Add(wRook);
         gameData.whiteRooks.Add(wRook2);
 
@@ -156,41 +193,6 @@ public class onlineGame : MonoBehaviour
 
         gameData.whiteKing = wKing;
         gameData.blackKing = bKing;
-
-        pawn.go.tag = "Pawn";
-        pawn2.go.tag = "Pawn";
-        pawn3.go.tag = "Pawn";
-        pawn4.go.tag = "Pawn";
-        pawn5.go.tag = "Pawn";
-        pawn6.go.tag = "Pawn";
-        pawn7.go.tag = "Pawn";
-        pawn8.go.tag = "Pawn";
-        bpawn.go.tag = "Pawn";
-        bpawn2.go.tag = "Pawn";
-        bpawn3.go.tag = "Pawn";
-        bpawn4.go.tag = "Pawn";
-        bpawn5.go.tag = "Pawn";
-        bpawn6.go.tag = "Pawn";
-        bpawn7.go.tag = "Pawn";
-        bpawn8.go.tag = "Pawn";
-
-        wBishop.go.tag = "Bishop";
-        wBishop2.go.tag = "Bishop";
-        wRook.go.tag = "Rook";
-        wRook2.go.tag = "Rook";
-        wKing.go.tag = "King";
-        wQueen.go.tag = "Queen";
-        wKnight.go.tag = "Knight";
-        wKnight2.go.tag = "Knight";
-        bBishop.go.tag = "Bishop";
-        bBishop2.go.tag = "Bishop";
-        bRook.go.tag = "Rook";
-        bRook2.go.tag = "Rook";
-        bKing.go.tag = "King";
-        bQueen.go.tag = "Queen";
-        bKnight.go.tag = "Knight";
-        bKnight2.go.tag = "Knight";
-
 
         panel.Initialize();
 
@@ -206,22 +208,53 @@ public class onlineGame : MonoBehaviour
 
         if (!gameData.readyToMove && gameData.selected && gameData.selected.transform.childCount != 0)
         {
-            Piece currentPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+            //Piece currentPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+            Piece currentPiece = gameData.selectedPiece;
             int currentColor = currentPiece.color;
-            if (gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn)
+            if ((gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn) || gameData.selectedFromPanel)
             {
-                gameData.readyToMove = true;
+                if (!HelperFunctions.isMultipleOnSquare(gameData.selected))
+                {
+                    gameData.readyToMove = true;
 
-                HelperFunctions.updateCastleCondition();
-                HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
+                    HelperFunctions.updateCastleCondition();
+                    HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
+                }
+                else
+                {
+                    //TODO: Force selection from side panel
+                    if (gameData.selectedFromPanel)
+                    {
+                        gameData.readyToMove = true;
+                    }
+                    //Debug.Log("PANEL");
+                    //Debug.Log(gameData.selected);
+                    //Debug.Log(gameData.selectedPiece.name);
+                    //Debug.Log(gameData.readyToMove);
+                    //Debug.Log(gameData.selectedToMove);
 
-                panel.squareImages = HelperFunctions.generateSidePanelImages(gameData.selected);
-                panel.RefreshImageGrid();
+                    HelperFunctions.updateCastleCondition();
+                    HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
+                }
+
+                if (!gameData.refreshedSinceClick)
+                {
+                    gameData.refreshedSinceClick = true;
+                    panel.squareImages = HelperFunctions.generateSidePanelImages(gameData.selected);
+                    panel.RefreshImageGrid();
+                }
             }
         }
 
+        //Debug.Log("ISREADY");
+        //Debug.Log(gameData.readyToMove);
+        //Debug.Log(gameData.selected);
+        ////Debug.Log(gameData.selectedPiece.name);
+        //Debug.Log(gameData.selectedToMove);
+
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.getPieceOnSquare(gameData.selectedToMove) != null)
         {
+            //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));
             
             if (gameData.turn == HelperFunctions.getPieceOnSquare(gameData.selectedToMove).color)
@@ -240,7 +273,7 @@ public class onlineGame : MonoBehaviour
                     }
 
                     photonView.RPC("MovePieceRPC", RpcTarget.All, HelperFunctions.findCoords(gameData.selectedToMove), HelperFunctions.findCoords(gameData.selected));
-                    //movePiece(HelperFunctions.getPieceOnSquare(gameData.selectedToMove), HelperFunctions.findCoords(gameData.selected));
+                    //movePiece(gameData.selectedPiece, HelperFunctions.findCoords(gameData.selected));
 
                     if (death)
                     {
@@ -258,6 +291,7 @@ public class onlineGame : MonoBehaviour
             HelperFunctions.resetBoardColours();
             gameData.readyToMove = false;
             gameData.isSelected = false;
+            gameData.selectedFromPanel = false;
             gameData.selected = null;
         }
     }
@@ -266,7 +300,7 @@ public class onlineGame : MonoBehaviour
     public void MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
         GameObject square = HelperFunctions.findSquare(toMoveCoords[0], toMoveCoords[1]);
-        Piece piece = HelperFunctions.getPieceOnSquare(square);
+        Piece piece = gameData.selectedToMovePiece;
         movePiece(piece, coords);
     }
 
@@ -365,8 +399,6 @@ public class onlineGame : MonoBehaviour
             System.Random rand = new System.Random();
             int random = rand.Next(1, 7);
 
-            Debug.Log(random);
-
             if (random == 3)
             {
                 HelperFunctions.collateralDeath(piece, piece.go);
@@ -432,6 +464,8 @@ public class onlineGame : MonoBehaviour
         {
             Invoke("toggleCheckmateUI", 1.5f);
         }
+
+        gameData.selectedPiece = null;
     }
 
     public void toggleCheckmateUI()
@@ -447,5 +481,8 @@ public class onlineGame : MonoBehaviour
         HelperFunctions.movePiece(piece, toAppend);
 
         piece.alive = 1;
+
+        //piece.go.tag = piece.name;
+        gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece.go);
     }
 }

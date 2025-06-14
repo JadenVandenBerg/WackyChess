@@ -52,11 +52,18 @@ public class HelperFunctions : MonoBehaviour
     public static GameObject clicked(BaseEventData e)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
+        Debug.Log("Clicked: " + pointerEventData.pointerPress);
         if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {
-            //Debug.Log("Clicked: " + pointerEventData.pointerPress);
+            gameData.refreshedSinceClick = false;
+
+            Debug.Log("HERE");
+            
             gameData.selectedToMove = gameData.selected;
+            gameData.selectedToMovePiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
+            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
+
             return pointerEventData.pointerPress;
         }
         else if (gameData.selected == pointerEventData.pointerPress)
@@ -67,6 +74,35 @@ public class HelperFunctions : MonoBehaviour
             gameData.selectedToMove = null;
             gameData.selected = null;
             //gameData.isSelected = false;
+        }
+        return null;
+    }
+
+    public static GameObject clickedSidePanel(BaseEventData e, SidePanelAdjust panel)
+    {
+        PointerEventData pointerEventData = (PointerEventData)e;
+        Debug.Log("Clicked: " + pointerEventData.pointerPress);
+
+        if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
+        {
+            gameData.refreshedSinceClick = false;
+            //gameData.selectedToMove = gameData.selected;
+            Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
+            gameData.selected = findSquare(piece.position[0], piece.position[1]);
+            gameData.selectedPiece = piece;
+            gameData.selectedFromPanel = true;
+
+            return pointerEventData.pointerPress;
+        }
+        else if (gameData.selected == pointerEventData.pointerPress)
+        {
+            gameData.readyToMove = false;
+            gameData.isSelected = false;
+            resetBoardColours();
+            gameData.selectedToMove = null;
+            gameData.selectedToMovePiece = null;
+            gameData.selected = null;
+            gameData.selectedFromPanel = false;
         }
         return null;
     }
@@ -1345,6 +1381,7 @@ public class HelperFunctions : MonoBehaviour
             t2d.LoadImage(f);
 
             Sprite s = Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), new Vector2(0.5f, 0.5f));
+            s.name = piece.name;
 
             squareImages.Add(s);
         }
@@ -1373,5 +1410,67 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return pieces;
+    }
+
+    public static List<List<List<GameObject>>> initBoardGrid()
+    {
+        List<List<List<GameObject>>> grid = new List<List<List<GameObject>>>();
+        for (int i = 0; i < 8; i++)
+        {
+            List<List<GameObject>> row = new List<List<GameObject>>();
+
+            for (int j = 0; j < 8; j++)
+            {
+                List<GameObject> piecesList = new List<GameObject>();
+                row.Add(piecesList);
+            }
+
+            grid.Add(row);
+        }
+
+        return grid;
+    }
+
+    public static List<Piece> getPiecesOnSquareBoardGrid(GameObject square)
+    {
+        List<Piece> pieces = new List<Piece>();
+        if (square != null && square.transform != null)
+        {
+            if (square.transform.childCount == 0)
+            {
+                return null;
+            }
+
+            int[] coords = findCoords(square);
+
+            for (int i = 0; i < gameData.boardGrid[coords[0]][coords[1]].Count; i++)
+            {
+                GameObject go = gameData.boardGrid[coords[0]][coords[1]][i];
+
+                pieces.Add(gameData.piecesDict[go]);
+            }
+        }
+
+        return pieces;
+    }
+
+    public static bool isMultipleOnSquare(GameObject square)
+    {
+        int[] coords = findCoords(square);
+
+        return gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count > 1;
+    }
+
+    public static Piece findPieceFromPanelCode(String panelCode)
+    {
+        foreach (Piece piece in gameData.piecesDict.Values)
+        {
+            if (piece.name == panelCode)
+            {
+                return piece;
+            }
+        }
+
+        return null;
     }
 }

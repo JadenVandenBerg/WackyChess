@@ -58,7 +58,7 @@ public class HelperFunctions : MonoBehaviour
             gameData.refreshedSinceClick = false;
 
             Debug.Log("HERE");
-            
+
             gameData.selectedToMove = gameData.selected;
             gameData.selectedToMovePiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
@@ -310,7 +310,8 @@ public class HelperFunctions : MonoBehaviour
                     return false;
                 }
 
-                if (pieceOnSquare != null) {
+                if (pieceOnSquare != null)
+                {
                     i = 100;
                 }
             }
@@ -393,7 +394,7 @@ public class HelperFunctions : MonoBehaviour
         //    Debug.Log("JUMP INFO - " + piece.name);
         //    Debug.Log("FROM: " + from[0] + "," + from[1] + " TO: " + to[0] + "," + to[1]);
         //} 
-        
+
         int dirX, dirY;
 
         if (from[0] > to[0])
@@ -511,7 +512,8 @@ public class HelperFunctions : MonoBehaviour
 
     public static int[] adjustCoordsForBouncing(Piece piece, int x, int y)
     {
-        if (checkState(piece, "Bouncing")) {
+        if (checkState(piece, "Bouncing"))
+        {
             if (x > 8)
             {
                 x = 8 - (x - 8);
@@ -591,7 +593,7 @@ public class HelperFunctions : MonoBehaviour
             GameObject goHighlight = findSquare(newPos[0], newPos[1]);
             if (goHighlight != null)
             {
-                
+
 
                 Piece pieceOnSquare = getPieceOnSquare(goHighlight);
                 bool pieceIsNull = pieceOnSquare == null;
@@ -607,7 +609,7 @@ public class HelperFunctions : MonoBehaviour
                 }
 
                 bool jump = false;
-                
+
                 //Portal Jump && Bouncing Jump
                 if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, "Portal"))
                 {
@@ -620,7 +622,7 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, "Bouncing"))
                 {
-                    if (piece.name == "BouncingBishop") Debug.Log($"Checking jump from ({piece.position[0]},{piece.position[1]}) to ({newPos[0]},{newPos[1]}) path ({moveType[i,0]}, {moveType[i, 1]})");
+                    //if (piece.name == "BouncingBishop") Debug.Log($"Checking jump from ({piece.position[0]},{piece.position[1]}) to ({newPos[0]},{newPos[1]}) path ({moveType[i, 0]}, {moveType[i, 1]})");
                     jump = isJumpBouncing(piece, piece.position, newPos);
                 }
                 else
@@ -628,7 +630,7 @@ public class HelperFunctions : MonoBehaviour
                     jump = isJump(piece, piece.position, newPos);
                 }
 
-                if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour))
+                if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour)) //TODO: Update comparator function to include pieces on both squares
                 {
                     //Check for states
                     if (pieceOnSquare != null && checkState(pieceOnSquare, "Shield"))
@@ -1338,7 +1340,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isOnStartSquare(Piece piece)
     {
-        return piece.startSquare[0] == piece.position[0] && piece.startSquare[1] == piece.position[1]; 
+        return piece.startSquare[0] == piece.position[0] && piece.startSquare[1] == piece.position[1];
     }
 
     public static bool isPieceOnStartSquare(Piece piece)
@@ -1392,7 +1394,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 return null;
             }
-            
+
             int[] coords = findCoords(square);
             foreach (Piece piece in gameData.piecesDict.Values)
             {
@@ -1466,5 +1468,22 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return null;
+    }
+
+    public static List<int> getColorsOnSquare(GameObject square)
+    {
+        List<int> colors = new List<int>();
+
+        List<Piece> pieces = getPiecesOnSquare(square);
+
+        foreach (Piece piece in pieces)
+        {
+            if (!colors.Contains(piece.color))
+            {
+                colors.Add(color);
+            }
+        }
+
+        return colors;
     }
 }

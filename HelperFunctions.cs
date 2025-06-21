@@ -451,36 +451,60 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static bool moveComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool moveComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
+        if (checkState(piece, "Crowding"))
+        {
+            if (checkSquareCrowdingEligible(piece, piecesOnSquare))
+            {
+                return !jump;
+            }
+        }
+        
         return !jump && pieceIsNull;
     }
-    public static bool moveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool moveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
+        if (checkState(piece, "Crowding"))
+        {
+            if (checkSquareCrowdingEligible(piece, piecesOnSquare))
+            {
+                return !jump;
+            }
+        }
+
         return !jump && (pieceIsNull || pieceIsDiffColour);
     }
-    public static bool attacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool attacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
         return !jump && !pieceIsNull && pieceIsDiffColour;
     }
-    public static bool oneTimeMovesComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool oneTimeMovesComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
         return !jump && !piece.hasMoved && pieceIsNull;
     }
-    public static bool oneTimeMoveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool oneTimeMoveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
         return !jump && !piece.hasMoved && (pieceIsNull || pieceIsDiffColour);
     }
-    public static bool murderousAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool murderousAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
         return !jump;
     }
-    public static bool conditionalAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool conditionalAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
         return !jump && piece.condition && pieceIsNull;
     }
-    public static bool jumpAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour)
+    public static bool jumpAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
+        if (checkState(piece, "Crowding"))
+        {
+            if (checkSquareCrowdingEligible(piece, piecesOnSquare))
+            {
+                return true;
+            }
+        }
+
         return pieceIsNull || pieceIsDiffColour;
     }
 
@@ -567,7 +591,7 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled)
+    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, bool, List<Piece>> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled)
     {
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
@@ -593,19 +617,22 @@ public class HelperFunctions : MonoBehaviour
             GameObject goHighlight = findSquare(newPos[0], newPos[1]);
             if (goHighlight != null)
             {
-
-
-                Piece pieceOnSquare = getPieceOnSquare(goHighlight);
-                bool pieceIsNull = pieceOnSquare == null;
+                //Piece pieceOnSquare = getPieceOnSquare(goHighlight);
+                List<Piece> piecesOnSquare = getPiecesOnSquare(goHighlight);
+                //bool pieceIsNull = pieceOnSquare == null;
+                bool pieceIsNull = piecesOnSquare.Count > 0;
                 bool pieceIsDiffColour = false;
                 if (!pieceIsNull)
                 {
-                    pieceIsDiffColour = pieceOnSquare.color != color;
+                    //pieceIsDiffColour = pieceOnSquare.color != color;
+                    pieceIsDiffColour = !getColorsOnSquare(goHighlight).Contains(piece.color);
+                    /* Not sure if I need this, if I do, use checkPiecesDisabled
                     if (ignoreDisabled && pieceOnSquare.disabled)
                     {
                         //Debug.Log("THE PIECE ON " + newPos[0] + "," + newPos[1] + " IS DISABLED!");
                         pieceIsNull = true;
                     }
+                    */
                 }
 
                 bool jump = false;
@@ -630,7 +657,7 @@ public class HelperFunctions : MonoBehaviour
                     jump = isJump(piece, piece.position, newPos);
                 }
 
-                if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour)) //TODO: Update comparator function to include pieces on both squares
+                if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, pieces)) //TODO: Update comparator function to include pieces on both squares
                 {
                     //Check for states
                     if (pieceOnSquare != null && checkState(pieceOnSquare, "Shield"))
@@ -1488,5 +1515,53 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return colors;
+    }
+
+    public static bool checkPiecesDisabled(List<Piece> pieces)
+    {
+        bool disabled = true;
+        foreach (Piece piece in pieces)
+        {
+            if (!piece.disabled)
+            {
+                return false;
+            }
+        }
+    }
+
+    public static bool checkSquareCrowdingEligible(Piece piece, List<Piece> piecesOnSquare)
+    {
+        bool crowdingEligible = true;
+
+        // No Pieces
+        if (piecesOnSquare.Count == 0)
+        {
+            return true;
+        }
+
+        // Pieces Different Color
+        if (getColorsOnSquare(findSquare(piecesOnSquare[0].position[0], piecesOnSquare[0].position[1])).Contains(piece.color * -1))
+        {
+            return false;
+        }
+
+        // Piece contains more than one other piece (not crowding)
+        if (piecesOnSquare.Count > 1)
+        {
+            bool crowd = false;
+            foreach (Piece _piece in piecesOnSquare)
+            {
+                if (!checkState(_piece, "Crowding"))
+                {
+                    return false;
+                }
+            }
+
+            // If they are all crowding
+            return true;
+        }
+
+        //Last case square contains one piece and its same color
+        return true;
     }
 }

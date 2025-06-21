@@ -842,7 +842,7 @@ public class HelperFunctions : MonoBehaviour
     {
 
         piece.disabled = true;
-        piece.coords = new int[] { -1, -1 };
+        piece.position = new int[] { -1, -1 };
         GameObject gp = new GameObject();
         gp.AddComponent<RectTransform>();
         movePieceNoImage(piece, gp);
@@ -1400,7 +1400,10 @@ public class HelperFunctions : MonoBehaviour
             {
                 if (piece.position[0] == coords[0] && piece.position[1] == coords[1])
                 {
-                    pieces.Add(piece);
+                    if (!piece.disabled)
+                    {
+                        pieces.Add(piece);
+                    }
                 }
             }
         }
@@ -1480,7 +1483,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!colors.Contains(piece.color))
             {
-                colors.Add(color);
+                colors.Add(piece.color);
             }
         }
 

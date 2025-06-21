@@ -2189,7 +2189,7 @@ public class CrowdingKnight : Piece
     public int flag { get; set; } = 0;
     public Piece spawnable { get; set; } = null;
 
-    public Knight(int color, bool online)
+    public CrowdingKnight(int color, bool online)
     {
         if (online)
         {

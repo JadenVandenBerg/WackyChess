@@ -246,11 +246,11 @@ public class onlineGame : MonoBehaviour
             }
         }
 
-        //Debug.Log("ISREADY");
-        //Debug.Log(gameData.readyToMove);
-        //Debug.Log(gameData.selected);
-        ////Debug.Log(gameData.selectedPiece.name);
-        //Debug.Log(gameData.selectedToMove);
+        Debug.Log("ISREADY");
+        Debug.Log("ReadyToMove: " + gameData.readyToMove);
+        Debug.Log("Selected: " +  gameData.selected);
+        if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
+        Debug.Log("SelectedToMove: " + gameData.selectedToMove);
 
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.getPieceOnSquare(gameData.selectedToMove) != null)
         {
@@ -345,6 +345,11 @@ public class onlineGame : MonoBehaviour
                 gameData.blackRooks[0].position = new int[] { 6, 8 };
             }
         }
+
+        //HelperFunctions.updateBoardGrid(piece.position, piece, "r");
+        //HelperFunctions.updateBoardGrid(coords, piece, "a");
+
+        HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
 
         piece.position = HelperFunctions.findCoords(toAppend);
         piece.hasMoved = true;
@@ -483,6 +488,6 @@ public class onlineGame : MonoBehaviour
         piece.alive = 1;
 
         //piece.go.tag = piece.name;
-        gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece.go);
+        HelperFunctions.updateBoardGrid(coords, piece, "a");
     }
 }

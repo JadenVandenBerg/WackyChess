@@ -632,7 +632,6 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, "Bouncing"))
                 {
-                    //if (piece.name == "BouncingBishop") Debug.Log($"Checking jump from ({piece.position[0]},{piece.position[1]}) to ({newPos[0]},{newPos[1]}) path ({moveType[i, 0]}, {moveType[i, 1]})");
                     jump = isJumpBouncing(piece, piece.position, newPos);
                 }
                 else
@@ -640,15 +639,15 @@ public class HelperFunctions : MonoBehaviour
                     jump = isJump(piece, piece.position, newPos);
                 }
 
+                Debug.Log(piece.name + " (" + newPos[0] + "," + newPos[1] + ") " + ": " + jump + " " + pieceIsNull + " " + pieceIsDiffColour + " " + piecesOnSquare.Count);
                 if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnSquare))
                 {
                     //Check for states
                     if (checkStateOnSquare(piecesOnSquare, "Shield"))
-                    {
+                    { 
                         continue;
                     }
 
-                    //if (piece.color == -1) Debug.Log("CONSIDERING MOVE: " + piece.position[0] + "," + piece.position[1] + " -> " + newPos[0] + "," + newPos[1]);
                     if (execDummyMove)
                     {
                         bool stillInCheck = dummyMove(piece, newPos);
@@ -874,7 +873,6 @@ public class HelperFunctions : MonoBehaviour
         {
             piece.disabled = false;
             movePieceNoImage(piece, findSquare(position[0], position[1]));
-            Piece pieceToCheck = getPieceOnSquare(findSquare(position[0], position[1]));
         }
 
         DestroyWrapper(go);
@@ -1481,7 +1479,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (square.transform.childCount == 0)
             {
-                return null;
+                return pieces;
             }
 
             int[] coords = findCoords(square);
@@ -1604,6 +1602,11 @@ public class HelperFunctions : MonoBehaviour
 
     public static void movePieceBoardGrid(Piece piece, int[] position, int[] coords)
     {
+        if (position[0] < 1 || position[1] < 1 || coords[0] < 1 || coords[1] < 1)
+        {
+            return;
+        }
+
         gameData.boardGrid[position[0] - 1][position[1] - 1].Remove(piece.go);
         gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece.go);
 

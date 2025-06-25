@@ -145,6 +145,7 @@ public class SidePanelAdjust : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        if (squareImages == null) return;
         int count = squareImages.Count;
         if (count == 0) return;
 

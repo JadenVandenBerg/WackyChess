@@ -246,11 +246,11 @@ public class onlineGame : MonoBehaviour
             }
         }
 
-        Debug.Log("ISREADY");
-        Debug.Log("ReadyToMove: " + gameData.readyToMove);
-        Debug.Log("Selected: " +  gameData.selected);
-        if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
-        Debug.Log("SelectedToMove: " + gameData.selectedToMove);
+        //Debug.Log("ISREADY");
+        //Debug.Log("ReadyToMove: " + gameData.readyToMove);
+        //Debug.Log("Selected: " +  gameData.selected);
+        //if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
+        //Debug.Log("SelectedToMove: " + gameData.selectedToMove);
 
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.getPieceOnSquare(gameData.selectedToMove) != null)
         {

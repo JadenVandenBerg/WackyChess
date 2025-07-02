@@ -299,14 +299,14 @@ public class HelperFunctions : MonoBehaviour
                 int[] newCoords = adjustCoordsForBouncing(piece, coords[0], coords[1]);
 
                 GameObject square = findSquare(newCoords[0], newCoords[1]);
-                Piece pieceOnSquare = getPieceOnSquareDebug(square);
+                bool pieceOnSquare = isPieceOnSquare(square);
 
                 if (newCoords[0] == toX && newCoords[1] == toY)
                 {
                     return false;
                 }
 
-                if (pieceOnSquare != null)
+                if (pieceOnSquare)
                 {
                     i = 100;
                 }
@@ -367,7 +367,7 @@ public class HelperFunctions : MonoBehaviour
                 }
 
                 GameObject square = findSquare(x, y);
-                if (getPieceOnSquare(square) != null)
+                if (isPieceOnSquare(square))
                 {
                     jumpedPiece = true;
                 }
@@ -422,11 +422,11 @@ public class HelperFunctions : MonoBehaviour
         for (int i = 1; i <= diff - 1; i++)
         {
             GameObject square = findSquare(from[0] + (i * dirX), from[1] + (i * dirY));
-            if (square != null && getPieceOnSquare(square) != null)
+            if (square != null && isPieceOnSquare(square))
             {
-                Piece onSquare = getPieceOnSquare(square);
+                List<Piece> onSquare = getPiecesOnSquare(square);
                 if (checkState(piece, "Ghost") && onSquare.color == piece.color
-                    || checkState(onSquare, "Ghoul") && piece.color == onSquare.color)
+                    || checkStateAllOnSquare(onSquare, "Ghoul") && isColorNotOnSquare(square, piece.color * -1))
                 {
                     continue;
                 }
@@ -648,7 +648,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     //Check for states
                     if (checkStateOnSquare(piecesOnSquare, "Shield"))
-                    { 
+                    {
                         continue;
                     }
 
@@ -822,16 +822,16 @@ public class HelperFunctions : MonoBehaviour
         GameObject square = findSquare(coords[0], coords[1]);
 
         //Save State
-        Piece oldPiece = null;
+        List<Piece> oldPieces = null;
         bool restore = false;
 
 
-        GameObject go = null;
+        List<GameObject> gos = new List<GameObject>();
 
-        if (getPieceOnSquareDebug(square) != null)
+        if (isPieceOnSquare(square))
         {
-            oldPiece = getPieceOnSquareDebug(square);
-            go = removePieceFromBoard(oldPiece);
+            oldPieces = getPiecesOnSquareBoardGrid(square);
+            gos = new List<GameObject>(removePieceFromBoard(oldPieces));
             restore = true;
         }
 
@@ -845,7 +845,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (restore)
         {
-            restorePieceToBoard(oldPiece, coords, go);
+            restorePieceToBoard(oldPieces, coords, gos);
         }
 
         movePieceBoardGrid(piece, coords, new int[] { x, y });
@@ -855,34 +855,45 @@ public class HelperFunctions : MonoBehaviour
         return isInCheck;
     }
 
-    public static GameObject removePieceFromBoard(Piece piece)
+    public static List<GameObject> removePieceFromBoard(List<Piece> pieces)
     {
+        List<GameObject> gos = new List<GameObject>();
 
-        piece.disabled = true;
-
-        updateBoardGrid(piece.position, piece, "r");
-        piece.position = new int[] { -1, -1 };
-
-        GameObject gp = new GameObject();
-        gp.AddComponent<RectTransform>();
-        movePieceNoImage(piece, gp);
-
-
-        return gp;
-    }
-
-    public static void restorePieceToBoard(Piece piece, int[] position, GameObject go)
-    {
-        if (piece != null)
+        foreach (Piece piece in pieces)
         {
-            piece.disabled = false;
-            movePieceNoImage(piece, findSquare(position[0], position[1]));
-            piece.position = position;
+            piece.disabled = true;
 
-            updateBoardGrid(position , piece, "a");
+            updateBoardGrid(piece.position, piece, "r");
+            piece.position = new int[] { -1, -1 };
+
+            GameObject gp = new GameObject();
+            gp.AddComponent<RectTransform>();
+            movePieceNoImage(piece, gp);
+
+            gos.Add(gp);
         }
 
-        DestroyWrapper(go);
+        return gos;
+    }
+
+    public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
+    {
+        foreach (Piece piece in pieces)
+        {
+            if (piece != null)
+            {
+                piece.disabled = false;
+                movePieceNoImage(piece, findSquare(position[0], position[1]));
+                piece.position = position;
+
+                updateBoardGrid(position, piece, "a");
+            }
+        }
+
+        foreach (GameObject go in gos)
+        {
+            DestroyWrapper(go);
+        }
     }
 
     public static void DestroyWrapper(GameObject go)
@@ -1121,16 +1132,20 @@ public class HelperFunctions : MonoBehaviour
         {
             for (int j = 1; j <= 8; j++)
             {
-                Piece p = getPieceOnSquare(findSquare(i, j));
-                if (p != null)
+                List<Piece> pieces = getPiecesOnSquareBoardGrid(findSquare(i, j));
+
+                foreach (Piece p in pieces)
                 {
-                    if (p.color == 1)
+                    if (p != null)
                     {
-                        gameData.pointsOnBoard[0] += p.points;
-                    }
-                    else if (p.color == -1)
-                    {
-                        gameData.pointsOnBoard[1] += p.points;
+                        if (p.color == 1)
+                        {
+                            gameData.pointsOnBoard[0] += p.points;
+                        }
+                        else if (p.color == -1)
+                        {
+                            gameData.pointsOnBoard[1] += p.points;
+                        }
                     }
                 }
             }
@@ -1275,7 +1290,8 @@ public class HelperFunctions : MonoBehaviour
     {
         List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(squareDead));
 
-        foreach (Piece piece in pieces) {
+        foreach (Piece piece in pieces)
+        {
             Debug.Log(piece.name + " just died");
             onDeath(piece, piece.go, attackerPiece, attacker);
         }
@@ -1379,7 +1395,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isPieceOnStartSquare(Piece piece)
     {
-        return getPieceOnSquareDebug(findSquare(piece.startSquare[0], piece.startSquare[1])) != null;
+        return isPieceOnSquare(findSquare(piece.startSquare[0], piece.startSquare[1]));
     }
 
     public static bool checkState(Piece piece, String state)
@@ -1403,6 +1419,24 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, string state)
+    {
+        if (piecesOnSquare == null)
+        {
+            return false;
+        }
+
+        foreach (Piece piece in piecesOnSquare)
+        {
+            if (piece.state != state && !piece.secondaryState.Contains(state))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static List<Sprite> generateSidePanelImages(GameObject square)
@@ -1632,5 +1666,24 @@ public class HelperFunctions : MonoBehaviour
     public static IEnumerator waitOneFrame()
     {
         yield return null;
+    }
+
+    public static bool isPieceOnSquare(GameObject square)
+    {
+        int[] coords = findCoords(square);
+
+        if (coords[1] < 1 || coords[0] < 1)
+        {
+            return false;
+        }
+
+        return gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count > 0;
+    }
+
+    public static bool isColorNotOnSquare(GameObject square, int color)
+    {
+        int[] colors = getColorsOnSquare(square);
+
+        return !colors.Contains(color);
     }
 }

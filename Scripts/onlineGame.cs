@@ -47,7 +47,7 @@ public class onlineGame : MonoBehaviour
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
-        pawn6 = new MonochromeRook(1, true);
+        pawn6 = new CrowdingKnight(1, true);
         pawn7 = new LandminePawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
@@ -115,7 +115,7 @@ public class onlineGame : MonoBehaviour
         gameData.piecesDict.Add(bKnight2.go, bKnight2);
 
         initPiece(pawn, new int[] { 1, 2 });
-        initPiece(pawn2, new int[] { 1, 2 });
+        initPiece(pawn2, new int[] { 2, 2 });
         initPiece(pawn3, new int[] { 3, 2 });
         initPiece(pawn4, new int[] { 4, 2 });
         initPiece(pawn5, new int[] { 5, 2 });
@@ -226,15 +226,15 @@ public class onlineGame : MonoBehaviour
                     if (gameData.selectedFromPanel)
                     {
                         gameData.readyToMove = true;
+
+                        HelperFunctions.updateCastleCondition();
+                        HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                     }
                     //Debug.Log("PANEL");
                     //Debug.Log(gameData.selected);
                     //Debug.Log(gameData.selectedPiece.name);
                     //Debug.Log(gameData.readyToMove);
                     //Debug.Log(gameData.selectedToMove);
-
-                    HelperFunctions.updateCastleCondition();
-                    HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                 }
 
                 if (!gameData.refreshedSinceClick)
@@ -248,7 +248,7 @@ public class onlineGame : MonoBehaviour
 
         //Debug.Log("ISREADY");
         //Debug.Log("ReadyToMove: " + gameData.readyToMove);
-        //Debug.Log("Selected: " +  gameData.selected);
+        //Debug.Log("Selected: " + gameData.selected);
         //if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
         //Debug.Log("SelectedToMove: " + gameData.selectedToMove);
 
@@ -269,22 +269,27 @@ public class onlineGame : MonoBehaviour
                     if (gameData.selected.transform.childCount != 0) {
                         selectedGo = gameData.selected.transform.GetChild(0).gameObject;
                         selectedToMoveGo = gameData.selectedToMove.transform.GetChild(0).gameObject;
+
                         death = true;
+                        if (!HelperFunctions.getColorsOnSquare(gameData.selected).Contains(gameData.selectedToMovePiece.color * -1))
+                        {
+                            death = false;
+                        }
+                    }
+
+                    Debug.Log(death);
+                    if (death)
+                    {
+                        Piece destroyer = gameData.piecesDict[selectedToMoveGo];
+
+                        //Debug.Log("DESTROYING: " + toDestroy.name + ". Square: " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1]);
+                        HelperFunctions.onDeaths(destroyer, selectedToMoveGo, gameData.selected);
+                        //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
+                        //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
                     }
 
                     photonView.RPC("MovePieceRPC", RpcTarget.All, HelperFunctions.findCoords(gameData.selectedToMove), HelperFunctions.findCoords(gameData.selected));
                     //movePiece(gameData.selectedPiece, HelperFunctions.findCoords(gameData.selected));
-
-                    if (death)
-                    {
-                        Piece toDestroy = gameData.piecesDict[selectedGo];
-                        Piece destroyer = gameData.piecesDict[selectedToMoveGo];
-
-                        //Debug.Log("DESTROYING: " + toDestroy.name + ". Square: " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1]);
-                        HelperFunctions.onDeath(toDestroy, selectedGo, destroyer, selectedToMoveGo);
-                        //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-                        //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
-                    }
                 }
             }
 
@@ -316,45 +321,43 @@ public class onlineGame : MonoBehaviour
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
 
         //Check for castle (maybe make helper func)
-        int xDisp = piece.position[0] - coords[0];
-        if ((piece == wKing || piece == bKing) && (xDisp == 2 || xDisp == -2))
-        {
-            //Debug.Log("Castle Taken Place");
-            if (piece == wKing && xDisp == 2)
-            {
-                gameData.whiteRooks[0].hasMoved = true;
-                HelperFunctions.movePiece(gameData.whiteRooks[0], HelperFunctions.findSquare(4, 1));
-                gameData.whiteRooks[0].position = new int[] { 4, 1 };
-            }
-            else if (piece == wKing && xDisp == -2)
-            {
-                gameData.whiteRooks[1].hasMoved = true;
-                HelperFunctions.movePiece(gameData.whiteRooks[1], HelperFunctions.findSquare(6, 1));
-                gameData.whiteRooks[1].position = new int[] { 6, 1 };
-            }
-            else if (piece == bKing && xDisp == 2)
-            {
-                gameData.blackRooks[0].hasMoved = true;
-                HelperFunctions.movePiece(gameData.blackRooks[0], HelperFunctions.findSquare(4, 8));
-                gameData.blackRooks[0].position = new int[] { 4, 8 };
-            }
-            else if (piece == bKing && xDisp == -2)
-            {
-                gameData.blackRooks[1].hasMoved = true;
-                HelperFunctions.movePiece(gameData.blackRooks[1], HelperFunctions.findSquare(6, 8));
-                gameData.blackRooks[0].position = new int[] { 6, 8 };
-            }
-        }
-
-        //HelperFunctions.updateBoardGrid(piece.position, piece, "r");
-        //HelperFunctions.updateBoardGrid(coords, piece, "a");
+        //int xDisp = piece.position[0] - coords[0];
+        //if ((piece == wKing || piece == bKing) && (xDisp == 2 || xDisp == -2))
+        //{
+        //    //Debug.Log("Castle Taken Place");
+        //    if (piece == wKing && xDisp == 2)
+        //    {
+        //        gameData.whiteRooks[0].hasMoved = true;
+        //        HelperFunctions.movePiece(gameData.whiteRooks[0], HelperFunctions.findSquare(4, 1));
+        //        gameData.whiteRooks[0].position = new int[] { 4, 1 };
+        //    }
+        //    else if (piece == wKing && xDisp == -2)
+        //    {
+        //        gameData.whiteRooks[1].hasMoved = true;
+        //        HelperFunctions.movePiece(gameData.whiteRooks[1], HelperFunctions.findSquare(6, 1));
+        //        gameData.whiteRooks[1].position = new int[] { 6, 1 };
+        //    }
+        //    else if (piece == bKing && xDisp == 2)
+        //    {
+        //        gameData.blackRooks[0].hasMoved = true;
+        //        HelperFunctions.movePiece(gameData.blackRooks[0], HelperFunctions.findSquare(4, 8));
+        //        gameData.blackRooks[0].position = new int[] { 4, 8 };
+        //    }
+        //    else if (piece == bKing && xDisp == -2)
+        //    {
+        //        gameData.blackRooks[1].hasMoved = true;
+        //        HelperFunctions.movePiece(gameData.blackRooks[1], HelperFunctions.findSquare(6, 8));
+        //        gameData.blackRooks[0].position = new int[] { 6, 8 };
+        //    }
+        //}
 
         HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
-
-        piece.position = HelperFunctions.findCoords(toAppend);
+        //StartCoroutine(HelperFunctions.waitOneFrame());
+        //piece.position = HelperFunctions.findCoords(toAppend);
         piece.hasMoved = true;
 
         HelperFunctions.movePiece(piece, toAppend);
+
         if (piece.stayTurn())
         {
             gameData.turn = gameData.turn * -1;

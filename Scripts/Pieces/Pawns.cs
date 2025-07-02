@@ -3122,7 +3122,7 @@ public class SuperGhostPawn : Piece
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] dependentAttacks { get; set; } = { { 0, 2 } };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };

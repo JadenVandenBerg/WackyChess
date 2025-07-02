@@ -36,7 +36,7 @@ public static class gameData
     public static Piece bestMovePiece { get; set; } = null;
     public static int[] bestMoveCoords { get; set; } = new int[] { 0, 0 };
     public static int forceStayTurn { get; set; } = 0;
-    public static List<List<List<GameObject>>> boardGrid { get; set; } = new List<List<List<GameObject>>>();
+    public static List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
 }
 
 public static class tempInfo

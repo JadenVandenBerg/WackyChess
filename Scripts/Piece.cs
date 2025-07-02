@@ -105,6 +105,7 @@ public interface Piece
      * None: No ability
      * Freeze: Can freeze pieces within a 1 block radius (not implemented yet)
      * Dematerialize: Can enter/exit dematerialized state (not implemented yet)
+     * Vomit: Spit out all pieces in storage onto squares that have no pieces
      */
     public String ability { get; set; }
 

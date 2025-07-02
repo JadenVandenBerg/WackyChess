@@ -351,8 +351,7 @@ public class onlineGame : MonoBehaviour
         //}
 
         HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
-        //StartCoroutine(HelperFunctions.waitOneFrame());
-        //piece.position = HelperFunctions.findCoords(toAppend);
+        
         piece.hasMoved = true;
 
         HelperFunctions.movePiece(piece, toAppend);

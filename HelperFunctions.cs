@@ -382,7 +382,7 @@ public class HelperFunctions : MonoBehaviour
     }
 
 
-    public static bool isJump(Piece piece, int[] from, int[] to) //For diagonal, file, column jumps
+    public static bool isJump(Piece piece, int[] from, int[] to)
     {
 
         int dirX, dirY;
@@ -620,6 +620,11 @@ public class HelperFunctions : MonoBehaviour
                         pieceIsNull = true;
                     }
                     */
+                    //Check for states
+                    if (checkStateOnSquare(piecesOnSquare, "Shield"))
+                    {
+                        continue;
+                    }
                 }
 
                 bool jump = false;
@@ -646,12 +651,6 @@ public class HelperFunctions : MonoBehaviour
                 //Debug.Log(piece.name + " (" + newPos[0] + "," + newPos[1] + ") " + ": " + jump + " " + pieceIsNull + " " + pieceIsDiffColour + " " + piecesOnSquare.Count);
                 if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnSquare))
                 {
-                    //Check for states
-                    if (checkStateOnSquare(piecesOnSquare, "Shield"))
-                    {
-                        continue;
-                    }
-
                     if (execDummyMove)
                     {
                         bool stillInCheck = dummyMove(piece, newPos);
@@ -1296,7 +1295,6 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            Debug.Log(piece.name + " just died");
             onDeath(piece, piece.go, attackerPiece, attacker);
         }
     }
@@ -1305,6 +1303,8 @@ public class HelperFunctions : MonoBehaviour
     {
         int[] attackerCoords = attackerPiece.position;
         int[] deadPieceCoords = deadPiece.position;
+
+        bool skipCollateral = false;
         //Infinite / Multi-Lives
         if (deadPiece.lives != 0)
         {
@@ -1323,51 +1323,61 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        //Collateral (Attacker)
-        if (attackerPiece.collateralType == 0) //Kill on Capture
+        //Hungry
+        if (checkState(attackerPiece, "Hungry"))
         {
-            for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
-            {
-                int[] coords = new int[] { attackerCoords[0] + attackerPiece.collateral[i, 0], attackerCoords[1] + attackerPiece.collateral[i, 1] };
-                GameObject square = findSquare(coords[0], coords[1]);
-
-                if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
-                {
-                    collateralDeath(attackerPiece, attackerPiece.go);
-                }
-
-                if (!square) continue;
-
-                List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-
-                foreach (Piece piece in pieces)
-                {
-                    collateralDeath(piece, piece.go);
-                }
-            }
+            attackerPiece.storage.Add(deadPiece);
+            skipCollateral = true;
         }
 
-        //Collateral (Attackee)
-        if (deadPiece.collateralType == 1)
+        if (!skipCollateral)
         {
-            for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
+            //Collateral (Attacker)
+            if (attackerPiece.collateralType == 0) //Kill on Capture
             {
-                int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
-                GameObject square = findSquare(coords[0], coords[1]);
-
-                if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
                 {
-                    collateralDeath(attackerPiece, attackerPiece.go);
-                    collateralDeath(deadPiece, deadPiece.go);
+                    int[] coords = new int[] { attackerCoords[0] + attackerPiece.collateral[i, 0], attackerCoords[1] + attackerPiece.collateral[i, 1] };
+                    GameObject square = findSquare(coords[0], coords[1]);
+
+                    if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
+                    {
+                        collateralDeath(attackerPiece, attackerPiece.go);
+                    }
+
+                    if (!square) continue;
+
+                    List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
+
+                    foreach (Piece piece in pieces)
+                    {
+                        collateralDeath(piece, piece.go);
+                    }
                 }
+            }
 
-                if (!square) continue;
-
-                List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-
-                foreach (Piece piece in pieces)
+            //Collateral (Attackee)
+            if (deadPiece.collateralType == 1)
+            {
+                for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
                 {
-                    collateralDeath(piece, piece.go);
+                    int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
+                    GameObject square = findSquare(coords[0], coords[1]);
+
+                    if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
+                    {
+                        collateralDeath(attackerPiece, attackerPiece.go);
+                        collateralDeath(deadPiece, deadPiece.go);
+                    }
+
+                    if (!square) continue;
+
+                    List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
+
+                    foreach (Piece piece in pieces)
+                    {
+                        collateralDeath(piece, piece.go);
+                    }
                 }
             }
         }

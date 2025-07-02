@@ -208,7 +208,6 @@ public class onlineGame : MonoBehaviour
 
         if (!gameData.readyToMove && gameData.selected && gameData.selected.transform.childCount != 0)
         {
-            //Piece currentPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
             Piece currentPiece = gameData.selectedPiece;
             int currentColor = currentPiece.color;
             if ((gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn) || gameData.selectedFromPanel)
@@ -252,12 +251,12 @@ public class onlineGame : MonoBehaviour
         //if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
         //Debug.Log("SelectedToMove: " + gameData.selectedToMove);
 
-        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.getPieceOnSquare(gameData.selectedToMove) != null)
+        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
         {
             //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));
             
-            if (gameData.turn == HelperFunctions.getPieceOnSquare(gameData.selectedToMove).color)
+            if (HelperFunctions.isColorOnSquare(gameData.turn))
             {
                 if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false)) {
                     moveSound.Play();
@@ -393,11 +392,11 @@ public class onlineGame : MonoBehaviour
 
                     if (!square) continue;
 
-                    Piece sqPiece = HelperFunctions.getPieceOnSquare(square);
+                    List<Piece> sqPieces = HelperFunctions.getPiecesOnSquareBoardGrid(square);
 
-                    if (sqPiece == null) continue;
+                    if (sqPieces == null || sqPieces.Count == 0) continue;
 
-                    HelperFunctions.collateralDeath(sqPiece, sqPiece.go);
+                    HelperFunctions.collateralDeath(sqPieces);
                 }
             }
         }

@@ -1244,24 +1244,28 @@ public class HelperFunctions : MonoBehaviour
         return resizedArray;
     }
 
-    public static void collateralDeath(Piece deadPiece, GameObject dead)
+    public static void collateralDeath(List<Piece> deadPieces)
     {
-        if (deadPiece.lives != 0)
+        foreach (Piece deadPiece in deadPieces)
         {
-            handleMultipleLivesDeath(deadPiece);
-        }
-        else
-        {
-            if (gameData.piecesDict.ContainsKey(dead))
+            GameObject dead = deadPiece.go;
+            if (deadPiece.lives != 0)
             {
-                gameData.piecesDict.Remove(dead);
+                handleMultipleLivesDeath(deadPiece);
             }
+            else
+            {
+                if (gameData.piecesDict.ContainsKey(dead))
+                {
+                    gameData.piecesDict.Remove(dead);
+                }
 
-            updateBoardGrid(deadPiece.position, deadPiece, "r");
-            DestroyWrapper(dead);
-            deadPiece.alive = 0;
-            deadPiece = null;
-        }
+                updateBoardGrid(deadPiece.position, deadPiece, "r");
+                DestroyWrapper(dead);
+                deadPiece.alive = 0;
+                deadPiece = null;
+            }
+        } 
     }
 
     public static void handleMultipleLivesDeath(Piece deadPiece)
@@ -1685,5 +1689,12 @@ public class HelperFunctions : MonoBehaviour
         int[] colors = getColorsOnSquare(square);
 
         return !colors.Contains(color);
+    }
+
+    public static bool isColorOnSquare(GameObject square, int color)
+    {
+        int[] colors = getColorsOnSquare(square);
+
+        return colors.Contains(color);
     }
 }

@@ -16,6 +16,7 @@ public static class gameData
     public static bool refreshedSinceClick { get; set; } = false;
     public static int turn { get; set; } = 1;
     public static bool readyToMove { get; set; } = false;
+    public static bool abilitySelected { get; set; } = false;
     public static GameObject selectedToMove { get; set; }
     public static List<int[]> currentMoveableCoords { get; set; } = new List<int[]>();
     public static List<int[]> currentMoveableCoordsAllPieces { get; set; } = new List<int[]>();

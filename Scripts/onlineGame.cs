@@ -202,7 +202,8 @@ public class onlineGame : MonoBehaviour
 
     void Update()
     {
-        if (!gameData.isSelected) {
+        if (!gameData.isSelected)
+        {
             HelperFunctions.resetBoardColours();
         }
 
@@ -251,21 +252,24 @@ public class onlineGame : MonoBehaviour
         //if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
         //Debug.Log("SelectedToMove: " + gameData.selectedToMove);
 
+        //MOVE
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
         {
             //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));
-            
+
             if (HelperFunctions.isColorOnSquare(gameData.turn))
             {
-                if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false)) {
+                if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false))
+                {
                     moveSound.Play();
 
                     bool death = false;
                     GameObject selectedGo = null;
                     GameObject selectedToMoveGo = null;
 
-                    if (gameData.selected.transform.childCount != 0) {
+                    if (gameData.selected.transform.childCount != 0)
+                    {
                         selectedGo = gameData.selected.transform.GetChild(0).gameObject;
                         selectedToMoveGo = gameData.selectedToMove.transform.GetChild(0).gameObject;
 
@@ -298,6 +302,8 @@ public class onlineGame : MonoBehaviour
             gameData.selectedFromPanel = false;
             gameData.selected = null;
         }
+        
+        //ABILITY
     }
 
     [PunRPC]

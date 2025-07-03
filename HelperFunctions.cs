@@ -1264,7 +1264,7 @@ public class HelperFunctions : MonoBehaviour
                 deadPiece.alive = 0;
                 deadPiece = null;
             }
-        } 
+        }
     }
 
     public static void handleMultipleLivesDeath(Piece deadPiece)
@@ -1706,5 +1706,41 @@ public class HelperFunctions : MonoBehaviour
         int[] colors = getColorsOnSquare(square);
 
         return colors.Contains(color);
+    }
+
+    public static GameObject hungryPieceNextBarf(Piece hungryPiece, List<int[]> collateral)
+    {
+        if (collateral == null)
+        {
+            collateral = new List<int[]>(
+                new int[,] {
+                    { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 },
+                    { 0, 1 }, { 0, -1 }, { -1, 0 }, { 1, 0 }
+                }
+            );
+        }
+
+        if (collateral.Count == 0)
+        {
+            return null;
+        }
+
+        int[] coord = null;
+        foreach (int[] coords in collateral)
+        {
+            collateral.Remove(coords);
+            if (isPieceOnSquare(findSquare(coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1])))
+            {
+                coord = [coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1]];
+                break;
+            }
+        }
+
+        if (coord == null)
+        {
+            return null;
+        }
+
+        return findSquare(coord[0], coord[1]);
     }
 }

@@ -47,7 +47,7 @@ public class onlineGame : MonoBehaviour
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
-        pawn6 = new CrowdingKnight(1, true);
+        pawn6 = new HungryKnight(1, true);
         pawn7 = new LandminePawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
@@ -202,7 +202,7 @@ public class onlineGame : MonoBehaviour
 
     void Update()
     {
-        if (!gameData.isSelected)
+        if (!gameData.isSelected && !gameData.abilitySelected)
         {
             HelperFunctions.resetBoardColours();
         }
@@ -213,8 +213,9 @@ public class onlineGame : MonoBehaviour
             int currentColor = currentPiece.color;
             if ((gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn) || gameData.selectedFromPanel)
             {
-                if (!HelperFunctions.isMultipleOnSquare(gameData.selected))
+                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && !gameData.abilitySelected)
                 {
+                    Debug.Log("HERE");
                     gameData.readyToMove = true;
 
                     HelperFunctions.updateCastleCondition();
@@ -225,6 +226,7 @@ public class onlineGame : MonoBehaviour
                     //TODO: Force selection from side panel
                     if (gameData.selectedFromPanel)
                     {
+                        Debug.Log("HERE 2");
                         gameData.readyToMove = true;
 
                         HelperFunctions.updateCastleCondition();
@@ -241,16 +243,18 @@ public class onlineGame : MonoBehaviour
                 {
                     gameData.refreshedSinceClick = true;
                     panel.squareImages = HelperFunctions.generateSidePanelImages(gameData.selected);
+                    panel.panelPieces = HelperFunctions.getPiecesOnSquareBoardGrid(gameData.selected);
                     panel.RefreshImageGrid();
                 }
             }
         }
 
-        //Debug.Log("ISREADY");
-        //Debug.Log("ReadyToMove: " + gameData.readyToMove);
-        //Debug.Log("Selected: " + gameData.selected);
-        //if (gameData.selectedPiece != null) Debug.Log("SekectedPiece: " + gameData.selectedPiece.name);
-        //Debug.Log("SelectedToMove: " + gameData.selectedToMove);
+        Debug.Log("ISREADY");
+        Debug.Log("ReadyToMove: " + gameData.readyToMove);
+        Debug.Log("Selected: " + gameData.selected);
+        if (gameData.selectedPiece != null) Debug.Log("SelectedPiece: " + gameData.selectedPiece.name);
+        Debug.Log("SelectedToMove: " + gameData.selectedToMove);
+        Debug.Log("Ability: " + gameData.abilitySelected);
 
         //MOVE
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
@@ -258,7 +262,7 @@ public class onlineGame : MonoBehaviour
             //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));
 
-            if (HelperFunctions.isColorOnSquare(gameData.turn))
+            if (gameData.selectedToMovePiece.color == gameData.turn)
             {
                 if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false))
                 {
@@ -304,6 +308,32 @@ public class onlineGame : MonoBehaviour
         }
         
         //ABILITY
+        if (gameData.abilitySelected && gameData.selectedPiece != null)
+        {
+            if (gameData.selectedPiece.ability == "Vomit")
+            {
+                if (gameData.abilityAdvanceNext)
+                {
+                    panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage);
+                    panel.panelPieces = gameData.selectedPiece.storage;
+                    panel.RefreshImageGrid();
+
+                    gameData.abilityAdvanceNext = false;
+                    tempInfo.tempSquare = HelperFunctions.hungryPieceNextBarf(gameData.selectedPiece, tempInfo.tempCoordSet);
+                    HelperFunctions.highlightSquare(tempInfo.tempSquare, Color.red);
+
+                    Debug.Log(tempInfo.tempSquare);
+                    if (tempInfo.tempSquare == null || gameData.selectedPiece.storage == null || gameData.selectedPiece.storage.Count == 0)
+                    {
+                        gameData.abilitySelected = false;
+                        gameData.selected = null;
+                        gameData.selectedPiece = null;
+                        HelperFunctions.resetBoardColours();
+                    }
+                }
+                
+            }
+        }
     }
 
     [PunRPC]
@@ -392,7 +422,7 @@ public class onlineGame : MonoBehaviour
 
                     if (collateral[i, 0] == 0 && collateral[i, 1] == 0)
                     {
-                        HelperFunctions.collateralDeath(piece, piece.go);
+                        HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
                     }
 
                     if (!square) continue;
@@ -413,7 +443,7 @@ public class onlineGame : MonoBehaviour
 
             if (random == 3)
             {
-                HelperFunctions.collateralDeath(piece, piece.go);
+                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
             }
         }
 

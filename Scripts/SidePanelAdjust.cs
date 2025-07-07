@@ -9,6 +9,7 @@ public class SidePanelAdjust : MonoBehaviour
     public GameObject canvas;
     public TMP_FontAsset titleFont;
     public List<Sprite> squareImages;
+    public List<Piece> panelPieces;
 
     [HideInInspector] public TMP_Text whiteCountText;
     [HideInInspector] public TMP_Text blackCountText;
@@ -138,6 +139,7 @@ public class SidePanelAdjust : MonoBehaviour
 
     public void RefreshImageGrid()
     {
+        //Debug.Log(panelPieces.Count + " " + squareImages.Count);
         if (imageGridTransform == null || gridLayout == null) return;
 
         foreach (Transform child in imageGridTransform)
@@ -165,12 +167,34 @@ public class SidePanelAdjust : MonoBehaviour
 
         gridLayout.cellSize = new Vector2(cellWidth, cellHeight);
 
-        foreach (Sprite sprite in squareImages)
+        for (int i = 0; i < squareImages.Count; i++)
         {
-            GameObject imgObj = new GameObject(sprite.name, typeof(Image));
+            Sprite baseSprite = squareImages[i];
+            GameObject container = new GameObject($"PieceContainer_{i}", typeof(RectTransform));
+            container.transform.SetParent(imageGridTransform, false);
 
-            //Add event handler
-            EventTrigger e = imgObj.AddComponent<EventTrigger>();
+            RectTransform containerRect = container.GetComponent<RectTransform>();
+            containerRect.anchorMin = Vector2.zero;
+            containerRect.anchorMax = Vector2.one;
+            containerRect.offsetMin = Vector2.zero;
+            containerRect.offsetMax = Vector2.zero;
+
+            // Base Image
+            GameObject baseImageObj = new GameObject("BaseImage", typeof(Image));
+            baseImageObj.transform.SetParent(container.transform, false);
+
+            Image baseImage = baseImageObj.GetComponent<Image>();
+            baseImage.sprite = baseSprite;
+            baseImage.preserveAspect = true;
+
+            RectTransform baseRect = baseImageObj.GetComponent<RectTransform>();
+            baseRect.anchorMin = Vector2.zero;
+            baseRect.anchorMax = Vector2.one;
+            baseRect.offsetMin = Vector2.zero;
+            baseRect.offsetMax = Vector2.zero;
+
+            // Click handler
+            EventTrigger e = baseImageObj.AddComponent<EventTrigger>();
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerClick;
             entry.callback.AddListener((eventData) =>
@@ -179,10 +203,44 @@ public class SidePanelAdjust : MonoBehaviour
             });
             e.triggers.Add(entry);
 
-            imgObj.transform.SetParent(imageGridTransform, false);
-            Image img = imgObj.GetComponent<Image>();
-            img.sprite = sprite;
-            img.preserveAspect = true;
+            // Overlay Ability Image (bottom-right corner)
+            if (panelPieces != null && i < panelPieces.Count && !string.IsNullOrEmpty(panelPieces[i].ability))
+            {
+                string abilityName = panelPieces[i].ability;
+                Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
+
+                if (abilitySprite != null)
+                {
+                    GameObject overlayObj = new GameObject(abilityName + "-" + panelPieces[i].name, typeof(Image));
+                    overlayObj.transform.SetParent(container.transform, false);
+
+                    Image overlayImg = overlayObj.GetComponent<Image>();
+                    overlayImg.sprite = abilitySprite;
+                    overlayImg.preserveAspect = true;
+
+                    RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
+                    overlayRect.anchorMin = new Vector2(1f, 0f);   // bottom-right corner
+                    overlayRect.anchorMax = new Vector2(1f, 0f);
+                    overlayRect.pivot = new Vector2(1f, 0f);
+                    float size = 32f; // Adjust as needed
+                    overlayRect.sizeDelta = new Vector2(size, size);
+                    overlayRect.anchoredPosition = new Vector2(-4, 4); // slight inward offset
+
+                    // Click handler
+                    EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
+                    EventTrigger.Entry entryAbility = new EventTrigger.Entry();
+                    entryAbility.eventID = EventTriggerType.PointerClick;
+                    entryAbility.callback.AddListener((eventData) =>
+                    {
+                        HelperFunctions.clickedAbility(eventData, this);
+                    });
+                    eAbility.triggers.Add(entryAbility);
+                }
+                else
+                {
+                    Debug.LogWarning($"Ability image not found for: {abilityName}");
+                }
+            }
         }
     }
 

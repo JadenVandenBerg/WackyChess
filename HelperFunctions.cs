@@ -53,6 +53,12 @@ public class HelperFunctions : MonoBehaviour
     public static GameObject clicked(BaseEventData e)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
+
+        if (gameData.abilitySelected)
+        {
+            return null;
+        }
+
         if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {
             gameData.refreshedSinceClick = false;
@@ -81,13 +87,19 @@ public class HelperFunctions : MonoBehaviour
     public static GameObject clickedSidePanel(BaseEventData e, SidePanelAdjust panel)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
+        if (pointerEventData.eligibleForClick && gameData.abilitySelected)
+        {
 
-        if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
+            //TODO look in an allpiecesfromstart dict instead
+            Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
+            Debug.Log("Selected " + piece.name + " from panel during ability");
+        }
+        else if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {
             gameData.refreshedSinceClick = false;
             //gameData.selectedToMove = gameData.selected;
             Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
-            Debug.Log(piece.name + " from panel");
+            Debug.Log("Selected " + piece.name + " from panel");
             gameData.selected = findSquare(piece.position[0], piece.position[1]);
             gameData.selectedPiece = piece;
             gameData.selectedFromPanel = true;
@@ -107,8 +119,39 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
+    public static GameObject clickedAbility(BaseEventData e, SidePanelAdjust panel)
+    {
+        if (gameData.abilitySelected)
+        {
+            return null;
+        }
+
+        PointerEventData pointerEventData = (PointerEventData)e;
+
+        if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
+        {
+            gameData.readyToMove = false;
+            gameData.abilitySelected = true;
+            string pieceName = pointerEventData.pointerPress.name.ToString().Contains("-") 
+                ? pointerEventData.pointerPress.name.ToString().Split('-')[1] 
+                : "";
+            Piece piece = findPieceFromPanelCode(pieceName);
+            gameData.selectedPiece = piece;
+            Debug.Log("clicked: " + pointerEventData.pointerPress.name.ToString());
+
+            gameData.abilityAdvanceNext = true;
+            tempInfo.tempCoordSet = null;
+            resetBoardColours();
+
+            return pointerEventData.pointerPress;
+        }
+
+        return null;
+    }
+
     public static void resetBoardColours()
     {
+        Debug.Log("Reset Board Colours");
 
         gameData.isSelected = false;
         //gameData.selected = null;
@@ -265,6 +308,8 @@ public class HelperFunctions : MonoBehaviour
 
     public static int[] findCoords(GameObject square)
     {
+        if (square == null) return null;
+
         int[] sq;
         sq = square.name.ToIntArray();
 
@@ -424,8 +469,8 @@ public class HelperFunctions : MonoBehaviour
             GameObject square = findSquare(from[0] + (i * dirX), from[1] + (i * dirY));
             if (square != null && isPieceOnSquare(square))
             {
-                List<Piece> onSquare = getPiecesOnSquare(square);
-                if (checkState(piece, "Ghost") && onSquare.color == piece.color
+                List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
+                if (checkState(piece, "Ghost") && isColorNotOnSquare(square, piece.color * -1)
                     || checkStateAllOnSquare(onSquare, "Ghoul") && isColorNotOnSquare(square, piece.color * -1))
                 {
                     continue;
@@ -821,7 +866,7 @@ public class HelperFunctions : MonoBehaviour
         GameObject square = findSquare(coords[0], coords[1]);
 
         //Save State
-        List<Piece> oldPieces = null;
+        List<Piece> oldPieces = new List<Piece>();
         bool restore = false;
 
 
@@ -829,7 +874,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (isPieceOnSquare(square))
         {
-            oldPieces = getPiecesOnSquareBoardGrid(square);
+            oldPieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
             gos = new List<GameObject>(removePieceFromBoard(oldPieces));
             restore = true;
         }
@@ -837,7 +882,7 @@ public class HelperFunctions : MonoBehaviour
         piece.setPosition(coords);
         movePieceBoardGrid(piece, new int[] { x, y }, coords);
 
-        movePieceNoImage(piece, square);
+        //movePieceNoImage(piece, square);
 
         List<int[]> moves = addToCurrentMoveableCoordsTotal(piece.color * -1, false, false, null, false, true);
         isInCheck = dummyIsCheck(moves, king);
@@ -849,7 +894,7 @@ public class HelperFunctions : MonoBehaviour
 
         movePieceBoardGrid(piece, coords, new int[] { x, y });
         piece.setPosition(new int[] { x, y });
-        movePieceNoImage(piece, findSquare(x, y));
+        //movePieceNoImage(piece, findSquare(x, y));
 
         return isInCheck;
     }
@@ -858,18 +903,18 @@ public class HelperFunctions : MonoBehaviour
     {
         List<GameObject> gos = new List<GameObject>();
 
-        foreach (Piece piece in pieces)
+        foreach (Piece piece in new List<Piece>(pieces))
         {
             piece.disabled = true;
 
             updateBoardGrid(piece.position, piece, "r");
-            piece.position = new int[] { -1, -1 };
+            //piece.position = new int[] { -1, -1 };
 
-            GameObject gp = new GameObject();
-            gp.AddComponent<RectTransform>();
-            movePieceNoImage(piece, gp);
+            //GameObject gp = new GameObject();
+            //gp.AddComponent<RectTransform>();
+            //movePieceNoImage(piece, gp);
 
-            gos.Add(gp);
+            //gos.Add(gp);
         }
 
         return gos;
@@ -877,22 +922,22 @@ public class HelperFunctions : MonoBehaviour
 
     public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
     {
-        foreach (Piece piece in pieces)
+        foreach (Piece piece in new List<Piece>(pieces))
         {
             if (piece != null)
             {
                 piece.disabled = false;
-                movePieceNoImage(piece, findSquare(position[0], position[1]));
-                piece.position = position;
+                //movePieceNoImage(piece, findSquare(position[0], position[1]));
+                //piece.position = position;
 
                 updateBoardGrid(position, piece, "a");
             }
         }
 
-        foreach (GameObject go in gos)
-        {
-            DestroyWrapper(go);
-        }
+        //foreach (GameObject go in gos)
+        //{
+        //    DestroyWrapper(go);
+        //}
     }
 
     public static void DestroyWrapper(GameObject go)
@@ -1247,6 +1292,7 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece deadPiece in deadPieces)
         {
+            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ")");
             GameObject dead = deadPiece.go;
             if (deadPiece.lives != 0)
             {
@@ -1262,7 +1308,6 @@ public class HelperFunctions : MonoBehaviour
                 updateBoardGrid(deadPiece.position, deadPiece, "r");
                 DestroyWrapper(dead);
                 deadPiece.alive = 0;
-                deadPiece = null;
             }
         }
     }
@@ -1295,6 +1340,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
+            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
             onDeath(piece, piece.go, attackerPiece, attacker);
         }
     }
@@ -1326,6 +1372,11 @@ public class HelperFunctions : MonoBehaviour
         //Hungry
         if (checkState(attackerPiece, "Hungry"))
         {
+            if (attackerPiece.storage == null)
+            {
+                attackerPiece.storage = new List<Piece>();
+            }
+
             attackerPiece.storage.Add(deadPiece);
             skipCollateral = true;
         }
@@ -1342,17 +1393,13 @@ public class HelperFunctions : MonoBehaviour
 
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
                     {
-                        collateralDeath(attackerPiece, attackerPiece.go);
+                        collateralDeath(pieceToList(attackerPiece));
                     }
 
                     if (!square) continue;
 
                     List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-
-                    foreach (Piece piece in pieces)
-                    {
-                        collateralDeath(piece, piece.go);
-                    }
+                    collateralDeath(pieces);
                 }
             }
 
@@ -1366,18 +1413,14 @@ public class HelperFunctions : MonoBehaviour
 
                     if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
                     {
-                        collateralDeath(attackerPiece, attackerPiece.go);
-                        collateralDeath(deadPiece, deadPiece.go);
+                        collateralDeath(pieceToList(attackerPiece));
+                        collateralDeath(pieceToList(deadPiece));
                     }
 
                     if (!square) continue;
 
                     List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-
-                    foreach (Piece piece in pieces)
-                    {
-                        collateralDeath(piece, piece.go);
-                    }
+                    collateralDeath(pieces);
                 }
             }
         }
@@ -1457,7 +1500,18 @@ public class HelperFunctions : MonoBehaviour
     {
         List<Sprite> squareImages = new List<Sprite>();
 
-        List<Piece> pieces = getPiecesOnSquare(square);
+        List<Piece> pieces = getPiecesOnSquareBoardGrid(square);
+
+        if (pieces == null) return null;
+
+        squareImages = generateSidePanelImagesFromList(pieces);
+
+        return squareImages;
+    }
+
+    public static List<Sprite> generateSidePanelImagesFromList(List<Piece> pieces)
+    {
+        List<Sprite> squareImages = new List<Sprite>();
 
         if (pieces == null) return null;
 
@@ -1540,12 +1594,8 @@ public class HelperFunctions : MonoBehaviour
     public static List<Piece> getPiecesOnSquareBoardGrid(GameObject square)
     {
         List<Piece> pieces = new List<Piece>();
-        if (square != null && square.transform != null)
+        if (square != null)
         {
-            if (square.transform.childCount == 0)
-            {
-                return pieces;
-            }
 
             int[] coords = findCoords(square);
 
@@ -1684,6 +1734,8 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isPieceOnSquare(GameObject square)
     {
+        if (square == null) return true;
+
         int[] coords = findCoords(square);
 
         if (coords[1] < 1 || coords[0] < 1)
@@ -1696,14 +1748,14 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isColorNotOnSquare(GameObject square, int color)
     {
-        int[] colors = getColorsOnSquare(square);
+        var colors = getColorsOnSquare(square);
 
         return !colors.Contains(color);
     }
 
     public static bool isColorOnSquare(GameObject square, int color)
     {
-        int[] colors = getColorsOnSquare(square);
+        var colors = getColorsOnSquare(square);
 
         return colors.Contains(color);
     }
@@ -1712,12 +1764,17 @@ public class HelperFunctions : MonoBehaviour
     {
         if (collateral == null)
         {
-            collateral = new List<int[]>(
-                new int[,] {
-                    { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 },
-                    { 0, 1 }, { 0, -1 }, { -1, 0 }, { 1, 0 }
-                }
-            );
+            collateral = new List<int[]>
+            {
+                new int[] { 1, 1 },
+                new int[] { 1, -1 },
+                new int[] { -1, 1 },
+                new int[] { -1, -1 },
+                new int[] { 0, 1 },
+                new int[] { 0, -1 },
+                new int[] { -1, 0 },
+                new int[] { 1, 0 }
+            };
         }
 
         if (collateral.Count == 0)
@@ -1726,12 +1783,16 @@ public class HelperFunctions : MonoBehaviour
         }
 
         int[] coord = null;
-        foreach (int[] coords in collateral)
+        foreach (int[] coords in new List<int[]>(collateral))
         {
             collateral.Remove(coords);
-            if (isPieceOnSquare(findSquare(coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1])))
+
+            GameObject square = findSquare(coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1]);
+            if (square == null) { continue; }
+
+            if (!isPieceOnSquare(square))
             {
-                coord = [coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1]];
+                coord = new int[] { coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1] };
                 break;
             }
         }
@@ -1742,5 +1803,20 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return findSquare(coord[0], coord[1]);
+    }
+
+    public static List<Piece> pieceToList(Piece piece)
+    {
+        List<Piece> pieceList = new List<Piece>();
+        pieceList.Add(piece);
+
+        return pieceList;
+    }
+
+    public static void highlightSquare(GameObject square, Color color)
+    {
+        if (square == null) return;
+
+        square.GetComponent<Image>().color = color;
     }
 }

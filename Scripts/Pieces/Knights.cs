@@ -2306,7 +2306,7 @@ public class HungryKnight : Piece
     public int flag { get; set; } = 0;
     public Piece spawnable { get; set; } = null;
 
-    public CrowdingKnight(int color, bool online)
+    public HungryKnight(int color, bool online)
     {
         if (online)
         {

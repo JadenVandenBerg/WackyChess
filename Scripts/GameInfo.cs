@@ -13,6 +13,7 @@ public static class gameData
     public static GameObject board { get; set; }
     public static bool isSelected { get; set; } = false;
     public static bool selectedFromPanel { get; set; } = false;
+    public static bool abilityAdvanceNext { get; set; } = false;
     public static bool refreshedSinceClick { get; set; } = false;
     public static int turn { get; set; } = 1;
     public static bool readyToMove { get; set; } = false;
@@ -43,4 +44,6 @@ public static class gameData
 public static class tempInfo
 {
     public static float botMoveOpponentBestPoints { get; set; } = 0;
+    public static List<int[]> tempCoordSet { get; set; } = null;
+    public static GameObject tempSquare { get; set; } = null;
 }

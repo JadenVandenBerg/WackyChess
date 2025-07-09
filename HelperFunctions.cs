@@ -89,10 +89,11 @@ public class HelperFunctions : MonoBehaviour
         PointerEventData pointerEventData = (PointerEventData)e;
         if (pointerEventData.eligibleForClick && gameData.abilitySelected)
         {
-
             //TODO look in an allpiecesfromstart dict instead
             Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
             Debug.Log("Selected " + piece.name + " from panel during ability");
+
+            tempInfo.tempPiece = piece;
         }
         else if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {

@@ -47,4 +47,5 @@ public static class tempInfo
     public static float botMoveOpponentBestPoints { get; set; } = 0;
     public static List<int[]> tempCoordSet { get; set; } = null;
     public static GameObject tempSquare { get; set; } = null;
+    public static Piece tempPiece { get; set; } = null;
 }

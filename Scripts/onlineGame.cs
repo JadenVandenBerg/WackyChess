@@ -331,7 +331,16 @@ public class onlineGame : MonoBehaviour
                         HelperFunctions.resetBoardColours();
                     }
                 }
-                
+
+                if (gameData.selectedFromPanel)
+                {
+                    //Put tempPiece on Square
+                    Piece p = tempInfo.tempPiece;
+                    Square s = tempInfo.tempSquare;
+
+                    HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
+                    initPiece(p, HelperFunctions.findCoords(s));
+                }
             }
         }
     }
@@ -518,11 +527,20 @@ public class onlineGame : MonoBehaviour
     private void initPiece(Piece piece, int[] coords)
     {
         gameData.piecesDict.Add(piece.go, piece);
-        gameData.allPiecesDict.Add(piece.go, piece);
+        
+        if (!gameData.allPiecesDict.Contains(piece.go))
+        {
+            gameData.allPiecesDict.Add(piece.go, piece);
+        }
         
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
         piece.position = HelperFunctions.findCoords(toAppend);
-        piece.startSquare = piece.position;
+        
+        if (piece.startSquare == null)
+        {
+            piece.startSquare = piece.position;
+        }
+
         HelperFunctions.movePiece(piece, toAppend);
 
         piece.alive = 1;

@@ -10,6 +10,7 @@ public static class gameData
     public static Piece selectedPiece { get; set; } = null;
     public static Piece selectedToMovePiece { get; set; } = null;
     public static Dictionary<GameObject, Piece> piecesDict { get; set; } = new Dictionary<GameObject, Piece>();
+    public static Dictionary<GameObject, Piece> allPiecesDict { get; set; } = new Dictionary<GameObject, Piece>();
     public static GameObject board { get; set; }
     public static bool isSelected { get; set; } = false;
     public static bool selectedFromPanel { get; set; } = false;

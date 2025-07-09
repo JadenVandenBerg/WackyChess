@@ -1504,12 +1504,12 @@ public class HelperFunctions : MonoBehaviour
 
         if (pieces == null) return null;
 
-        squareImages = generateSidePanelImagesFromList(pieces);
+        squareImages = generateSidePanelImagesFromList(pieces, false);
 
         return squareImages;
     }
 
-    public static List<Sprite> generateSidePanelImagesFromList(List<Piece> pieces)
+    public static List<Sprite> generateSidePanelImagesFromList(List<Piece> pieces, bool addPass)
     {
         List<Sprite> squareImages = new List<Sprite>();
 
@@ -1518,20 +1518,33 @@ public class HelperFunctions : MonoBehaviour
         foreach (Piece piece in pieces)
         {
             String url;
-
             url = piece.bImage;
             if (piece.color == 1)
             {
                 url = piece.wImage;
             }
-
             byte[] f;
-
             f = File.ReadAllBytes(url);
-
             Texture2D t2d = new Texture2D(2, 2);
             t2d.LoadImage(f);
+            Sprite s = Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), new Vector2(0.5f, 0.5f));
+            s.name = piece.name;
 
+            squareImages.Add(s);
+        }
+
+        if (addPass)
+        {
+            String url;
+            url = "Assets/Resources/Pass.png";
+            if (piece.color == 1)
+            {
+                url = piece.wImage;
+            }
+            byte[] f;
+            f = File.ReadAllBytes(url);
+            Texture2D t2d = new Texture2D(2, 2);
+            t2d.LoadImage(f);
             Sprite s = Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), new Vector2(0.5f, 0.5f));
             s.name = piece.name;
 
@@ -1615,6 +1628,14 @@ public class HelperFunctions : MonoBehaviour
     public static Piece findPieceFromPanelCode(String panelCode)
     {
         foreach (Piece piece in gameData.piecesDict.Values)
+        {
+            if (piece.name == panelCode)
+            {
+                return piece;
+            }
+        }
+
+        foreach (Piece piece in gameData.allPiecesDict.Values)
         {
             if (piece.name == panelCode)
             {

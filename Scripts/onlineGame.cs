@@ -314,7 +314,8 @@ public class onlineGame : MonoBehaviour
             {
                 if (gameData.abilityAdvanceNext)
                 {
-                    panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage);
+                    Debug.Log("Advancing Next Vomit");
+                    panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
                     panel.panelPieces = gameData.selectedPiece.storage;
                     panel.RefreshImageGrid();
 
@@ -329,17 +330,31 @@ public class onlineGame : MonoBehaviour
                         gameData.selected = null;
                         gameData.selectedPiece = null;
                         HelperFunctions.resetBoardColours();
+                        gameData.turn = gameData.turn * -1;
                     }
                 }
 
-                if (gameData.selectedFromPanel)
+                if (tempInfo.selectedFromPanel/* && tempInfo.tempPiece != null*/)
                 {
                     //Put tempPiece on Square
                     Piece p = tempInfo.tempPiece;
-                    Square s = tempInfo.tempSquare;
 
-                    HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
-                    initPiece(p, HelperFunctions.findCoords(s));
+                    if (p != null)
+                    {
+                        GameObject s = tempInfo.tempSquare;
+
+                        HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
+                        HelperFunctions.restorePieceImageToBoard(p);
+                        initPiece(p, HelperFunctions.findCoords(s));
+
+                        gameData.selectedPiece.storage.Remove(p);
+                    }
+
+                    gameData.abilityAdvanceNext = true;
+                    gameData.selectedFromPanel = false;
+                    tempInfo.tempPiece = null;
+                    tempInfo.tempSquare = null;
+                    gameData.selected = null;
                 }
             }
         }
@@ -526,9 +541,12 @@ public class onlineGame : MonoBehaviour
 
     private void initPiece(Piece piece, int[] coords)
     {
-        gameData.piecesDict.Add(piece.go, piece);
+        if (!gameData.piecesDict.ContainsKey(piece.go))
+        {
+            gameData.piecesDict.Add(piece.go, piece);
+        }
         
-        if (!gameData.allPiecesDict.Contains(piece.go))
+        if (!gameData.allPiecesDict.ContainsKey(piece.go))
         {
             gameData.allPiecesDict.Add(piece.go, piece);
         }

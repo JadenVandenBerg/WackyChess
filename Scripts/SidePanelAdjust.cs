@@ -181,6 +181,7 @@ public class SidePanelAdjust : MonoBehaviour
 
             // Base Image
             GameObject baseImageObj = new GameObject("BaseImage", typeof(Image));
+            baseImageObj.name = panelPieces.Count > i ? panelPieces[i].name : "Pass";
             baseImageObj.transform.SetParent(container.transform, false);
 
             Image baseImage = baseImageObj.GetComponent<Image>();

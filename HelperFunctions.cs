@@ -90,10 +90,18 @@ public class HelperFunctions : MonoBehaviour
         if (pointerEventData.eligibleForClick && gameData.abilitySelected)
         {
             //TODO look in an allpiecesfromstart dict instead
-            Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
-            Debug.Log("Selected " + piece.name + " from panel during ability");
+            if (pointerEventData.pointerPress.ToString() == "Pass")
+            {
+                tempInfo.tempPiece = null;
+            }
+            else
+            {
+                Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
+                Debug.Log("Selected " + piece.name + " from panel during ability");
+                tempInfo.tempPiece = piece;
+            }
 
-            tempInfo.tempPiece = piece;
+            tempInfo.selectedFromPanel = true;
         }
         else if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {
@@ -1380,6 +1388,11 @@ public class HelperFunctions : MonoBehaviour
 
             attackerPiece.storage.Add(deadPiece);
             skipCollateral = true;
+            gameData.piecesDict.Remove(dead);
+            updateBoardGrid(deadPieceCoords, deadPiece, "r");
+            removePieceImageFromBoard(deadPiece);
+
+            return;
         }
 
         if (!skipCollateral)
@@ -1442,8 +1455,8 @@ public class HelperFunctions : MonoBehaviour
     public void _MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
         GameObject square = findSquare(toMoveCoords[0], toMoveCoords[1]);
-        Piece piece = getPieceOnSquare(square);
-        onlineGame.movePiece(piece, coords);
+        //Piece piece = getPieceOnSquare(square);
+        //onlineGame.movePiece(piece, coords);
     }
 
     public static bool isOnStartSquare(Piece piece)
@@ -1538,16 +1551,12 @@ public class HelperFunctions : MonoBehaviour
         {
             String url;
             url = "Assets/Resources/Pass.png";
-            if (piece.color == 1)
-            {
-                url = piece.wImage;
-            }
             byte[] f;
             f = File.ReadAllBytes(url);
             Texture2D t2d = new Texture2D(2, 2);
             t2d.LoadImage(f);
             Sprite s = Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), new Vector2(0.5f, 0.5f));
-            s.name = piece.name;
+            s.name = "Pass";
 
             squareImages.Add(s);
         }
@@ -1840,5 +1849,20 @@ public class HelperFunctions : MonoBehaviour
         if (square == null) return;
 
         square.GetComponent<Image>().color = color;
+    }
+
+    public static void removePieceImageFromBoard(Piece piece)
+    {
+        GameObject go = piece.go;
+
+        go.transform.parent = null;
+        go.SetActive(false);
+    }
+
+    public static void restorePieceImageToBoard(Piece piece)
+    {
+        GameObject go = piece.go;
+
+        go.SetActive(true);
     }
 }

@@ -413,8 +413,7 @@ public class OneTimeKnight : Piece
             GameObject newSquare = HelperFunctions.findSquare(this.position[0] + moveOptions[i, 0], this.position[1] + moveOptions[i, 1]);
             if (newSquare != null && !this.hasMoved)
             {
-                Piece piece = HelperFunctions.getPieceOnSquare(newSquare);
-                if (piece == null || piece.color != this.color)
+                if (HelperFunctions.isPieceOnSquare(newSquare) || HelperFunctions.isColorNotOnSquare(newSquare, this.color))
                 {
                     HelperFunctions.addTo2DArray(dependentAttacks, new int[] { moveOptions[i,0], moveOptions[i,1] });
                 }

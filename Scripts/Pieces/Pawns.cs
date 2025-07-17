@@ -1727,20 +1727,16 @@ public class MurderousPawn : Piece
         //Simulate Murderous
         dependentAttacks = new int[,] { };
 
-        GameObject newSquare = HelperFunctions.findSquare(this.position[0] + 1, this.position[1] + 1);
-        if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare))) {
-            if (HelperFunctions.getPieceOnSquare(newSquare) != null)
-            {
-                HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 1, 1 });
-            }
-        }
-
-        newSquare = HelperFunctions.findSquare(this.position[0] + -1, this.position[1] + 1);
-        if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare)))
+        GameObject newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 1);
+        if (newSquare != null)
         {
-            if (HelperFunctions.getPieceOnSquare(newSquare) != null)
+            if (HelperFunctions.isPieceOnSquare(newSquare) && HelperFunctions.getColorsOnSquare(newSquare).Contains(this.color))
             {
-                HelperFunctions.addTo2DArray(dependentAttacks, new int[] { -1, 1 });
+                newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 2);
+                if (HelperFunctions.isPieceOnSquare(newSquare) && this.hasMoved == false)
+                {
+                    HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 0, 2 });
+                }
             }
         }
 
@@ -1855,21 +1851,7 @@ public class GhostPawn : Piece
     public List<Piece> storage { get; set; } = null;
     public int[,] dependentMovesSet()
     {
-        //Simulate Murderous
         dependentAttacks = new int[,] { };
-
-        GameObject newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 1);
-        if (newSquare != null)
-        {
-            if (HelperFunctions.getPieceOnSquare(newSquare) != null && HelperFunctions.getPieceOnSquare(newSquare).color == this.color)
-            {
-                newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 2);
-                if (HelperFunctions.getPieceOnSquare(newSquare) != null && this.hasMoved == false)
-                {
-                    HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 0, 2 });
-                }
-            }
-        }
 
         return dependentAttacks;
     }
@@ -2209,8 +2191,7 @@ public class OneTimePawn : Piece
         GameObject newSquare = HelperFunctions.findSquare(this.position[0] + 1, this.position[1] + 1);
         if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare)))
         {
-            Piece piece = HelperFunctions.getPieceOnSquare(newSquare);
-            if (piece != null && !this.hasMoved && piece.color != this.color)
+            if (HelperFunctions.isPieceOnSquare(newSquare) || HelperFunctions.isColorNotOnSquare(newSquare, this.color))
             {
                 HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 1, 1 });
             }
@@ -2219,8 +2200,7 @@ public class OneTimePawn : Piece
         newSquare = HelperFunctions.findSquare(this.position[0] + -1, this.position[1] + 1);
         if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare)))
         {
-            Piece piece = HelperFunctions.getPieceOnSquare(newSquare);
-            if (piece != null && !this.hasMoved && piece.color != this.color)
+            if (HelperFunctions.isPieceOnSquare(newSquare) || HelperFunctions.isColorNotOnSquare(newSquare, this.color))
             {
                 HelperFunctions.addTo2DArray(dependentAttacks, new int[] { -1, 1 });
             }
@@ -3160,23 +3140,7 @@ public class SuperGhostPawn : Piece
     public List<Piece> storage { get; set; } = null;
     public int[,] dependentMovesSet()
     {
-        //Simulate Murderous
-        dependentAttacks = new int[,] { };
-
-        GameObject newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 1);
-        if (newSquare != null)
-        {
-            if (HelperFunctions.getPieceOnSquare(newSquare) != null && HelperFunctions.getPieceOnSquare(newSquare).color == this.color)
-            {
-                newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 2);
-                if (HelperFunctions.getPieceOnSquare(newSquare) != null && this.hasMoved == false)
-                {
-                    HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 0, 2 });
-                }
-            }
-        }
-
-        return dependentAttacks;
+        return new int[,] { };
     }
 
     public int[,] interactiveMovesSet()

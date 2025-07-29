@@ -49,4 +49,5 @@ public static class tempInfo
     public static GameObject tempSquare { get; set; } = null;
     public static Piece tempPiece { get; set; } = null;
     public static bool selectedFromPanel { get; set; } = false;
+    public static bool passed { get; set; } = false;
 }

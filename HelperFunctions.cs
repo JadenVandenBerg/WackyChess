@@ -87,12 +87,15 @@ public class HelperFunctions : MonoBehaviour
     public static GameObject clickedSidePanel(BaseEventData e, SidePanelAdjust panel)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
+
+        Debug.Log(pointerEventData.pointerPress.ToString());
         if (pointerEventData.eligibleForClick && gameData.abilitySelected)
         {
             //TODO look in an allpiecesfromstart dict instead
-            if (pointerEventData.pointerPress.ToString() == "Pass")
+            if (pointerEventData.pointerPress.ToString().Contains("Pass"))
             {
                 tempInfo.tempPiece = null;
+                tempInfo.passed = true;
             }
             else
             {
@@ -1212,28 +1215,28 @@ public class HelperFunctions : MonoBehaviour
         panel.whiteCountText.text = $"White: {gameData.pointsOnBoard[0]}";
         panel.blackCountText.text = $"Black: {gameData.pointsOnBoard[1]}";
 
-        String whoseTurn;
-        if (gameData.turn == 1)
-        {
-            whoseTurn = "Whites";
-        }
-        else
-        {
-            whoseTurn = "Blacks";
-        }
+        //String whoseTurn;
+        //if (gameData.turn == 1)
+        //{
+        //    whoseTurn = "Whites";
+        //}
+        //else
+        //{
+        //    whoseTurn = "Blacks";
+        //}
 
-        if (gameData.checkMate)
-        {
-            //Later
-        }
-        else if (gameData.staleMate)
-        {
-            //Latewr
-        }
-        else if (gameData.check)
-        {
-            //Later
-        }
+        //if (gameData.checkMate)
+        //{
+        //    //Later
+        //}
+        //else if (gameData.staleMate)
+        //{
+        //    //Latewr
+        //}
+        //else if (gameData.check)
+        //{
+        //    //Later
+        //}
     }
 
     public static void updateBotMoves() //Update for choose colour
@@ -1791,20 +1794,20 @@ public class HelperFunctions : MonoBehaviour
         return colors.Contains(color);
     }
 
-    public static GameObject hungryPieceNextBarf(Piece hungryPiece, List<int[]> collateral)
+    public static GameObject hungryPieceNextBarf(Piece hungryPiece, ref List<int[]> collateral)
     {
         if (collateral == null)
         {
             collateral = new List<int[]>
             {
                 new int[] { 1, 1 },
+                new int[] { 1, 0 },
                 new int[] { 1, -1 },
-                new int[] { -1, 1 },
-                new int[] { -1, -1 },
-                new int[] { 0, 1 },
                 new int[] { 0, -1 },
+                new int[] { -1, -1 },
                 new int[] { -1, 0 },
-                new int[] { 1, 0 }
+                new int[] { -1, 1 },
+                new int[] { 0, 1 }
             };
         }
 

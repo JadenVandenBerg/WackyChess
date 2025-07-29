@@ -317,10 +317,16 @@ public class onlineGame : MonoBehaviour
                     Debug.Log("Advancing Next Vomit");
                     panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
                     panel.panelPieces = gameData.selectedPiece.storage;
-                    panel.RefreshImageGrid();
+                    panel.RefreshImageGrid(); 
 
                     gameData.abilityAdvanceNext = false;
-                    tempInfo.tempSquare = HelperFunctions.hungryPieceNextBarf(gameData.selectedPiece, tempInfo.tempCoordSet);
+                    gameData.selectedFromPanel = false;
+
+                    List<int[]> tempCoordSet = tempInfo.tempCoordSet;
+                    tempInfo.tempSquare = HelperFunctions.hungryPieceNextBarf(gameData.selectedPiece, ref tempCoordSet);
+                    tempInfo.tempCoordSet = tempCoordSet;
+
+                    HelperFunctions.resetBoardColours();
                     HelperFunctions.highlightSquare(tempInfo.tempSquare, Color.red);
 
                     Debug.Log(tempInfo.tempSquare);
@@ -328,13 +334,20 @@ public class onlineGame : MonoBehaviour
                     {
                         gameData.abilitySelected = false;
                         gameData.selected = null;
-                        gameData.selectedPiece = null;
                         HelperFunctions.resetBoardColours();
                         gameData.turn = gameData.turn * -1;
+
+                        gameData.selectedPiece.storage = new List<Piece>();
+
+                        panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
+                        panel.panelPieces = gameData.selectedPiece.storage;
+                        panel.RefreshImageGrid();
+
+                        gameData.selectedPiece = null;
                     }
                 }
 
-                if (tempInfo.selectedFromPanel/* && tempInfo.tempPiece != null*/)
+                if (tempInfo.selectedFromPanel && tempInfo.tempPiece != null)
                 {
                     //Put tempPiece on Square
                     Piece p = tempInfo.tempPiece;
@@ -349,6 +362,17 @@ public class onlineGame : MonoBehaviour
 
                         gameData.selectedPiece.storage.Remove(p);
                     }
+
+                    gameData.abilityAdvanceNext = true;
+                    gameData.selectedFromPanel = false;
+                    tempInfo.tempPiece = null;
+                    tempInfo.tempSquare = null;
+                    gameData.selected = null;
+                }
+
+                if (tempInfo.passed)
+                {
+                    tempInfo.passed = false;
 
                     gameData.abilityAdvanceNext = true;
                     gameData.selectedFromPanel = false;

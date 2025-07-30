@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
@@ -207,7 +207,7 @@ public class SidePanelAdjust : MonoBehaviour
             // Overlay Ability Image (bottom-right corner)
             if (panelPieces != null && i < panelPieces.Count && !string.IsNullOrEmpty(panelPieces[i].ability))
             {
-                string[] abilityNames = panelPieces[i].ability.split("-");
+                string[] abilityNames = panelPieces[i].ability.Split("-");
                 // foreach (string abilityName in abilityNames)
                 // {
                 //     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
@@ -248,9 +248,11 @@ public class SidePanelAdjust : MonoBehaviour
                 float gridSpacing = 5f;
                 float size = 32f;
 
-                //TODO add validation to see if ability can be used
+                // TODO: Add validation to see if ability can be used
+                int j = 0;
                 foreach (string abilityName in abilityNames)
                 {
+                    j++;
                     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 
                     if (abilitySprite != null)
@@ -264,14 +266,17 @@ public class SidePanelAdjust : MonoBehaviour
 
                         RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
 
-                        int row = j / gridColumns;
-                        int column = j % gridColumns;
+                        overlayRect.anchorMin = new Vector2(1, 0);
+                        overlayRect.anchorMax = new Vector2(1, 0);
+                        overlayRect.pivot = new Vector2(1, 0);
 
-                        float xPos = column * (size + gridSpacing);
-                        float yPos = -row * (size + gridSpacing);
+                        int row = (j - 1) / gridColumns;
+                        int column = (j - 1) % gridColumns;
+
+                        float xPos = -column * (size + gridSpacing);
+                        float yPos = row * (size + gridSpacing);
 
                         overlayRect.anchoredPosition = new Vector2(xPos, yPos);
-
                         overlayRect.sizeDelta = new Vector2(size, size);
 
                         EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
@@ -288,6 +293,7 @@ public class SidePanelAdjust : MonoBehaviour
                         Debug.LogWarning($"Ability image not found for: {abilityName}");
                     }
                 }
+
             }
         }
     }

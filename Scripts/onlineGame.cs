@@ -67,7 +67,7 @@ public class onlineGame : MonoBehaviour
         wKnight = new FragileKnight(1, true);
         wKnight2 = new LandmineKnight(1, true);
         wQueen = new ReverseMinister(1, true);
-        wKing = new SlidingKing(1, true);
+        wKing = new HungryKing(1, true);
 
         // gameData.piecesDict.Add(wRook.go, wRook);
         // gameData.piecesDict.Add(wRook2.go, wRook2);

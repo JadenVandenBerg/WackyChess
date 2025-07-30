@@ -54,7 +54,7 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
-        if (gameData.abilitySelected)
+        if (gameData.abilitySelected != "")
         {
             return null;
         }
@@ -89,7 +89,7 @@ public class HelperFunctions : MonoBehaviour
         PointerEventData pointerEventData = (PointerEventData)e;
 
         Debug.Log(pointerEventData.pointerPress.ToString());
-        if (pointerEventData.eligibleForClick && gameData.abilitySelected)
+        if (pointerEventData.eligibleForClick && gameData.abilitySelected != "")
         {
             //TODO look in an allpiecesfromstart dict instead
             if (pointerEventData.pointerPress.ToString().Contains("Pass"))
@@ -131,9 +131,9 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static GameObject clickedAbility(BaseEventData e, SidePanelAdjust panel)
+    public static GameObject clickedAbility(BaseEventData e, SidePanelAdjust panel, string abilityName)
     {
-        if (gameData.abilitySelected)
+        if (gameData.abilitySelected != "")
         {
             return null;
         }
@@ -143,10 +143,11 @@ public class HelperFunctions : MonoBehaviour
         if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
         {
             gameData.readyToMove = false;
-            gameData.abilitySelected = true;
+            gameData.abilitySelected = abilityName;
+
             string pieceName = pointerEventData.pointerPress.name.ToString().Contains("-")
-                ? pointerEventData.pointerPress.name.ToString().Split('-')[1]
-                : "";
+            ? pointerEventData.pointerPress.name.ToString().Split('-')[1]
+            : "";
             Piece piece = findPieceFromPanelCode(pieceName);
             gameData.selectedPiece = piece;
             Debug.Log("clicked: " + pointerEventData.pointerPress.name.ToString());
@@ -639,7 +640,6 @@ public class HelperFunctions : MonoBehaviour
 
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
-
             //Portal
             int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
             int[] coordsP = adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);

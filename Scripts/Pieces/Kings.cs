@@ -42,7 +42,7 @@ public class King : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -130,7 +130,7 @@ public class MurderousKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -243,7 +243,7 @@ public class GhoulKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Ghoul";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -356,7 +356,7 @@ public class OneTimeKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -494,7 +494,7 @@ public class ElectricKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Electric";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -607,7 +607,7 @@ public class PortalKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Portal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -720,7 +720,7 @@ public class AtomicKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -833,7 +833,7 @@ public class LandmineKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -944,7 +944,7 @@ public class LiteKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1057,7 +1057,7 @@ public class HyperFastKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1170,7 +1170,7 @@ public class FastKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1283,7 +1283,7 @@ public class FragileKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Fragile";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1397,7 +1397,7 @@ public class SlidingKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1510,7 +1510,7 @@ public class CrowdingKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "Crowding";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1623,7 +1623,7 @@ public class HungryKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "Vomit";
+    public String ability { get; set; } = "Vomit-CastleLeft-CastleRight";
     public String state { get; set; } = "Hungry";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -1736,7 +1736,7 @@ public class CaptureTheFlagKing : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
+    public String ability { get; set; } = "CastleLeft-CastleRight";
     public String state { get; set; } = "CaptureTheFlag";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;

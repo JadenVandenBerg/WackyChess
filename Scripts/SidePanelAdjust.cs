@@ -207,39 +207,86 @@ public class SidePanelAdjust : MonoBehaviour
             // Overlay Ability Image (bottom-right corner)
             if (panelPieces != null && i < panelPieces.Count && !string.IsNullOrEmpty(panelPieces[i].ability))
             {
-                string abilityName = panelPieces[i].ability;
-                Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
+                string[] abilityNames = panelPieces[i].ability.split("-");
+                // foreach (string abilityName in abilityNames)
+                // {
+                //     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 
-                if (abilitySprite != null)
+                //     if (abilitySprite != null)
+                //     {
+                //         GameObject overlayObj = new GameObject(abilityName + "-" + panelPieces[i].name, typeof(Image));
+                //         overlayObj.transform.SetParent(container.transform, false);
+
+                //         Image overlayImg = overlayObj.GetComponent<Image>();
+                //         overlayImg.sprite = abilitySprite;
+                //         overlayImg.preserveAspect = true;
+
+                //         RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
+                //         overlayRect.anchorMin = new Vector2(1f, 0f);   // bottom-right corner
+                //         overlayRect.anchorMax = new Vector2(1f, 0f);
+                //         overlayRect.pivot = new Vector2(1f, 0f);
+                //         float size = 32f; // Adjust as needed
+                //         overlayRect.sizeDelta = new Vector2(size, size);
+                //         overlayRect.anchoredPosition = new Vector2(-4, 4); // slight inward offset
+
+                //         // Click handler
+                //         EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
+                //         EventTrigger.Entry entryAbility = new EventTrigger.Entry();
+                //         entryAbility.eventID = EventTriggerType.PointerClick;
+                //         entryAbility.callback.AddListener((eventData) =>
+                //         {
+                //             HelperFunctions.clickedAbility(eventData, this);
+                //         });
+                //         eAbility.triggers.Add(entryAbility);
+                //     }
+                //     else
+                //     {
+                //         Debug.LogWarning($"Ability image not found for: {abilityName}");
+                //     }
+                // }
+                int gridColumns = 3;
+                float gridSpacing = 5f;
+                float size = 32f;
+
+                //TODO add validation to see if ability can be used
+                foreach (string abilityName in abilityNames)
                 {
-                    GameObject overlayObj = new GameObject(abilityName + "-" + panelPieces[i].name, typeof(Image));
-                    overlayObj.transform.SetParent(container.transform, false);
+                    Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 
-                    Image overlayImg = overlayObj.GetComponent<Image>();
-                    overlayImg.sprite = abilitySprite;
-                    overlayImg.preserveAspect = true;
-
-                    RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
-                    overlayRect.anchorMin = new Vector2(1f, 0f);   // bottom-right corner
-                    overlayRect.anchorMax = new Vector2(1f, 0f);
-                    overlayRect.pivot = new Vector2(1f, 0f);
-                    float size = 32f; // Adjust as needed
-                    overlayRect.sizeDelta = new Vector2(size, size);
-                    overlayRect.anchoredPosition = new Vector2(-4, 4); // slight inward offset
-
-                    // Click handler
-                    EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
-                    EventTrigger.Entry entryAbility = new EventTrigger.Entry();
-                    entryAbility.eventID = EventTriggerType.PointerClick;
-                    entryAbility.callback.AddListener((eventData) =>
+                    if (abilitySprite != null)
                     {
-                        HelperFunctions.clickedAbility(eventData, this);
-                    });
-                    eAbility.triggers.Add(entryAbility);
-                }
-                else
-                {
-                    Debug.LogWarning($"Ability image not found for: {abilityName}");
+                        GameObject overlayObj = new GameObject(abilityName + "-" + panelPieces[i].name, typeof(Image));
+                        overlayObj.transform.SetParent(container.transform, false);
+
+                        Image overlayImg = overlayObj.GetComponent<Image>();
+                        overlayImg.sprite = abilitySprite;
+                        overlayImg.preserveAspect = true;
+
+                        RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
+
+                        int row = j / gridColumns;
+                        int column = j % gridColumns;
+
+                        float xPos = column * (size + gridSpacing);
+                        float yPos = -row * (size + gridSpacing);
+
+                        overlayRect.anchoredPosition = new Vector2(xPos, yPos);
+
+                        overlayRect.sizeDelta = new Vector2(size, size);
+
+                        EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
+                        EventTrigger.Entry entryAbility = new EventTrigger.Entry();
+                        entryAbility.eventID = EventTriggerType.PointerClick;
+                        entryAbility.callback.AddListener((eventData) =>
+                        {
+                            HelperFunctions.clickedAbility(eventData, this, abilityName);
+                        });
+                        eAbility.triggers.Add(entryAbility);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Ability image not found for: {abilityName}");
+                    }
                 }
             }
         }

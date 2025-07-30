@@ -202,7 +202,7 @@ public class onlineGame : MonoBehaviour
 
     void Update()
     {
-        if (!gameData.isSelected && !gameData.abilitySelected)
+        if (!gameData.isSelected && gameData.abilitySelected == "")
         {
             HelperFunctions.resetBoardColours();
         }
@@ -213,9 +213,8 @@ public class onlineGame : MonoBehaviour
             int currentColor = currentPiece.color;
             if ((gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn) || gameData.selectedFromPanel)
             {
-                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && !gameData.abilitySelected)
+                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && gameData.abilitySelected == "")
                 {
-                    Debug.Log("HERE");
                     gameData.readyToMove = true;
 
                     HelperFunctions.updateCastleCondition();
@@ -226,7 +225,6 @@ public class onlineGame : MonoBehaviour
                     //TODO: Force selection from side panel
                     if (gameData.selectedFromPanel)
                     {
-                        Debug.Log("HERE 2");
                         gameData.readyToMove = true;
 
                         HelperFunctions.updateCastleCondition();
@@ -306,18 +304,18 @@ public class onlineGame : MonoBehaviour
             gameData.selectedFromPanel = false;
             gameData.selected = null;
         }
-        
+
         //ABILITY
-        if (gameData.abilitySelected && gameData.selectedPiece != null)
+        if (gameData.abilitySelected != "" && gameData.selectedPiece != null)
         {
-            if (gameData.selectedPiece.ability == "Vomit")
+            if (gameData.abilitySelected == "Vomit")
             {
                 if (gameData.abilityAdvanceNext)
                 {
                     Debug.Log("Advancing Next Vomit");
                     panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
                     panel.panelPieces = gameData.selectedPiece.storage;
-                    panel.RefreshImageGrid(); 
+                    panel.RefreshImageGrid();
 
                     gameData.abilityAdvanceNext = false;
                     gameData.selectedFromPanel = false;
@@ -332,7 +330,7 @@ public class onlineGame : MonoBehaviour
                     Debug.Log(tempInfo.tempSquare);
                     if (tempInfo.tempSquare == null || gameData.selectedPiece.storage == null || gameData.selectedPiece.storage.Count == 0)
                     {
-                        gameData.abilitySelected = false;
+                        gameData.abilitySelected = "";
                         gameData.selected = null;
                         HelperFunctions.resetBoardColours();
                         gameData.turn = gameData.turn * -1;
@@ -380,6 +378,17 @@ public class onlineGame : MonoBehaviour
                     tempInfo.tempSquare = null;
                     gameData.selected = null;
                 }
+            }
+
+            //TODO
+            if (gameData.abilitySelected == "CastleLeft")
+            {
+
+            }
+
+            if (gameData.abilitySelected == "CastleRight")
+            {
+                
             }
         }
     }

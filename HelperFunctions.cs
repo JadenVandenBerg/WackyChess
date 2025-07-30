@@ -144,8 +144,8 @@ public class HelperFunctions : MonoBehaviour
         {
             gameData.readyToMove = false;
             gameData.abilitySelected = true;
-            string pieceName = pointerEventData.pointerPress.name.ToString().Contains("-") 
-                ? pointerEventData.pointerPress.name.ToString().Split('-')[1] 
+            string pieceName = pointerEventData.pointerPress.name.ToString().Contains("-")
+                ? pointerEventData.pointerPress.name.ToString().Split('-')[1]
                 : "";
             Piece piece = findPieceFromPanelCode(pieceName);
             gameData.selectedPiece = piece;
@@ -681,6 +681,24 @@ public class HelperFunctions : MonoBehaviour
                     if (checkStateOnSquare(piecesOnSquare, "Shield"))
                     {
                         continue;
+                    }
+
+                    if (checkStateOnSquare(piecesOnSquare, "CaptureTheFlag"))
+                    {
+                        bool _continue = false;
+                        foreach (Piece piece_ in piecesOnSquare)
+                        {
+                            if (checkCaptureTheFlag(piece_))
+                            {
+                                _continue = true;
+                                break;
+                            }
+                        }
+                        
+                        if (_continue)
+                        {
+                            continue;
+                        }
                     }
                 }
 
@@ -1867,5 +1885,25 @@ public class HelperFunctions : MonoBehaviour
         GameObject go = piece.go;
 
         go.SetActive(true);
+    }
+
+    public static bool checkCaptureTheFlag(Piece piece)
+    {
+        if (piece.color == 1)
+        {
+            if (piece.position[1] <= 2)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (piece.position[1] >= 7)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

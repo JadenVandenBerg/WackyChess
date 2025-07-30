@@ -119,9 +119,8 @@ public interface Piece
      * Shield: Cannot be captured
      * Dematerialized: Cannot be captured until manually rematerialized (not implemented yet)
      * Frozen: Cannot move until unfrozen (not implemented yet)
-     * Ghost: Can go through your own pieces (not implemented yet)
-     * Ghoul: Your pieces can go through this piece (not implemented yet)
-     * Respawnable: Can respawn at start square (depends on lives) (not implemented yet)
+     * Ghost: Can go through your own pieces
+     * Ghoul: Your pieces can go through this piece
      * Feminist: Cannot capture female opponent pieces (not implemented yet)
      * Oppressive: Cannot capture male opponent pieces (not implemented yet)
      * Combustable: May explode after every turn (1/6)
@@ -144,6 +143,7 @@ public interface Piece
      * Depressed: Cannot move if in check (not implemented yet)
      * Portal: Can teleport through the board
      * Bouncing: Can bounce off the walls
+     * CaptureTheFlag: Cannot be captured on your own side of the board (back 2 ranks)
      */
     public String state { get; set; }
     public String secondaryState { get; set; }

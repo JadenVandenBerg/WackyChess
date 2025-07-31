@@ -418,13 +418,20 @@ public class onlineGame : MonoBehaviour
                 if (gameData.abilityAdvanceNext)
                 {
                     highlightSurroundingSquaresWithPieces(gameData.selected);
-                    
+
                     gameData.abilityAdvanceNext = false;
+                    gameData.selected = null;
+                }
+                else if (gameData.selected && gameData.selectedPiece)
+                {
+                    
                 }
             }
             else if (gameData.abilitySelected == "Unfreeze")
             {
+                piece.secondaryState.Remove("-Frozen");
                 piece.secondaryState.Remove("Frozen");
+
                 gameData.abilitySelected = "";
                 gameData.selected = null;
                 HelperFunctions.resetBoardColours();

@@ -57,6 +57,8 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.abilitySelected == "Freeze")
         {
             Debug.Log("Here");
+            gameData.selected = pointerEventData.pointerPress;
+            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
         }
         else if (gameData.abilitySelected != "")
         {
@@ -92,10 +94,11 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
+        //TODO add support for selecting abilities here
+
         Debug.Log(pointerEventData.pointerPress.ToString());
         if (pointerEventData.eligibleForClick && gameData.abilitySelected != "")
         {
-            //TODO look in an allpiecesfromstart dict instead
             if (pointerEventData.pointerPress.ToString().Contains("Pass"))
             {
                 tempInfo.tempPiece = null;

@@ -379,9 +379,7 @@ public class onlineGame : MonoBehaviour
                     gameData.selected = null;
                 }
             }
-
-            //TODO
-            if (gameData.abilitySelected == "CastleLeft")
+            else if (gameData.abilitySelected == "CastleLeft")
             {
                 string color;
 
@@ -398,8 +396,7 @@ public class onlineGame : MonoBehaviour
                 HelperFunctions.resetBoardColours();
                 gameData.turn = gameData.turn * -1;
             }
-
-            if (gameData.abilitySelected == "CastleRight")
+            else if (gameData.abilitySelected == "CastleRight")
             {
                 string color;
 
@@ -411,6 +408,23 @@ public class onlineGame : MonoBehaviour
                 photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + 2 }, king.position[1]);
                 photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] - 3 }, rook.position[1]);
 
+                gameData.abilitySelected = "";
+                gameData.selected = null;
+                HelperFunctions.resetBoardColours();
+                gameData.turn = gameData.turn * -1;
+            }
+            else if (gameData.abilitySelected == "Freeze")
+            {
+                if (gameData.abilityAdvanceNext)
+                {
+                    highlightSurroundingSquaresWithPieces(gameData.selected);
+                    
+                    gameData.abilityAdvanceNext = false;
+                }
+            }
+            else if (gameData.abilitySelected == "Unfreeze")
+            {
+                piece.secondaryState.Remove("Frozen");
                 gameData.abilitySelected = "";
                 gameData.selected = null;
                 HelperFunctions.resetBoardColours();

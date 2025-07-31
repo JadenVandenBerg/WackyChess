@@ -276,6 +276,20 @@ public class SidePanelAdjust : MonoBehaviour
                             continue;
                         }
                     }
+                    else if (abilityName == "Unfreeze")
+                    {
+                        if (!HelperFunctions.checkState(panelPieces[i], "Frozen"))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (abilityName == "Freeze")
+                    {
+                        if (!HelperFunctions.isPieceSurrounding(panelPieces[i]))
+                        {
+                            continue;
+                        }
+                    }
 
                     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 

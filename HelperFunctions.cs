@@ -54,7 +54,11 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
-        if (gameData.abilitySelected != "")
+        if (gameData.abilitySelected == "Freeze")
+        {
+            Debug.Log("Here");
+        }
+        else if (gameData.abilitySelected != "")
         {
             return null;
         }
@@ -637,6 +641,10 @@ public class HelperFunctions : MonoBehaviour
 
     public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled)
     {
+        if (checkState(piece, "Frozen"))
+        {
+            return;
+        }
 
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
@@ -2008,6 +2016,60 @@ public class HelperFunctions : MonoBehaviour
             if (!gameData.panelCodes.Contains(str))
             {
                 return str;
+            }
+        }
+    }
+
+    public static bool isPieceSurrounding(Piece piece)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void highlightSurroundingSquaresWithPieces(Piece piece)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
+            {
+                highlightSquare(findSquare(x, y), Colors.red);
             }
         }
     }

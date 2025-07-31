@@ -55,8 +55,7 @@ public interface Piece
 
     /*
      * Disabled
-     * Used during dummy moves
-     * Ensures that pieces are not considered during move checks
+     * Used to ignore pieces in calculations of possible moves
      */
     public bool disabled { get; set; }
 
@@ -106,6 +105,10 @@ public interface Piece
      * Freeze: Can freeze pieces within a 1 block radius (not implemented yet)
      * Dematerialize: Can enter/exit dematerialized state (not implemented yet)
      * Vomit: Spit out all pieces in storage onto squares that have no pieces
+     * Castle: Can castle (CastleLeft or CastleRight)
+     * Rotateable: Pieces can rotate 90 degrees and their moves rotate with them (not implemented yet)
+     * Spawnable: Can spawn other pieces depending on spawnable flag (not implemented yet)
+     * Wizard: Dematerializes pieces that put it in check (not implemented yet)
      */
     public String ability { get; set; }
 
@@ -127,16 +130,12 @@ public interface Piece
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move (not implemented yet)
      * Uncastle: Can't castle (not implemented yet)
-     * Rulebreaker: Can castle in check or if rook has moves (as long as it's in start) (not implemented yet)
+     * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start) (not implemented yet)
      * Electric: Has a change of killing pieces that capture it (1/2)
      * Crook: Can't be captured, only jailed (not implemented yet)
-     * Wizard: Dematerializes pieces that put it in check (not implemented yet)
-     * Rotateable: Pieces can rotate 90 degrees and their moves rotate with them (not implemented yet)
      * Wall: Can't be jumped over (not implemented yet)
-     * Spawnable: Can spawn other pieces depending on spawnable flag (not implemented yet)
      * Medusa: Converts pieces it captures into shiled states and jail states (not implemented yet)
      * Hungry: Adds pieces to storage, has the option of spitting out pieces (not implemented yet)
-     * Freezer: Has the option of freezing pieces (not implemented yet)
      * Piggyback: Carries pieces on top of it with it (not implemented yet)
      * Projectile: Pieces other pieces throw kill pieces they land on (not implemented yet)
      * Delayed: Move executed the turn after (if possible) (not implemented yet)

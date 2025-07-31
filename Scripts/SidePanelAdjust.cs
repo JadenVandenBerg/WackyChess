@@ -208,6 +208,7 @@ public class SidePanelAdjust : MonoBehaviour
             if (panelPieces != null && i < panelPieces.Count && !string.IsNullOrEmpty(panelPieces[i].ability))
             {
                 string[] abilityNames = panelPieces[i].ability.Split("-");
+                int color = panelPieces[i].color;
                 // foreach (string abilityName in abilityNames)
                 // {
                 //     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
@@ -248,11 +249,34 @@ public class SidePanelAdjust : MonoBehaviour
                 float gridSpacing = 5f;
                 float size = 32f;
 
-                // TODO: Add validation to see if ability can be used
                 int j = 0;
                 foreach (string abilityName in abilityNames)
                 {
                     j++;
+
+                    //Validate Ability
+                    if (abilityName == "Vomit")
+                    {
+                        if (panelPieces[i].storage.Count < 1)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (abilityName == "CastleLeft")
+                    {
+                        if (!HelperFunctions.checkCanCastle(color, -1))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (abilityName == "CastleRight")
+                    {
+                        if (!HelperFunctions.checkCanCastle(color, 1))
+                        {
+                            continue;
+                        }
+                    }
+
                     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 
                     if (abilitySprite != null)

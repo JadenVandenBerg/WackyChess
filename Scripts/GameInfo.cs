@@ -40,6 +40,7 @@ public static class gameData
     public static int[] bestMoveCoords { get; set; } = new int[] { 0, 0 };
     public static int forceStayTurn { get; set; } = 0;
     public static List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
+    public static List<String> panelCodes { get; set; } = new List<String>();
 }
 
 public static class tempInfo

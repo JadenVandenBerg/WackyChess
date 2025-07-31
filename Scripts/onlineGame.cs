@@ -383,12 +383,38 @@ public class onlineGame : MonoBehaviour
             //TODO
             if (gameData.abilitySelected == "CastleLeft")
             {
+                string color;
 
+                gameData.turn == 1 ? color = "w" : color = "r";
+
+                Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
+                Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r1");
+
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] - 2 }, king.position[1]);
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + 3 }, rook.position[1]);
+
+                gameData.abilitySelected = "";
+                gameData.selected = null;
+                HelperFunctions.resetBoardColours();
+                gameData.turn = gameData.turn * -1;
             }
 
             if (gameData.abilitySelected == "CastleRight")
             {
-                
+                string color;
+
+                gameData.turn == 1 ? color = "w" : color = "r";
+
+                Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
+                Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r2");
+
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + 2 }, king.position[1]);
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] - 3 }, rook.position[1]);
+
+                gameData.abilitySelected = "";
+                gameData.selected = null;
+                HelperFunctions.resetBoardColours();
+                gameData.turn = gameData.turn * -1;
             }
         }
     }
@@ -578,15 +604,15 @@ public class onlineGame : MonoBehaviour
         {
             gameData.piecesDict.Add(piece.go, piece);
         }
-        
+
         if (!gameData.allPiecesDict.ContainsKey(piece.go))
         {
             gameData.allPiecesDict.Add(piece.go, piece);
         }
-        
+
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
         piece.position = HelperFunctions.findCoords(toAppend);
-        
+
         if (piece.startSquare == null)
         {
             piece.startSquare = piece.position;
@@ -598,5 +624,6 @@ public class onlineGame : MonoBehaviour
 
         //piece.go.tag = piece.name;
         HelperFunctions.updateBoardGrid(coords, piece, "a");
+        gameData.panelCodes.Add(piece.name);
     }
 }

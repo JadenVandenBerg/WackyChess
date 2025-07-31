@@ -694,7 +694,7 @@ public class HelperFunctions : MonoBehaviour
                                 break;
                             }
                         }
-                        
+
                         if (_continue)
                         {
                             continue;
@@ -1905,5 +1905,110 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static bool checkCanCastle(int color, int direction)
+    {
+        Piece king;
+        Piece rook;
+        GameObject kingSquare;
+        GameObject rookSquare;
+        if (color == 1)
+        {
+            king = findPieceFromPanelCode("w_k1");
+            if (direction == -1)
+            {
+                rook = findPieceFromPanelCode("w_r1");
+            }
+            else
+            {
+                rook = findPieceFromPanelCode("w_r2");
+            }
+        }
+        else
+        {
+            king = findPieceFromPanelCode("b_k1");
+            if (direction == -1)
+            {
+                rook = findPieceFromPanelCode("b_r1");
+            }
+            else
+            {
+                rook = findPieceFromPanelCode("b_r2");
+            }
+        }
+
+        if (king == null || rook == null)
+        {
+            return false;
+        }
+
+        if (king.alive && rook.alive && !king.hasMoved && !rook.hasMoved)
+        {
+            kingSquare = findSquare(king.position[0], king.position[1]);
+            rookSquare = findSquare(rook.position[0], rook.position[1]);
+
+            if (getPiecesInBetweenSquaresHorizontal(kingSquare, rookSquare).Count > 0)
+            {
+                return false;
+            }
+
+            if (getPiecesOnSquareBoardGrid(kingSquare).Count != 1 || getPiecesOnSquareBoardGrid(rookSquare.Count) != 1)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static List<Piece> getPiecesInBetweenSquaresHorizontal(GameObject s1, GameObject s2)
+    {
+        if (findCoords(s1)[1] != findCoords(s2)[1])
+        {
+            return new List<Piece>();
+        }
+
+        int y = findCoords(s1)[1];
+        List<Piece> pieces = new List<Piece>();
+
+        int x1 = findCoords(s1)[0];
+        int x2 = findCoords(s2)[0];
+        int dir = (x1 - x2) / Math.Abs(x1 - x2);
+
+        for (int i = x2; i != x1; i += dir)
+        {
+            GameObject sq = findSquare(i, y);
+
+            pieces.add(getPiecesOnSquareBoardGrid(sq));
+        }
+
+        return pieces;
+    }
+
+    public static String findNextAvailablePanelCode(String panelCode)
+    {
+        String color;
+        String type;
+        int number;
+
+        String[] parts = panelCode.Split("_");
+        color = parts[0];
+        type = parts[1][0];
+
+        number = Int32.parse(parts[1].Substring(1));
+
+        bool found = false;
+        while (!found)
+        {
+            number += 1;
+            String str = color + "_" + type + number.ToString();
+            if (!gameData.panelCodes.Contains(str))
+            {
+                return str;
+            }
+        }
     }
 }

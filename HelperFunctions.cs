@@ -59,6 +59,7 @@ public class HelperFunctions : MonoBehaviour
             Debug.Log("Here");
             gameData.selected = pointerEventData.pointerPress;
             gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
+            tempInfo.tempPiece = gameData.selectedPiece;
         }
         else if (gameData.abilitySelected != "")
         {
@@ -180,14 +181,24 @@ public class HelperFunctions : MonoBehaviour
             for (int j = 1; j <= 8; j++)
             {
                 Image s = findSquare(i, j).GetComponent<Image>();
-                if ((i + j) % 2 == 0)
+                bool frozen = checkStateOnSquare(getPiecesOnSquareBoardGrid(findSquare(i, j)), "Frozen");
+
+                if (frozen)
                 {
-                    s.color = (Color)(new Color32(14, 115, 34, 255));
+                    s.color = (Color) (new Color32(189, 222, 236, 255));
                 }
                 else
                 {
-                    s.color = (Color)(new Color32(131, 199, 145, 255));
+                    if ((i + j) % 2 == 0)
+                    {
+                        s.color = (Color)(new Color32(14, 115, 34, 255));
+                    }
+                    else
+                    {
+                        s.color = (Color)(new Color32(131, 199, 145, 255));
+                    }
                 }
+                
             }
         }
     }
@@ -1924,8 +1935,12 @@ public class HelperFunctions : MonoBehaviour
         Piece rook;
         GameObject kingSquare;
         GameObject rookSquare;
+
+        Debug.Log("2");
+
         if (color == 1)
         {
+            Debug.Log("3");
             king = findPieceFromPanelCode("w_k1");
             if (direction == -1)
             {
@@ -1933,6 +1948,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
+                Debug.Log("4");
                 rook = findPieceFromPanelCode("w_r2");
             }
         }
@@ -1954,8 +1970,11 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
-        if (king.alive && rook.alive && !king.hasMoved && !rook.hasMoved)
+        Debug.Log("5");
+
+        if (king.alive == 1 && rook.alive == 1 && !king.hasMoved && !rook.hasMoved)
         {
+            Debug.Log("6");
             kingSquare = findSquare(king.position[0], king.position[1]);
             rookSquare = findSquare(rook.position[0], rook.position[1]);
 
@@ -1964,10 +1983,14 @@ public class HelperFunctions : MonoBehaviour
                 return false;
             }
 
-            if (getPiecesOnSquareBoardGrid(kingSquare).Count != 1 || getPiecesOnSquareBoardGrid(rookSquare.Count) != 1)
+            Debug.Log("7");
+
+            if (getPiecesOnSquareBoardGrid(kingSquare).Count != 1 || getPiecesOnSquareBoardGrid(rookSquare).Count != 1)
             {
                 return false;
             }
+
+            Debug.Log("8");
 
             return true;
         }
@@ -1977,10 +2000,13 @@ public class HelperFunctions : MonoBehaviour
 
     public static List<Piece> getPiecesInBetweenSquaresHorizontal(GameObject s1, GameObject s2)
     {
+        Debug.Log("6.1");
         if (findCoords(s1)[1] != findCoords(s2)[1])
         {
             return new List<Piece>();
         }
+
+        Debug.Log("6.2");
 
         int y = findCoords(s1)[1];
         List<Piece> pieces = new List<Piece>();
@@ -1989,12 +2015,16 @@ public class HelperFunctions : MonoBehaviour
         int x2 = findCoords(s2)[0];
         int dir = (x1 - x2) / Math.Abs(x1 - x2);
 
-        for (int i = x2; i != x1; i += dir)
+        Debug.Log("6.3");
+
+        for (int i = x2 + dir; i != x1; i += dir)
         {
             GameObject sq = findSquare(i, y);
 
-            pieces.add(getPiecesOnSquareBoardGrid(sq));
+            pieces.AddRange(getPiecesOnSquareBoardGrid(sq));
         }
+
+        Debug.Log("6.4 -> " + pieces.Count);
 
         return pieces;
     }
@@ -2002,14 +2032,14 @@ public class HelperFunctions : MonoBehaviour
     public static String findNextAvailablePanelCode(String panelCode)
     {
         String color;
-        String type;
+        char type;
         int number;
 
         String[] parts = panelCode.Split("_");
         color = parts[0];
         type = parts[1][0];
 
-        number = Int32.parse(parts[1].Substring(1));
+        number = Int32.Parse(parts[1].Substring(1));
 
         bool found = false;
         while (!found)
@@ -2021,6 +2051,8 @@ public class HelperFunctions : MonoBehaviour
                 return str;
             }
         }
+
+        return null;
     }
 
     public static bool isPieceSurrounding(Piece piece)
@@ -2037,6 +2069,8 @@ public class HelperFunctions : MonoBehaviour
             new int[] {-1, -1 }  // down-left
         };
 
+        Debug.Log("2");
+
         foreach (var dir in directions)
         {
             int x = piece.position[0] + dir[0];
@@ -2047,6 +2081,8 @@ public class HelperFunctions : MonoBehaviour
                 return true;
             }
         }
+
+        Debug.Log("3");
 
         return false;
     }
@@ -2072,8 +2108,67 @@ public class HelperFunctions : MonoBehaviour
 
             if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
             {
-                highlightSquare(findSquare(x, y), Colors.red);
+                highlightSquare(findSquare(x, y), Color.red);
             }
+        }
+    }
+
+    public static bool isPieceSurroundingColor(Piece piece, int color)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0 && isColorOnSquare(findSquare(x, y), color))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void addState(Piece piece, String state)
+    {
+        if (piece.state == "" || piece.state == null)
+        {
+            piece.state = state;
+        }
+        else
+        {
+            if (piece.secondaryState == "" || piece.secondaryState == null)
+            {
+                piece.secondaryState = state;
+            }
+            else
+            {
+                piece.secondaryState = piece.secondaryState + "-" + state;
+            }
+        }
+    }
+
+    public static void addAbility(Piece piece, String ability)
+    {
+        if (piece.ability == "" || piece.ability == null)
+        {
+            piece.ability = ability;
+        }
+        else
+        {
+            piece.ability = piece.ability + "-" + ability;
         }
     }
 }

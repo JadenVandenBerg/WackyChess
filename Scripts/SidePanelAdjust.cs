@@ -171,6 +171,13 @@ public class SidePanelAdjust : MonoBehaviour
         {
             Sprite baseSprite = squareImages[i];
             GameObject container = new GameObject($"PieceContainer_{i}", typeof(RectTransform));
+            Image bgImage = container.AddComponent<Image>();
+            bgImage.color = new Color32(0, 0, 0, 0);
+            if (HelperFunctions.checkState(panelPieces[i], "Frozen"))
+            {
+                bgImage.color = new Color32(189, 222, 236, 255);
+            }
+
             container.transform.SetParent(imageGridTransform, false);
 
             RectTransform containerRect = container.GetComponent<RectTransform>();
@@ -209,42 +216,6 @@ public class SidePanelAdjust : MonoBehaviour
             {
                 string[] abilityNames = panelPieces[i].ability.Split("-");
                 int color = panelPieces[i].color;
-                // foreach (string abilityName in abilityNames)
-                // {
-                //     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
-
-                //     if (abilitySprite != null)
-                //     {
-                //         GameObject overlayObj = new GameObject(abilityName + "-" + panelPieces[i].name, typeof(Image));
-                //         overlayObj.transform.SetParent(container.transform, false);
-
-                //         Image overlayImg = overlayObj.GetComponent<Image>();
-                //         overlayImg.sprite = abilitySprite;
-                //         overlayImg.preserveAspect = true;
-
-                //         RectTransform overlayRect = overlayObj.GetComponent<RectTransform>();
-                //         overlayRect.anchorMin = new Vector2(1f, 0f);   // bottom-right corner
-                //         overlayRect.anchorMax = new Vector2(1f, 0f);
-                //         overlayRect.pivot = new Vector2(1f, 0f);
-                //         float size = 32f; // Adjust as needed
-                //         overlayRect.sizeDelta = new Vector2(size, size);
-                //         overlayRect.anchoredPosition = new Vector2(-4, 4); // slight inward offset
-
-                //         // Click handler
-                //         EventTrigger eAbility = overlayObj.AddComponent<EventTrigger>();
-                //         EventTrigger.Entry entryAbility = new EventTrigger.Entry();
-                //         entryAbility.eventID = EventTriggerType.PointerClick;
-                //         entryAbility.callback.AddListener((eventData) =>
-                //         {
-                //             HelperFunctions.clickedAbility(eventData, this);
-                //         });
-                //         eAbility.triggers.Add(entryAbility);
-                //     }
-                //     else
-                //     {
-                //         Debug.LogWarning($"Ability image not found for: {abilityName}");
-                //     }
-                // }
                 int gridColumns = 3;
                 float gridSpacing = 5f;
                 float size = 32f;
@@ -254,10 +225,16 @@ public class SidePanelAdjust : MonoBehaviour
                 {
                     j++;
 
+                    Debug.Log(abilityName);
+
                     //Validate Ability
                     if (abilityName == "Vomit")
                     {
-                        if (panelPieces[i].storage.Count < 1)
+                        if (panelPieces[i].storage != null && panelPieces[i].storage.Count < 1)
+                        {
+                            continue;
+                        }
+                        else if (panelPieces[i].storage == null)
                         {
                             continue;
                         }
@@ -271,6 +248,7 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "CastleRight")
                     {
+                        Debug.Log("1");
                         if (!HelperFunctions.checkCanCastle(color, 1))
                         {
                             continue;
@@ -285,7 +263,7 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "Freeze")
                     {
-                        if (!HelperFunctions.isPieceSurrounding(panelPieces[i]))
+                        if (!HelperFunctions.isPieceSurroundingColor(panelPieces[i], panelPieces[i].color * -1))
                         {
                             continue;
                         }

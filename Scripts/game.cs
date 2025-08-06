@@ -204,7 +204,7 @@ public class game : MonoBehaviour
             {
                 gameData.readyToMove = true;
 
-                HelperFunctions.updateCastleCondition();
+                //HelperFunctions.updateCastleCondition();
                 HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
             }
         }

@@ -42,23 +42,14 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new SinisterMinisterQueen(1, true);
-        pawn2 = new Man(1, true);
+        pawn = new FreezingBishop(1, true);
+        pawn2 = new CrowdingKnight(1, true);
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
         pawn6 = new HungryKnight(1, true);
         pawn7 = new LandminePawn(1, true);
         pawn8 = new LandminePawn(1, true);
-
-        // gameData.piecesDict.Add(pawn.go, pawn);
-        // gameData.piecesDict.Add(pawn2.go, pawn2);
-        // gameData.piecesDict.Add(pawn3.go, pawn3);
-        // gameData.piecesDict.Add(pawn4.go, pawn4);
-        // gameData.piecesDict.Add(pawn5.go, pawn5);
-        // gameData.piecesDict.Add(pawn6.go, pawn6);
-        // gameData.piecesDict.Add(pawn7.go, pawn7);
-        // gameData.piecesDict.Add(pawn8.go, pawn8);
 
         wRook = new FragileRook(1, true);
         wRook2 = new Empress(1, true);
@@ -69,15 +60,6 @@ public class onlineGame : MonoBehaviour
         wQueen = new ReverseMinister(1, true);
         wKing = new HungryKing(1, true);
 
-        // gameData.piecesDict.Add(wRook.go, wRook);
-        // gameData.piecesDict.Add(wRook2.go, wRook2);
-        // gameData.piecesDict.Add(wBishop.go, wBishop);
-        // gameData.piecesDict.Add(wBishop2.go, wBishop2);
-        // gameData.piecesDict.Add(wKnight.go, wKnight);
-        // gameData.piecesDict.Add(wQueen.go, wQueen);
-        // gameData.piecesDict.Add(wKing.go, wKing);
-        // gameData.piecesDict.Add(wKnight2.go, wKnight2);
-
         bpawn = new SuperGhostPawn(-1, true);
         bpawn2 = new LandminePawn(-1, true);
         bpawn3 = new LandminePawn(-1, true);
@@ -87,15 +69,6 @@ public class onlineGame : MonoBehaviour
         bpawn7 = new LandminePawn(-1, true);
         bpawn8 = new LandminePawn(-1, true);
 
-        // gameData.piecesDict.Add(bpawn.go, bpawn);
-        // gameData.piecesDict.Add(bpawn2.go, bpawn2);
-        // gameData.piecesDict.Add(bpawn3.go, bpawn3);
-        // gameData.piecesDict.Add(bpawn4.go, bpawn4);
-        // gameData.piecesDict.Add(bpawn5.go, bpawn5);
-        // gameData.piecesDict.Add(bpawn6.go, bpawn6);
-        // gameData.piecesDict.Add(bpawn7.go, bpawn7);
-        // gameData.piecesDict.Add(bpawn8.go, bpawn8);
-
         bRook = new InfiniteRook(-1, true);
         bRook2 = new InfiniteRook(-1, true);
         bBishop = new InfiniteBishop(-1, true);
@@ -104,15 +77,6 @@ public class onlineGame : MonoBehaviour
         bKnight2 = new InfiniteKnight(-1, true);
         bQueen = new InfiniteQueen(-1, true);
         bKing = new HyperFastKing(-1, true);
-
-        // gameData.piecesDict.Add(bRook.go, bRook);
-        // gameData.piecesDict.Add(bRook2.go, bRook2);
-        // gameData.piecesDict.Add(bBishop.go, bBishop);
-        // gameData.piecesDict.Add(bBishop2.go, bBishop2);
-        // gameData.piecesDict.Add(bKnight.go, bKnight);
-        // gameData.piecesDict.Add(bQueen.go, bQueen);
-        // gameData.piecesDict.Add(bKing.go, bKing);
-        // gameData.piecesDict.Add(bKnight2.go, bKnight2);
 
         initPiece(pawn, new int[] { 1, 2 });
         initPiece(pawn2, new int[] { 2, 2 });
@@ -217,7 +181,7 @@ public class onlineGame : MonoBehaviour
                 {
                     gameData.readyToMove = true;
 
-                    HelperFunctions.updateCastleCondition();
+                    //HelperFunctions.updateCastleCondition();
                     HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                 }
                 else
@@ -227,7 +191,7 @@ public class onlineGame : MonoBehaviour
                     {
                         gameData.readyToMove = true;
 
-                        HelperFunctions.updateCastleCondition();
+                        //HelperFunctions.updateCastleCondition();
                         HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                     }
                     //Debug.Log("PANEL");
@@ -383,13 +347,22 @@ public class onlineGame : MonoBehaviour
             {
                 string color;
 
-                gameData.turn == 1 ? color = "w" : color = "r";
+                if (gameData.turn == 1)
+                {
+                    color = "w";
+                }
+                else
+                {
+                    color = "r";
+                }
 
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r1");
 
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] - 2 }, king.position[1]);
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + 3 }, rook.position[1]);
+                gameData.selectedToMovePiece = king;
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] - 2, king.position[1] });
+                gameData.selectedToMovePiece = rook;
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + 3, rook.position[1] });
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
@@ -400,13 +373,21 @@ public class onlineGame : MonoBehaviour
             {
                 string color;
 
-                gameData.turn == 1 ? color = "w" : color = "r";
+                if (gameData.turn == 1) {
+                    color = "w";
+                }
+                else
+                {
+                    color = "r";
+                }
 
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r2");
 
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + 2 }, king.position[1]);
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] - 3 }, rook.position[1]);
+                gameData.selectedToMovePiece = king;
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + 2, king.position[1] });
+                gameData.selectedToMovePiece = rook;
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] - 2, rook.position[1] });
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
@@ -417,20 +398,36 @@ public class onlineGame : MonoBehaviour
             {
                 if (gameData.abilityAdvanceNext)
                 {
-                    highlightSurroundingSquaresWithPieces(gameData.selected);
+                    HelperFunctions.highlightSurroundingSquaresWithPieces(gameData.selectedPiece);
 
                     gameData.abilityAdvanceNext = false;
                     gameData.selected = null;
                 }
-                else if (gameData.selected && gameData.selectedPiece)
+                else if (gameData.selectedPiece != null && tempInfo.tempPiece == gameData.selectedPiece)
                 {
-                    
+                    HelperFunctions.addState(tempInfo.tempPiece, "Frozen");
+                    HelperFunctions.addAbility(tempInfo.tempPiece, "Unfreeze");
+
+                    gameData.abilitySelected = "";
+                    gameData.selected = null;
+                    HelperFunctions.resetBoardColours();
+                    gameData.turn = gameData.turn * -1;
+                    tempInfo.tempPiece = null;
                 }
             }
             else if (gameData.abilitySelected == "Unfreeze")
             {
-                piece.secondaryState.Remove("-Frozen");
-                piece.secondaryState.Remove("Frozen");
+                Piece piece = gameData.selectedPiece;
+
+                piece.state = piece.state.Replace("-Frozen", "");
+                piece.state = piece.state.Replace("Frozen", "");
+                piece.secondaryState = piece.secondaryState.Replace("-Frozen", "");
+                piece.secondaryState = piece.secondaryState.Replace("Frozen", "");
+                piece.ability = piece.ability.Replace("-Unfreeze", "");
+                piece.ability = piece.ability.Replace("Unfreeze", "");
+
+                Debug.Log(piece.state);
+                Debug.Log(piece.secondaryState);
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;

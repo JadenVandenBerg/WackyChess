@@ -268,6 +268,18 @@ public class SidePanelAdjust : MonoBehaviour
                             continue;
                         }
                     }
+                    else if (abilityName == "Spawn")
+                    {
+                        if (panelPieces[i].numSpawns <= 0)
+                        {
+                            continue;
+                        }
+                        
+                        if (!HelperFunctions.areSurroundingSquaresFull(panelPieces[i]))
+                        {
+                            continue;
+                        }
+                    }
 
                     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 

@@ -56,10 +56,14 @@ public class HelperFunctions : MonoBehaviour
 
         if (gameData.abilitySelected == "Freeze")
         {
-            Debug.Log("Here");
             gameData.selected = pointerEventData.pointerPress;
             gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
             tempInfo.tempPiece = gameData.selectedPiece;
+        }
+        else if (gameData.abilitySelected == "Spawn")
+        {
+            tempInfo.tempPiece = gameData.selectedPiece;
+            gameData.selected = pointerEventData.pointerPress;
         }
         else if (gameData.abilitySelected != "")
         {
@@ -94,8 +98,6 @@ public class HelperFunctions : MonoBehaviour
     public static GameObject clickedSidePanel(BaseEventData e, SidePanelAdjust panel)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
-
-        //TODO add support for selecting abilities here
 
         Debug.Log(pointerEventData.pointerPress.ToString());
         if (pointerEventData.eligibleForClick && gameData.abilitySelected != "")
@@ -185,7 +187,7 @@ public class HelperFunctions : MonoBehaviour
 
                 if (frozen)
                 {
-                    s.color = (Color) (new Color32(189, 222, 236, 255));
+                    s.color = (Color)(new Color32(189, 222, 236, 255));
                 }
                 else
                 {
@@ -198,7 +200,7 @@ public class HelperFunctions : MonoBehaviour
                         s.color = (Color)(new Color32(131, 199, 145, 255));
                     }
                 }
-                
+
             }
         }
     }
@@ -2069,8 +2071,6 @@ public class HelperFunctions : MonoBehaviour
             new int[] {-1, -1 }  // down-left
         };
 
-        Debug.Log("2");
-
         foreach (var dir in directions)
         {
             int x = piece.position[0] + dir[0];
@@ -2081,8 +2081,6 @@ public class HelperFunctions : MonoBehaviour
                 return true;
             }
         }
-
-        Debug.Log("3");
 
         return false;
     }
@@ -2169,6 +2167,51 @@ public class HelperFunctions : MonoBehaviour
         else
         {
             piece.ability = piece.ability + "-" + ability;
+        }
+    }
+
+    public static bool areSurroundingSquaresFull(Piece piece)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count < 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static class Spawnables
+    {
+        public static Piece create(string pieceName)
+        {
+            switch (pieceName)
+            {
+                case "King": return new King(1);
+                case "Queen": return new Queen(1);
+                case "Rook": return new Rook(1);
+                case "Knight": return new Knight(1);
+                case "Bishop": return new Bishop(1);
+                case "Pawn": return new Pawn(1);
+                default: throw new ArgumentException("Bad Piece");
+            }
         }
     }
 }

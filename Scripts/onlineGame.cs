@@ -373,7 +373,8 @@ public class onlineGame : MonoBehaviour
             {
                 string color;
 
-                if (gameData.turn == 1) {
+                if (gameData.turn == 1)
+                {
                     color = "w";
                 }
                 else
@@ -426,9 +427,19 @@ public class onlineGame : MonoBehaviour
                 piece.ability = piece.ability.Replace("-Unfreeze", "");
                 piece.ability = piece.ability.Replace("Unfreeze", "");
 
-                Debug.Log(piece.state);
-                Debug.Log(piece.secondaryState);
+                gameData.abilitySelected = "";
+                gameData.selected = null;
+                HelperFunctions.resetBoardColours();
+                gameData.turn = gameData.turn * -1;
+            }
+            else if (gameData.abilitySelected == "Spawn")
+            {
+                GameObject square = gameData.selected;
+                string pieceName = tempInfo.tempPiece.spawnable;
 
+                Piece piece = Spawnables.create(pieceName);
+                initPiece(piece, HelperFunctions.findCoords(square));
+                
                 gameData.abilitySelected = "";
                 gameData.selected = null;
                 HelperFunctions.resetBoardColours();

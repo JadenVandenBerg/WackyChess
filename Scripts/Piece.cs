@@ -102,12 +102,12 @@ public interface Piece
      * Different abilities are moves pieces can do instead of doing a regular move
      * 
      * None: No ability
-     * Freeze: Can freeze pieces within a 1 block radius (not implemented yet)
+     * Freeze: Can freeze pieces within a 1 block radius
      * Dematerialize: Can enter/exit dematerialized state (not implemented yet)
      * Vomit: Spit out all pieces in storage onto squares that have no pieces
-     * Castle: Can castle (CastleLeft or CastleRight)
-     * Rotateable: Pieces can rotate 90 degrees and their moves rotate with them (not implemented yet)
-     * Spawnable: Can spawn other pieces depending on spawnable flag (not implemented yet)
+     * Castle: Can castle
+     * Rotate: Pieces can rotate 90 degrees and their moves rotate with them (not implemented yet)
+     * Spawn: Can spawn other pieces depending on spawnable flag (not implemented yet)
      * Wizard: Dematerializes pieces that put it in check (not implemented yet)
      */
     public String ability { get; set; }
@@ -121,7 +121,7 @@ public interface Piece
      * Normal: Piece functions as normal
      * Shield: Cannot be captured
      * Dematerialized: Cannot be captured until manually rematerialized (not implemented yet)
-     * Frozen: Cannot move until unfrozen (not implemented yet)
+     * Frozen: Cannot move until unfrozen
      * Ghost: Can go through your own pieces
      * Ghoul: Your pieces can go through this piece
      * Feminist: Cannot capture female opponent pieces (not implemented yet)
@@ -415,7 +415,8 @@ public interface Piece
      * What piece this piece can spawn
      * null: Nothing
      */
-    public Piece spawnable { get; set; }
+    public string spawnable { get; set; }
+    public int numSpawns { get; set; }
 
 
 

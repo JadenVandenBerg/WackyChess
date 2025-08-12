@@ -76,7 +76,7 @@ public class Knight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Knight(int color, bool online)
     {
@@ -200,7 +200,7 @@ public class MurderousKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousKnight(int color, bool online)
     {
@@ -312,7 +312,7 @@ public class GhoulKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulKnight(int color, bool online)
     {
@@ -438,7 +438,7 @@ public class OneTimeKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimeKnight(int color, bool online)
     {
@@ -555,7 +555,7 @@ public class ElectricKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricKnight(int color, bool online)
     {
@@ -673,7 +673,7 @@ public class InfiniteKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public InfiniteKnight(int color, bool online)
     {
@@ -791,7 +791,7 @@ public class PortalKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalKnight(int color, bool online)
     {
@@ -909,7 +909,7 @@ public class AtomicKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicKnight(int color, bool online)
     {
@@ -1027,7 +1027,7 @@ public class LandmineKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandmineKnight(int color, bool online)
     {
@@ -1142,7 +1142,7 @@ public class LiteKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LiteKnight(int color, bool online)
     {
@@ -1262,7 +1262,7 @@ public class SpiderKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SpiderKnight(int color, bool online)
     {
@@ -1379,7 +1379,7 @@ public class DisabledKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public DisabledKnight(int color, bool online)
     {
@@ -1496,7 +1496,7 @@ public class Elephant : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Elephant(int color, bool online)
     {
@@ -1613,7 +1613,7 @@ public class SniperElephant : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SniperElephant(int color, bool online)
     {
@@ -1731,7 +1731,7 @@ public class Camel : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Camel(int color, bool online)
     {
@@ -1849,7 +1849,7 @@ public class FragileKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragileKnight(int color, bool online)
     {
@@ -1967,7 +1967,7 @@ public class SinisterMinisterKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SinisterMinisterKnight(int color, bool online)
     {
@@ -2087,7 +2087,7 @@ public class RoyalKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public RoyalKnight(int color, bool online)
     {
@@ -2205,7 +2205,7 @@ public class CrowdingKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingKnight(int color, bool online)
     {
@@ -2323,7 +2323,7 @@ public class HungryKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryKnight(int color, bool online)
     {
@@ -2441,7 +2441,7 @@ public class CaptureTheFlagKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagKnight(int color, bool online)
     {
@@ -2559,7 +2559,7 @@ public class FreezingKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingKnight(int color, bool online)
     {
@@ -2677,7 +2677,7 @@ public class CloningKnight : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Knight";
-    public int numSpawns = 2;
+    public int numSpawns { get; set; } = 2;
 
     public CloningKnight(int color, bool online)
     {

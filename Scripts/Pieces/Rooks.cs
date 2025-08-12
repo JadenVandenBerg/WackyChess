@@ -77,7 +77,7 @@ public class Rook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Rook(int color, bool online)
     {
@@ -195,7 +195,7 @@ public class MurderousRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousRook(int color, bool online)
     {
@@ -312,7 +312,7 @@ public class GhostRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhostRook(int color, bool online)
     {
@@ -429,7 +429,7 @@ public class GhoulRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulRook(int color, bool online)
     {
@@ -546,7 +546,7 @@ public class OneTimeRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimeRook(int color, bool online)
     {
@@ -664,7 +664,7 @@ public class ElectricRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricRook(int color, bool online)
     {
@@ -783,7 +783,7 @@ public class InfiniteRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public InfiniteRook(int color, bool online)
     {
@@ -902,7 +902,7 @@ public class PortalRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalRook(int color, bool online)
     {
@@ -1021,7 +1021,7 @@ public class AtomicRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicRook(int color, bool online)
     {
@@ -1140,7 +1140,7 @@ public class LandmineRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandmineRook(int color, bool online)
     {
@@ -1254,7 +1254,7 @@ public class LiteRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LiteRook(int color, bool online)
     {
@@ -1372,7 +1372,7 @@ public class SuperGhostRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SuperGhostRook(int color, bool online)
     {
@@ -1493,7 +1493,7 @@ public class Empress : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Empress(int color, bool online)
     {
@@ -1612,7 +1612,7 @@ public class FragileRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragileRook(int color, bool online)
     {
@@ -1732,7 +1732,7 @@ public class RoyalRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public RoyalRook(int color, bool online)
     {
@@ -1851,7 +1851,7 @@ public class MonochromeRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MonochromeRook(int color, bool online)
     {
@@ -1970,7 +1970,7 @@ public class CrowdingRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingRook(int color, bool online)
     {
@@ -2089,7 +2089,7 @@ public class HungryRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryRook(int color, bool online)
     {
@@ -2208,7 +2208,7 @@ public class CaptureTheFlagRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagRook(int color, bool online)
     {
@@ -2327,7 +2327,7 @@ public class FreezingRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingRook(int color, bool online)
     {
@@ -2446,7 +2446,7 @@ public class CloningRook : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Rook";
-    public int numSpawns = 2;
+    public int numSpawns { get; set; } = 2;
 
     public CloningRook(int color, bool online)
     {

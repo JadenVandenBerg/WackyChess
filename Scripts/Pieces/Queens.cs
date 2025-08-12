@@ -80,7 +80,7 @@ public class Queen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Queen(int color, bool online)
     {
@@ -202,7 +202,7 @@ public class MurderousQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousQueen(int color, bool online)
     {
@@ -324,7 +324,7 @@ public class GhostQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhostQueen(int color, bool online)
     {
@@ -446,7 +446,7 @@ public class GhoulQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulQueen(int color, bool online)
     {
@@ -568,7 +568,7 @@ public class OneTimeQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimeQueen(int color, bool online)
     {
@@ -689,7 +689,7 @@ public class ElectricQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricQueen(int color, bool online)
     {
@@ -811,7 +811,7 @@ public class InfiniteQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public InfiniteQueen(int color, bool online)
     {
@@ -933,7 +933,7 @@ public class PortalQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalQueen(int color, bool online)
     {
@@ -1055,7 +1055,7 @@ public class AtomicQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicQueen(int color, bool online)
     {
@@ -1177,7 +1177,7 @@ public class LandmineQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandmineQueen(int color, bool online)
     {
@@ -1290,7 +1290,7 @@ public class LiteQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LiteQueen(int color, bool online)
     {
@@ -1413,7 +1413,7 @@ public class SuperGhostQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SuperGhostQueen(int color, bool online)
     {
@@ -1527,7 +1527,7 @@ public class Minister : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Minister(int color, bool online)
     {
@@ -1649,7 +1649,7 @@ public class FragileQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragileQueen(int color, bool online)
     {
@@ -1774,7 +1774,7 @@ public class Amazon : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Amazon(int color, bool online)
     {
@@ -1889,7 +1889,7 @@ public class ReverseMinister : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ReverseMinister(int color, bool online)
     {
@@ -2007,7 +2007,7 @@ public class SinisterMinisterQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SinisterMinisterQueen(int color, bool online)
     {
@@ -2129,7 +2129,7 @@ public class MonochromeQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MonochromeQueen(int color, bool online)
     {
@@ -2251,7 +2251,7 @@ public class BouncingQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public BouncingQueen(int color, bool online)
     {
@@ -2373,7 +2373,7 @@ public class CrowdingQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingQueen(int color, bool online)
     {
@@ -2495,7 +2495,7 @@ public class HungryQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryQueen(int color, bool online)
     {
@@ -2617,7 +2617,7 @@ public class CaptureTheFlagQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagQueen(int color, bool online)
     {
@@ -2739,7 +2739,7 @@ public class FreezingQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingQueen(int color, bool online)
     {
@@ -2861,7 +2861,7 @@ public class CloningQueen : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Queen";
-    public int numSpawns = 2;
+    public int numSpawns { get; set; } = 2;
 
     public CloningQueen(int color, bool online)
     {

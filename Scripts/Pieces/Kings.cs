@@ -73,7 +73,7 @@ public class King : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public King(int color, bool online)
     {
@@ -188,7 +188,7 @@ public class MurderousKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousKing(int color, bool online)
     {
@@ -302,7 +302,7 @@ public class GhoulKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulKing(int color, bool online)
     {
@@ -416,7 +416,7 @@ public class OneTimeKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimeKing(int color, bool online)
     {
@@ -529,7 +529,7 @@ public class ElectricKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricKing(int color, bool online)
     {
@@ -643,7 +643,7 @@ public class PortalKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalKing(int color, bool online)
     {
@@ -757,7 +757,7 @@ public class AtomicKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicKing(int color, bool online)
     {
@@ -871,7 +871,7 @@ public class LandmineKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandmineKing(int color, bool online)
     {
@@ -983,7 +983,7 @@ public class LiteKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LiteKing(int color, bool online)
     {
@@ -1097,7 +1097,7 @@ public class HyperFastKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HyperFastKing(int color, bool online)
     {
@@ -1211,7 +1211,7 @@ public class FastKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FastKing(int color, bool online)
     {
@@ -1325,7 +1325,7 @@ public class FragileKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragileKing(int color, bool online)
     {
@@ -1440,7 +1440,7 @@ public class SlidingKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SlidingKing(int color, bool online)
     {
@@ -1554,7 +1554,7 @@ public class CrowdingKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingKing(int color, bool online)
     {
@@ -1668,7 +1668,7 @@ public class HungryKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryKing(int color, bool online)
     {
@@ -1782,7 +1782,7 @@ public class CaptureTheFlagKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagKing(int color, bool online)
     {
@@ -1896,7 +1896,7 @@ public class FreezingKing : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingKing(int color, bool online)
     {

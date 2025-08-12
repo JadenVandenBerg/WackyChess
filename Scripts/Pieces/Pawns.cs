@@ -72,7 +72,7 @@ public class Pawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Pawn(int color, bool online)
     {
@@ -186,7 +186,7 @@ public class TwoPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public TwoPawn(int color, bool online)
     {
@@ -299,7 +299,7 @@ public class ThreePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ThreePawn(int color, bool online)
     {
@@ -411,7 +411,7 @@ public class FourPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FourPawn(int color, bool online)
     {
@@ -523,7 +523,7 @@ public class OneTwoPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTwoPawn(int color, bool online)
     {
@@ -635,7 +635,7 @@ public class ForwardPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ForwardPawn(int color, bool online)
     {
@@ -747,7 +747,7 @@ public class TwoForwardPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public TwoForwardPawn(int color, bool online)
     {
@@ -859,7 +859,7 @@ public class OneTwoForwardPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTwoForwardPawn(int color, bool online)
     {
@@ -971,7 +971,7 @@ public class UpperPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public UpperPawn(int color, bool online)
     {
@@ -1083,7 +1083,7 @@ public class DiagonalSquarePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public DiagonalSquarePawn(int color, bool online)
     {
@@ -1195,7 +1195,7 @@ public class OctaPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OctaPawn(int color, bool online)
     {
@@ -1307,7 +1307,7 @@ public class OctaPawnLite : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OctaPawnLite(int color, bool online)
     {
@@ -1419,7 +1419,7 @@ public class ForwardSidePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ForwardSidePawn(int color, bool online)
     {
@@ -1531,7 +1531,7 @@ public class SquarePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SquarePawn(int color, bool online)
     {
@@ -1643,7 +1643,7 @@ public class LitePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LitePawn(int color, bool online)
     {
@@ -1771,7 +1771,7 @@ public class MurderousPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousPawn(int color, bool online)
     {
@@ -1885,7 +1885,7 @@ public class GhostPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhostPawn(int color, bool online)
     {
@@ -1997,7 +1997,7 @@ public class GhoulPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulPawn(int color, bool online)
     {
@@ -2109,7 +2109,7 @@ public class BackwardPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public BackwardPawn(int color, bool online)
     {
@@ -2241,7 +2241,7 @@ public class OneTimePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimePawn(int color, bool online)
     {
@@ -2354,7 +2354,7 @@ public class ElectricPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricPawn(int color, bool online)
     {
@@ -2469,7 +2469,7 @@ public class ShieldPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ShieldPawn(int color, bool online)
     {
@@ -2584,7 +2584,7 @@ public class InfinitePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public InfinitePawn(int color, bool online)
     {
@@ -2724,7 +2724,7 @@ public class PortalPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalPawn(int color, bool online)
     {
@@ -2839,7 +2839,7 @@ public class AtomicPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicPawn(int color, bool online)
     {
@@ -2954,7 +2954,7 @@ public class LandminePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandminePawn(int color, bool online)
     {
@@ -3069,7 +3069,7 @@ public class SpontaneouslyCombustingPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SpontaneouslyCombustingPawn(int color, bool online)
     {
@@ -3183,7 +3183,7 @@ public class SuperGhostPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SuperGhostPawn(int color, bool online)
     {
@@ -3298,7 +3298,7 @@ public class Man : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Man(int color, bool online)
     {
@@ -3413,7 +3413,7 @@ public class FragilePawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragilePawn(int color, bool online)
     {
@@ -3528,7 +3528,7 @@ public class CrowdingPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingPawn(int color, bool online)
     {
@@ -3643,7 +3643,7 @@ public class HungryPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryPawn(int color, bool online)
     {
@@ -3758,7 +3758,7 @@ public class CaptureTheFlagPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagPawn(int color, bool online)
     {
@@ -3873,7 +3873,7 @@ public class FreezingPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingPawn(int color, bool online)
     {
@@ -3988,7 +3988,7 @@ public class CloningPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Pawn";
-    public int numSpawns = 2;
+    public int numSpawns { get; set; } = 2;
 
     public CloningPawn(int color, bool online)
     {

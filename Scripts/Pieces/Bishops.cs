@@ -77,7 +77,7 @@ public class Bishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Bishop(int color, bool online)
     {
@@ -195,7 +195,7 @@ public class MurderousBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public MurderousBishop(int color, bool online)
     {
@@ -312,7 +312,7 @@ public class GhostBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhostBishop(int color, bool online)
     {
@@ -429,7 +429,7 @@ public class GhoulBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public GhoulBishop(int color, bool online)
     {
@@ -546,7 +546,7 @@ public class OneTimeBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public OneTimeBishop(int color, bool online)
     {
@@ -664,7 +664,7 @@ public class ElectricBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ElectricBishop(int color, bool online)
     {
@@ -783,7 +783,7 @@ public class InfiniteBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public InfiniteBishop(int color, bool online)
     {
@@ -902,7 +902,7 @@ public class PortalBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public PortalBishop(int color, bool online)
     {
@@ -1021,7 +1021,7 @@ public class AtomicBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public AtomicBishop(int color, bool online)
     {
@@ -1140,7 +1140,7 @@ public class LandmineBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LandmineBishop(int color, bool online)
     {
@@ -1259,7 +1259,7 @@ public class ColorChangingBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public ColorChangingBishop(int color, bool online)
     {
@@ -1373,7 +1373,7 @@ public class LiteBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public LiteBishop(int color, bool online)
     {
@@ -1491,7 +1491,7 @@ public class SuperGhostBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SuperGhostBishop(int color, bool online)
     {
@@ -1612,7 +1612,7 @@ public class Princess : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Princess(int color, bool online)
     {
@@ -1731,7 +1731,7 @@ public class FragileBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FragileBishop(int color, bool online)
     {
@@ -1851,7 +1851,7 @@ public class RoyalBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public RoyalBishop(int color, bool online)
     {
@@ -1970,7 +1970,7 @@ public class BouncingBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public BouncingBishop(int color, bool online)
     {
@@ -2089,7 +2089,7 @@ public class CrowdingBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CrowdingBishop(int color, bool online)
     {
@@ -2208,7 +2208,7 @@ public class HungryBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public HungryBishop(int color, bool online)
     {
@@ -2327,7 +2327,7 @@ public class CaptureTheFlagBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public CaptureTheFlagBishop(int color, bool online)
     {
@@ -2446,7 +2446,7 @@ public class FreezingBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public FreezingBishop(int color, bool online)
     {
@@ -2565,7 +2565,7 @@ public class CloningBishop : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Bishop";
-    public int numSpawns = 2;
+    public int numSpawns { get; set; } = 2;
 
     public CloningBishop(int color, bool online)
     {

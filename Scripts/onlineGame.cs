@@ -437,7 +437,8 @@ public class onlineGame : MonoBehaviour
                 GameObject square = gameData.selected;
                 string pieceName = tempInfo.tempPiece.spawnable;
 
-                Piece piece = Spawnables.create(pieceName);
+                Piece piece = HelperFunctions.Spawnables.create(pieceName);
+                piece.color = tempInfo.tempPiece.color;
                 initPiece(piece, HelperFunctions.findCoords(square));
                 
                 gameData.abilitySelected = "";

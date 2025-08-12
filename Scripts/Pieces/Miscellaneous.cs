@@ -72,7 +72,7 @@ public class Template : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public Template(int color, bool online)
     {
@@ -196,7 +196,7 @@ public class SuperPawn : Piece
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
-    public int numSpawns = 0;
+    public int numSpawns { get; set; } = 0;
 
     public SuperPawn(int color, bool online)
     {

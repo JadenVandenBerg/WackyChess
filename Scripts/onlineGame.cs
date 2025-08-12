@@ -438,6 +438,8 @@ public class onlineGame : MonoBehaviour
                 string pieceName = tempInfo.tempPiece.spawnable;
 
                 Piece piece = Spawnables.create(pieceName);
+                piece.color = tempInfo.tempPiece.color;
+                piece.numSpawns--;
                 initPiece(piece, HelperFunctions.findCoords(square));
                 
                 gameData.abilitySelected = "";

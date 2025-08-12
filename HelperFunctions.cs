@@ -2204,12 +2204,13 @@ public class HelperFunctions : MonoBehaviour
         {
             switch (pieceName)
             {
-                case "King": return new King(1, online);
-                case "Queen": return new Queen(1, online);
-                case "Rook": return new Rook(1, online);
-                case "Knight": return new Knight(1, online);
-                case "Bishop": return new Bishop(1, online);
-                case "Pawn": return new Pawn(1, online);
+                case "King": return new King(1, online, true);
+                case "Queen": return new Queen(1, online, true);
+                case "Rook": return new Rook(1, online, true);
+                case "Knight": return new Knight(1, online, true);
+                case "Bishop": return new Bishop(1, online, true);
+                case "Pawn": return new Pawn(1, online, true);
+                case "ZombiePawn": return new ZombiePawn(1, true);
                 default: throw new ArgumentException("Bad Piece");
             }
         }

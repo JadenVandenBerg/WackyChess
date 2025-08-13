@@ -2238,4 +2238,98 @@ public class HelperFunctions : MonoBehaviour
             }
         }
     }
+
+    public static void removeState(Piece piece, string state)
+    {
+        piece.state = piece.state.Replace("-" + state, "");
+        piece.state = piece.state.Replace(state, "");
+        piece.secondaryState = piece.secondaryState.Replace("-" + state, "");
+        piece.secondaryState = piece.secondaryState.Replace(state, "");
+    }
+
+    public static void removeAbility(Piece piece, string ability)
+    {
+
+        piece.ability = piece.ability.Replace("-" + ability, "");
+        piece.ability = piece.ability.Replace(ability, "");
+    }
+
+    public static Dictionary<Piece, List<string>> getAllElegibleAbilities(int color)
+    {
+        Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string[]>>();
+
+        foreach (Piece piece in gameData.piecesDict)
+        {
+            if (piece.color != color)
+            {
+                continue;
+            }
+            
+            string[] abilityNames = piece.ability.Split("-");
+            List<string> abilities = new List<string>();
+
+            foreach (string abilityName in abilityNames)
+            {
+                if (abilityName == "Vomit")
+                {
+                    if (piece.storage != null && piece.storage.Count < 1)
+                    {
+                        continue;
+                    }
+                    else if (piece.storage == null)
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "CastleLeft")
+                {
+                    if (!HelperFunctions.checkCanCastle(color, -1))
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "CastleRight")
+                {
+                    Debug.Log("1");
+                    if (!HelperFunctions.checkCanCastle(color, 1))
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "Unfreeze")
+                {
+                    if (!HelperFunctions.checkState(piece, "Frozen"))
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "Freeze")
+                {
+                    if (!HelperFunctions.isPieceSurroundingColor(piece, piece.color * -1))
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "Spawn")
+                {
+                    if (piece.numSpawns <= 0)
+                    {
+                        continue;
+                    }
+
+                    if (!HelperFunctions.areSurroundingSquaresFull(panelPieces[i]))
+                    {
+                        continue;
+                    }
+                }
+
+                abilities.Add(abilityName);
+            }
+
+            pieceAbilities.add(piece, abilities);
+            abilities.Clear();
+        }
+
+        return pieceAbilities;
+    }
 }

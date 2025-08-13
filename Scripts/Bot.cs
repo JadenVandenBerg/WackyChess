@@ -1,4 +1,6 @@
-using HelperFunctions;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public interface Bot
 {
@@ -43,18 +45,18 @@ public interface Bot
     * Get All Moves
     * Gets the coords of every square you can move to
     */
-    private int[,] getAllMoves()
+    private List<int[]> getAllMoves()
     {
-        return addToCurrentMoveableCoordsTotal(color, false, false, null, true, true);
+        return HelperFunctions.addToCurrentMoveableCoordsTotal(color, false, false, null, true, true);
     }
 
     /*
     * Get All Moves Piece
     * Gets the coords of every square you can move to with a specific piece
     */
-    private int[,] getAllMovesPiece(Piece piece)
+    private List<int[]> getAllMovesPiece(Piece piece)
     {
-        return addMovesToCurrentMoveableCoords(piece);
+        return HelperFunctions.addMovesToCurrentMoveableCoords(piece);
     }
 
     /*
@@ -63,7 +65,7 @@ public interface Bot
     */
     private Dictionary<Piece, List<int[]>> getPossibleMoves()
     {
-        updateBotMoves();
+        HelperFunctions.updateBotMoves();
 
         return gameData.botMoves;
     }
@@ -74,6 +76,6 @@ public interface Bot
     */
     private Dictionary<Piece, List<string>> getAllAbilities()
     {
-        return getAllElegibleAbilities(color);
+        return HelperFunctions.getAllEligibleAbilities(color);
     }
 }

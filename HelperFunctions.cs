@@ -2254,11 +2254,11 @@ public class HelperFunctions : MonoBehaviour
         piece.ability = piece.ability.Replace(ability, "");
     }
 
-    public static Dictionary<Piece, List<string>> getAllElegibleAbilities(int color)
+    public static Dictionary<Piece, List<string>> getAllEligibleAbilities(int color)
     {
-        Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string[]>>();
+        Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string>>();
 
-        foreach (Piece piece in gameData.piecesDict)
+        foreach (Piece piece in gameData.piecesDict.Values)
         {
             if (piece.color != color)
             {
@@ -2317,7 +2317,7 @@ public class HelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    if (!HelperFunctions.areSurroundingSquaresFull(panelPieces[i]))
+                    if (!HelperFunctions.areSurroundingSquaresFull(piece))
                     {
                         continue;
                     }
@@ -2326,7 +2326,7 @@ public class HelperFunctions : MonoBehaviour
                 abilities.Add(abilityName);
             }
 
-            pieceAbilities.add(piece, abilities);
+            pieceAbilities.Add(piece, abilities);
             abilities.Clear();
         }
 

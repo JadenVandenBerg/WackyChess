@@ -64,6 +64,7 @@ public class HelperFunctions : MonoBehaviour
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
+            tempInfo.tempSquare = pointerEventData.pointerPress;
         }
         else if (gameData.abilitySelected != "")
         {
@@ -77,6 +78,7 @@ public class HelperFunctions : MonoBehaviour
             gameData.selectedToMove = gameData.selected;
             gameData.selectedToMovePiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
+            tempInfo.tempSquare = pointerEventData.pointerPress;
             gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
 
             Debug.Log("Clicked: " + pointerEventData.pointerPress + " -> " + getPiecesOnSquareBoardGrid(pointerEventData.pointerPress).Count);
@@ -160,6 +162,7 @@ public class HelperFunctions : MonoBehaviour
             : "";
             Piece piece = findPieceFromPanelCode(pieceName);
             gameData.selectedPiece = piece;
+            tempInfo.tempPiece = piece;
             Debug.Log("clicked: " + pointerEventData.pointerPress.name.ToString());
 
             gameData.abilityAdvanceNext = true;
@@ -2002,13 +2005,10 @@ public class HelperFunctions : MonoBehaviour
 
     public static List<Piece> getPiecesInBetweenSquaresHorizontal(GameObject s1, GameObject s2)
     {
-        Debug.Log("6.1");
         if (findCoords(s1)[1] != findCoords(s2)[1])
         {
             return new List<Piece>();
         }
-
-        Debug.Log("6.2");
 
         int y = findCoords(s1)[1];
         List<Piece> pieces = new List<Piece>();
@@ -2017,7 +2017,6 @@ public class HelperFunctions : MonoBehaviour
         int x2 = findCoords(s2)[0];
         int dir = (x1 - x2) / Math.Abs(x1 - x2);
 
-        Debug.Log("6.3");
 
         for (int i = x2 + dir; i != x1; i += dir)
         {
@@ -2025,8 +2024,6 @@ public class HelperFunctions : MonoBehaviour
 
             pieces.AddRange(getPiecesOnSquareBoardGrid(sq));
         }
-
-        Debug.Log("6.4 -> " + pieces.Count);
 
         return pieces;
     }
@@ -2105,6 +2102,32 @@ public class HelperFunctions : MonoBehaviour
             int y = piece.position[1] + dir[1];
 
             if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
+            {
+                highlightSquare(findSquare(x, y), Color.red);
+            }
+        }
+    }
+
+    public static void highlightSurroundingSquaresWithoutPieces(Piece piece)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count == 0)
             {
                 highlightSquare(findSquare(x, y), Color.red);
             }
@@ -2204,13 +2227,13 @@ public class HelperFunctions : MonoBehaviour
         {
             switch (pieceName)
             {
-                case "King": return new King(1, online, true);
-                case "Queen": return new Queen(1, online, true);
-                case "Rook": return new Rook(1, online, true);
-                case "Knight": return new Knight(1, online, true);
-                case "Bishop": return new Bishop(1, online, true);
-                case "Pawn": return new Pawn(1, online, true);
-                case "ZombiePawn": return new ZombiePawn(1, true);
+                case "King": return new King(1, online);
+                case "Queen": return new Queen(1, online);
+                case "Rook": return new Rook(1, online);
+                case "Knight": return new Knight(1, online);
+                case "Bishop": return new Bishop(1, online);
+                case "Pawn": return new Pawn(1, online);
+                case "ZombiePawn": return new ZombiePawn(1, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }

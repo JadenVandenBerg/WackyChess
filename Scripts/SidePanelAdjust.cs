@@ -281,6 +281,8 @@ public class SidePanelAdjust : MonoBehaviour
                         }
                     }
 
+                    Debug.Log(abilityName + " -> Passed");
+
                     Sprite abilitySprite = Resources.Load<Sprite>($"Ability/{abilityName}");
 
                     if (abilitySprite != null)

@@ -42,7 +42,7 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new FreezingBishop(1, true);
+        pawn = new UndeadQueen(1, true);
         pawn2 = new CrowdingKnight(1, true);
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
@@ -60,7 +60,7 @@ public class onlineGame : MonoBehaviour
         wQueen = new ReverseMinister(1, true);
         wKing = new HungryKing(1, true);
 
-        bpawn = new SuperGhostPawn(-1, true);
+        bpawn = new CloningQueen(-1, true);
         bpawn2 = new LandminePawn(-1, true);
         bpawn3 = new LandminePawn(-1, true);
         bpawn4 = new LandminePawn(-1, true);
@@ -434,19 +434,30 @@ public class onlineGame : MonoBehaviour
             }
             else if (gameData.abilitySelected == "Spawn")
             {
-                GameObject square = gameData.selected;
-                string pieceName = tempInfo.tempPiece.spawnable;
+                if (gameData.abilityAdvanceNext)
+                {
+                    HelperFunctions.highlightSurroundingSquaresWithoutPieces(gameData.selectedPiece);
 
-                Piece piece = HelperFunctions.Spawnables.create(pieceName);
-                piece.color = tempInfo.tempPiece.color;
-                piece.color = tempInfo.tempPiece.color;
-                piece.numSpawns--;
-                initPiece(piece, HelperFunctions.findCoords(square));
-                
-                gameData.abilitySelected = "";
-                gameData.selected = null;
-                HelperFunctions.resetBoardColours();
-                gameData.turn = gameData.turn * -1;
+                    gameData.abilityAdvanceNext = false;
+                    gameData.selected = null;
+                    tempInfo.tempSquare = null;
+                }
+                else if (tempInfo.tempSquare != null)
+                {
+                    GameObject square = tempInfo.tempSquare;
+                    Debug.Log(tempInfo.tempSquare);
+                    string pieceName = tempInfo.tempPiece.spawnable;
+
+                    Piece piece = HelperFunctions.Spawnables.create(pieceName);
+                    piece.color = tempInfo.tempPiece.color;
+                    gameData.selectedPiece.numSpawns--;
+                    initPiece(piece, HelperFunctions.findCoords(square));
+
+                    gameData.abilitySelected = "";
+                    gameData.selected = null;
+                    HelperFunctions.resetBoardColours();
+                    gameData.turn = gameData.turn * -1;
+                }
             }
         }
     }

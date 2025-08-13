@@ -419,13 +419,8 @@ public class onlineGame : MonoBehaviour
             else if (gameData.abilitySelected == "Unfreeze")
             {
                 Piece piece = gameData.selectedPiece;
-
-                piece.state = piece.state.Replace("-Frozen", "");
-                piece.state = piece.state.Replace("Frozen", "");
-                piece.secondaryState = piece.secondaryState.Replace("-Frozen", "");
-                piece.secondaryState = piece.secondaryState.Replace("Frozen", "");
-                piece.ability = piece.ability.Replace("-Unfreeze", "");
-                piece.ability = piece.ability.Replace("Unfreeze", "");
+                HelperFunctions.removeState(piece, "Freeze");
+                HelperFunctions.removeAbility(piece, "Unfreeze");
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
@@ -470,37 +465,6 @@ public class onlineGame : MonoBehaviour
 
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
 
-        //Check for castle (maybe make helper func)
-        //int xDisp = piece.position[0] - coords[0];
-        //if ((piece == wKing || piece == bKing) && (xDisp == 2 || xDisp == -2))
-        //{
-        //    //Debug.Log("Castle Taken Place");
-        //    if (piece == wKing && xDisp == 2)
-        //    {
-        //        gameData.whiteRooks[0].hasMoved = true;
-        //        HelperFunctions.movePiece(gameData.whiteRooks[0], HelperFunctions.findSquare(4, 1));
-        //        gameData.whiteRooks[0].position = new int[] { 4, 1 };
-        //    }
-        //    else if (piece == wKing && xDisp == -2)
-        //    {
-        //        gameData.whiteRooks[1].hasMoved = true;
-        //        HelperFunctions.movePiece(gameData.whiteRooks[1], HelperFunctions.findSquare(6, 1));
-        //        gameData.whiteRooks[1].position = new int[] { 6, 1 };
-        //    }
-        //    else if (piece == bKing && xDisp == 2)
-        //    {
-        //        gameData.blackRooks[0].hasMoved = true;
-        //        HelperFunctions.movePiece(gameData.blackRooks[0], HelperFunctions.findSquare(4, 8));
-        //        gameData.blackRooks[0].position = new int[] { 4, 8 };
-        //    }
-        //    else if (piece == bKing && xDisp == -2)
-        //    {
-        //        gameData.blackRooks[1].hasMoved = true;
-        //        HelperFunctions.movePiece(gameData.blackRooks[1], HelperFunctions.findSquare(6, 8));
-        //        gameData.blackRooks[0].position = new int[] { 6, 8 };
-        //    }
-        //}
-
         HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
         
         piece.hasMoved = true;
@@ -517,6 +481,7 @@ public class onlineGame : MonoBehaviour
             gameData.forceStayTurn = 0;
         }
 
+        // After move collateral
         if (HelperFunctions.checkState(piece, "Combustable"))
         {
             System.Random rand = new System.Random();

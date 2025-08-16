@@ -56,7 +56,7 @@ public class onlineGame : MonoBehaviour
         wBishop = new FragileBishop(1, true);
         wBishop2 = new ColorChangingBishop(1, true);
         wKnight = new FragileKnight(1, true);
-        wKnight2 = new LandmineKnight(1, true);
+        wKnight2 = new LongKnight(1, true);
         wQueen = new ReverseMinister(1, true);
         wKing = new HungryKing(1, true);
 
@@ -69,13 +69,13 @@ public class onlineGame : MonoBehaviour
         bpawn7 = new LandminePawn(-1, true);
         bpawn8 = new LandminePawn(-1, true);
 
-        bRook = new InfiniteRook(-1, true);
-        bRook2 = new InfiniteRook(-1, true);
-        bBishop = new InfiniteBishop(-1, true);
-        bBishop2 = new InfiniteBishop(-1, true);
+        bRook = new Rook(-1, true);
+        bRook2 = new Rook(-1, true);
+        bBishop = new Bishop(-1, true);
+        bBishop2 = new Bishop(-1, true);
         bKnight = new Knight(-1, true);
-        bKnight2 = new InfiniteKnight(-1, true);
-        bQueen = new InfiniteQueen(-1, true);
+        bKnight2 = new Knight(-1, true);
+        bQueen = new Queen(-1, true);
         bKing = new HyperFastKing(-1, true);
 
         initPiece(pawn, new int[] { 1, 2 });

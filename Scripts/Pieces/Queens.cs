@@ -56,7 +56,7 @@ public class Queen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wQueen.png";
@@ -178,7 +178,7 @@ public class MurderousQueen : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wMurderousQueen.png";
@@ -300,7 +300,7 @@ public class GhostQueen : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wGhostQueen.png";
@@ -422,7 +422,7 @@ public class GhoulQueen : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wGhoulQueen.png";
@@ -544,7 +544,7 @@ public class OneTimeQueen : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wOneTimeQueen.png";
@@ -665,7 +665,7 @@ public class ElectricQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wElectricQueen.png";
@@ -787,7 +787,7 @@ public class InfiniteQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wInfiniteQueen.png";
@@ -909,7 +909,7 @@ public class PortalQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wPortalQueen.png";
@@ -1031,7 +1031,7 @@ public class AtomicQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wAtomicQueen.png";
@@ -1153,7 +1153,7 @@ public class LandmineQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wLandmineQueen.png";
@@ -1266,7 +1266,7 @@ public class LiteQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wLiteQueen.png";
@@ -1389,7 +1389,7 @@ public class SuperGhostQueen : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wSuperGhostQueen.png";
@@ -1503,7 +1503,7 @@ public class Minister : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wMinister.png";
@@ -1625,7 +1625,7 @@ public class FragileQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wFragileQueen.png";
@@ -1750,7 +1750,7 @@ public class Amazon : Piece
     };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wAmazon.png";
@@ -1865,7 +1865,7 @@ public class ReverseMinister : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wReverseMinister.png";
@@ -1983,7 +1983,7 @@ public class SinisterMinisterQueen : Piece
     };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wSinisterMinisterQueen.png";
@@ -2105,7 +2105,7 @@ public class MonochromeQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wMonochromeQueen.png";
@@ -2227,7 +2227,7 @@ public class BouncingQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wBouncingQueen.png";
@@ -2349,7 +2349,7 @@ public class CrowdingQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wCrowdingQueen.png";
@@ -2471,7 +2471,7 @@ public class HungryQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wHungryQueen.png";
@@ -2593,7 +2593,7 @@ public class CaptureTheFlagQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wCaptureTheFlagQueen.png";
@@ -2715,7 +2715,7 @@ public class FreezingQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wFreezingQueen.png";
@@ -2837,7 +2837,7 @@ public class CloningQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wCloningQueen.png";
@@ -2959,7 +2959,7 @@ public class UndeadQueen : Piece
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Queens/wUndeadQueen.png";
@@ -3030,5 +3030,3 @@ public class UndeadQueen : Piece
         this.position = pos;
     }
 }
-
-

@@ -12,18 +12,26 @@ using System.Linq;
 
 public class HelperFunctions : MonoBehaviour
 {
-    [SerializeField] static bool online;
-    [SerializeField] static PhotonView photonView;
+    [SerializeField] public static string onlineL;
+    static bool online;
+    public static PhotonView photonView;
     public onlineGame onlineGame;
     //public SidePanelAdjust panel;
 
 
     private void Start()
     {
-        if (!online)
+        if (onlineL == "True" || onlineL == "true")
+        {
+            online = true;
+        }
+        else
         {
             online = false;
         }
+
+        online = true;
+        photonView = onlineGame.photonView;
     }
     public static void movePiece(Piece p, GameObject toAppend)
     {
@@ -1001,14 +1009,37 @@ public class HelperFunctions : MonoBehaviour
     {
         if (online)
         {
-            photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-            PhotonNetwork.Destroy(go);
+            PhotonView pv = go.GetComponent<PhotonView>();
+
+            if (pv == null)
+            {
+                Debug.LogWarning($"No PhotonView -> {go.name}");
+                GameObject.Destroy(go);
+                return;
+            }
+
+            if (pv.ViewID == 0)
+            {
+                Debug.LogWarning($"ViewID is 0 -> {go.name}");
+                GameObject.Destroy(go);
+                return;
+            }
+
+            if (pv.IsMine || PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(go);
+            }
+            else
+            {
+                Debug.LogWarning($"Not owner -> {go.name}");
+            }
         }
         else
         {
-            Destroy(go);
+            GameObject.Destroy(go);
         }
     }
+
 
     public static bool dummyIsCheck(List<int[]> moves, Piece king)
     {
@@ -1354,6 +1385,8 @@ public class HelperFunctions : MonoBehaviour
             if (deadPiece.lives != 0)
             {
                 handleMultipleLivesDeath(deadPiece);
+
+                continue;
             }
             else
             {
@@ -1375,8 +1408,8 @@ public class HelperFunctions : MonoBehaviour
 
         if (!isOnStartSquare(deadPiece) && !isPieceOnStartSquare(deadPiece))
         {
-            //deadPiece.position = deadPiece.startSquare;
             movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
+            //deadPiece.position = deadPiece.startSquare;
 
             if (online)
             {
@@ -1386,14 +1419,24 @@ public class HelperFunctions : MonoBehaviour
             {
                 movePiece(deadPiece, findSquare(deadPiece.startSquare[0], deadPiece.startSquare[1]));
             }
+        }
+        else
+        {
+            if (gameData.piecesDict.ContainsKey(deadPiece.go))
+            {
+                gameData.piecesDict.Remove(deadPiece.go);
+            }
 
-            return;
+            updateBoardGrid(deadPiece.position, deadPiece, "r");
+            DestroyWrapper(deadPiece.go);
+            deadPiece.alive = 0;
         }
     }
 
     public static void onDeaths(Piece attackerPiece, GameObject attacker, GameObject squareDead)
     {
         List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(squareDead));
+
 
         foreach (Piece piece in pieces)
         {
@@ -1412,6 +1455,8 @@ public class HelperFunctions : MonoBehaviour
         if (deadPiece.lives != 0)
         {
             handleMultipleLivesDeath(deadPiece);
+
+            return;
         }
 
         //Electric
@@ -1503,8 +1548,7 @@ public class HelperFunctions : MonoBehaviour
     public void _MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
         GameObject square = findSquare(toMoveCoords[0], toMoveCoords[1]);
-        //Piece piece = getPieceOnSquare(square);
-        //onlineGame.movePiece(piece, coords);
+        onlineGame.movePiece(gameData.selectedPiece, coords);
     }
 
     public static bool isOnStartSquare(Piece piece)

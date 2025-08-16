@@ -42,7 +42,7 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new UndeadQueen(1, true);
+        pawn = new PromotionPawn(1, true);
         pawn2 = new CrowdingKnight(1, true);
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
@@ -246,7 +246,6 @@ public class onlineGame : MonoBehaviour
                         }
                     }
 
-                    Debug.Log(death);
                     if (death)
                     {
                         Piece destroyer = gameData.piecesDict[selectedToMoveGo];
@@ -440,7 +439,6 @@ public class onlineGame : MonoBehaviour
                 else if (tempInfo.tempSquare != null)
                 {
                     GameObject square = tempInfo.tempSquare;
-                    Debug.Log(tempInfo.tempSquare);
                     string pieceName = tempInfo.tempPiece.spawnable;
 
                     Piece piece = HelperFunctions.Spawnables.create(pieceName);
@@ -546,27 +544,27 @@ public class onlineGame : MonoBehaviour
 
         //Check for Pawn Promote
         //TODO Generalize to function
-        if (piece.go.tag == "Pawn")
+        //BUG does not properly delete pawn
+        if (piece.promotesInto != "")
         {
             if (piece.color == 1 && piece.position[1] == 8)
             {
+                HelperFunctions.updateBoardGrid(piece.position, piece, "r");
                 PhotonNetwork.Destroy(piece.go);
                 piece.alive = 0;
-                Piece superPawn = new SuperPawn(1, true);
-                initPiece(superPawn, coords);
-                superPawn.go.tag = "SuperPawn";
-
-                gameData.piecesDict.Add(superPawn.go, superPawn);
+                string pname = piece.promotesInto;
+                Piece p = HelperFunctions.Spawnables.create(pname);
+                p.color = 1;
+                initPiece(p, coords);
             }
             else if (piece.color == -1 && piece.position[1] == 1)
             {
                 PhotonNetwork.Destroy(piece.go);
                 piece.alive = 0;
-                Piece superPawn = new SuperPawn(-1, true);
-                initPiece(superPawn, coords);
-                superPawn.go.tag = "SuperPawn";
-
-                gameData.piecesDict.Add(superPawn.go, superPawn);
+                string pname = piece.promotesInto;
+                Piece p = HelperFunctions.Spawnables.create(pname);
+                p.color = -1;
+                initPiece(p, coords);
             }
         }
 
@@ -621,10 +619,7 @@ public class onlineGame : MonoBehaviour
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
         piece.position = HelperFunctions.findCoords(toAppend);
 
-        if (piece.startSquare == null)
-        {
-            piece.startSquare = piece.position;
-        }
+        piece.startSquare = new int[] { piece.position[0], piece.position[1] };
 
         HelperFunctions.movePiece(piece, toAppend);
 

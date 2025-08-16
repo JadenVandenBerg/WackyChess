@@ -32,7 +32,7 @@ public class King : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bKing.png";
@@ -164,7 +164,7 @@ public class MurderousKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Kings/wMurderousKing.png";
@@ -278,7 +278,7 @@ public class GhoulKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Kings/wGhoulKing.png";
@@ -392,7 +392,7 @@ public class OneTimeKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Kings/wOneTimeKing.png";
@@ -488,7 +488,7 @@ public class ElectricKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wElectricKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bElectricKing.png";
@@ -602,7 +602,7 @@ public class PortalKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wPortalKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bPortalKing.png";
@@ -716,7 +716,7 @@ public class AtomicKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wAtomicKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bAtomicKing.png";
@@ -830,7 +830,7 @@ public class LandmineKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wLandmineKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bLandmineKing.png";
@@ -942,7 +942,7 @@ public class LiteKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wLiteKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bLiteKing.png";
@@ -1056,7 +1056,7 @@ public class HyperFastKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wHyperFastKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bHyperFastKing.png";
@@ -1170,7 +1170,7 @@ public class FastKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wFastKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFastKing.png";
@@ -1284,7 +1284,7 @@ public class FragileKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wFragileKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFragileKing.png";
@@ -1399,7 +1399,7 @@ public class SlidingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wSlidingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bSlidingKing.png";
@@ -1513,7 +1513,7 @@ public class CrowdingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wCrowdingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bCrowdingKing.png";
@@ -1627,7 +1627,7 @@ public class HungryKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wHungryKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bHungryKing.png";
@@ -1741,7 +1741,7 @@ public class CaptureTheFlagKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wCaptureTheFlagKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bCaptureTheFlagKing.png";
@@ -1855,7 +1855,7 @@ public class FreezingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wFreezingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFreezingKing.png";
@@ -1969,7 +1969,7 @@ public class UndeadKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
     public String wImage { get; set; } = "Assets/Images/Kings/wUndeadKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bUndeadKing.png";

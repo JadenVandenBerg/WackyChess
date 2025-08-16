@@ -48,7 +48,7 @@ public class Template : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/";
@@ -172,7 +172,7 @@ public class SuperPawn : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = new GameObject();
+    public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Extras/wSuperPawn.png";

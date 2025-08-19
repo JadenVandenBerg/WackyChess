@@ -603,26 +603,15 @@ public class onlineGame : MonoBehaviour
 
         //Check for Pawn Promote
         //TODO Generalize to function
-        //BUG does not properly delete pawn
+        //TODO make sure this works
         if (piece.promotesInto != "")
         {
-            if (piece.color == 1 && piece.position[1] == 8)
+            if (piece.position[1] == piece.promotingRow)
             {
-                HelperFunctions.updateBoardGrid(piece.position, piece, "r");
-                PhotonNetwork.Destroy(piece.go);
-                piece.alive = 0;
                 string pname = piece.promotesInto;
                 Piece p = HelperFunctions.Spawnables.create(pname);
-                p.color = 1;
-                initPiece(p, coords);
-            }
-            else if (piece.color == -1 && piece.position[1] == 1)
-            {
-                PhotonNetwork.Destroy(piece.go);
-                piece.alive = 0;
-                string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname);
-                p.color = -1;
+                p.color = piece.color;
+                HelperFunctions.forceRemove(piece);
                 initPiece(p, coords);
             }
         }

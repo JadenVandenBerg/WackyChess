@@ -172,8 +172,8 @@ public interface Piece
      * What happens to the pieces in range of collateral
      * Collateral is not considered check/checkmate
      * -1: None
-     * 0: Kill (After Capture) (not implemented yet)
-     * 1: Kill (After Captured) (not implemented yet)
+     * 0: Kill (After Capture)
+     * 1: Kill (After Captured)
      * 2: Push (not implemented yet)
      * 3: Magnet (not implemented yet)
      * 4: Prevent Explosion (not implemented yet)
@@ -185,7 +185,7 @@ public interface Piece
 
 
     /*
-     * Collateral (not implemented yet)
+     * Collateral
      * Range of collateral
      * Collateral is not considered check/checkmate
      */
@@ -202,7 +202,7 @@ public interface Piece
 
 
     /*
-     * Promotes Into (not implemented yet)
+     * Promotes Into
      * "": Can't promote
      * Anything else promotes into that piece
      */
@@ -210,7 +210,7 @@ public interface Piece
 
 
     /*
-     * Promoting Row (not implemented yet)
+     * Promoting Row
      * Where pieces promote (row)
      */
     public int promotingRow { get; set; }
@@ -395,7 +395,7 @@ public interface Piece
 
 
     /*
-     * StayTurn (not implemented yet)
+     * StayTurn
      * Determines if it should stay your turn after a move is made
      */
     public bool stayTurn();
@@ -412,7 +412,7 @@ public interface Piece
 
 
     /*
-     * Spawnable (not implemented yet)
+     * Spawnable
      * What piece this piece can spawn
      * null: Nothing
      */

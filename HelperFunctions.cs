@@ -1176,6 +1176,11 @@ public class HelperFunctions : MonoBehaviour
             p.enPassantMoves[i, 1] = p.enPassantMoves[i, 1] * p.color;
             p.enPassantMoves[i, 0] = p.enPassantMoves[i, 0] * p.color;
         }
+
+        if (p.color != 1)
+        {
+            p.promotingRow = 9 - p.promotingRow;
+        }
     }
 
     public static void updateCastleCondition()
@@ -1405,6 +1410,19 @@ public class HelperFunctions : MonoBehaviour
                 deadPiece.alive = 0;
             }
         }
+    }
+
+    public static void forceRemove(Piece deadPiece)
+    {
+        GameObject dead = piece.go;
+        if (gameData.piecesDict.ContainsKey(dead))
+        {
+            gameData.piecesDict.Remove(dead);
+        }
+
+        updateBoardGrid(deadPiece.position, deadPiece, "r");
+        DestroyWrapper(dead);
+        deadPiece.alive = 0;
     }
 
     public static void handleMultipleLivesDeath(Piece deadPiece)
@@ -2312,6 +2330,7 @@ public class HelperFunctions : MonoBehaviour
                 case "Bishop": return new Bishop(1, online);
                 case "Pawn": return new Pawn(1, online);
                 case "ZombiePawn": return new ZombiePawn(1, online);
+                case "SuperPawn": return new SuperPawn(1, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }
@@ -2361,28 +2380,28 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (abilityName == "CastleLeft")
                 {
-                    if (!HelperFunctions.checkCanCastle(color, -1))
+                    if (!checkCanCastle(color, -1))
                     {
                         continue;
                     }
                 }
                 else if (abilityName == "CastleRight")
                 {
-                    if (!HelperFunctions.checkCanCastle(color, 1))
+                    if (!checkCanCastle(color, 1))
                     {
                         continue;
                     }
                 }
                 else if (abilityName == "Unfreeze")
                 {
-                    if (!HelperFunctions.checkState(piece, "Frozen"))
+                    if (!checkState(piece, "Frozen"))
                     {
                         continue;
                     }
                 }
                 else if (abilityName == "Freeze")
                 {
-                    if (!HelperFunctions.isPieceSurroundingColor(piece, piece.color * -1))
+                    if (!isPieceSurroundingColor(piece, piece.color * -1))
                     {
                         continue;
                     }
@@ -2394,7 +2413,7 @@ public class HelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    if (!HelperFunctions.areSurroundingSquaresFull(piece))
+                    if (!areSurroundingSquaresFull(piece))
                     {
                         continue;
                     }

@@ -65,10 +65,16 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.abilitySelected == "Freeze")
         {
             gameData.selected = pointerEventData.pointerPress;
-            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
+            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress); //TODO
             tempInfo.tempPiece = gameData.selectedPiece;
         }
         else if (gameData.abilitySelected == "Spawn")
+        {
+            tempInfo.tempPiece = gameData.selectedPiece;
+            gameData.selected = pointerEventData.pointerPress;
+            tempInfo.tempSquare = pointerEventData.pointerPress;
+        }
+        else if (gameData.abilitySelected == "Spit")
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
@@ -109,7 +115,6 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
-        Debug.Log(pointerEventData.pointerPress.ToString());
         if (pointerEventData.eligibleForClick && gameData.abilitySelected != "")
         {
             if (pointerEventData.pointerPress.ToString().Contains("Pass"))
@@ -1488,11 +1493,43 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
+        //Spitting
+        if (checkState(attackerPiece, "Spitting"))
+        {
+            if (attackerPiece.storage == null)
+            {
+                attackerPiece.storage = new List<Piece>();
+            }
+
+            if (attackerPiece.storage.Count < attackerPiece.storageLimit)
+            {
+                attackerPiece.storage.Add(deadPiece);
+                skipCollateral = true;
+                gameData.piecesDict.Remove(dead);
+                updateBoardGrid(deadPieceCoords, deadPiece, "r");
+                removePieceImageFromBoard(deadPiece);
+            }
+            else
+            {
+                List<Piece> piece = pieceToList(deadPiece);
+                collateralDeath(piece);
+            }
+
+            return;
+        }
+
         if (!skipCollateral)
         {
             //Collateral (Attacker)
             if (attackerPiece.collateralType == 0) //Kill on Capture
             {
+                if (isPieceSurroundingState(deadPiece, "Defuser"))
+                {
+                    collateralDeath(pieceToList(attackerPiece));
+                    collateralDeath(pieceToList(deadPiece));
+                    return;
+                }
+
                 for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
                 {
                     int[] coords = new int[] { attackerCoords[0] + attackerPiece.collateral[i, 0], attackerCoords[1] + attackerPiece.collateral[i, 1] };
@@ -1513,6 +1550,13 @@ public class HelperFunctions : MonoBehaviour
             //Collateral (Attackee)
             if (deadPiece.collateralType == 1)
             {
+                if (isPieceSurroundingState(deadPiece, "Defuser"))
+                {
+                    collateralDeath(pieceToList(attackerPiece));
+                    collateralDeath(pieceToList(deadPiece));
+                    return;
+                }
+
                 for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
                 {
                     int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
@@ -1947,7 +1991,7 @@ public class HelperFunctions : MonoBehaviour
     {
         GameObject go = piece.go;
 
-        go.transform.parent = null;
+        //go.transform.parent = null;
         go.SetActive(false);
     }
 
@@ -1985,11 +2029,8 @@ public class HelperFunctions : MonoBehaviour
         GameObject kingSquare;
         GameObject rookSquare;
 
-        Debug.Log("2");
-
         if (color == 1)
         {
-            Debug.Log("3");
             king = findPieceFromPanelCode("w_k1");
             if (direction == -1)
             {
@@ -1997,7 +2038,6 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
-                Debug.Log("4");
                 rook = findPieceFromPanelCode("w_r2");
             }
         }
@@ -2019,11 +2059,9 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
-        Debug.Log("5");
 
         if (king.alive == 1 && rook.alive == 1 && !king.hasMoved && !rook.hasMoved)
         {
-            Debug.Log("6");
             kingSquare = findSquare(king.position[0], king.position[1]);
             rookSquare = findSquare(rook.position[0], rook.position[1]);
 
@@ -2032,14 +2070,10 @@ public class HelperFunctions : MonoBehaviour
                 return false;
             }
 
-            Debug.Log("7");
-
             if (getPiecesOnSquareBoardGrid(kingSquare).Count != 1 || getPiecesOnSquareBoardGrid(rookSquare).Count != 1)
             {
                 return false;
             }
-
-            Debug.Log("8");
 
             return true;
         }
@@ -2334,7 +2368,6 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (abilityName == "CastleRight")
                 {
-                    Debug.Log("1");
                     if (!HelperFunctions.checkCanCastle(color, 1))
                     {
                         continue;
@@ -2366,6 +2399,13 @@ public class HelperFunctions : MonoBehaviour
                         continue;
                     }
                 }
+                else if (abilityName == "Spit")
+                {
+                    if (piece.storage.Count <= 0)
+                    {
+                        continue;
+                    }
+                }
 
                 abilities.Add(abilityName);
             }
@@ -2375,5 +2415,34 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return pieceAbilities;
+    }
+
+    public static bool isPieceSurroundingState(Piece piece, string state)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 },  // down-left
+            new int[] { 0, 0 }  // on
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            if (checkStateOnSquare(getPiecesOnSquare(findSquare(x, y)), state))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

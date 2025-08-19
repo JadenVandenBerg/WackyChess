@@ -42,8 +42,8 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new PromotionPawn(1, true);
-        pawn2 = new CrowdingKnight(1, true);
+        pawn = new SpittingKnight(1, true);
+        pawn2 = new Hippocamelus(1, true);
         pawn3 = new Pawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
@@ -58,9 +58,9 @@ public class onlineGame : MonoBehaviour
         wKnight = new FragileKnight(1, true);
         wKnight2 = new LongKnight(1, true);
         wQueen = new ReverseMinister(1, true);
-        wKing = new HungryKing(1, true);
+        wKing = new Overlord(1, true);
 
-        bpawn = new CloningQueen(-1, true);
+        bpawn = new AtomicPawn(-1, true);
         bpawn2 = new LandminePawn(-1, true);
         bpawn3 = new LandminePawn(-1, true);
         bpawn4 = new LandminePawn(-1, true);
@@ -171,7 +171,7 @@ public class onlineGame : MonoBehaviour
             HelperFunctions.resetBoardColours();
         }
 
-        if (!gameData.readyToMove && gameData.selected && gameData.selected.transform.childCount != 0)
+        if (!gameData.readyToMove && gameData.selected && gameData.selected.transform.childCount != 0 && gameData.selectedPiece != null)
         {
             Piece currentPiece = gameData.selectedPiece;
             int currentColor = currentPiece.color;
@@ -273,6 +273,7 @@ public class onlineGame : MonoBehaviour
         {
             if (gameData.abilitySelected == "Vomit")
             {
+                //TODO make it so you can only pass if there are less pieces than spaces
                 if (gameData.abilityAdvanceNext)
                 {
                     Debug.Log("Advancing Next Vomit");
@@ -452,6 +453,41 @@ public class onlineGame : MonoBehaviour
                     gameData.turn = gameData.turn * -1;
                 }
             }
+            else if (gameData.abilitySelected == "Spit")
+            {
+                if (gameData.abilityAdvanceNext)
+                {
+                    HelperFunctions.highlightSurroundingSquaresWithoutPieces(gameData.selectedPiece);
+                    HelperFunctions.highlightSurroundingSquaresWithPieces(gameData.selectedPiece);
+
+                    gameData.abilityAdvanceNext = false;
+                    gameData.selected = null;
+                    tempInfo.tempSquare = null;
+                }
+                else if (tempInfo.tempSquare != null)
+                {
+                    Piece p = gameData.selectedPiece.storage[0];
+                    if (p != null)
+                    {
+                        GameObject s = tempInfo.tempSquare;
+                        Debug.Log(s);
+
+                        HelperFunctions.collateralDeath(HelperFunctions.getPiecesOnSquare(s));
+                        
+                        initPiece(p, HelperFunctions.findCoords(s));
+                        HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
+                        HelperFunctions.restorePieceImageToBoard(p);
+
+                        gameData.selectedPiece.storage.Remove(p);
+                    }
+
+                    gameData.abilityAdvanceNext = true;
+                    gameData.selectedFromPanel = false;
+                    tempInfo.tempPiece = null;
+                    tempInfo.tempSquare = null;
+                    gameData.selected = null;
+                }
+            }
         }
     }
 
@@ -498,18 +534,41 @@ public class onlineGame : MonoBehaviour
 
             if (random == 3)
             {
-                int[,] collateral = {
-                    { 1, 0 }, { 1, 1 }, { 1, -1 },
-                    { -1, 0 }, { -1, 1 }, { -1, -1 },
-                    { 0, 1 }, { 0, -1 }, { 0, 0 }
+                List<int[]> collateral = new List<int[]>
+                {
+                    new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 },
+                    new int[] { -1, 0 }, new int[] { -1, 1 }, new int[] { -1, -1 },
+                    new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 0 }
                 };
 
-                for (int i = 0; i < collateral.GetLength(0); i++)
+                if (HelperFunctions.isPieceSurroundingState(piece, "Defuser"))
                 {
-                    int[] col_coords = new int[] { piece.position[0] + collateral[i, 0], piece.position[1] + collateral[i, 1] };
+                    collateral = new List<int[]>
+                    {
+                        new int[] { 0, 0 }
+                    };
+                }
+                else
+                {
+                    collateral = new List<int[]>
+                    {
+                        new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 },
+                        new int[] { -1, 0 }, new int[] { -1, 1 }, new int[] { -1, -1 },
+                        new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 0 }
+                    };
+                }
+
+                for (int i = 0; i < collateral.Count; i++)
+                {
+                    int[] col_coords = new int[]
+                    {
+                        piece.position[0] + collateral[i][0],
+                        piece.position[1] + collateral[i][1]
+                    };
+
                     GameObject square = HelperFunctions.findSquare(col_coords[0], col_coords[1]);
 
-                    if (collateral[i, 0] == 0 && collateral[i, 1] == 0)
+                    if (collateral[i][0] == 0 && collateral[i][1] == 0)
                     {
                         HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
                     }

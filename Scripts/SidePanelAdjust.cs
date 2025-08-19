@@ -280,6 +280,17 @@ public class SidePanelAdjust : MonoBehaviour
                             continue;
                         }
                     }
+                    else if (abilityName == "Spit")
+                    {
+                        if (panelPieces[0].storage != null && panelPieces[0].storage.Count < 1)
+                        {
+                            continue;
+                        }
+                    }
+                    else if (abilityName == "None" || abilityName == "")
+                    {
+                        continue;
+                    }
 
                     Debug.Log(abilityName + " -> Passed");
 

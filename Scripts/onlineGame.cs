@@ -249,6 +249,10 @@ public class onlineGame : MonoBehaviour
                         {
                             death = false;
                         }
+                        else if (HelperFunctions.checkSquareCrowdingEligible(gameData.selectedToMovePiece, HelperFunctions.piecesOnSquare(gameData.selected)))
+                        {
+                            death = false;
+                        }
                     }
 
                     if (death)
@@ -665,8 +669,7 @@ public class onlineGame : MonoBehaviour
         }
 
         bool isInCheck = HelperFunctions.isCheck(king);
-        bool isInCheckMate;
-        isInCheckMate = HelperFunctions.isCheckMate(king, true);
+        bool isInCheckMate = HelperFunctions.isCheckMate(king, true);
 
         Debug.Log("Check: " + isInCheck);
         Debug.Log("Checkmate: " + isInCheckMate);

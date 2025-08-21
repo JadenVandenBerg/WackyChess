@@ -608,7 +608,7 @@ public class HelperFunctions : MonoBehaviour
         }
         else if (checkState(piece, "Dematerialized"))
         {
-            return !jump;
+            return true;
         }
 
         return pieceIsNull || pieceIsDiffColour;
@@ -1860,7 +1860,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 continue;
             }
-            
+
             colors.Add(piece.color);
         }
 
@@ -1880,6 +1880,7 @@ public class HelperFunctions : MonoBehaviour
         return true;
     }
 
+    //TODO test this
     public static bool checkSquareCrowdingEligible(Piece piece, List<Piece> piecesOnSquare)
     {
         // No Pieces
@@ -1895,7 +1896,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         // Piece contains more than one other piece (not crowding)
-        if (piecesOnSquare.Count > 1)
+        if (piecesOnSquare.Count > 1 && checkState(piece, "Crowding"))
         {
             foreach (Piece _piece in piecesOnSquare)
             {
@@ -1909,8 +1910,22 @@ public class HelperFunctions : MonoBehaviour
             return true;
         }
 
-        //Last case square contains one piece and its same color
-        return true;
+        //There is one piece on the square, but piece is not crowding
+        if (!checkState(piece, "Crowding") && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1))
+        {
+            return true;
+        }
+
+
+        if (!checkState(piece, "Crowding"))
+        {
+            return false;
+        }
+        else
+        {
+            //Last case square contains one piece and its same color
+            return true;
+        }
     }
 
     public static void updateBoardGrid(int[] coords, Piece piece, String action)

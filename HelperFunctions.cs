@@ -534,7 +534,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
                 if (checkState(piece, "Ghost") && isColorNotOnSquare(square, piece.color * -1)
-                    || checkStateAllOnSquare(onSquare, "Ghoul") && isColorNotOnSquare(square, piece.color * -1))
+                    || checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && isColorNotOnSquare(square, piece.color * -1))
                 {
                     continue;
                 }
@@ -554,6 +554,10 @@ public class HelperFunctions : MonoBehaviour
                 return !jump;
             }
         }
+        else if (checkState(piece, "Dematerialized"))
+        {
+            return !jump;
+        }
 
         return !jump && pieceIsNull;
     }
@@ -565,6 +569,10 @@ public class HelperFunctions : MonoBehaviour
             {
                 return !jump;
             }
+        }
+        else if (checkState(piece, "Dematerialized"))
+        {
+            return !jump;
         }
 
         return !jump && (pieceIsNull || pieceIsDiffColour);
@@ -597,6 +605,10 @@ public class HelperFunctions : MonoBehaviour
             {
                 return true;
             }
+        }
+        else if (checkState(piece, "Dematerialized"))
+        {
+            return !jump;
         }
 
         return pieceIsNull || pieceIsDiffColour;
@@ -724,13 +736,13 @@ public class HelperFunctions : MonoBehaviour
                 {
                     //pieceIsDiffColour = pieceOnSquare.color != color;
                     pieceIsDiffColour = !getColorsOnSquare(goHighlight).Contains(piece.color);
-                    /* Not sure if I need this, if I do, use checkPiecesDisabled
-                    if (ignoreDisabled && pieceOnSquare.disabled)
+                    
+                    //TODO: does this work with dematerialized properly?
+                    if (checkPiecesDisabled(piecesOnSquare))
                     {
-                        //Debug.Log("THE PIECE ON " + newPos[0] + "," + newPos[1] + " IS DISABLED!");
                         pieceIsNull = true;
                     }
-                    */
+
                     //Check for states
                     if (checkStateOnSquare(piecesOnSquare, "Shield"))
                     {
@@ -1668,12 +1680,18 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
+        List<string> states = state.Split('-').ToList();
         foreach (Piece piece in piecesOnSquare)
         {
-            if (piece.state != state && !piece.secondaryState.Contains(state))
+            foreach (string s in states)
             {
-                return false;
+                if (piece.state == s || piece.secondaryState.Contains(s))
+                {
+                    break;
+                }
             }
+
+            return false;
         }
 
         return true;
@@ -1838,6 +1856,11 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
+            if (piece.disabled || piece.alive == 0 || checkState(piece, "Dematerialized"))
+            {
+                continue;
+            }
+            
             colors.Add(piece.color);
         }
 
@@ -1848,7 +1871,7 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece piece in pieces)
         {
-            if (!piece.disabled)
+            if (!piece.disabled || checkState(piece, "Dematerialized"))
             {
                 return false;
             }
@@ -2436,6 +2459,20 @@ public class HelperFunctions : MonoBehaviour
                 else if (abilityName == "Spit")
                 {
                     if (piece.storage.Count <= 0)
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "Dematerialize")
+                {
+                    if (piece.state == "Dematerialized")
+                    {
+                        continue;
+                    }
+                }
+                else if (abilityName == "Materialize")
+                {
+                    if (piece.state != "Dematerialized")
                     {
                         continue;
                     }

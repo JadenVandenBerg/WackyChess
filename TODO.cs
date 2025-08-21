@@ -1,21 +1,17 @@
 //TODO
 
-//Fix castling (add button to UI)
-//Test ghost/ghoul again
+//there might be problems with dematerialize if multiple pieces are on one square diff colours
+//same with crowding when pieces go on the square of a crowded piece
 
 //Pieces IMG
 /*
-Cloning Bishop
-Cloning Knight
-Cloning Pawn
-Cloning Queen
-Cloning Rook
+PhantomBishop
+PhantomKnight
+PhantomPawn
+PhantomQueen
+PhantomRook
 
-Zombie Pawn
-Undead Bishop
-Undead King
-Undead Knight
-Undead Pawn
-Undead Queen
-Undead Rook
+//Abilities Img
+Dematerialize
+Materialize
 */

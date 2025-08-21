@@ -245,6 +245,10 @@ public class onlineGame : MonoBehaviour
                         {
                             death = false;
                         }
+                        else if (HelperFunctions.checkStateAllOnSquare(gameData.selected, "Dematerialized"))
+                        {
+                            death = false;
+                        }
                     }
 
                     if (death)
@@ -474,7 +478,7 @@ public class onlineGame : MonoBehaviour
 
                         //Todo maybe trigger collateral of killed piece
                         HelperFunctions.collateralDeath(HelperFunctions.getPiecesOnSquare(s));
-                        
+
                         initPiece(p, HelperFunctions.findCoords(s));
                         HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
                         HelperFunctions.restorePieceImageToBoard(p);
@@ -482,7 +486,7 @@ public class onlineGame : MonoBehaviour
                         gameData.selectedPiece.storage.Remove(p);
                     }
 
-                    gameData.abilityAdvanceNext = true;
+                    gameData.abilityAdvanceNext = true; //todo is this needed?
                     gameData.selectedFromPanel = false;
                     tempInfo.tempPiece = null;
                     tempInfo.tempSquare = null;
@@ -490,6 +494,38 @@ public class onlineGame : MonoBehaviour
                     gameData.abilitySelected = "";
                     gameData.turn = gameData.turn * -1;
                 }
+            }
+            else if (gameData.abilitySelected == "Dematerialize")
+            {
+                Piece piece = gameData.selectedPiece;
+                HelperFunctions.addState(piece, "Dematerialized");
+                HelperFunctions.addAbility(piece, "Materialize");
+                HelperFunctions.removeAbility(piece, "Dematerialize");
+
+                gameData.selectedFromPanel = false;
+                tempInfo.tempPiece = null;
+                tempInfo.tempSquare = null;
+                gameData.selected = null;
+                gameData.abilitySelected = "";
+                gameData.turn = gameData.turn * -1;
+
+                piece.go.color.A = 0.5f;
+            }
+            else if (gameData.abilitySelected == "Materialize")
+            {
+                Piece piece = gameData.selectedPiece;
+                HelperFunctions.removeState(piece, "Dematerialized");
+                HelperFunctions.addAbility(piece, "Dematerialize");
+                HelperFunctions.removeAbility(piece, "Materialize");
+
+                gameData.selectedFromPanel = false;
+                tempInfo.tempPiece = null;
+                tempInfo.tempSquare = null;
+                gameData.selected = null;
+                gameData.abilitySelected = "";
+                gameData.turn = gameData.turn * -1;
+
+                piece.go.color.A = 1f;
             }
         }
     }
@@ -538,12 +574,7 @@ public class onlineGame : MonoBehaviour
 
             if (random == 3)
             {
-                List<int[]> collateral = new List<int[]>
-                {
-                    new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 },
-                    new int[] { -1, 0 }, new int[] { -1, 1 }, new int[] { -1, -1 },
-                    new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 0 }
-                };
+                List<int[]> collateral = null;
 
                 if (HelperFunctions.isPieceSurroundingState(piece, "Defuser"))
                 {

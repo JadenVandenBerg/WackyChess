@@ -2514,4 +2514,3 @@ public class SpittingKing : Piece
         this.position = pos;
     }
 }
-

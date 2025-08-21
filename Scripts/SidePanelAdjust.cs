@@ -272,7 +272,7 @@ public class SidePanelAdjust : MonoBehaviour
                         {
                             continue;
                         }
-                        
+
                         if (!HelperFunctions.areSurroundingSquaresFull(panelPieces[i]))
                         {
                             continue;
@@ -288,6 +288,20 @@ public class SidePanelAdjust : MonoBehaviour
                     else if (abilityName == "None" || abilityName == "")
                     {
                         continue;
+                    }
+                    else if (abilityName == "Dematerialize")
+                    {
+                        if (panelPieces[i].state == "Dematerialized")
+                        {
+                            continue;
+                        }
+                    }
+                    else if (abilityName == "Materialize")
+                    {
+                        if (panelPieces[i].state != "Dematerialized")
+                        {
+                            continue;
+                        }
                     }
 
                     Debug.Log(abilityName + " -> Passed");

@@ -82,7 +82,7 @@ public class HelperFunctions : MonoBehaviour
         }
         else if (gameData.abilitySelected != "")
         {
-            return null;
+            //return null;
         }
 
         if (pointerEventData.eligibleForClick && gameData.selected != pointerEventData.pointerPress)
@@ -95,7 +95,7 @@ public class HelperFunctions : MonoBehaviour
             tempInfo.tempSquare = pointerEventData.pointerPress;
             gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress);
 
-            Debug.Log("Clicked: " + pointerEventData.pointerPress + " -> " + getPiecesOnSquareBoardGrid(pointerEventData.pointerPress).Count);
+            Debug.Log("Clicked: (" + gameData.selectedPiece.name + ")" + pointerEventData.pointerPress + " -> " + getPiecesOnSquareBoardGrid(pointerEventData.pointerPress).Count);
 
             return pointerEventData.pointerPress;
         }
@@ -223,7 +223,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static Piece getPieceOnSquare(GameObject square)
     {
-        if (square != null && square.transform != null)
+        /*if (square != null && square.transform != null)
         {
             if (square.transform.childCount == 0)
             {
@@ -234,9 +234,23 @@ public class HelperFunctions : MonoBehaviour
             {
                 return gameData.piecesDict[square.transform.GetChild(0).gameObject];
             }
+        }*/
+
+        int[] coords = findCoords(square);
+
+        if (coords[0] < 1 || coords[1] < 1)
+        {
+            return null;
         }
 
-        return null;
+        if (gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count < 1)
+        {
+            return null;
+        }
+
+        return gameData.boardGrid[coords[0] - 1][coords[1] - 1][0];
+
+        //return null;
     }
 
     public static Piece getPieceOnSquareDebug(GameObject square)
@@ -1503,6 +1517,7 @@ public class HelperFunctions : MonoBehaviour
 
             if (attackerPiece.storage.Count < attackerPiece.storageLimit)
             {
+                Debug.Log("Consumed " + deadPiece.name + " for spit");
                 attackerPiece.storage.Add(deadPiece);
                 skipCollateral = true;
                 gameData.piecesDict.Remove(dead);

@@ -216,6 +216,7 @@ public class onlineGame : MonoBehaviour
         Debug.Log("Selected: " + gameData.selected);
         if (gameData.selectedPiece != null) Debug.Log("SelectedPiece: " + gameData.selectedPiece.name);
         Debug.Log("SelectedToMove: " + gameData.selectedToMove);
+        Debug.Log("SelectedToMovePiece: " + gameData.selectedToMovePiece);
         Debug.Log("Ability: " + gameData.abilitySelected);
 
         //MOVE
@@ -237,7 +238,7 @@ public class onlineGame : MonoBehaviour
                     if (gameData.selected.transform.childCount != 0)
                     {
                         selectedGo = gameData.selected.transform.GetChild(0).gameObject;
-                        selectedToMoveGo = gameData.selectedToMove.transform.GetChild(0).gameObject;
+                        selectedToMoveGo = gameData.selectedToMovePiece.go;
 
                         death = true;
                         if (!HelperFunctions.getColorsOnSquare(gameData.selected).Contains(gameData.selectedToMovePiece.color * -1))
@@ -470,8 +471,8 @@ public class onlineGame : MonoBehaviour
                     if (p != null)
                     {
                         GameObject s = tempInfo.tempSquare;
-                        Debug.Log(s);
 
+                        //Todo maybe trigger collateral of killed piece
                         HelperFunctions.collateralDeath(HelperFunctions.getPiecesOnSquare(s));
                         
                         initPiece(p, HelperFunctions.findCoords(s));
@@ -486,6 +487,8 @@ public class onlineGame : MonoBehaviour
                     tempInfo.tempPiece = null;
                     tempInfo.tempSquare = null;
                     gameData.selected = null;
+                    gameData.abilitySelected = "";
+                    gameData.turn = gameData.turn * -1;
                 }
             }
         }
@@ -511,6 +514,7 @@ public class onlineGame : MonoBehaviour
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
 
         HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
+        Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
         
         piece.hasMoved = true;
 

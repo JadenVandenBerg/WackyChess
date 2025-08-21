@@ -225,8 +225,6 @@ public class SidePanelAdjust : MonoBehaviour
                 {
                     j++;
 
-                    Debug.Log(abilityName);
-
                     //Validate Ability
                     if (abilityName == "Vomit")
                     {

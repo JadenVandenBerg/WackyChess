@@ -65,7 +65,7 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.abilitySelected == "Freeze")
         {
             gameData.selected = pointerEventData.pointerPress;
-            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress); //TODO
+            gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress); //TODO maybe
             tempInfo.tempPiece = gameData.selectedPiece;
         }
         else if (gameData.abilitySelected == "Spawn")
@@ -75,6 +75,12 @@ public class HelperFunctions : MonoBehaviour
             tempInfo.tempSquare = pointerEventData.pointerPress;
         }
         else if (gameData.abilitySelected == "Spit")
+        {
+            tempInfo.tempPiece = gameData.selectedPiece;
+            gameData.selected = pointerEventData.pointerPress;
+            tempInfo.tempSquare = pointerEventData.pointerPress;
+        }
+        else if (gameData.abilitySelected == "Split")
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
@@ -556,7 +562,7 @@ public class HelperFunctions : MonoBehaviour
         }
         else if (checkState(piece, "Dematerialized"))
         {
-            return !jump;
+            return true;
         }
 
         return !jump && pieceIsNull;
@@ -674,7 +680,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isKnightPortalBackRank(Piece piece, int[] old, int[] new_)
     {
-        if (!piece.name.Contains("Knight"))
+        if (!piece.name.Contains("n"))
         {
             return false;
         }
@@ -735,10 +741,14 @@ public class HelperFunctions : MonoBehaviour
                 if (!pieceIsNull)
                 {
                     //pieceIsDiffColour = pieceOnSquare.color != color;
-                    pieceIsDiffColour = !getColorsOnSquare(goHighlight).Contains(piece.color);
+                    pieceIsDiffColour = !getColorsOnSquare(goHighlight, true).Contains(piece.color);
                     
-                    //TODO: does this work with dematerialized properly?
                     if (checkPiecesDisabled(piecesOnSquare))
+                    {
+                        pieceIsNull = true;
+                    }
+
+                    if (checkSquareCrowdingEligible(piece, piecesOnSquare))
                     {
                         pieceIsNull = true;
                     }
@@ -766,6 +776,11 @@ public class HelperFunctions : MonoBehaviour
                             continue;
                         }
                     }
+
+                    /*if (checkStateAllOnSquare(piecesOnSquare, "Dematerialized"))
+                    {
+                        continue;
+                    }*/
                 }
 
                 bool jump = false;
@@ -1440,7 +1455,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static void forceRemove(Piece deadPiece)
     {
-        GameObject dead = piece.go;
+        GameObject dead = deadPiece.go;
         if (gameData.piecesDict.ContainsKey(dead))
         {
             gameData.piecesDict.Remove(dead);
@@ -1652,7 +1667,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool checkState(Piece piece, String state)
     {
-        return piece.state == state || piece.secondaryState.Contains(state);
+        return piece.state.Contains(state) || piece.secondaryState.Contains(state);
     }
 
     public static bool checkStateOnSquare(List<Piece> piecesOnSquare, String state)
@@ -1843,7 +1858,7 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static List<int> getColorsOnSquare(GameObject square)
+    public static List<int> getColorsOnSquare(GameObject square, bool ignoreDematerialized)
     {
         List<int> colors = new List<int>();
 
@@ -1856,7 +1871,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (piece.disabled || piece.alive == 0 || checkState(piece, "Dematerialized"))
+            if (piece.disabled || piece.alive == 0 || ( ignoreDematerialized && checkState(piece, "Dematerialized")))
             {
                 continue;
             }
@@ -1871,7 +1886,7 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece piece in pieces)
         {
-            if (!piece.disabled || checkState(piece, "Dematerialized"))
+            if (!piece.disabled && !checkState(piece, "Dematerialized"))
             {
                 return false;
             }
@@ -1890,7 +1905,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         // Pieces Different Color
-        if (getColorsOnSquare(findSquare(piecesOnSquare[0].position[0], piecesOnSquare[0].position[1])).Contains(piece.color * -1))
+        if (getColorsOnSquare(findSquare(piecesOnSquare[0].position[0], piecesOnSquare[0].position[1]), true).Contains(piece.color * -1))
         {
             return false;
         }
@@ -1910,8 +1925,8 @@ public class HelperFunctions : MonoBehaviour
             return true;
         }
 
-        //There is one piece on the square, but piece is not crowding
-        if (!checkState(piece, "Crowding") && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1))
+        //There is one piece on the square, piece is crowding
+        if (checkState(piece, "Crowding") && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
             return true;
         }
@@ -1986,14 +2001,14 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isColorNotOnSquare(GameObject square, int color)
     {
-        var colors = getColorsOnSquare(square);
+        var colors = getColorsOnSquare(square, true);
 
         return !colors.Contains(color);
     }
 
-    public static bool isColorOnSquare(GameObject square, int color)
+    public static bool isColorOnSquare(GameObject square, int color, bool ignoreDematerialized)
     {
-        var colors = getColorsOnSquare(square);
+        var colors = getColorsOnSquare(square, ignoreDematerialized);
 
         return colors.Contains(color);
     }
@@ -2302,7 +2317,7 @@ public class HelperFunctions : MonoBehaviour
             int x = piece.position[0] + dir[0];
             int y = piece.position[1] + dir[1];
 
-            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0 && isColorOnSquare(findSquare(x, y), color))
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0 && isColorOnSquare(findSquare(x, y), color, true))
             {
                 return true;
             }
@@ -2384,6 +2399,8 @@ public class HelperFunctions : MonoBehaviour
                 case "Pawn": return new Pawn(1, online);
                 case "ZombiePawn": return new ZombiePawn(1, online);
                 case "SuperPawn": return new SuperPawn(1, online);
+                case "LeftPawn": return new LeftPawn(1, online);
+                case "RightPawn": return new RightPawn(1, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }
@@ -2491,6 +2508,10 @@ public class HelperFunctions : MonoBehaviour
                     {
                         continue;
                     }
+                }
+                else if (abilityName == "Split")
+                {
+                    //You can always split
                 }
 
                 abilities.Add(abilityName);

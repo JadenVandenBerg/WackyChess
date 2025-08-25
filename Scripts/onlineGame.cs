@@ -43,12 +43,12 @@ public class onlineGame : MonoBehaviour
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
         pawn = new SpittingKnight(1, true);
-        pawn2 = new Hippocamelus(1, true);
-        pawn3 = new Pawn(1, true);
+        pawn2 = new PhantomKnight(1, true);
+        pawn3 = new SplittingPawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
         pawn6 = new HungryKnight(1, true);
-        pawn7 = new LandminePawn(1, true);
+        pawn7 = new PromotingPawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
         wRook = new FragileRook(1, true);
@@ -58,7 +58,7 @@ public class onlineGame : MonoBehaviour
         wKnight = new FragileKnight(1, true);
         wKnight2 = new LongKnight(1, true);
         wQueen = new ReverseMinister(1, true);
-        wKing = new Overlord(1, true);
+        wKing = new SwitchingKing(1, true);
 
         bpawn = new AtomicPawn(-1, true);
         bpawn2 = new LandminePawn(-1, true);
@@ -175,18 +175,19 @@ public class onlineGame : MonoBehaviour
         {
             Piece currentPiece = gameData.selectedPiece;
             int currentColor = currentPiece.color;
-            if ((gameData.selected.transform.GetChild(0).gameObject != null && currentColor == gameData.turn) || gameData.selectedFromPanel)
+            if ((gameData.selected.transform.GetChild(0).gameObject != null) || gameData.selectedFromPanel)
             {
-                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && gameData.abilitySelected == "")
+                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && gameData.abilitySelected == "" && currentColor == gameData.turn)
                 {
                     gameData.readyToMove = true;
 
                     //HelperFunctions.updateCastleCondition();
                     HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                 }
-                else
+                else if (HelperFunctions.isColorOnSquare(gameData.selected, gameData.turn, false))
                 {
                     //TODO: Force selection from side panel
+                    Debug.Log("SIDE PANEL SELECTION");
                     if (gameData.selectedFromPanel)
                     {
                         gameData.readyToMove = true;
@@ -241,15 +242,19 @@ public class onlineGame : MonoBehaviour
                         selectedToMoveGo = gameData.selectedToMovePiece.go;
 
                         death = true;
-                        if (!HelperFunctions.getColorsOnSquare(gameData.selected).Contains(gameData.selectedToMovePiece.color * -1))
+                        if (!HelperFunctions.getColorsOnSquare(gameData.selected, true).Contains(gameData.selectedToMovePiece.color * -1))
                         {
                             death = false;
                         }
-                        else if (HelperFunctions.checkStateAllOnSquare(gameData.selected, "Dematerialized"))
+                        else if (HelperFunctions.checkStateAllOnSquare(HelperFunctions.getPiecesOnSquare(gameData.selected), "Dematerialized"))
                         {
                             death = false;
                         }
-                        else if (HelperFunctions.checkSquareCrowdingEligible(gameData.selectedToMovePiece, HelperFunctions.piecesOnSquare(gameData.selected)))
+                        else if (HelperFunctions.checkSquareCrowdingEligible(gameData.selectedToMovePiece, HelperFunctions.getPiecesOnSquare(gameData.selected)))
+                        {
+                            death = false;
+                        }
+                        else if (HelperFunctions.checkState(gameData.selectedToMovePiece, "Dematerialized"))
                         {
                             death = false;
                         }
@@ -368,15 +373,27 @@ public class onlineGame : MonoBehaviour
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r1");
 
+                int kingMove = -3;
+                int rookMove = 3;
+
+                if (HelperFunctions.checkState(king, "Switch"))
+                {
+                    kingMove--;
+                    rookMove++;
+                }
+
                 gameData.selectedToMovePiece = king;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] - 2, king.position[1] });
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
                 gameData.selectedToMovePiece = rook;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + 3, rook.position[1] });
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
                 HelperFunctions.resetBoardColours();
                 gameData.turn = gameData.turn * -1;
+
+                HelperFunctions.removeAbility(king, "CastleLeft");
+                HelperFunctions.removeAbility(king, "CastleRight");
             }
             else if (gameData.abilitySelected == "CastleRight")
             {
@@ -394,15 +411,27 @@ public class onlineGame : MonoBehaviour
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r2");
 
+                int kingMove = 4;
+                int rookMove = -4;
+
+                if (HelperFunctions.checkState(king, "Switch"))
+                {
+                    kingMove--;
+                    rookMove++;
+                }
+
                 gameData.selectedToMovePiece = king;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + 2, king.position[1] });
+                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
                 gameData.selectedToMovePiece = rook;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] - 2, rook.position[1] });
+                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
                 HelperFunctions.resetBoardColours();
                 gameData.turn = gameData.turn * -1;
+
+                HelperFunctions.removeAbility(king, "CastleLeft");
+                HelperFunctions.removeAbility(king, "CastleRight");
             }
             else if (gameData.abilitySelected == "Freeze")
             {
@@ -497,14 +526,18 @@ public class onlineGame : MonoBehaviour
                     gameData.selected = null;
                     gameData.abilitySelected = "";
                     gameData.turn = gameData.turn * -1;
+                    HelperFunctions.resetBoardColours();
                 }
             }
             else if (gameData.abilitySelected == "Dematerialize")
             {
                 Piece piece = gameData.selectedPiece;
                 HelperFunctions.addState(piece, "Dematerialized");
-                HelperFunctions.addAbility(piece, "Materialize");
                 HelperFunctions.removeAbility(piece, "Dematerialize");
+                HelperFunctions.addAbility(piece, "Materialize");
+
+                Debug.Log("ABILITY: " + piece.ability);
+                Debug.Log("STATE: " + piece.state);
 
                 gameData.selectedFromPanel = false;
                 tempInfo.tempPiece = null;
@@ -513,14 +546,24 @@ public class onlineGame : MonoBehaviour
                 gameData.abilitySelected = "";
                 gameData.turn = gameData.turn * -1;
 
-                piece.go.color.A = 0.5f;
+                Image img = piece.go.GetComponent<Image>();
+                Color c = img.color;
+                c.a = 0.5f;
+                img.color = c;
+                HelperFunctions.resetBoardColours();
+
             }
             else if (gameData.abilitySelected == "Materialize")
             {
                 Piece piece = gameData.selectedPiece;
                 HelperFunctions.removeState(piece, "Dematerialized");
-                HelperFunctions.addAbility(piece, "Dematerialize");
                 HelperFunctions.removeAbility(piece, "Materialize");
+                HelperFunctions.addAbility(piece, "Dematerialize");
+
+                List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(gameData.selected);
+                piecesOnSquare.Remove(piece);
+
+                HelperFunctions.onDeaths(piece, piece.go, gameData.selected);
 
                 gameData.selectedFromPanel = false;
                 tempInfo.tempPiece = null;
@@ -529,7 +572,28 @@ public class onlineGame : MonoBehaviour
                 gameData.abilitySelected = "";
                 gameData.turn = gameData.turn * -1;
 
-                piece.go.color.A = 1f;
+                Image img = piece.go.GetComponent<Image>();
+                Color c = img.color;
+                c.a = 1f;
+                img.color = c;
+                HelperFunctions.resetBoardColours();
+            }
+            else if (gameData.abilitySelected == "Split")
+            {
+                HelperFunctions.forceRemove(gameData.selectedPiece);
+
+                Piece piece = HelperFunctions.Spawnables.create("LeftPawn");
+                piece.color = tempInfo.tempPiece.color;
+                initPiece(piece, HelperFunctions.findCoords(gameData.selected));
+
+                Piece piece2 = HelperFunctions.Spawnables.create("RightPawn");
+                piece2.color = tempInfo.tempPiece.color;
+                initPiece(piece2, HelperFunctions.findCoords(gameData.selected));
+
+                gameData.abilitySelected = "";
+                gameData.selected = null;
+                HelperFunctions.resetBoardColours();
+                gameData.turn = gameData.turn * -1;
             }
         }
     }
@@ -645,6 +709,7 @@ public class onlineGame : MonoBehaviour
         //TODO make sure this works
         if (piece.promotesInto != "")
         {
+            Debug.Log(piece.promotingRow);
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;

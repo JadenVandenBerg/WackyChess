@@ -291,17 +291,21 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "Dematerialize")
                     {
-                        if (panelPieces[i].state == "Dematerialized")
+                        if (HelperFunctions.checkState(panelPieces[i], "Dematerialized"))
                         {
                             continue;
                         }
                     }
                     else if (abilityName == "Materialize")
                     {
-                        if (panelPieces[i].state != "Dematerialized")
+                        if (!HelperFunctions.checkState(panelPieces[i], "Dematerialized"))
                         {
                             continue;
                         }
+                    }
+                    else if (abilityName == "Split")
+                    {
+                        //You can always split
                     }
 
                     Debug.Log(abilityName + " -> Passed");

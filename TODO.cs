@@ -1,17 +1,13 @@
 //TODO
 
-//there might be problems with dematerialize if multiple pieces are on one square diff colours
-//same with crowding when pieces go on the square of a crowded piece
+//Bug
+//When selecting from side panel, cannot properly deselect without clicking a new square
+
+//Feature
+//Side panel only show selectable pieces
 
 //Pieces IMG
 /*
-PhantomBishop
-PhantomKnight
-PhantomPawn
-PhantomQueen
-PhantomRook
 
 //Abilities Img
-Dematerialize
-Materialize
 */

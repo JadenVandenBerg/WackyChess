@@ -144,6 +144,7 @@ public interface Piece
      * Bouncing: Can bounce off the walls
      * CaptureTheFlag: Cannot be captured on your own side of the board (back 2 ranks)
      * Defuser: Bombs do not explode near this piece
+     * Switch: When you castle, king and rook switch instead of normal castle
      */
     public String state { get; set; }
     public String secondaryState { get; set; }

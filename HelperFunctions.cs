@@ -1562,7 +1562,6 @@ public class HelperFunctions : MonoBehaviour
 
             if (attackerPiece.storage.Count < attackerPiece.storageLimit)
             {
-                Debug.Log("Consumed " + deadPiece.name + " for spit");
                 attackerPiece.storage.Add(deadPiece);
                 skipCollateral = true;
                 gameData.piecesDict.Remove(dead);
@@ -1576,6 +1575,82 @@ public class HelperFunctions : MonoBehaviour
             }
 
             return;
+        }
+
+        if (checkState(attackerPiece, "Stacking"))
+        {
+            Piece p = deadPiece;
+
+            // Abilities / States
+            string state = deadPiece.state;
+            string[] parts = state.Split('-');
+            
+            foreach (string statePart in parts)
+            {
+                if (!attackerPiece.state.Contains(statePart))
+                {
+                    addState(attackerPiece, statePart);
+                }
+            }
+
+            string state2 = deadPiece.secondaryState;
+            string[] parts2 = state2.Split('-');
+
+            foreach (string statePart in parts2)
+            {
+                if (!attackerPiece.state.Contains(statePart))
+                {
+                    addState(attackerPiece, statePart);
+                }
+            }
+
+            string ability = deadPiece.secondaryState;
+            string[] abilityParts = ability.Split('-');
+
+            foreach (string abilityPart in abilityParts)
+            {
+                if (!attackerPiece.ability.Contains(abilityPart))
+                {
+                    addState(attackerPiece, abilityPart);
+                }
+            }
+
+            //Moves
+            int[,] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
+            int[,] oneTimeMoves = combineMoveSets(attackerPiece.oneTimeMoves, deadPiece.oneTimeMoves);
+            int[,] moveAndAttacks = combineMoveSets(attackerPiece.moveAndAttacks, deadPiece.moveAndAttacks);
+            int[,] oneTimeMoveAndAttacks = combineMoveSets(attackerPiece.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
+            int[,] murderousAttacks = combineMoveSets(attackerPiece.murderousAttacks, deadPiece.murderousAttacks);
+            int[,] conditionalAttacks = combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
+            int[,] attacks = combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
+            int[,] jumpAttacks = combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
+            int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
+            int[,] interactiveAttacks = combineMoveSets(attackerPiece.interactiveAttacks, deadPiece.interactiveAttacks);
+            int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
+            int[,] forceStayTurnMoves = combineMoveSets(attackerPiece.forceStayTurnMoves, deadPiece.forceStayTurnMoves);
+            int[,] flagMove1 = combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
+            int[,] flagMove2 = combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
+            int[,] pushMoves = combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
+            int[,] enPassantMoves = combineMoveSets(attackerPiece.enPassantMoves, deadPiece.enPassantMoves);
+
+            attackerPiece.moves = moves;
+            attackerPiece.oneTimeMoves = oneTimeMoves;
+            attackerPiece.moveAndAttacks = moveAndAttacks;
+            attackerPiece.oneTimeMoveAndAttacks = oneTimeMoveAndAttacks;
+            attackerPiece.murderousAttacks = murderousAttacks;
+            attackerPiece.conditionalAttacks = conditionalAttacks;
+            attackerPiece.attacks = attacks;
+            attackerPiece.jumpAttacks = jumpAttacks;
+            attackerPiece.dependentAttacks = dependentAttacks;
+            attackerPiece.interactiveAttacks = interactiveAttacks;
+            attackerPiece.positionIndependentMoves = positionIndependentMoves;
+            attackerPiece.forceStayTurnMoves = forceStayTurnMoves;
+            attackerPiece.flagMove1 = flagMove1;
+            attackerPiece.flagMove2 = flagMove2;
+            attackerPiece.pushMoves = pushMoves;
+            attackerPiece.enPassantMoves = enPassantMoves;
+
+            //maybe add promotion row and storage
         }
 
         if (!skipCollateral)
@@ -2551,5 +2626,32 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static int[,] combineMoveSets(int[,] a, int[,] b)
+    {
+        List<int[]> result = new List<int[]>();
+
+        for (int i = 0; i < a.GetLength(0); i++)
+            result.Add(new int[] { a[i, 0], a[i, 1] });
+
+        for (int i = 0; i < b.GetLength(0); i++)
+        {
+            int x = b[i, 0];
+            int y = b[i, 1];
+
+            bool exists = result.Any(r => r[0] == x && r[1] == y);
+            if (!exists)
+                result.Add(new int[] { x, y });
+        }
+
+        int[,] merged = new int[result.Count, 2];
+        for (int i = 0; i < result.Count; i++)
+        {
+            merged[i, 0] = result[i][0];
+            merged[i, 1] = result[i][1];
+        }
+
+        return merged;
     }
 }

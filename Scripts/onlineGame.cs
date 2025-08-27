@@ -43,7 +43,7 @@ public class onlineGame : MonoBehaviour
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
         pawn = new SpittingKnight(1, true);
-        pawn2 = new PhantomKnight(1, true);
+        pawn2 = new JailKnight(1, true);
         pawn3 = new SplittingPawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
@@ -61,7 +61,7 @@ public class onlineGame : MonoBehaviour
         wKing = new SwitchingKing(1, true);
 
         bpawn = new AtomicPawn(-1, true);
-        bpawn2 = new LandminePawn(-1, true);
+        bpawn2 = new StackingKnight(-1, true);
         bpawn3 = new LandminePawn(-1, true);
         bpawn4 = new LandminePawn(-1, true);
         bpawn5 = new LandminePawn(-1, true);
@@ -480,8 +480,7 @@ public class onlineGame : MonoBehaviour
                     GameObject square = tempInfo.tempSquare;
                     string pieceName = tempInfo.tempPiece.spawnable;
 
-                    Piece piece = HelperFunctions.Spawnables.create(pieceName);
-                    piece.color = tempInfo.tempPiece.color;
+                    Piece piece = HelperFunctions.Spawnables.create(pieceName, tempInfo.tempPiece.color);
                     gameData.selectedPiece.numSpawns--;
                     initPiece(piece, HelperFunctions.findCoords(square));
 
@@ -582,12 +581,10 @@ public class onlineGame : MonoBehaviour
             {
                 HelperFunctions.forceRemove(gameData.selectedPiece);
 
-                Piece piece = HelperFunctions.Spawnables.create("LeftPawn");
-                piece.color = tempInfo.tempPiece.color;
+                Piece piece = HelperFunctions.Spawnables.create("LeftPawn", tempInfo.tempPiece.color);
                 initPiece(piece, HelperFunctions.findCoords(gameData.selected));
 
-                Piece piece2 = HelperFunctions.Spawnables.create("RightPawn");
-                piece2.color = tempInfo.tempPiece.color;
+                Piece piece2 = HelperFunctions.Spawnables.create("RightPawn", tempInfo.tempPiece.color);
                 initPiece(piece2, HelperFunctions.findCoords(gameData.selected));
 
                 gameData.abilitySelected = "";
@@ -616,6 +613,16 @@ public class onlineGame : MonoBehaviour
         //Debug.Log("readyToMove: " + gameData.readyToMove);
 
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
+
+        //Before piece is moved
+        if (HelperFunctions.checkState(piece, "Jailer"))
+        {
+            List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(HelperFunctions.findSquare(piece.position[0], piece.position[1]));
+            foreach (Piece pieceOnSquare in piecesOnSquare)
+            {
+                HelperFunctions.removeState(pieceOnSquare, "Jailed");
+            }
+        }
 
         HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
         Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
@@ -713,8 +720,7 @@ public class onlineGame : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname);
-                p.color = piece.color;
+                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
                 HelperFunctions.forceRemove(piece);
                 initPiece(p, coords);
             }

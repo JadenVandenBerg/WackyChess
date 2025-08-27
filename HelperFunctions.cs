@@ -705,7 +705,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled)
     {
-        if (checkState(piece, "Frozen"))
+        if (checkState(piece, "Frozen") || checkState(piece, "Jailed"))
         {
             return;
         }
@@ -1579,8 +1579,6 @@ public class HelperFunctions : MonoBehaviour
 
         if (checkState(attackerPiece, "Stacking"))
         {
-            Piece p = deadPiece;
-
             // Abilities / States
             string state = deadPiece.state;
             string[] parts = state.Split('-');
@@ -1604,16 +1602,18 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
-            string ability = deadPiece.secondaryState;
+            string ability = deadPiece.ability;
             string[] abilityParts = ability.Split('-');
 
             foreach (string abilityPart in abilityParts)
             {
                 if (!attackerPiece.ability.Contains(abilityPart))
                 {
-                    addState(attackerPiece, abilityPart);
+                    addAbility(attackerPiece, abilityPart);
                 }
             }
+
+            Debug.Log("Stacking Piece -> State:" + attackerPiece.state + " " + attackerPiece.secondaryState + ". Ability: " + attackerPiece.ability);
 
             //Moves
             int[,] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
@@ -1651,6 +1651,13 @@ public class HelperFunctions : MonoBehaviour
             attackerPiece.enPassantMoves = enPassantMoves;
 
             //maybe add promotion row and storage
+        }
+
+        if (checkState(attackerPiece, "Jailer"))
+        {
+            addState(deadPiece, "Jailed");
+
+            return;
         }
 
         if (!skipCollateral)
@@ -1946,7 +1953,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (piece.disabled || piece.alive == 0 || ( ignoreDematerialized && checkState(piece, "Dematerialized")))
+            if (piece.disabled || piece.alive == 0 || ( ignoreDematerialized && checkState(piece, "Dematerialized")) || checkState(piece, "Jailed"))
             {
                 continue;
             }
@@ -2462,20 +2469,20 @@ public class HelperFunctions : MonoBehaviour
 
     public static class Spawnables
     {
-        public static Piece create(string pieceName)
+        public static Piece create(string pieceName, int color)
         {
             switch (pieceName)
             {
-                case "King": return new King(1, online);
-                case "Queen": return new Queen(1, online);
-                case "Rook": return new Rook(1, online);
-                case "Knight": return new Knight(1, online);
-                case "Bishop": return new Bishop(1, online);
-                case "Pawn": return new Pawn(1, online);
-                case "ZombiePawn": return new ZombiePawn(1, online);
-                case "SuperPawn": return new SuperPawn(1, online);
-                case "LeftPawn": return new LeftPawn(1, online);
-                case "RightPawn": return new RightPawn(1, online);
+                case "King": return new King(color, online);
+                case "Queen": return new Queen(color, online);
+                case "Rook": return new Rook(color, online);
+                case "Knight": return new Knight(color, online);
+                case "Bishop": return new Bishop(color, online);
+                case "Pawn": return new Pawn(color, online);
+                case "ZombiePawn": return new ZombiePawn(color, online);
+                case "SuperPawn": return new SuperPawn(color, online);
+                case "LeftPawn": return new LeftPawn(color, online);
+                case "RightPawn": return new RightPawn(color, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }

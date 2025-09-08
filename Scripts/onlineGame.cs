@@ -42,12 +42,12 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new SpittingKnight(1, true);
+        pawn = new DoublePawn(1, true);
         pawn2 = new JailKnight(1, true);
-        pawn3 = new SplittingPawn(1, true);
+        pawn3 = new ProtectivePawn(1, true);
         pawn4 = new RoyalKnight(1, true);
-        pawn5 = new Pawn(1, true);
-        pawn6 = new HungryKnight(1, true);
+        pawn5 = new PAWN(1, true);
+        pawn6 = new JockeyKnight(1, true);
         pawn7 = new PromotingPawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
@@ -58,10 +58,10 @@ public class onlineGame : MonoBehaviour
         wKnight = new FragileKnight(1, true);
         wKnight2 = new LongKnight(1, true);
         wQueen = new ReverseMinister(1, true);
-        wKing = new SwitchingKing(1, true);
+        wKing = new HeartbrokenKing(1, true);
 
         bpawn = new AtomicPawn(-1, true);
-        bpawn2 = new StackingKnight(-1, true);
+        bpawn2 = new PiggybackKnight(-1, true);
         bpawn3 = new LandminePawn(-1, true);
         bpawn4 = new LandminePawn(-1, true);
         bpawn5 = new LandminePawn(-1, true);
@@ -212,7 +212,6 @@ public class onlineGame : MonoBehaviour
             }
         }
 
-        Debug.Log("ISREADY");
         Debug.Log("ReadyToMove: " + gameData.readyToMove);
         Debug.Log("Selected: " + gameData.selected);
         if (gameData.selectedPiece != null) Debug.Log("SelectedPiece: " + gameData.selectedPiece.name);
@@ -613,6 +612,7 @@ public class onlineGame : MonoBehaviour
         //Debug.Log("readyToMove: " + gameData.readyToMove);
 
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
+        GameObject pieceOriginalSquare = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
 
         //Before piece is moved
         if (HelperFunctions.checkState(piece, "Jailer"))
@@ -628,8 +628,31 @@ public class onlineGame : MonoBehaviour
         Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
         
         piece.hasMoved = true;
-
         HelperFunctions.movePiece(piece, toAppend);
+
+        if (HelperFunctions.checkState(piece, "Piggyback"))
+        {
+            List<Piece> piecesOnSquare = new List<Piece> (HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
+            foreach (Piece pieceOnSquare in piecesOnSquare)
+            {
+                Debug.Log(pieceOnSquare.name + " is moved from Piggyback");
+
+                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
+                pieceOnSquare.hasMoved = true;
+                HelperFunctions.movePiece(pieceOnSquare, toAppend);
+            }
+        }
+
+        List<Piece> piecesOnSquare2 = new List<Piece>(HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
+        foreach (Piece pieceOnSquare in piecesOnSquare2)
+        {
+            if (HelperFunctions.checkState(pieceOnSquare, "Jockey"))
+            {
+                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
+                pieceOnSquare.hasMoved = true;
+                HelperFunctions.movePiece(pieceOnSquare, toAppend);
+            }
+        }
 
         if (piece.stayTurn())
         {
@@ -716,7 +739,6 @@ public class onlineGame : MonoBehaviour
         //TODO make sure this works
         if (piece.promotesInto != "")
         {
-            Debug.Log(piece.promotingRow);
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
@@ -737,6 +759,28 @@ public class onlineGame : MonoBehaviour
         else
         {
             king = wKing;
+        }
+
+        //Last minute things
+        //Heartbroken King Check
+        if (HelperFunctions.checkState(gameData.whiteKing, "Heartbroken"))
+        {
+            if (!HelperFunctions.isPieceTypeOnBoard("q", 1))
+            {
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                initPiece(tempKing, gameData.whiteKing.position);
+                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.whiteKing));
+                gameData.whiteKing = tempKing;
+            }
+        }
+        else if (HelperFunctions.checkState(gameData.blackKing, "Heartbroken")) {
+            if (!HelperFunctions.isPieceTypeOnBoard("q", -1))
+            {
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
+                initPiece(tempKing, gameData.blackKing.position);
+                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.blackKing));
+                gameData.blackKing = tempKing;
+            }
         }
 
         bool isInCheck = HelperFunctions.isCheck(king);
@@ -776,6 +820,18 @@ public class onlineGame : MonoBehaviour
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
         piece.position = HelperFunctions.findCoords(toAppend);
 
+        if (HelperFunctions.checkState(piece, "PAWN"))
+        {
+            piece.position[1] = piece.position[1] + 1;
+            toAppend = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
+        }
+
+        if (HelperFunctions.checkState(piece, "Double"))
+        {
+            Piece doublePawn = HelperFunctions.Spawnables.create("Pawn", piece.color);
+            initPiece(doublePawn, piece.position);
+        }
+
         piece.startSquare = new int[] { piece.position[0], piece.position[1] };
 
         HelperFunctions.movePiece(piece, toAppend);
@@ -783,7 +839,7 @@ public class onlineGame : MonoBehaviour
         piece.alive = 1;
 
         //piece.go.tag = piece.name;
-        HelperFunctions.updateBoardGrid(coords, piece, "a");
+        HelperFunctions.updateBoardGrid(piece.position, piece, "a");
         gameData.panelCodes.Add(piece.name);
     }
 }

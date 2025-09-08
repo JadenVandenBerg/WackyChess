@@ -136,15 +136,18 @@ public interface Piece
      * Wall: Can't be jumped over (not implemented yet)
      * Medusa: Converts pieces it captures into shiled states and jail states (not implemented yet)
      * Hungry: Adds pieces to storage, has the option of spitting out pieces (not implemented yet)
-     * Piggyback: Carries pieces on top of it with it (not implemented yet)
-     * Projectile: Pieces other pieces throw kill pieces they land on (not implemented yet)
+     * Piggyback: Carries pieces on top of it with it
+     * Jockey: Other pieces carry it around with them
      * Delayed: Move executed the turn after (if possible) (not implemented yet)
-     * Depressed: Cannot move if in check (not implemented yet)
+     * Depressed: Cannot move if in check
+     * Heartbroken: Becomes depressed if your queen dies
      * Portal: Can teleport through the board
      * Bouncing: Can bounce off the walls
      * CaptureTheFlag: Cannot be captured on your own side of the board (back 2 ranks)
      * Defuser: Bombs do not explode near this piece
      * Switch: When you castle, king and rook switch instead of normal castle
+     * PAWN: Start an extra square forward
+     * Double: Starts as two pawns
      */
     public String state { get; set; }
     public String secondaryState { get; set; }

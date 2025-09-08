@@ -309,35 +309,37 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.turn == gameData.forceStayTurn)
         {
             //Force Stay Turn Moves
-            iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, null, Color.red, check, false, false, allMoves, color, true, false);
+            iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
         }
         else
         {
-            iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
-            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false);
+            iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
 
             //Dependent Attacks
             piece.dependentMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, allMoves, color, true, false);
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
 
             //Interactive Moves
             piece.interactiveMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, null, Color.red, check, false, false, allMoves, color, true, false);
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+
+            updatePieceFlags(piece, check);
 
             //Flag Moves
             if (piece.flag == 1)
             {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, allMoves, color, true, false);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
             }
             else if (piece.flag == 2)
             {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, allMoves, color, false, false);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
             }
         }
 
@@ -553,7 +555,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool moveComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding"))
+        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
@@ -569,7 +571,7 @@ public class HelperFunctions : MonoBehaviour
     }
     public static bool moveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding"))
+        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
@@ -605,7 +607,7 @@ public class HelperFunctions : MonoBehaviour
     }
     public static bool jumpAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding"))
+        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
@@ -703,10 +705,14 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled)
+    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
     {
         if (checkState(piece, "Frozen") || checkState(piece, "Jailed"))
         {
+            return;
+        }
+
+        if (fromTotal && (checkState(piece, "Jailer"))) {
             return;
         }
 
@@ -830,6 +836,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static List<int[]> addToCurrentMoveableCoordsTotal(int color, bool changeValue, bool highlight, Piece highlightPiece, bool execDummyMove, bool ignoreDisabled)
     {
+        bool fromTotal = true;
         gameData.currentMoveableCoordsAllPieces.Clear();
 
         if (highlightPiece != null)
@@ -838,6 +845,7 @@ public class HelperFunctions : MonoBehaviour
             resetBoardColours();
             gameData.isSelected = true;
 
+            fromTotal = false;
             addMovesToCurrentMoveableCoords(highlightPiece);
         }
 
@@ -863,50 +871,52 @@ public class HelperFunctions : MonoBehaviour
             if (gameData.turn == gameData.forceStayTurn)
             {
                 //Force Stay Turn Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
             }
             else
             {
                 //Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Moves and Attacks
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Attacks
-                iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //One Time Moves
-                iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //One Time Move and Attacks
-                iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Murderous Attacks
-                iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Conditional Attacks
-                iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Jump Attacks
-                iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Dependent Attacks
                 piece.dependentMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Interactive Moves
                 piece.interactiveMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
 
                 //Flag Moves
+
+                updatePieceFlags(piece, check);
                 if (piece.flag == 1)
                 {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
                 }
                 else if (piece.flag == 2)
                 {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled);
+                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
                 }
             }
 
@@ -1992,7 +2002,7 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
-        // Piece contains more than one other piece (not crowding)
+        // Square contains more than one other piece (not crowding)
         if (piecesOnSquare.Count > 1 && checkState(piece, "Crowding"))
         {
             foreach (Piece _piece in piecesOnSquare)
@@ -2009,6 +2019,18 @@ public class HelperFunctions : MonoBehaviour
 
         //There is one piece on the square, piece is crowding
         if (checkState(piece, "Crowding") && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        {
+            return true;
+        }
+
+        //There is one piece on square, piece on square is piggyback
+        if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], "Piggyback") && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        {
+            return true;
+        }
+
+        //There is one piece on square, piece is jockey
+        if (piecesOnSquare.Count == 1 && checkState(piece, "Jockey") && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
             return true;
         }
@@ -2483,6 +2505,7 @@ public class HelperFunctions : MonoBehaviour
                 case "SuperPawn": return new SuperPawn(color, online);
                 case "LeftPawn": return new LeftPawn(color, online);
                 case "RightPawn": return new RightPawn(color, online);
+                case "DepressedKing": return new DepressedKing(color, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }
@@ -2660,5 +2683,50 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return merged;
+    }
+
+    public static void updatePieceFlags(Piece piece, bool isInCheck)
+    {
+        if (piece.go.name.Contains("ProtectivePawn") || piece.go.name.Contains("ScaredyKing") || piece.go.name.Contains("DepressedKing"))
+        {
+            if (isInCheck)
+            {
+                piece.flag = 2;
+            }
+            else
+            {
+                piece.flag = 1;
+            }
+        }
+    }
+
+    public static List<Piece> getPiecesOnBoard()
+    {
+        List<Piece> allPieces = new List<Piece>();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                List<Piece> pieces = getPiecesOnSquareBoardGrid(findSquare(i, j));
+                allPieces.AddRange(pieces);
+            }
+        }
+
+        return allPieces;
+    }
+
+    public static bool isPieceTypeOnBoard(string pieceType, int color)
+    {
+        List<Piece> pieces = getPiecesOnBoard();
+        foreach(Piece p in pieces)
+        {
+            if (p.name.Contains(pieceType) && p.color == color)
+            {
+                Debug.Log("TRUE -> " + p.name);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

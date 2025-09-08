@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.EventSystems;
 
 public class SidePanelAdjust : MonoBehaviour
-{
+{ 
     public GameObject canvas;
     public TMP_FontAsset titleFont;
     public List<Sprite> squareImages;
@@ -18,7 +18,7 @@ public class SidePanelAdjust : MonoBehaviour
     private GridLayoutGroup gridLayout;
 
     void Start()
-    {
+    { 
         RectTransform canvasRect = canvas.GetComponent<RectTransform>();
         RectTransform rect = GetComponent<RectTransform>();
 

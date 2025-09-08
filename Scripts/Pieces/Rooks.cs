@@ -19,8 +19,6 @@ public class Rook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -114,15 +112,6 @@ public class Rook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class MurderousRook : Piece
@@ -138,8 +127,6 @@ public class MurderousRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -231,15 +218,6 @@ public class MurderousRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class GhostRook : Piece
@@ -255,8 +233,6 @@ public class GhostRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -348,15 +324,6 @@ public class GhostRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class GhoulRook : Piece
@@ -372,8 +339,6 @@ public class GhoulRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -465,15 +430,6 @@ public class GhoulRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class OneTimeRook : Piece
@@ -489,8 +445,6 @@ public class OneTimeRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -582,15 +536,6 @@ public class OneTimeRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class ElectricRook : Piece
@@ -606,8 +551,6 @@ public class ElectricRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -701,15 +644,6 @@ public class ElectricRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class InfiniteRook : Piece
@@ -725,8 +659,6 @@ public class InfiniteRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -820,15 +752,6 @@ public class InfiniteRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class PortalRook : Piece
@@ -844,8 +767,6 @@ public class PortalRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -939,15 +860,6 @@ public class PortalRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class AtomicRook : Piece
@@ -963,8 +875,6 @@ public class AtomicRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1058,15 +968,6 @@ public class AtomicRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class LandmineRook : Piece
@@ -1082,8 +983,6 @@ public class LandmineRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1177,15 +1076,6 @@ public class LandmineRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class LiteRook : Piece
@@ -1201,8 +1091,6 @@ public class LiteRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1291,15 +1179,6 @@ public class LiteRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class SuperGhostRook : Piece
@@ -1315,8 +1194,6 @@ public class SuperGhostRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
     public String secondaryState { get; set; } = "Ghost";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1408,15 +1285,6 @@ public class SuperGhostRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class Empress : Piece
@@ -1432,8 +1300,6 @@ public class Empress : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1530,15 +1396,6 @@ public class Empress : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class FragileRook : Piece
@@ -1554,8 +1411,6 @@ public class FragileRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1649,15 +1504,6 @@ public class FragileRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class RoyalRook : Piece
@@ -1673,8 +1519,6 @@ public class RoyalRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1769,15 +1613,6 @@ public class RoyalRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class MonochromeRook : Piece
@@ -1793,8 +1628,6 @@ public class MonochromeRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -1888,15 +1721,6 @@ public class MonochromeRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class CrowdingRook : Piece
@@ -1912,8 +1736,6 @@ public class CrowdingRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2007,15 +1829,6 @@ public class CrowdingRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class HungryRook : Piece
@@ -2031,8 +1844,6 @@ public class HungryRook : Piece
     public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2126,15 +1937,6 @@ public class HungryRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class CaptureTheFlagRook : Piece
@@ -2150,8 +1952,6 @@ public class CaptureTheFlagRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "CaptureTheFlag";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2245,15 +2045,6 @@ public class CaptureTheFlagRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class FreezingRook : Piece
@@ -2269,8 +2060,6 @@ public class FreezingRook : Piece
     public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2364,15 +2153,6 @@ public class FreezingRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class CloningRook : Piece
@@ -2388,8 +2168,6 @@ public class CloningRook : Piece
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2483,15 +2261,6 @@ public class CloningRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class UndeadRook : Piece
@@ -2507,8 +2276,6 @@ public class UndeadRook : Piece
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2602,15 +2369,6 @@ public class UndeadRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class PromotionRook : Piece
@@ -2626,8 +2384,6 @@ public class PromotionRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2721,15 +2477,6 @@ public class PromotionRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class DefuserRook : Piece
@@ -2745,8 +2492,6 @@ public class DefuserRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Defuser";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2840,15 +2585,6 @@ public class DefuserRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class SpittingRook : Piece
@@ -2864,8 +2600,6 @@ public class SpittingRook : Piece
     public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -2959,15 +2693,6 @@ public class SpittingRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class PhantomRook : Piece
@@ -2983,8 +2708,6 @@ public class PhantomRook : Piece
     public String ability { get; set; } = "Dematerialize";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -3078,15 +2801,6 @@ public class PhantomRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class StackingRook : Piece
@@ -3102,8 +2816,6 @@ public class StackingRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -3197,15 +2909,6 @@ public class StackingRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class JailRook : Piece
@@ -3221,8 +2924,6 @@ public class JailRook : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jailer";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -3316,14 +3017,113 @@ public class JailRook : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
+}
+
+public class Crook : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 5;
+    public int[] startSquare { get; set; } = null;
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Crook";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] moves { get; set; } = { };
+    public int[,] oneTimeMoves { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = {
+        { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 }, { 0, 8 },
+        { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 },
+        { 0, -1 }, { 0, -2 }, { 0, -3 }, { 0, -4 }, { 0, -5 }, { 0, -6 }, { 0, -7 }, { 0, -8 },
+        { -1, 0 }, { -2, 0 }, { -3, 0 }, { -4, 0 }, { -5, 0 }, { -6, 0 }, { -7, 0 }, { -8, 0 }
+    };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public bool condition { get; set; } = false; //Condition: Castle
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { };
+
+    public int[] position { get; set; } = { 0, 0 };
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Assets/Images/Rooks/wCrook.png";
+    public String bImage { get; set; } = "Assets/Images/Rooks/bCrook.png";
+    public String name { get; set; } = "Crook";
+    public int[,] dependentMovesSet()
     {
-        return position;
+        return new int[,] { };
     }
 
-    public void setPosition(int[] pos)
+    public int[,] interactiveMovesSet()
     {
-        this.position = pos;
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public Crook(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+        Image s = go.AddComponent<Image>();
+        byte[] fileData;
+
+        if (color == 1)
+        {
+            fileData = File.ReadAllBytes(wImage);
+        }
+        else
+        {
+            fileData = File.ReadAllBytes(bImage);
+        }
+
+        Texture2D texture2D = new Texture2D(2, 2);
+        texture2D.LoadImage(fileData);
+
+        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
+
+        s.sprite = sp;
     }
 }
 

@@ -20,8 +20,6 @@ public class Template : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -108,15 +106,6 @@ public class Template : Piece
 
         s.sprite = sp;
     }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }
 
 public class SuperPawn : Piece
@@ -132,8 +121,6 @@ public class SuperPawn : Piece
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -231,14 +218,5 @@ public class SuperPawn : Piece
         Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
 
         s.sprite = sp;
-    }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
     }
 }

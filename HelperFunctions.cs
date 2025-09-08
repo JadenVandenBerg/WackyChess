@@ -1670,6 +1670,13 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
+        if (checkState(deadPiece, "Crook") && deadPiece.color != attackerPiece.color)
+        {
+            addState(deadPiece, "Jailed");
+
+            return;
+        }
+
         if (!skipCollateral)
         {
             //Collateral (Attacker)

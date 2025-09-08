@@ -120,7 +120,7 @@ public interface Piece
      * 
      * Normal: Piece functions as normal
      * Shield: Cannot be captured
-     * Dematerialized: Cannot be captured until manually rematerialized (not implemented yet)
+     * Dematerialized: Cannot be captured until manually rematerialized
      * Frozen: Cannot move until unfrozen
      * Ghost: Can go through your own pieces
      * Ghoul: Your pieces can go through this piece
@@ -128,18 +128,17 @@ public interface Piece
      * Oppressive: Cannot capture male opponent pieces (not implemented yet)
      * Combustable: May explode after every turn (1/6)
      * Fragile: May die after each move (1/6)
-     * Jailed: Piece temporarily cant move (not implemented yet)
+     * Jailed: Piece temporarily cant move
      * Uncastle: Can't castle (not implemented yet)
      * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start) (not implemented yet)
      * Electric: Has a change of killing pieces that capture it (1/2)
      * Crook: Can't be captured, only jailed (not implemented yet)
      * Wall: Can't be jumped over (not implemented yet)
-     * Medusa: Converts pieces it captures into shiled states and jail states (not implemented yet)
-     * Hungry: Adds pieces to storage, has the option of spitting out pieces (not implemented yet)
-     * Piggyback: Carries pieces on top of it with it (not implemented yet)
-     * Projectile: Pieces other pieces throw kill pieces they land on (not implemented yet)
+     * Medusa: Converts pieces it captures into shield pawns or jail states (not implemented yet)
+     * Hungry: Adds pieces to storage, has the option of spitting out pieces
+     * Piggyback: Carries pieces on top of it with it
      * Delayed: Move executed the turn after (if possible) (not implemented yet)
-     * Depressed: Cannot move if in check (not implemented yet)
+     * Depressed: Cannot move if in check
      * Portal: Can teleport through the board
      * Bouncing: Can bounce off the walls
      * CaptureTheFlag: Cannot be captured on your own side of the board (back 2 ranks)
@@ -148,25 +147,6 @@ public interface Piece
      */
     public String state { get; set; }
     public String secondaryState { get; set; }
-
-
-    /*
-     * Stackable (not implemented yet)
-     * If this piece can stack on other pieces
-     * 1: Can Stack
-     * 0: Cant Stack
-     */
-    public int stackable { get; set; }
-
-
-    /*
-     * Reverse Stackable (not implemented yet)
-     * If other pieces can stack on this piece
-     * 1: Can Stack
-     * 0: Cant Stack
-     */
-    public int reverseStackable { get; set; }
- 
 
     /*
      * CollateralType
@@ -427,6 +407,7 @@ public interface Piece
     /*
      * Getters/Setters not unique to pieces
      */
+
     public int[] getPosition()
     {
         return position;

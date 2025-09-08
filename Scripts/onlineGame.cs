@@ -43,7 +43,7 @@ public class onlineGame : MonoBehaviour
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
         pawn = new SpittingKnight(1, true);
-        pawn2 = new JailKnight(1, true);
+        pawn2 = new Crook(1, true);
         pawn3 = new SplittingPawn(1, true);
         pawn4 = new RoyalKnight(1, true);
         pawn5 = new Pawn(1, true);
@@ -63,7 +63,7 @@ public class onlineGame : MonoBehaviour
         bpawn = new AtomicPawn(-1, true);
         bpawn2 = new StackingKnight(-1, true);
         bpawn3 = new LandminePawn(-1, true);
-        bpawn4 = new LandminePawn(-1, true);
+        bpawn4 = new Crook(-1, true);
         bpawn5 = new LandminePawn(-1, true);
         bpawn6 = new LandminePawn(-1, true);
         bpawn7 = new LandminePawn(-1, true);
@@ -217,7 +217,7 @@ public class onlineGame : MonoBehaviour
         Debug.Log("Selected: " + gameData.selected);
         if (gameData.selectedPiece != null) Debug.Log("SelectedPiece: " + gameData.selectedPiece.name);
         Debug.Log("SelectedToMove: " + gameData.selectedToMove);
-        Debug.Log("SelectedToMovePiece: " + gameData.selectedToMovePiece);
+        Debug.Log("SelectedToMovePiece: " + gameData.selectedToMovePiece + ". State: " + gameData.selectedToMovePiece.state + ". Ability: " + gameData.selectedToMovePiece.ability);
         Debug.Log("Ability: " + gameData.abilitySelected);
 
         //MOVE
@@ -614,11 +614,19 @@ public class onlineGame : MonoBehaviour
 
         GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
 
-        //Before piece is moved
-        if (HelperFunctions.checkState(piece, "Jailer"))
+        //before piece is moved
+        //Loop through pieces for state check
+        List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(HelperFunctions.findSquare(piece.position[0], piece.position[1]));
+        foreach (Piece pieceOnSquare in piecesOnSquare)
         {
-            List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(HelperFunctions.findSquare(piece.position[0], piece.position[1]));
-            foreach (Piece pieceOnSquare in piecesOnSquare)
+            if (HelperFunctions.checkState(pieceOnSquare, "Crook")) {
+                if (piecesOnSquare.Count == 2)
+                {
+                    HelperFunctions.removeState(pieceOnSquare, "Jailed");
+                }
+            }
+
+            if (HelperFunctions.checkState(piece, "Jailer"))
             {
                 HelperFunctions.removeState(pieceOnSquare, "Jailed");
             }

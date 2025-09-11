@@ -125,7 +125,7 @@ public interface Piece
      * Ghost: Can go through your own pieces
      * Ghoul: Your pieces can go through this piece
      * Feminist: Cannot capture female opponent pieces (not implemented yet)
-     * Oppressive: Cannot capture male opponent pieces (not implemented yet)
+     * Oppressive: Cannot capture male opponent pieces
      * Combustable: May explode after every turn (1/6)
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move

@@ -42,7 +42,7 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new DoublePawn(1, true);
+        pawn = new OppressivePawn(1, true);
         pawn2 = new Crook(1, true);
         pawn3 = new ProtectivePawn(1, true);
         pawn4 = new RoyalKnight(1, true);
@@ -51,7 +51,7 @@ public class onlineGame : MonoBehaviour
         pawn7 = new PromotingPawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
-        wRook = new FragileRook(1, true);
+        wRook = new Rook(1, true);
         wRook2 = new Empress(1, true);
         wBishop = new FragileBishop(1, true);
         wBishop2 = new ColorChangingBishop(1, true);
@@ -212,12 +212,12 @@ public class onlineGame : MonoBehaviour
             }
         }
 
-        Debug.Log("ReadyToMove: " + gameData.readyToMove);
+        /*Debug.Log("ReadyToMove: " + gameData.readyToMove);
         Debug.Log("Selected: " + gameData.selected);
         if (gameData.selectedPiece != null) Debug.Log("SelectedPiece: " + gameData.selectedPiece.name);
         Debug.Log("SelectedToMove: " + gameData.selectedToMove);
         Debug.Log("SelectedToMovePiece: " + gameData.selectedToMovePiece + ". State: " + gameData.selectedToMovePiece.state + ". Ability: " + gameData.selectedToMovePiece.ability);
-        Debug.Log("Ability: " + gameData.abilitySelected);
+        Debug.Log("Ability: " + gameData.abilitySelected);*/
 
         //MOVE
         if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
@@ -640,7 +640,7 @@ public class onlineGame : MonoBehaviour
 
         if (HelperFunctions.checkState(piece, "Piggyback"))
         {
-            List<Piece> piecesOnSquare = new List<Piece> (HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
+            piecesOnSquare = new List<Piece> (HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
             foreach (Piece pieceOnSquare in piecesOnSquare)
             {
                 Debug.Log(pieceOnSquare.name + " is moved from Piggyback");

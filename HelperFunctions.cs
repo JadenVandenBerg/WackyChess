@@ -716,6 +716,13 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
+        if (checkPieceType(piece, "q")) {
+            if (isOppressorOnBoard(piece.color))
+            {
+                return;
+            }
+        }
+
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
             //Portal
@@ -2729,9 +2736,32 @@ public class HelperFunctions : MonoBehaviour
         {
             if (p.name.Contains(pieceType) && p.color == color)
             {
-                Debug.Log("TRUE -> " + p.name);
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public static bool isOppressorOnBoard(int pieceColor)
+    {
+        List<Piece> pieces = getPiecesOnBoard();
+        foreach (Piece p in pieces)
+        {
+            if (checkState(p, "Oppressive") && p.color != pieceColor)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool checkPieceType(Piece piece, string pieceType)
+    {
+        if (piece.name.Contains(pieceType))
+        {
+            return true;
         }
 
         return false;

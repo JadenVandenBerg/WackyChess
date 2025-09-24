@@ -92,3 +92,6 @@ Photon/
 
 # Ignore TextMesh Pro directory
 TextMesh Pro/
+
+# API
+google-services.json

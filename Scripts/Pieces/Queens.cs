@@ -11,6 +11,7 @@ public class Queen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -122,6 +123,7 @@ public class MurderousQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a normal queen but can also kill your own pieces.";
     public String longDescription { get; set; } = "";
@@ -232,6 +234,7 @@ public class GhostQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 11;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a normal queen but can also go through your own pieces.";
     public String longDescription { get; set; } = "";
@@ -343,6 +346,7 @@ public class GhoulQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9.5f;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a normal queen but your pieces can go through it.";
     public String longDescription { get; set; } = "";
@@ -454,6 +458,7 @@ public class OneTimeQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0f;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a normal queen but can only move once.";
     public String longDescription { get; set; } = "";
@@ -565,6 +570,7 @@ public class ElectricQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 10.5f;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "This piece moves like a queen. On capture, there is a 50% chance the capturing piece will die.";
     public String longDescription { get; set; } = "";
@@ -676,6 +682,7 @@ public class InfiniteQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 18;
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -787,6 +794,7 @@ public class PortalQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 15;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -898,6 +906,7 @@ public class AtomicQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1009,6 +1018,7 @@ public class LandmineQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1120,6 +1130,7 @@ public class LiteQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1222,6 +1233,7 @@ public class SuperGhostQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9.5f;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a normal queen but your pieces can go through it.";
     public String longDescription { get; set; } = "";
@@ -1333,6 +1345,7 @@ public class Minister : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1437,6 +1450,7 @@ public class FragileQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1548,6 +1562,7 @@ public class Amazon : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1662,6 +1677,7 @@ public class ReverseMinister : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1766,6 +1782,7 @@ public class SinisterMinisterQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1873,6 +1890,7 @@ public class MonochromeQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1984,6 +2002,7 @@ public class BouncingQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2095,6 +2114,7 @@ public class CrowdingQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2206,6 +2226,7 @@ public class HungryQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2317,6 +2338,7 @@ public class CaptureTheFlagQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2428,6 +2450,7 @@ public class FreezingQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2539,6 +2562,7 @@ public class CloningQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2650,6 +2674,7 @@ public class UndeadQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2761,6 +2786,7 @@ public class DefuserQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2872,6 +2898,7 @@ public class SpittingQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2983,6 +3010,7 @@ public class PhantomQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3094,6 +3122,7 @@ public class StackingQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3205,6 +3234,7 @@ public class JailQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3316,6 +3346,7 @@ public class PiggybackQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3438,6 +3469,7 @@ public class JockeyQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

@@ -11,6 +11,7 @@ public class Bishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -119,6 +120,7 @@ public class MurderousBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a bishop but you can kill your own pieces.";
     public String longDescription { get; set; } = "";
@@ -225,6 +227,7 @@ public class GhostBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a bishop but you can go through your own pieces.";
     public String longDescription { get; set; } = "";
@@ -331,6 +334,7 @@ public class GhoulBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3.5f;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a bishop but your pieces can g=o through it.";
     public String longDescription { get; set; } = "";
@@ -437,6 +441,7 @@ public class OneTimeBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0f;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Moves like a bishop but can only move once.";
     public String longDescription { get; set; } = "";
@@ -543,6 +548,7 @@ public class ElectricBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "This piece moves like a bishop. On capture, the capturing piece has a 50% chance of dying.";
     public String longDescription { get; set; } = "";
@@ -651,6 +657,7 @@ public class InfiniteBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -759,6 +766,7 @@ public class PortalBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 6;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -867,6 +875,7 @@ public class AtomicBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -975,6 +984,7 @@ public class LandmineBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1083,6 +1093,7 @@ public class ColorChangingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1191,6 +1202,7 @@ public class LiteBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1294,8 +1306,9 @@ public class SuperGhostBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3.5f;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
-    public String description { get; set; } = "Moves like a bishop but your pieces can g=o through it.";
+    public String description { get; set; } = "Moves like a bishop but your pieces can go through it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
@@ -1400,6 +1413,7 @@ public class Princess : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1511,6 +1525,7 @@ public class FragileBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1619,6 +1634,7 @@ public class RoyalBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1728,6 +1744,7 @@ public class BouncingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1836,6 +1853,7 @@ public class CrowdingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1944,6 +1962,7 @@ public class HungryBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2052,6 +2071,7 @@ public class CaptureTheFlagBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2160,6 +2180,7 @@ public class FreezingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2268,6 +2289,7 @@ public class CloningBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2376,6 +2398,7 @@ public class UndeadBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2484,6 +2507,7 @@ public class PromotionBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2592,6 +2616,7 @@ public class DefuserBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2700,6 +2725,7 @@ public class SpittingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2808,6 +2834,7 @@ public class PhantomBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2916,6 +2943,7 @@ public class StackingBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3024,6 +3052,7 @@ public class JailBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3132,6 +3161,7 @@ public class PiggybackBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3251,6 +3281,7 @@ public class JockeyBishop : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

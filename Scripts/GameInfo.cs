@@ -51,4 +51,5 @@ public static class tempInfo
     public static Piece tempPiece { get; set; } = null;
     public static bool selectedFromPanel { get; set; } = false;
     public static bool passed { get; set; } = false;
+    public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 }

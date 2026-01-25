@@ -124,21 +124,18 @@ public interface Piece
      * Frozen: Cannot move until unfrozen
      * Ghost: Can go through your own pieces
      * Ghoul: Your pieces can go through this piece
-     * Feminist: Cannot capture female opponent pieces (not implemented yet)
+     * Feminist: Cannot capture female opponent pieces
      * Oppressive: Cannot capture male opponent pieces
      * Combustable: May explode after every turn (1/6)
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move
      * Uncastle: Can't castle (not implemented yet)
-     * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start) (not implemented yet)
+     * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start)
      * Electric: Has a change of killing pieces that capture it (1/2)
-     * Crook: Can't be captured, only jailed (not implemented yet)
+     * Crook: Can't be captured, only jailed
      * Wall: Can't be jumped over (not implemented yet)
-     * Medusa: Converts pieces it captures into shield pawns or jail states (not implemented yet)
+     * Medusa: Converts pieces it captures into shield pawns or jail states
      * Hungry: Adds pieces to storage, has the option of spitting out pieces
-     * Piggyback: Carries pieces on top of it with it
-     * Medusa: Converts pieces it captures into shiled states and jail states (not implemented yet)
-     * Hungry: Adds pieces to storage, has the option of spitting out pieces (not implemented yet)
      * Piggyback: Carries pieces on top of it with it
      * Jockey: Other pieces carry it around with them
      * Delayed: Move executed the turn after (if possible) (not implemented yet)

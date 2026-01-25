@@ -582,6 +582,10 @@ public class HelperFunctions : MonoBehaviour
         {
             return !jump;
         }
+        else if (checkState(piece, "Feminist") && checkPieceTypeFromList(piecesOnSquare, "q"))
+        {
+            return false;
+        }
 
         return !jump && (pieceIsNull || pieceIsDiffColour);
     }
@@ -1448,6 +1452,11 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece deadPiece in deadPieces)
         {
+            if (checkState(deadPiece, "Shield") || checkCaptureTheFlag(deadPiece))
+            {
+                continue;
+            }
+
             Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ")");
             GameObject dead = deadPiece.go;
             if (deadPiece.lives != 0)
@@ -1630,8 +1639,6 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
-            Debug.Log("Stacking Piece -> State:" + attackerPiece.state + " " + attackerPiece.secondaryState + ". Ability: " + attackerPiece.ability);
-
             //Moves
             int[,] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
             int[,] oneTimeMoves = combineMoveSets(attackerPiece.oneTimeMoves, deadPiece.oneTimeMoves);
@@ -1682,6 +1689,20 @@ public class HelperFunctions : MonoBehaviour
             addState(deadPiece, "Jailed");
 
             return;
+        }
+
+        if (checkState(attackerPiece, "Medusa"))
+        {
+            if (attackerPiece.numSpawns != 0)
+            {
+                attackerPiece.numSpawns--;
+
+                int[] pos = deadPiece.position;
+                removePieceFromBoard(pieceToList(deadPiece));
+
+                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                initPiece(shieldPawn, pos);
+            }
         }
 
         if (!skipCollateral)
@@ -2208,6 +2229,11 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool checkCaptureTheFlag(Piece piece)
     {
+        if (!checkState(piece, "CaptureTheFlag"))
+        {
+            return false;
+        }
+
         if (piece.color == 1)
         {
             if (piece.position[1] <= 2)
@@ -2263,8 +2289,21 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
-
+        bool goNext = false;
         if (king.alive == 1 && rook.alive == 1 && !king.hasMoved && !rook.hasMoved)
+        {
+            if (king.color == 1 && gameData.isInCheck[0] == 0 || king.color == -1 && gameData.isInCheck[1] == 0)
+            {
+                goNext = true;
+            }
+        }
+
+        if (king.alive == 1 && rook.alive == 1 && checkState(king, "Rulebreaker"))
+        {
+            goNext = true;
+        }
+
+        if (goNext)
         {
             kingSquare = findSquare(king.position[0], king.position[1]);
             rookSquare = findSquare(rook.position[0], rook.position[1]);
@@ -2520,6 +2559,7 @@ public class HelperFunctions : MonoBehaviour
                 case "LeftPawn": return new LeftPawn(color, online);
                 case "RightPawn": return new RightPawn(color, online);
                 case "DepressedKing": return new DepressedKing(color, online);
+                case "ShieldPawn": return new ShieldPawn(color, online);
                 default: throw new ArgumentException("Bad Piece");
             }
         }
@@ -2765,5 +2805,58 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static bool checkPieceTypeFromList(List<Piece> pieces, string pieceType)
+    {
+        foreach (Piece piece in pieces)
+        {
+            bool pieceIsType = checkPieceType(piece, pieceType);
+
+            if (pieceIsType)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static void initPiece(Piece piece, int[] coords)
+    {
+        if (!gameData.piecesDict.ContainsKey(piece.go))
+        {
+            gameData.piecesDict.Add(piece.go, piece);
+        }
+
+        if (!gameData.allPiecesDict.ContainsKey(piece.go))
+        {
+            gameData.allPiecesDict.Add(piece.go, piece);
+        }
+
+        GameObject toAppend = findSquare(coords[0], coords[1]);
+        piece.position = findCoords(toAppend);
+
+        if (checkState(piece, "PAWN"))
+        {
+            piece.position[1] = piece.position[1] + 1;
+            toAppend = findSquare(piece.position[0], piece.position[1]);
+        }
+
+        if (checkState(piece, "Double"))
+        {
+            Piece doublePawn = Spawnables.create("Pawn", piece.color);
+            initPiece(doublePawn, piece.position);
+        }
+
+        piece.startSquare = new int[] { piece.position[0], piece.position[1] };
+
+        movePiece(piece, toAppend);
+
+        piece.alive = 1;
+
+        //piece.go.tag = piece.name;
+        updateBoardGrid(piece.position, piece, "a");
+        gameData.panelCodes.Add(piece.name);
     }
 }

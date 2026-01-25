@@ -246,7 +246,6 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "CastleRight")
                     {
-                        Debug.Log("1");
                         if (!HelperFunctions.checkCanCastle(color, 1))
                         {
                             continue;
@@ -359,5 +358,66 @@ public class SidePanelAdjust : MonoBehaviour
     {
         RectTransform rect = GetComponent<RectTransform>();
         CreateSidePanel(rect);
+    }
+}
+
+public class PieceMove
+{
+    public Piece piece { get; set; }
+    public int[] coords { get; set; }
+    public int turnsToRemove { get; set; }
+
+    public PieceMove(Piece piece, int[] coords, int turnsToRemove)
+    {
+        this.piece = piece;
+        this.coords = coords;
+        this.turnsToRemove = turnsToRemove;
+    }
+}
+
+public class DelayedQueue
+{
+    private List<PieceMove> _items = new List<PieceMove>();
+
+    public int Count => _items.Count;
+
+    public void Enqueue(PieceMove item)
+    {
+        _items.Add(item);
+    }
+
+    public PieceMove Dequeue()
+    {
+        if (_items.Count == 0)
+        {
+            return null;
+        }
+
+        PieceMove item = _items[0];
+        _items.RemoveAt(0);
+        return item;
+    }
+
+    public PieceMove Peek()
+    {
+        if (_items.Count == 0)
+        {
+            return null;
+        }
+
+        return _items[0];
+    }
+
+    public void Clear()
+    {
+        _items.Clear();
+    }
+
+    public void deIncrement()
+    {
+        foreach (PieceMove item in _items)
+        {
+            item.turnsToRemove--;
+        }
     }
 }

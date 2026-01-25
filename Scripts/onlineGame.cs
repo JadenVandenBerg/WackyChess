@@ -42,7 +42,7 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new OppressivePawn(1, true);
+        pawn = new Pawn(1, true);
         pawn2 = new Crook(1, true);
         pawn3 = new ProtectivePawn(1, true);
         pawn4 = new RoyalKnight(1, true);
@@ -56,9 +56,9 @@ public class onlineGame : MonoBehaviour
         wBishop = new FragileBishop(1, true);
         wBishop2 = new ColorChangingBishop(1, true);
         wKnight = new FragileKnight(1, true);
-        wKnight2 = new LongKnight(1, true);
-        wQueen = new ReverseMinister(1, true);
-        wKing = new HeartbrokenKing(1, true);
+        wKnight2 = new Knight(1, true);
+        wQueen = new Medusa(1, true);
+        wKing = new RulebreakerKing(1, true);
 
         bpawn = new AtomicPawn(-1, true);
         bpawn2 = new PiggybackKnight(-1, true);
@@ -78,41 +78,41 @@ public class onlineGame : MonoBehaviour
         bQueen = new Queen(-1, true);
         bKing = new HyperFastKing(-1, true);
 
-        initPiece(pawn, new int[] { 1, 2 });
-        initPiece(pawn2, new int[] { 2, 2 });
-        initPiece(pawn3, new int[] { 3, 2 });
-        initPiece(pawn4, new int[] { 4, 2 });
-        initPiece(pawn5, new int[] { 5, 2 });
-        initPiece(pawn6, new int[] { 6, 2 });
-        initPiece(pawn7, new int[] { 7, 2 });
-        initPiece(pawn8, new int[] { 8, 2 });
+        HelperFunctions.initPiece(pawn, new int[] { 1, 2 });
+        HelperFunctions.initPiece(pawn2, new int[] { 2, 2 });
+        HelperFunctions.initPiece(pawn3, new int[] { 3, 2 });
+        HelperFunctions.initPiece(pawn4, new int[] { 4, 2 });
+        HelperFunctions.initPiece(pawn5, new int[] { 5, 2 });
+        HelperFunctions.initPiece(pawn6, new int[] { 6, 2 });
+        HelperFunctions.initPiece(pawn7, new int[] { 7, 2 });
+        HelperFunctions.initPiece(pawn8, new int[] { 8, 2 });
 
-        initPiece(wRook, new int[] { 1, 1 });
-        initPiece(wRook2, new int[] { 8, 1 });
-        initPiece(wBishop, new int[] { 3, 1 });
-        initPiece(wBishop2, new int[] { 6, 1 });
-        initPiece(wKnight, new int[] { 2, 1 });
-        initPiece(wKnight2, new int[] { 7, 1 });
-        initPiece(wQueen, new int[] { 4, 1 });
-        initPiece(wKing, new int[] { 5, 1 });
+        HelperFunctions.initPiece(wRook, new int[] { 1, 1 });
+        HelperFunctions.initPiece(wRook2, new int[] { 8, 1 });
+        HelperFunctions.initPiece(wBishop, new int[] { 3, 1 });
+        HelperFunctions.initPiece(wBishop2, new int[] { 6, 1 });
+        HelperFunctions.initPiece(wKnight, new int[] { 2, 1 });
+        HelperFunctions.initPiece(wKnight2, new int[] { 7, 1 });
+        HelperFunctions.initPiece(wQueen, new int[] { 4, 1 });
+        HelperFunctions.initPiece(wKing, new int[] { 5, 1 });
 
-        initPiece(bpawn, new int[] { 1, 7 });
-        initPiece(bpawn2, new int[] { 2, 7 });
-        initPiece(bpawn3, new int[] { 3, 7 });
-        initPiece(bpawn4, new int[] { 4, 7 });
-        initPiece(bpawn5, new int[] { 5, 7 });
-        initPiece(bpawn6, new int[] { 6, 7 });
-        initPiece(bpawn7, new int[] { 7, 7 });
-        initPiece(bpawn8, new int[] { 8, 7 });
+        HelperFunctions.initPiece(bpawn, new int[] { 1, 7 });
+        HelperFunctions.initPiece(bpawn2, new int[] { 2, 7 });
+        HelperFunctions.initPiece(bpawn3, new int[] { 3, 7 });
+        HelperFunctions.initPiece(bpawn4, new int[] { 4, 7 });
+        HelperFunctions.initPiece(bpawn5, new int[] { 5, 7 });
+        HelperFunctions.initPiece(bpawn6, new int[] { 6, 7 });
+        HelperFunctions.initPiece(bpawn7, new int[] { 7, 7 });
+        HelperFunctions.initPiece(bpawn8, new int[] { 8, 7 });
 
-        initPiece(bRook, new int[] { 1, 8 });
-        initPiece(bRook2, new int[] { 8, 8 });
-        initPiece(bBishop, new int[] { 3, 8 });
-        initPiece(bBishop2, new int[] { 6, 8 });
-        initPiece(bKnight, new int[] { 2, 8 });
-        initPiece(bKnight2, new int[] { 7, 8 });
-        initPiece(bQueen, new int[] { 4, 8 });
-        initPiece(bKing, new int[] { 5, 8 });
+        HelperFunctions.initPiece(bRook, new int[] { 1, 8 });
+        HelperFunctions.initPiece(bRook2, new int[] { 8, 8 });
+        HelperFunctions.initPiece(bBishop, new int[] { 3, 8 });
+        HelperFunctions.initPiece(bBishop2, new int[] { 6, 8 });
+        HelperFunctions.initPiece(bKnight, new int[] { 2, 8 });
+        HelperFunctions.initPiece(bKnight2, new int[] { 7, 8 });
+        HelperFunctions.initPiece(bQueen, new int[] { 4, 8 });
+        HelperFunctions.initPiece(bKing, new int[] { 5, 8 });
 
         //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
         pawn.name = "w_p1";
@@ -333,7 +333,7 @@ public class onlineGame : MonoBehaviour
 
                         HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
                         HelperFunctions.restorePieceImageToBoard(p);
-                        initPiece(p, HelperFunctions.findCoords(s));
+                        HelperFunctions.initPiece(p, HelperFunctions.findCoords(s));
 
                         gameData.selectedPiece.storage.Remove(p);
                     }
@@ -366,19 +366,19 @@ public class onlineGame : MonoBehaviour
                 }
                 else
                 {
-                    color = "r";
+                    color = "b";
                 }
 
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r1");
 
-                int kingMove = -3;
+                int kingMove = -2;
                 int rookMove = 3;
 
                 if (HelperFunctions.checkState(king, "Switch"))
                 {
-                    kingMove--;
-                    rookMove++;
+                    kingMove -= 2;
+                    rookMove ++;
                 }
 
                 gameData.selectedToMovePiece = king;
@@ -404,19 +404,19 @@ public class onlineGame : MonoBehaviour
                 }
                 else
                 {
-                    color = "r";
+                    color = "b";
                 }
 
                 Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
                 Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r2");
 
-                int kingMove = 4;
-                int rookMove = -4;
+                int kingMove = 2;
+                int rookMove = -2;
 
                 if (HelperFunctions.checkState(king, "Switch"))
                 {
-                    kingMove--;
-                    rookMove++;
+                    kingMove++;
+                    rookMove--;
                 }
 
                 gameData.selectedToMovePiece = king;
@@ -481,7 +481,7 @@ public class onlineGame : MonoBehaviour
 
                     Piece piece = HelperFunctions.Spawnables.create(pieceName, tempInfo.tempPiece.color);
                     gameData.selectedPiece.numSpawns--;
-                    initPiece(piece, HelperFunctions.findCoords(square));
+                    HelperFunctions.initPiece(piece, HelperFunctions.findCoords(square));
 
                     gameData.abilitySelected = "";
                     gameData.selected = null;
@@ -510,7 +510,7 @@ public class onlineGame : MonoBehaviour
                         //Todo maybe trigger collateral of killed piece
                         HelperFunctions.collateralDeath(HelperFunctions.getPiecesOnSquare(s));
 
-                        initPiece(p, HelperFunctions.findCoords(s));
+                        HelperFunctions.initPiece(p, HelperFunctions.findCoords(s));
                         HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
                         HelperFunctions.restorePieceImageToBoard(p);
 
@@ -581,10 +581,10 @@ public class onlineGame : MonoBehaviour
                 HelperFunctions.forceRemove(gameData.selectedPiece);
 
                 Piece piece = HelperFunctions.Spawnables.create("LeftPawn", tempInfo.tempPiece.color);
-                initPiece(piece, HelperFunctions.findCoords(gameData.selected));
+                HelperFunctions.initPiece(piece, HelperFunctions.findCoords(gameData.selected));
 
                 Piece piece2 = HelperFunctions.Spawnables.create("RightPawn", tempInfo.tempPiece.color);
-                initPiece(piece2, HelperFunctions.findCoords(gameData.selected));
+                HelperFunctions.initPiece(piece2, HelperFunctions.findCoords(gameData.selected));
 
                 gameData.abilitySelected = "";
                 gameData.selected = null;
@@ -604,6 +604,13 @@ public class onlineGame : MonoBehaviour
 
     public void movePiece(Piece piece, int[] coords)
     {
+        if (HelperFunctions.checkState(piece, "Delayed"))
+        {
+            PieceMove delayedMove = new PieceMove(piece, coords, 2);
+            tempInfo.delayedQueue.Enqueue(delayedMove);
+
+            return;
+        }
 
         //Debug.Log("Flags");
         //if (gameData.selected) Debug.Log("Selected: " + gameData.selected.name);
@@ -752,7 +759,7 @@ public class onlineGame : MonoBehaviour
                 string pname = piece.promotesInto;
                 Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
                 HelperFunctions.forceRemove(piece);
-                initPiece(p, coords);
+                HelperFunctions.initPiece(p, coords);
             }
         }
 
@@ -776,7 +783,7 @@ public class onlineGame : MonoBehaviour
             if (!HelperFunctions.isPieceTypeOnBoard("q", 1))
             {
                 Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
-                initPiece(tempKing, gameData.whiteKing.position);
+                HelperFunctions.initPiece(tempKing, gameData.whiteKing.position);
                 HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.whiteKing));
                 gameData.whiteKing = tempKing;
             }
@@ -785,7 +792,7 @@ public class onlineGame : MonoBehaviour
             if (!HelperFunctions.isPieceTypeOnBoard("q", -1))
             {
                 Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
-                initPiece(tempKing, gameData.blackKing.position);
+                HelperFunctions.initPiece(tempKing, gameData.blackKing.position);
                 HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.blackKing));
                 gameData.blackKing = tempKing;
             }
@@ -811,43 +818,5 @@ public class onlineGame : MonoBehaviour
     public void toggleCheckmateUI()
     {
         checkmateUI.SetActive(true);
-    }
-
-    private void initPiece(Piece piece, int[] coords)
-    {
-        if (!gameData.piecesDict.ContainsKey(piece.go))
-        {
-            gameData.piecesDict.Add(piece.go, piece);
-        }
-
-        if (!gameData.allPiecesDict.ContainsKey(piece.go))
-        {
-            gameData.allPiecesDict.Add(piece.go, piece);
-        }
-
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
-        piece.position = HelperFunctions.findCoords(toAppend);
-
-        if (HelperFunctions.checkState(piece, "PAWN"))
-        {
-            piece.position[1] = piece.position[1] + 1;
-            toAppend = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
-        }
-
-        if (HelperFunctions.checkState(piece, "Double"))
-        {
-            Piece doublePawn = HelperFunctions.Spawnables.create("Pawn", piece.color);
-            initPiece(doublePawn, piece.position);
-        }
-
-        piece.startSquare = new int[] { piece.position[0], piece.position[1] };
-
-        HelperFunctions.movePiece(piece, toAppend);
-
-        piece.alive = 1;
-
-        //piece.go.tag = piece.name;
-        HelperFunctions.updateBoardGrid(piece.position, piece, "a");
-        gameData.panelCodes.Add(piece.name);
     }
 }

@@ -12,6 +12,7 @@ public class Template : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -113,6 +114,7 @@ public class SuperPawn : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 12;
+    public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "This piece can move like a queen and a knight";
     public String longDescription { get; set; } = "";

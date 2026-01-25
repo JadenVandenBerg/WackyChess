@@ -37,6 +37,7 @@ public class King : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bKing.png";
     public String name { get; set; } = "King";
+    public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -115,6 +116,7 @@ public class MurderousKing : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Like a normal king, but you can kill your own pieces to get out of a pinch!";
     public String longDescription { get; set; } = "";
@@ -218,6 +220,7 @@ public class GhoulKing : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Like a normal king, but other pieces can go through it.";
     public String longDescription { get; set; } = "";
@@ -321,6 +324,7 @@ public class OneTimeKing : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Like a normal king, but can only move once.";
     public String longDescription { get; set; } = "";
@@ -449,6 +453,7 @@ public class ElectricKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wElectricKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bElectricKing.png";
     public String name { get; set; } = "Electric King";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "Protect this piece! It cannot move very fast, but if this piece dies or gets checkmated you lose the game.";
     public String longDescription { get; set; } = "";
@@ -552,6 +557,7 @@ public class PortalKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wPortalKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bPortalKing.png";
     public String name { get; set; } = "PortalKing";
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -655,6 +661,7 @@ public class AtomicKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wAtomicKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bAtomicKing.png";
     public String name { get; set; } = "AtomicKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -758,6 +765,7 @@ public class LandmineKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wLandmineKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bLandmineKing.png";
     public String name { get; set; } = "LandmineKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -859,6 +867,7 @@ public class LiteKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wLiteKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bLiteKing.png";
     public String name { get; set; } = "LiteKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -962,6 +971,7 @@ public class HyperFastKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wHyperFastKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bHyperFastKing.png";
     public String name { get; set; } = "HyperFastKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1065,6 +1075,7 @@ public class FastKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wFastKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFastKing.png";
     public String name { get; set; } = "FastKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1168,6 +1179,7 @@ public class FragileKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wFragileKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFragileKing.png";
     public String name { get; set; } = "FragileKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1272,6 +1284,7 @@ public class SlidingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wSlidingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bSlidingKing.png";
     public String name { get; set; } = "SlidingKing";
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1375,6 +1388,7 @@ public class CrowdingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wCrowdingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bCrowdingKing.png";
     public String name { get; set; } = "CrowdingKing";
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1478,6 +1492,7 @@ public class HungryKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wHungryKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bHungryKing.png";
     public String name { get; set; } = "HungryKing";
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1581,6 +1596,7 @@ public class CaptureTheFlagKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wCaptureTheFlagKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bCaptureTheFlagKing.png";
     public String name { get; set; } = "CaptureTheFlagKing";
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1684,6 +1700,7 @@ public class FreezingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wFreezingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bFreezingKing.png";
     public String name { get; set; } = "FreezingKing";
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1787,6 +1804,7 @@ public class UndeadKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wUndeadKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bUndeadKing.png";
     public String name { get; set; } = "UndeadKing";
+    public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1890,6 +1908,7 @@ public class DefuserKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wDefuserKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bDefuserKing.png";
     public String name { get; set; } = "DefuserKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1994,6 +2013,7 @@ public class Overlord : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wOverlord.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bOverlord.png";
     public String name { get; set; } = "Overlord";
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2097,6 +2117,7 @@ public class BadKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wBadKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bBadKing.png";
     public String name { get; set; } = "BadKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2200,6 +2221,7 @@ public class SpittingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wSpittingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bSpittingKing.png";
     public String name { get; set; } = "SpittingKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2303,6 +2325,7 @@ public class SwitchingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wSwitchingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bSwitchingKing.png";
     public String name { get; set; } = "SwitchingKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2406,6 +2429,7 @@ public class StackingKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wStackingKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bStackingKing.png";
     public String name { get; set; } = "StackingKing";
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2489,7 +2513,7 @@ public class PiggybackKing : Piece
     public int[,] moveAndAttacks { get; set; } = {
         { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
     };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { }; 
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2509,6 +2533,7 @@ public class PiggybackKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wPiggybackKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bPiggybackKing.png";
     public String name { get; set; } = "PiggybackKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2625,6 +2650,7 @@ public class ScaredyKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wScaredyKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bScaredyKing.png";
     public String name { get; set; } = "ScaredyKing";
+    public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2737,6 +2763,7 @@ public class DepressedKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wDepressedKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bDepressedKing.png";
     public String name { get; set; } = "DepressedKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2851,6 +2878,7 @@ public class HeartbrokenKing : Piece
     public String wImage { get; set; } = "Assets/Images/Kings/wHeartbrokenKing.png";
     public String bImage { get; set; } = "Assets/Images/Kings/bHeartbrokenKing.png";
     public String name { get; set; } = "HeartbrokenKing";
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

@@ -22,6 +22,17 @@ public interface Piece
      */
     public float points { get; set; }
 
+    /*
+     * Rarity Level
+     * 0 - Start With
+     * 1 - Pawn             35%
+     * 2 - Common Item      35%
+     * 3 - Uncommon Item    20%
+     * 4 - Rare Item        8%
+     * 5 - Legendary Item   2%
+     */
+    public int rarityLevel { get; set; }
+
 
     /*
      * Position

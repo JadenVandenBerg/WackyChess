@@ -974,6 +974,9 @@ public class HelperFunctions : MonoBehaviour
         return check;
     }
 
+    /* TODO
+    * Simulate abilities
+    */
     public static bool dummyMove(Piece piece, int[] coords) //Returns dummyIsCheck
     {
         int x = piece.position[0];
@@ -2540,6 +2543,9 @@ public class HelperFunctions : MonoBehaviour
         piece.ability = piece.ability.Replace(ability, "");
     }
 
+    /* TODO
+    * Refactor to pass gameData.piecesDict.Values as an argument
+    */
     public static Dictionary<Piece, List<string>> getAllEligibleAbilities(int color)
     {
         Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string>>();

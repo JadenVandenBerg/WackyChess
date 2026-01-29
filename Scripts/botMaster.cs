@@ -9,6 +9,10 @@ using UnityEngine.UI;
 using System.Xml.Linq;
 using System.Net.NetworkInformation;
 using Photon.Pun;
+using System.Linq;
+using System;
+using System.Diagnostics;
+using System.Threading;
 
 public class botMaster : MonoBehaviour
 {
@@ -37,8 +41,8 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        BotTemplate botWhite = new Bot1(1);
-        BotTemplate botBlack = new Bot1(-1);
+        BotTemplate botWhite = new RandomBot(1);
+        BotTemplate botBlack = new RandomBot(-1);
 
         moveSound = GetComponent<AudioSource>();
         photonView = GetComponent<PhotonView>();
@@ -143,28 +147,72 @@ public class botMaster : MonoBehaviour
         HelperFunctions.updatePointsOnBoard(panel);
     }
 
-    void Update()
+    int turn = 1;
+
+    IEnumerator Update()
     {
+        Bot currentBot;
+        bool valid = true;
+        if (turn == 1) {
+            currentBot = botWhite;
+        }
+        else {
+            currentBot = botBlack;
+        }
 
-        //Workflow
+        if (currentBot.penalty) {
+            Debug.Log("Bot " + currentBot.name + " has a penalty. Executing random move");
+            valid = false;
+            currentBot.penalty = false;
+        }
+        else {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            Dictionary<Piece, int[]> nextMove = currentBot.nextMove();
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
 
-        //botWhite.nextMove
-        //Verify
-        //Else random move
-        //Move piece
-        //Check if check/update bot boardstate
+            if (elapsedMs > 5000) {
+                currentBot.penalty = true;
+            }
 
-        //botBlack.nextMove
-        //Verify
-        //Else Random move
-        //Move piece
+            KeyValuePair<Piece, int[]> = nextMove.First();
 
-        //If bot takes too long to move, make a random move
+            Piece _movePiece = nextMove.Key;
+            int[] _moveCoords = nextMove.Value;
+
+            valid = botValidateMove(_movePiece, _moveCoords);
+        }
+
+        
+
+        if (valid) {
+            movePiece(_movePiece, _moveCoords);
+        }
+        else {
+            var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
+            movePiece(randomMove._randMovePiece, randomMove.moveCoords);
+        }
+
+
+        turn = turn * -1;
+        currentBot.boardGrid.refresh();
+
+        yield return new WaitForSeconds(3.0f);
 
         //Check if check/update bot boardstate
     }
 
-    public void movePiece(Piece piece, int[] coords)
+    public bool botValidateMove(Piece piece, int[] coords) {
+        List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
+
+        if (HelperFunctions.isInList(moves, coords, false)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void movePiece(Piece piece, int[] randMoveCoords)
     {
 
         //Debug.Log("Flags");

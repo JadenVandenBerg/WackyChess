@@ -229,6 +229,7 @@ public class onlineGame : MonoBehaviour
             {
                 if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false))
                 {
+                    //TODO MOVE DEATH LOGIC TO MOVEPIECE AND MOVE MOVEPIECE TO HELPERFUNCTIONS
                     moveSound.Play();
 
                     bool death = false;

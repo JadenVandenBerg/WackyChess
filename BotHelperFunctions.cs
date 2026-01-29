@@ -62,7 +62,46 @@ public class BotHelperFunctions : MonoBehaviour
     	}
     }
 
-    public (List<Dictionary<Piece, int[]>>, List<Dictionary<Piece, string>>) getAllPossibleBotMoves(BotTemplate bot, int color) {
+    //List so its easier to randomize. Each Dict has only one entry
+    public (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, string> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
     	// REMAKE of the original algorithm from helperfunctions
+    	// TODO this function assumes gameData vars are set
+
+    	List<List<List<Piece>>> oldBoardGrid = gameData.boardGrid;
+    	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
+
+    	foreach (Piece piece in bot.pieces) {
+    		List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
+
+    		if (moves.Count > 0) {
+    			Dictionary<Piece, List<int[]>> pMoveDict = new Dictionary<Piece, List<int[]>>();
+
+	    		pMoveDict.Add(piece, moves);
+
+	    		totalMoves.Add(pMoveDict);
+    		}
+    	}
+
+    }
+
+    public (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot) {
+        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(bot, bot.color);
+        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        Dictionary<Piece, string> allAbilities = botMoves.piecesAbilities;
+
+        Random rand = new Random();
+        int r = rand.Next(allMoves.Count);
+
+        Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[r];
+        KeyValuePair<Piece, List<int[]>> = pieceMovesKeyVal.First();
+        Piece _randMovePiece = pieceMovesKeyVal.Key;
+        int[] _randMoveCoordsList = pieceMovesKeyVal.Value;
+
+        rand = new Random();
+        int r = rand.Next(_randMoveCoordsList.Count);
+
+        int[] randMoveCoords = _randMoveCoordsList[r];
+
+        return (_randMovePiece, moveCoords)
     }
 }

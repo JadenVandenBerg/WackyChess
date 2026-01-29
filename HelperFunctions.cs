@@ -1386,13 +1386,13 @@ public class HelperFunctions : MonoBehaviour
         //}
     }
 
-    public static void updateBotMoves() //Update for choose colour
+    public static void updateBotMoves(int color)
     {
         gameData.botMoves.Clear();
 
         foreach (Piece piece in gameData.piecesDict.Values)
         {
-            if (piece.color == -1)
+            if (piece.color == color)
             {
                 List<int[]> moves = addMovesToCurrentMoveableCoords(piece);
                 gameData.botMoves.Add(piece, moves);
@@ -2543,9 +2543,6 @@ public class HelperFunctions : MonoBehaviour
         piece.ability = piece.ability.Replace(ability, "");
     }
 
-    /* TODO
-    * Refactor to pass gameData.piecesDict.Values as an argument
-    */
     public static Dictionary<Piece, List<string>> getAllEligibleAbilities(int color)
     {
         Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string>>();

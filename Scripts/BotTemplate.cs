@@ -8,6 +8,8 @@ public abstract class BotTemplate {
 	public List<Piece> pieces { get; set; } = new List<Piece>();
 	public List<Piece> opponentPieces { get; set; } = new List<Piece>();
 	public Piece king { get; set; } = null;
+	public bool penalty { get; set; } = false;
+	public string name { get; set; } = "Template";
 
 	//1: white, -1: black
 	public int color { get; set; } = 0;
@@ -53,27 +55,40 @@ public class BoardState {
 	// Outer List: x-Axis
 	// Middle List: y-Axis
 	// Inner List: List of Pieces
+	// ie. List<Piece> a2 = boardGrid[0][1]
 	public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
 
 	public int whitePointsOnBoard { get; set; } = 0;
 	public int blackPointsOnBoard { get; set; } = 0;
 
-	// How many unique squares colour can attack
-	public int whiteControl { get; set; } = 0;
-	public int whiteControl { get; set; } = 0;
-
-	public float whiteRating { get; set; } = 0.0f;
-	public float blackRating { get; set; } = 0.0f;
-
 	// List of colours in check
 	public int[] inCheck { get; set; } = [];
 
 	public BoardState() {
-		//
+		refresh();
 	}
 
 	// Resets the board state based on the real value of the board
+	// TODO
 	public BoardState refresh(List<List<List<Piece>>> newBoardGrid) {
 		boardGrid = new List<List<List<Piece>>>(newBoardGrid);
+
+		boardGrid = gameData.boardGrid;
+
+		int wp = 0;
+		int bp = 0;
+
+		foreach (List<List<Piece>> llp in boardGrid) {
+			foreach (List<Piece> lp in llp) {
+				foreach (Piece piece in lp) {
+					if (piece.color == 1) {
+						wp += piece.points
+					}
+					else if (piece.color == -1) {
+						bp += piece.points;
+					}
+				}
+			}
+		}
 	}
 }

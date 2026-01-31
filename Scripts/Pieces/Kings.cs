@@ -2968,6 +2968,7 @@ public class RulebreakerKing : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 3;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -3071,6 +3072,7 @@ public class DelayedKing : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 2;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {

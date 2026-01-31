@@ -3712,6 +3712,7 @@ public class DelayedKnight : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

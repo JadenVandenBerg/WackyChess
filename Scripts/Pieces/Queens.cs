@@ -3592,6 +3592,7 @@ public class Feminist : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3696,6 +3697,7 @@ public class Medusa : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -3807,6 +3809,7 @@ public class DelayedQueen : Piece
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9;
+    public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

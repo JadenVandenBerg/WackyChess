@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using HelperFunctions;
 
 public abstract class BotTemplate {
 	public BoardState currentBoardState { get; set; } = new BoardState();
@@ -43,11 +42,8 @@ public abstract class BotTemplate {
 	// This function will be called to determine your pieces next move in the game
 	//Piece: The piece to be moved
 	//int[]: 1-indexed coords to move the piece ([1,1]:[8,8])
-	public Dictionary<Piece, int[]> nextMove() {
-		Dictionary<Piece, int[]> finalMove = new Dictionary<Piece, int[]>();
-
-		return finalMove;
-	}
+	abstract
+	public Dictionary<Piece, int[]> nextMove();
 }
 
 public class BoardState {
@@ -58,11 +54,11 @@ public class BoardState {
 	// ie. List<Piece> a2 = boardGrid[0][1]
 	public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
 
-	public int whitePointsOnBoard { get; set; } = 0;
-	public int blackPointsOnBoard { get; set; } = 0;
+	public float whitePointsOnBoard { get; set; } = 0;
+	public float blackPointsOnBoard { get; set; } = 0;
 
 	// List of colours in check
-	public int[] inCheck { get; set; } = [];
+	public int[] inCheck { get; set; } = new int[2];
 
 	public BoardState() {
 		refresh();
@@ -70,19 +66,18 @@ public class BoardState {
 
 	// Resets the board state based on the real value of the board
 	// TODO
-	public BoardState refresh(List<List<List<Piece>>> newBoardGrid) {
-		boardGrid = new List<List<List<Piece>>>(newBoardGrid);
+	public void refresh() {
 
 		boardGrid = gameData.boardGrid;
 
-		int wp = 0;
-		int bp = 0;
+		float wp = 0;
+		float bp = 0;
 
 		foreach (List<List<Piece>> llp in boardGrid) {
 			foreach (List<Piece> lp in llp) {
 				foreach (Piece piece in lp) {
 					if (piece.color == 1) {
-						wp += piece.points
+						wp += piece.points;
 					}
 					else if (piece.color == -1) {
 						bp += piece.points;
@@ -90,5 +85,8 @@ public class BoardState {
 				}
 			}
 		}
+
+		whitePointsOnBoard = wp;
+		blackPointsOnBoard = bp;
 	}
 }

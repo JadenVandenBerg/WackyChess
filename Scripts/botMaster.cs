@@ -10,9 +10,6 @@ using System.Xml.Linq;
 using System.Net.NetworkInformation;
 using Photon.Pun;
 using System.Linq;
-using System;
-using System.Diagnostics;
-using System.Threading;
 
 public class botMaster : MonoBehaviour
 {
@@ -35,17 +32,20 @@ public class botMaster : MonoBehaviour
 
     private AudioSource moveSound;
 
+    BotTemplate botWhite;
+    BotTemplate botBlack;
+
     IEnumerator Start()
     {
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
 
-        BotTemplate botWhite = new RandomBot(1);
-        BotTemplate botBlack = new RandomBot(-1);
-
         moveSound = GetComponent<AudioSource>();
         photonView = GetComponent<PhotonView>();
+
+        botWhite = new RandomBot(1);
+        botBlack = new RandomBot(-1);
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
@@ -140,7 +140,6 @@ public class botMaster : MonoBehaviour
 
         gameData.whiteKing = botWhiteKing[0];
         gameData.blackKing = botBlackKing[0];
-
         panel.Initialize();
 
         yield return null;
@@ -148,56 +147,77 @@ public class botMaster : MonoBehaviour
     }
 
     int turn = 1;
+    bool isTurn = true;
 
-    IEnumerator Update()
+    void Update()
     {
-        Bot currentBot;
+        if (!isTurn) return;
+
+        isTurn = false;
+
+        StartCoroutine(BotTurn());
+    }
+
+    IEnumerator BotTurn()
+    {
+        BotTemplate currentBot;
         bool valid = true;
-        if (turn == 1) {
+
+        Piece movePieceObj = null;
+        int[] moveCoords = null;
+
+        if (turn == 1)
+        {
             currentBot = botWhite;
         }
-        else {
+        else
+        {
             currentBot = botBlack;
         }
 
-        if (currentBot.penalty) {
+        if (currentBot.penalty)
+        {
             Debug.Log("Bot " + currentBot.name + " has a penalty. Executing random move");
             valid = false;
             currentBot.penalty = false;
         }
-        else {
+        else
+        {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             Dictionary<Piece, int[]> nextMove = currentBot.nextMove();
             watch.Stop();
-            var elapsedMs = watch.ElapsedMilliseconds;
 
-            if (elapsedMs > 5000) {
+            if (watch.ElapsedMilliseconds > 5000)
+            {
                 currentBot.penalty = true;
+                valid = false;
             }
+            else
+            {
+                KeyValuePair<Piece, int[]> movePair = nextMove.First();
+                movePieceObj = movePair.Key;
+                moveCoords = movePair.Value;
 
-            KeyValuePair<Piece, int[]> = nextMove.First();
-
-            Piece _movePiece = nextMove.Key;
-            int[] _moveCoords = nextMove.Value;
-
-            valid = botValidateMove(_movePiece, _moveCoords);
+                valid = botValidateMove(movePieceObj, moveCoords);
+            }
         }
 
-        
-
-        if (valid) {
-            movePiece(_movePiece, _moveCoords);
+        if (valid)
+        {
+            movePiece(movePieceObj, moveCoords);
         }
-        else {
+        else
+        {
             var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
-            movePiece(randomMove._randMovePiece, randomMove.moveCoords);
+            movePiece(randomMove.piece, randomMove.coords);
         }
 
-
-        turn = turn * -1;
-        currentBot.boardGrid.refresh();
+        turn *= -1;
+        currentBot.currentBoardState.refresh();
 
         yield return new WaitForSeconds(3.0f);
+        isTurn = true;
+
 
         //Check if check/update bot boardstate
     }
@@ -212,7 +232,7 @@ public class botMaster : MonoBehaviour
         return false;
     }
 
-    public void movePiece(Piece piece, int[] randMoveCoords)
+    public void movePiece(Piece piece, int[] coords)
     {
 
         //Debug.Log("Flags");
@@ -372,11 +392,11 @@ public class botMaster : MonoBehaviour
         Piece king;
         if (piece.color == 1)
         {
-            king = bKing;
+            king = gameData.whiteKing;
         }
         else
         {
-            king = wKing;
+            king = gameData.blackKing;
         }
 
         //Last minute things

@@ -95,3 +95,10 @@ TextMesh Pro/
 
 # API
 google-services.json
+
+# IGNORE DIRS
+Firebase/
+ExternalDependencyManager/
+StreamingAssets/
+Editor Default Resources/
+_TerrainAutoUpgrade/

@@ -11,6 +11,7 @@ public class RandomBot : BotTemplate
         choosePieces();
     }
 
+    override
     public Dictionary<Piece, int[]> nextMove()
     {
         var move = BotHelperFunctions.getRandomBotMove(this);
@@ -19,5 +20,7 @@ public class RandomBot : BotTemplate
 
         Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
         moveDict.Add(piece, coords);
+
+        return moveDict;
     }
 }

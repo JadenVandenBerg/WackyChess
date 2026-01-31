@@ -15,7 +15,7 @@ public class BotHelperFunctions : MonoBehaviour
 	public static List<Piece> getPiecesTypeRandom(string type, int color) {
 		List<string> pieces = getAllTypePieces(type);
 
-		List<string> selected = new List<string>();
+		List<Piece> selected = new List<Piece>();
 
 		int count = 2;
 
@@ -28,23 +28,28 @@ public class BotHelperFunctions : MonoBehaviour
 
 		for (int i = 0; i < count; i++)
 		{
-		    int index = Random.Shared.Next(pieces.Count);
+            System.Random rand = new System.Random();
+		    int index = rand.Next(pieces.Count);
 
-		    Type type = Type.GetType("" + pieces[index] + ", Assembly-CSharp");
-		    selected.Add((Piece) Activator.CreateInstance(type, color, false));
+		    Type type_ = Type.GetType("" + pieces[index] + ", Assembly-CSharp");
+            Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
+
+            selected.Add(piece);
 		    pieces.RemoveAt(index);
 		}
 
 		return selected;
 	}
 
-	private List<string> getAllTypePieces(string type) {
+	private static List<string> getAllTypePieces(string type) {
 
-    	List<Piece> allPieces = Lootbox.GetAllPieces();
+    	List<Type> allPieces = Lootbox.GetAllPieces();
     	List<string> eligiblePieces = new List<string>();
 
-    	foreach (var piece in allPieces) {
-    		if (piece.baseType = type) {
+    	foreach (var piece_ in allPieces) {
+
+            Piece piece = (Piece)Activator.CreateInstance(piece_);
+            if (piece.baseType == type) {
     			eligiblePieces.Add(piece.name);
     		}
     	}
@@ -52,18 +57,20 @@ public class BotHelperFunctions : MonoBehaviour
     	return eligiblePieces;
     }
 
-    public List<Piece> filterPieces(string type, List<Piece> pieces) {
+    public static List<Piece> filterPieces(string type, List<Piece> pieces) {
     	List<Piece> filteredPieces = new List<Piece>();
 
     	foreach (var piece in pieces) {
-    		if (piece.baseType == type) {
+            if (piece.baseType == type) {
     			filteredPieces.Add(piece);
     		}
     	}
+
+        return filteredPieces;
     }
 
     //List so its easier to randomize. Each Dict has only one entry
-    public (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, string> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
     	// REMAKE of the original algorithm from helperfunctions
     	// TODO this function assumes gameData vars are set
 
@@ -82,26 +89,31 @@ public class BotHelperFunctions : MonoBehaviour
     		}
     	}
 
+        return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+
     }
 
-    public (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot) {
-        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(bot, bot.color);
+    public static (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot)
+    {
+        var botMoves = getAllPossibleBotMoves(bot, bot.color);
+
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
-        Dictionary<Piece, string> allAbilities = botMoves.piecesAbilities;
+        Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
-        Random rand = new Random();
-        int r = rand.Next(allMoves.Count);
+        System.Random rand = new System.Random();
 
-        Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[r];
-        KeyValuePair<Piece, List<int[]>> = pieceMovesKeyVal.First();
-        Piece _randMovePiece = pieceMovesKeyVal.Key;
-        int[] _randMoveCoordsList = pieceMovesKeyVal.Value;
+        int dictIndex = rand.Next(allMoves.Count);
 
-        rand = new Random();
-        int r = rand.Next(_randMoveCoordsList.Count);
+        Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+        KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
 
-        int[] randMoveCoords = _randMoveCoordsList[r];
+        Piece randMovePiece = pieceMovesKeyVal.Key;
+        List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
 
-        return (_randMovePiece, moveCoords)
+        int coordIndex = rand.Next(randMoveCoordsList.Count);
+        int[] randMoveCoords = randMoveCoordsList[coordIndex];
+
+        return (randMovePiece, randMoveCoords);
     }
+
 }

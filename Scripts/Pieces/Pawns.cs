@@ -5700,6 +5700,7 @@ public class DelayedPawn : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public int rarityLevel { get; set; } = 1;
+    public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };

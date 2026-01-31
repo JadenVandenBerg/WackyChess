@@ -254,7 +254,7 @@ public class gameBot2 : MonoBehaviour
 
             gameData.botMove = true;
 
-            HelperFunctions.updateBotMoves();
+            HelperFunctions.updateBotMoves(-1);
 
             bool isMoveable = false;
 

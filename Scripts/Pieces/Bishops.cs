@@ -3433,6 +3433,7 @@ public class DelayedBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
+    public string baseType { get; set; } = "Bishop";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";

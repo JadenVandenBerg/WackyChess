@@ -13,8 +13,8 @@ public class Lootbox {
 		getUnboxedPiece(getRarityLevel());
 	}
 
-	private int() getRarity {
-		Random rand = new Random();
+	private int getRarity() {
+		System.Random rand = new System.Random();
 
 		int randVal = rand.Next(0, 100);
 		int rarityLevel = 0;
@@ -51,11 +51,13 @@ public class Lootbox {
 
     private List<string> getAllElegiblePieces(int rarityLevel) {
 
-    	List<Piece> allPieces = GetAllPieces();
+    	List<Type> allPieces = GetAllPieces();
     	List<string> eligiblePieces = new List<string>();
 
-    	foreach (var piece in allPieces) {
-    		if (piece.rarityLevel = rarityLevel) {
+    	foreach (var piece_ in allPieces) {
+			Piece piece = (Piece)Activator.CreateInstance(piece_);
+
+			if (piece.rarityLevel == rarityLevel) {
     			eligiblePieces.Add(piece.name);
     		}
     	}
@@ -64,11 +66,11 @@ public class Lootbox {
     }
 
     private string getUnboxedPiece(int rarityLevel) {
-    	Random rand = new Random();
+		System.Random rand = new System.Random();
     	List<string> pieces = getAllElegiblePieces(rarityLevel);
 
-    	string unboxed = pieces[rand.Next(pieces.length)];
-    	setPiece(unboxed);
+    	string unboxed = pieces[rand.Next(pieces.Count)];
+		setUnboxed(unboxed);
     	return unboxed;
     }
 
@@ -84,7 +86,7 @@ public class Lootbox {
 		return item;
 	}
 
-	public string setUnboxed(string unboxed) {
+	public void setUnboxed(string unboxed) {
 		item = unboxed;
 	}
 

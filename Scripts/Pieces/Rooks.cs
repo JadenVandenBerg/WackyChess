@@ -13,6 +13,7 @@ public class Rook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -122,6 +123,7 @@ public class MurderousRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "Moves like a rook but you can kill your own pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -229,6 +231,7 @@ public class GhostRook : Piece
     public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "Moves like a rook but you can go through your own pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -336,6 +339,7 @@ public class GhoulRook : Piece
     public float points { get; set; } = 5.5f;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "Moves like a rook but your pieces can go through it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -443,6 +447,7 @@ public class OneTimeRook : Piece
     public float points { get; set; } = 0f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "Moves like a rook but can only move once.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -550,6 +555,7 @@ public class ElectricRook : Piece
     public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "This piece moves like a rook. On capture, the capturing piece has a 50% chance of dying.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -659,6 +665,7 @@ public class InfiniteRook : Piece
     public float points { get; set; } = 11;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -768,6 +775,7 @@ public class PortalRook : Piece
     public float points { get; set; } = 8;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -877,6 +885,7 @@ public class AtomicRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -986,6 +995,7 @@ public class LandmineRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1095,6 +1105,7 @@ public class LiteRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1199,6 +1210,7 @@ public class SuperGhostRook : Piece
     public float points { get; set; } = 5.5f;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "Moves like a rook but your pieces can go through it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1306,6 +1318,7 @@ public class Empress : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1418,6 +1431,7 @@ public class FragileRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1527,6 +1541,7 @@ public class RoyalRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1637,6 +1652,7 @@ public class MonochromeRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1746,6 +1762,7 @@ public class CrowdingRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1855,6 +1872,7 @@ public class HungryRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1964,6 +1982,7 @@ public class CaptureTheFlagRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2073,6 +2092,7 @@ public class FreezingRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2182,6 +2202,7 @@ public class CloningRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2291,6 +2312,7 @@ public class UndeadRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2400,6 +2422,7 @@ public class PromotionRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2509,6 +2532,7 @@ public class DefuserRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2618,6 +2642,7 @@ public class SpittingRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2727,6 +2752,7 @@ public class PhantomRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2836,6 +2862,7 @@ public class StackingRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2945,6 +2972,7 @@ public class JailRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3054,6 +3082,7 @@ public class Crook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3163,6 +3192,7 @@ public class PiggybackRook : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3283,6 +3313,7 @@ public class JockeyRook : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Rook";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;

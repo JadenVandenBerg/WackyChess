@@ -13,6 +13,7 @@ public class Bishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -122,6 +123,7 @@ public class MurderousBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but you can kill your own pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -229,6 +231,7 @@ public class GhostBishop : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but you can go through your own pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -336,6 +339,7 @@ public class GhoulBishop : Piece
     public float points { get; set; } = 3.5f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but your pieces can g=o through it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -443,6 +447,7 @@ public class OneTimeBishop : Piece
     public float points { get; set; } = 0f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but can only move once.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -550,6 +555,7 @@ public class ElectricBishop : Piece
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "This piece moves like a bishop. On capture, the capturing piece has a 50% chance of dying.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -659,6 +665,7 @@ public class InfiniteBishop : Piece
     public float points { get; set; } = 9;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -768,6 +775,7 @@ public class PortalBishop : Piece
     public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -877,6 +885,7 @@ public class AtomicBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -986,6 +995,7 @@ public class LandmineBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1095,6 +1105,7 @@ public class ColorChangingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1204,6 +1215,7 @@ public class LiteBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1308,6 +1320,7 @@ public class SuperGhostBishop : Piece
     public float points { get; set; } = 3.5f;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but your pieces can go through it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1415,6 +1428,7 @@ public class Princess : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1527,6 +1541,7 @@ public class FragileBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1636,6 +1651,7 @@ public class RoyalBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1746,6 +1762,7 @@ public class BouncingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1855,6 +1872,7 @@ public class CrowdingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1964,6 +1982,7 @@ public class HungryBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2073,6 +2092,7 @@ public class CaptureTheFlagBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2182,6 +2202,7 @@ public class FreezingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2291,6 +2312,7 @@ public class CloningBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2400,6 +2422,7 @@ public class UndeadBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2509,6 +2532,7 @@ public class PromotionBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2618,6 +2642,7 @@ public class DefuserBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2727,6 +2752,7 @@ public class SpittingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2836,6 +2862,7 @@ public class PhantomBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2945,6 +2972,7 @@ public class StackingBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3054,6 +3082,7 @@ public class JailBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3163,6 +3192,7 @@ public class PiggybackBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3283,6 +3313,7 @@ public class JockeyBishop : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;

@@ -14,6 +14,12 @@ public interface Piece
      */
     public int color { get; set; }
 
+    /*
+    * BaseType
+    * What class of piece this is. Ie. Pawn, Rook
+    */
+    public string baseType { get; set; }
+
 
     /*
      * Points
@@ -45,6 +51,7 @@ public interface Piece
     /*
      * Start Square
      * Where the piece starts
+     * [x, y]
      */
     public int[] startSquare { get; set; }
 

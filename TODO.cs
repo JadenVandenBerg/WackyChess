@@ -8,6 +8,9 @@
 //Feature
 //Side panel only show selectable pieces
 
+//Refactor
+//Move movePiece function to HelperFunctions
+
 //Pieces IMG
 /*
 

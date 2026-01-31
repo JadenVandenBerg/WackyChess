@@ -38,6 +38,7 @@ public class Pawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -118,6 +119,7 @@ public class TwoPawn : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "Similar to a normal pawn, but this piece is capable of moving up two squares. What it lacks in defense it makes up for with its speedy promotions";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -221,6 +223,7 @@ public class ThreePawn : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "Similar to a normal pawn, but this piece is capable of moving up three squares. What it lacks in defense it makes up for with its speedy promotions";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -323,6 +326,7 @@ public class FourPawn : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "Similar to a normal pawn, but this piece is capable of moving up four squares. What it lacks in defense it makes up for with its speedy promotions";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -425,6 +429,7 @@ public class OneTwoPawn : Piece
     public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "A strong pawn that can move one or two squares forward.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -527,6 +532,7 @@ public class ForwardPawn : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn both attacks and moves forwards.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -629,6 +635,7 @@ public class TwoForwardPawn : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn both attacks and moves forwards. Can move two squares at a time";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -731,6 +738,7 @@ public class OneTwoForwardPawn : Piece
     public float points { get; set; } = 1.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn both attacks and moves forwards. Can move one or two squares at a time";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -833,6 +841,7 @@ public class UpperPawn : Piece
     public float points { get; set; } = 2f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "A strong, defensive pawn. Can attack in all upwards directions, this pawn has no weak points when in formation.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -935,6 +944,7 @@ public class DiagonalSquarePawn : Piece
     public float points { get; set; } = 1.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "A strong, defensive pawn that protects the pawns in front and below it.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1037,6 +1047,7 @@ public class OctaPawn : Piece
     public float points { get; set; } = 2.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "The powerhouse of pawns, this piece can attack anywhere it pleases.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1139,6 +1150,7 @@ public class OctaPawnLite : Piece
     public float points { get; set; } = 1.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "The powerhouse of pawns, this piece can attack anywhere it pleases. However, this piece cannot move";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1241,6 +1253,7 @@ public class ForwardSidePawn : Piece
     public float points { get; set; } = 1f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn attacks forward, left, and right.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1343,6 +1356,7 @@ public class SquarePawn : Piece
     public float points { get; set; } = 1.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn attacks forward, backward, left, and right.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1445,6 +1459,7 @@ public class LitePawn : Piece
     public float points { get; set; } = -1.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn cannot move.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1571,6 +1586,7 @@ public class MurderousPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bMurderousPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. Or Killing them, since you can do that too.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1689,6 +1705,7 @@ public class GhostPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bGhostPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. This piece can move through your other pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1793,6 +1810,7 @@ public class GhoulPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bGhoulPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "Normal pawn, but your pieces can move through this piece.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1871,6 +1889,7 @@ public class BackwardPawn : Piece
     public float points { get; set; } = -0.5f;
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This pawn moves forwards and attacks backwards";
     public String longDescription { get; set; } = "There once was a backward pawn who walked a backward mile. He lived in a backward house and had a backward smile.";
     public int alive { get; set; } = 1;
@@ -1997,6 +2016,7 @@ public class OneTimePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bOneTimePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "Normal pawn, but can only move once.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2120,6 +2140,7 @@ public class ElectricPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bElectricPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This piece moves like a pawn. On its capture, there is a 50% chance the capturing piece will die.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2225,6 +2246,7 @@ public class ShieldPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bShieldPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2330,6 +2352,7 @@ public class InfinitePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bInfinitePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2435,6 +2458,7 @@ public class PortalPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPortalPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2565,6 +2589,7 @@ public class AtomicPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bAtomicPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2670,6 +2695,7 @@ public class LandminePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bLandminePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2775,6 +2801,7 @@ public class SpontaneouslyCombustingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bSpontaneouslyCombustingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2879,6 +2906,7 @@ public class SuperGhostPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bSuperGhostPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. This piece can move through your other pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2984,6 +3012,7 @@ public class Man : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bMan.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3089,6 +3118,7 @@ public class FragilePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bFragilePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3194,6 +3224,7 @@ public class CrowdingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bCrowdingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3299,6 +3330,7 @@ public class HungryPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bHungryPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3404,6 +3436,7 @@ public class CaptureTheFlagPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bCaptureTheFlagPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3509,6 +3542,7 @@ public class FreezingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bFreezingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3614,6 +3648,7 @@ public class CloningPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bCloningPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3719,6 +3754,7 @@ public class ZombiePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bZombiePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3824,6 +3860,7 @@ public class UndeadPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bUndeadPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3929,6 +3966,7 @@ public class PromotionPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPromotionPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4034,6 +4072,7 @@ public class DefuserPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bDefuserPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4139,6 +4178,7 @@ public class SpittingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bSpittingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4244,6 +4284,7 @@ public class PhantomPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPhantomPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4349,6 +4390,7 @@ public class SplittingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bSplittingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4454,6 +4496,7 @@ public class LeftPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bLeftPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4559,6 +4602,7 @@ public class RightPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bRightPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4664,6 +4708,7 @@ public class PromotingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPromotingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4769,6 +4814,7 @@ public class StackingPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bStackingPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4874,6 +4920,7 @@ public class JailPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bJailPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -4979,6 +5026,7 @@ public class PiggybackPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPiggybackPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -5095,6 +5143,7 @@ public class JockeyPawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bJockeyPawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -5220,6 +5269,7 @@ public class ProtectivePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bProtectivePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -5336,6 +5386,7 @@ public class PAWN : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bPAWN!.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -5452,6 +5503,7 @@ public class DoublePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bDoublePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -5568,6 +5620,7 @@ public class OppressivePawn : Piece
     public String bImage { get; set; } = "Assets/Images/Pawns/bOppressivePawn.png";
     public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;

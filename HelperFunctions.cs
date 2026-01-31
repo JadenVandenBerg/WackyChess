@@ -978,6 +978,9 @@ public class HelperFunctions : MonoBehaviour
         return check;
     }
 
+    /* TODO
+    * Simulate abilities
+    */
     public static bool dummyMove(Piece piece, int[] coords) //Returns dummyIsCheck
     {
         int x = piece.position[0];
@@ -1387,13 +1390,13 @@ public class HelperFunctions : MonoBehaviour
         //}
     }
 
-    public static void updateBotMoves() //Update for choose colour
+    public static void updateBotMoves(int color)
     {
         gameData.botMoves.Clear();
 
         foreach (Piece piece in gameData.piecesDict.Values)
         {
-            if (piece.color == -1)
+            if (piece.color == color)
             {
                 List<int[]> moves = addMovesToCurrentMoveableCoords(piece);
                 gameData.botMoves.Add(piece, moves);

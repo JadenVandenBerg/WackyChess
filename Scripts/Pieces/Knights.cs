@@ -13,6 +13,7 @@ public class Knight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -121,6 +122,7 @@ public class MurderousKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "Similar to a regular knight, but this piece can capture your own pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -234,6 +236,7 @@ public class GhoulKnight : Piece
     public float points { get; set; } = 3.5f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "Similar to a regular knight, but your pieces can move through this piece.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -336,6 +339,7 @@ public class OneTimeKnight : Piece
     public float points { get; set; } = 0f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "Similar to a regular knight, but can only move once.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -452,6 +456,7 @@ public class ElectricKnight : Piece
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "This piece moves like a knight. On capture, there is a 50% chance the capturing piece will die.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -560,6 +565,7 @@ public class InfiniteKnight : Piece
     public float points { get; set; } = 12;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -668,6 +674,7 @@ public class PortalKnight : Piece
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -776,6 +783,7 @@ public class AtomicKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -884,6 +892,7 @@ public class LandmineKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -992,6 +1001,7 @@ public class LiteKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1097,6 +1107,7 @@ public class SpiderKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1207,6 +1218,7 @@ public class DisabledKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1314,6 +1326,7 @@ public class Elephant : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1421,6 +1434,7 @@ public class SniperElephant : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1528,6 +1542,7 @@ public class Camel : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1636,6 +1651,7 @@ public class FragileKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1744,6 +1760,7 @@ public class SinisterMinisterKnight : Piece
     public float points { get; set; } = 9;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1852,6 +1869,7 @@ public class RoyalKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -1962,6 +1980,7 @@ public class CrowdingKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2070,6 +2089,7 @@ public class HungryKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2178,6 +2198,7 @@ public class CaptureTheFlagKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2286,6 +2307,7 @@ public class FreezingKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2394,6 +2416,7 @@ public class CloningKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2502,6 +2525,7 @@ public class UndeadKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2610,6 +2634,7 @@ public class PromotionKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2718,6 +2743,7 @@ public class LongKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2826,6 +2852,7 @@ public class DefuserKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2934,6 +2961,7 @@ public class Hippocamelus : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3044,6 +3072,7 @@ public class SpittingKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3152,6 +3181,7 @@ public class PhantomKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3260,6 +3290,7 @@ public class StackingKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3368,6 +3399,7 @@ public class JailKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3476,6 +3508,7 @@ public class PiggybackKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -3595,6 +3628,7 @@ public class JockeyKnight : Piece
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Knight";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;

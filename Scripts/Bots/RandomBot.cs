@@ -7,6 +7,7 @@ public class RandomBot : BotTemplate
     {
         color = botColor;
         pieces = new List<Piece>();
+        name = "Random Bot";
 
         choosePieces();
     }

@@ -1475,7 +1475,7 @@ public class SniperElephant : Piece
     public bool hasMoved { get; set; } = false;
 
     public String wImage { get; set; } = "Assets/Images/Knights/wSniperElephant.png";
-    public String bImage { get; set; } = "Assets/Images/Knights/vSniperElephant.png";
+    public String bImage { get; set; } = "Assets/Images/Knights/bSniperElephant.png";
     public String name { get; set; } = "KnightSniperElephant";
 
     public int[,] dependentMovesSet()
@@ -1802,8 +1802,8 @@ public class SinisterMinisterKnight : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Queens/wSinisterMinisterKnight.png";
-    public String bImage { get; set; } = "Assets/Images/Queens/bSinisterMinisterKnight.png";
+    public String wImage { get; set; } = "Assets/Images/Knights/wSinisterMinisterKnight.png";
+    public String bImage { get; set; } = "Assets/Images/Knights/bSinisterMinisterKnight.png";
     public String name { get; set; } = "SinisterMinisterKnight";
     public int[,] dependentMovesSet()
     {

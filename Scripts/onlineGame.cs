@@ -14,7 +14,7 @@ public class onlineGame : MonoBehaviour
 {
     public GameObject board2;
     public GameObject boardWrapper;
-    public GameObject checkmateUI;
+    public HelperFunctions helper;
 
     public Piece pawn, pawn2, pawn3, pawn4, pawn5, pawn6, pawn7, pawn8;
     public Piece bpawn, bpawn2, bpawn3, bpawn4, bpawn5, bpawn6, bpawn7, bpawn8;
@@ -27,9 +27,7 @@ public class onlineGame : MonoBehaviour
     public PhotonView photonView;
 
     //public GameObject wp, bp, t, a;
-    public SidePanelAdjust panel;
-
-    private AudioSource moveSound;
+   // public SidePanelAdjust panel;
 
     IEnumerator Start()
     {
@@ -37,12 +35,11 @@ public class onlineGame : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        moveSound = GetComponent<AudioSource>();
         photonView = GetComponent<PhotonView>();
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new Pawn(1, true);
+        pawn = new DelayedPawn(1, true);
         pawn2 = new Crook(1, true);
         pawn3 = new ProtectivePawn(1, true);
         pawn4 = new RoyalKnight(1, true);
@@ -158,10 +155,10 @@ public class onlineGame : MonoBehaviour
         gameData.whiteKing = wKing;
         gameData.blackKing = bKing;
 
-        panel.Initialize();
+        //panel.Initialize();
 
         yield return null;
-        HelperFunctions.updatePointsOnBoard(panel);
+        //HelperFunctions.updatePointsOnBoard(panel);
     }
 
     void Update()
@@ -205,9 +202,7 @@ public class onlineGame : MonoBehaviour
                 if (!gameData.refreshedSinceClick)
                 {
                     gameData.refreshedSinceClick = true;
-                    panel.squareImages = HelperFunctions.generateSidePanelImages(gameData.selected);
-                    panel.panelPieces = HelperFunctions.getPiecesOnSquareBoardGrid(gameData.selected);
-                    panel.RefreshImageGrid();
+                    helper.refreshPanelSelected();
                 }
             }
         }
@@ -220,7 +215,7 @@ public class onlineGame : MonoBehaviour
         Debug.Log("Ability: " + gameData.abilitySelected);*/
 
         //MOVE
-        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
+        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMovePiece != null && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
         {
             //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));
@@ -229,46 +224,8 @@ public class onlineGame : MonoBehaviour
             {
                 if (HelperFunctions.isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected), false))
                 {
+                    helper.performPreMove();
                     //TODO MOVE DEATH LOGIC TO MOVEPIECE AND MOVE MOVEPIECE TO HELPERFUNCTIONS
-                    moveSound.Play();
-
-                    bool death = false;
-                    GameObject selectedGo = null;
-                    GameObject selectedToMoveGo = null;
-
-                    if (gameData.selected.transform.childCount != 0)
-                    {
-                        selectedGo = gameData.selected.transform.GetChild(0).gameObject;
-                        selectedToMoveGo = gameData.selectedToMovePiece.go;
-
-                        death = true;
-                        if (!HelperFunctions.getColorsOnSquare(gameData.selected, true).Contains(gameData.selectedToMovePiece.color * -1))
-                        {
-                            death = false;
-                        }
-                        else if (HelperFunctions.checkStateAllOnSquare(HelperFunctions.getPiecesOnSquare(gameData.selected), "Dematerialized"))
-                        {
-                            death = false;
-                        }
-                        else if (HelperFunctions.checkSquareCrowdingEligible(gameData.selectedToMovePiece, HelperFunctions.getPiecesOnSquare(gameData.selected)))
-                        {
-                            death = false;
-                        }
-                        else if (HelperFunctions.checkState(gameData.selectedToMovePiece, "Dematerialized"))
-                        {
-                            death = false;
-                        }
-                    }
-
-                    if (death)
-                    {
-                        Piece destroyer = gameData.piecesDict[selectedToMoveGo];
-
-                        //Debug.Log("DESTROYING: " + toDestroy.name + ". Square: " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1]);
-                        HelperFunctions.onDeaths(destroyer, selectedToMoveGo, gameData.selected);
-                        //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
-                        //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
-                    }
 
                     photonView.RPC("MovePieceRPC", RpcTarget.All, HelperFunctions.findCoords(gameData.selectedToMove), HelperFunctions.findCoords(gameData.selected));
                     //movePiece(gameData.selectedPiece, HelperFunctions.findCoords(gameData.selected));
@@ -285,539 +242,7 @@ public class onlineGame : MonoBehaviour
         //ABILITY
         if (gameData.abilitySelected != "" && gameData.selectedPiece != null)
         {
-            if (gameData.abilitySelected == "Vomit")
-            {
-                //TODO make it so you can only pass if there are less pieces than spaces
-                if (gameData.abilityAdvanceNext)
-                {
-                    Debug.Log("Advancing Next Vomit");
-                    panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
-                    panel.panelPieces = gameData.selectedPiece.storage;
-                    panel.RefreshImageGrid();
-
-                    gameData.abilityAdvanceNext = false;
-                    gameData.selectedFromPanel = false;
-
-                    List<int[]> tempCoordSet = tempInfo.tempCoordSet;
-                    tempInfo.tempSquare = HelperFunctions.hungryPieceNextBarf(gameData.selectedPiece, ref tempCoordSet);
-                    tempInfo.tempCoordSet = tempCoordSet;
-
-                    HelperFunctions.resetBoardColours();
-                    HelperFunctions.highlightSquare(tempInfo.tempSquare, Color.red);
-
-                    Debug.Log(tempInfo.tempSquare);
-                    if (tempInfo.tempSquare == null || gameData.selectedPiece.storage == null || gameData.selectedPiece.storage.Count == 0)
-                    {
-                        gameData.abilitySelected = "";
-                        gameData.selected = null;
-                        HelperFunctions.resetBoardColours();
-                        gameData.turn = gameData.turn * -1;
-
-                        gameData.selectedPiece.storage = new List<Piece>();
-
-                        panel.squareImages = HelperFunctions.generateSidePanelImagesFromList(gameData.selectedPiece.storage, true);
-                        panel.panelPieces = gameData.selectedPiece.storage;
-                        panel.RefreshImageGrid();
-
-                        gameData.selectedPiece = null;
-                    }
-                }
-
-                if (tempInfo.selectedFromPanel && tempInfo.tempPiece != null)
-                {
-                    //Put tempPiece on Square
-                    Piece p = tempInfo.tempPiece;
-
-                    if (p != null)
-                    {
-                        GameObject s = tempInfo.tempSquare;
-
-                        HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
-                        HelperFunctions.restorePieceImageToBoard(p);
-                        HelperFunctions.initPiece(p, HelperFunctions.findCoords(s));
-
-                        gameData.selectedPiece.storage.Remove(p);
-                    }
-
-                    gameData.abilityAdvanceNext = true;
-                    gameData.selectedFromPanel = false;
-                    tempInfo.tempPiece = null;
-                    tempInfo.tempSquare = null;
-                    gameData.selected = null;
-                }
-
-                if (tempInfo.passed)
-                {
-                    tempInfo.passed = false;
-
-                    gameData.abilityAdvanceNext = true;
-                    gameData.selectedFromPanel = false;
-                    tempInfo.tempPiece = null;
-                    tempInfo.tempSquare = null;
-                    gameData.selected = null;
-                }
-            }
-            else if (gameData.abilitySelected == "CastleLeft")
-            {
-                string color;
-
-                if (gameData.turn == 1)
-                {
-                    color = "w";
-                }
-                else
-                {
-                    color = "b";
-                }
-
-                Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
-                Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r1");
-
-                int kingMove = -2;
-                int rookMove = 3;
-
-                if (HelperFunctions.checkState(king, "Switch"))
-                {
-                    kingMove -= 2;
-                    rookMove ++;
-                }
-
-                gameData.selectedToMovePiece = king;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
-                gameData.selectedToMovePiece = rook;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
-
-                gameData.abilitySelected = "";
-                gameData.selected = null;
-                HelperFunctions.resetBoardColours();
-                gameData.turn = gameData.turn * -1;
-
-                HelperFunctions.removeAbility(king, "CastleLeft");
-                HelperFunctions.removeAbility(king, "CastleRight");
-            }
-            else if (gameData.abilitySelected == "CastleRight")
-            {
-                string color;
-
-                if (gameData.turn == 1)
-                {
-                    color = "w";
-                }
-                else
-                {
-                    color = "b";
-                }
-
-                Piece king = HelperFunctions.findPieceFromPanelCode(color + "_k1");
-                Piece rook = HelperFunctions.findPieceFromPanelCode(color + "_r2");
-
-                int kingMove = 2;
-                int rookMove = -2;
-
-                if (HelperFunctions.checkState(king, "Switch"))
-                {
-                    kingMove++;
-                    rookMove--;
-                }
-
-                gameData.selectedToMovePiece = king;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
-                gameData.selectedToMovePiece = rook;
-                photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
-
-                gameData.abilitySelected = "";
-                gameData.selected = null;
-                HelperFunctions.resetBoardColours();
-                gameData.turn = gameData.turn * -1;
-
-                HelperFunctions.removeAbility(king, "CastleLeft");
-                HelperFunctions.removeAbility(king, "CastleRight");
-            }
-            else if (gameData.abilitySelected == "Freeze")
-            {
-                if (gameData.abilityAdvanceNext)
-                {
-                    HelperFunctions.highlightSurroundingSquaresWithPieces(gameData.selectedPiece);
-
-                    gameData.abilityAdvanceNext = false;
-                    gameData.selected = null;
-                }
-                else if (gameData.selectedPiece != null && tempInfo.tempPiece == gameData.selectedPiece)
-                {
-                    HelperFunctions.addState(tempInfo.tempPiece, "Frozen");
-                    HelperFunctions.addAbility(tempInfo.tempPiece, "Unfreeze");
-
-                    gameData.abilitySelected = "";
-                    gameData.selected = null;
-                    HelperFunctions.resetBoardColours();
-                    gameData.turn = gameData.turn * -1;
-                    tempInfo.tempPiece = null;
-                }
-            }
-            else if (gameData.abilitySelected == "Unfreeze")
-            {
-                Piece piece = gameData.selectedPiece;
-                HelperFunctions.removeState(piece, "Freeze");
-                HelperFunctions.removeAbility(piece, "Unfreeze");
-
-                gameData.abilitySelected = "";
-                gameData.selected = null;
-                HelperFunctions.resetBoardColours();
-                gameData.turn = gameData.turn * -1;
-            }
-            else if (gameData.abilitySelected == "Spawn")
-            {
-                if (gameData.abilityAdvanceNext)
-                {
-                    HelperFunctions.highlightSurroundingSquaresWithoutPieces(gameData.selectedPiece);
-
-                    gameData.abilityAdvanceNext = false;
-                    gameData.selected = null;
-                    tempInfo.tempSquare = null;
-                }
-                else if (tempInfo.tempSquare != null)
-                {
-                    GameObject square = tempInfo.tempSquare;
-                    string pieceName = tempInfo.tempPiece.spawnable;
-
-                    Piece piece = HelperFunctions.Spawnables.create(pieceName, tempInfo.tempPiece.color);
-                    gameData.selectedPiece.numSpawns--;
-                    HelperFunctions.initPiece(piece, HelperFunctions.findCoords(square));
-
-                    gameData.abilitySelected = "";
-                    gameData.selected = null;
-                    HelperFunctions.resetBoardColours();
-                    gameData.turn = gameData.turn * -1;
-                }
-            }
-            else if (gameData.abilitySelected == "Spit")
-            {
-                if (gameData.abilityAdvanceNext)
-                {
-                    HelperFunctions.highlightSurroundingSquaresWithoutPieces(gameData.selectedPiece);
-                    HelperFunctions.highlightSurroundingSquaresWithPieces(gameData.selectedPiece);
-
-                    gameData.abilityAdvanceNext = false;
-                    gameData.selected = null;
-                    tempInfo.tempSquare = null;
-                }
-                else if (tempInfo.tempSquare != null)
-                {
-                    Piece p = gameData.selectedPiece.storage[0];
-                    if (p != null)
-                    {
-                        GameObject s = tempInfo.tempSquare;
-
-                        //Todo maybe trigger collateral of killed piece
-                        HelperFunctions.collateralDeath(HelperFunctions.getPiecesOnSquare(s));
-
-                        HelperFunctions.initPiece(p, HelperFunctions.findCoords(s));
-                        HelperFunctions.updateBoardGrid(HelperFunctions.findCoords(s), p, "a");
-                        HelperFunctions.restorePieceImageToBoard(p);
-
-                        gameData.selectedPiece.storage.Remove(p);
-                    }
-
-                    gameData.abilityAdvanceNext = true; //todo is this needed?
-                    gameData.selectedFromPanel = false;
-                    tempInfo.tempPiece = null;
-                    tempInfo.tempSquare = null;
-                    gameData.selected = null;
-                    gameData.abilitySelected = "";
-                    gameData.turn = gameData.turn * -1;
-                    HelperFunctions.resetBoardColours();
-                }
-            }
-            else if (gameData.abilitySelected == "Dematerialize")
-            {
-                Piece piece = gameData.selectedPiece;
-                HelperFunctions.addState(piece, "Dematerialized");
-                HelperFunctions.removeAbility(piece, "Dematerialize");
-                HelperFunctions.addAbility(piece, "Materialize");
-
-                Debug.Log("ABILITY: " + piece.ability);
-                Debug.Log("STATE: " + piece.state);
-
-                gameData.selectedFromPanel = false;
-                tempInfo.tempPiece = null;
-                tempInfo.tempSquare = null;
-                gameData.selected = null;
-                gameData.abilitySelected = "";
-                gameData.turn = gameData.turn * -1;
-
-                Image img = piece.go.GetComponent<Image>();
-                Color c = img.color;
-                c.a = 0.5f;
-                img.color = c;
-                HelperFunctions.resetBoardColours();
-
-            }
-            else if (gameData.abilitySelected == "Materialize")
-            {
-                Piece piece = gameData.selectedPiece;
-                HelperFunctions.removeState(piece, "Dematerialized");
-                HelperFunctions.removeAbility(piece, "Materialize");
-                HelperFunctions.addAbility(piece, "Dematerialize");
-
-                List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(gameData.selected);
-                piecesOnSquare.Remove(piece);
-
-                HelperFunctions.onDeaths(piece, piece.go, gameData.selected);
-
-                gameData.selectedFromPanel = false;
-                tempInfo.tempPiece = null;
-                tempInfo.tempSquare = null;
-                gameData.selected = null;
-                gameData.abilitySelected = "";
-                gameData.turn = gameData.turn * -1;
-
-                Image img = piece.go.GetComponent<Image>();
-                Color c = img.color;
-                c.a = 1f;
-                img.color = c;
-                HelperFunctions.resetBoardColours();
-            }
-            else if (gameData.abilitySelected == "Split")
-            {
-                HelperFunctions.forceRemove(gameData.selectedPiece);
-
-                Piece piece = HelperFunctions.Spawnables.create("LeftPawn", tempInfo.tempPiece.color);
-                HelperFunctions.initPiece(piece, HelperFunctions.findCoords(gameData.selected));
-
-                Piece piece2 = HelperFunctions.Spawnables.create("RightPawn", tempInfo.tempPiece.color);
-                HelperFunctions.initPiece(piece2, HelperFunctions.findCoords(gameData.selected));
-
-                gameData.abilitySelected = "";
-                gameData.selected = null;
-                HelperFunctions.resetBoardColours();
-                gameData.turn = gameData.turn * -1;
-            }
+            helper.abilityHandler();
         }
-    }
-
-    [PunRPC]
-    public void MovePieceRPC(int[] toMoveCoords, int[] coords)
-    {
-        GameObject square = HelperFunctions.findSquare(toMoveCoords[0], toMoveCoords[1]);
-        Piece piece = gameData.selectedToMovePiece;
-        movePiece(piece, coords);
-    }
-
-    public void movePiece(Piece piece, int[] coords)
-    {
-        if (HelperFunctions.checkState(piece, "Delayed"))
-        {
-            PieceMove delayedMove = new PieceMove(piece, coords, 2);
-            tempInfo.delayedQueue.Enqueue(delayedMove);
-
-            return;
-        }
-
-        //Debug.Log("Flags");
-        //if (gameData.selected) Debug.Log("Selected: " + gameData.selected.name);
-        //if (gameData.selectedToMove) Debug.Log("SelectedToMove: " + gameData.selectedToMove.name);
-        //Debug.Log("isSelected: " + gameData.isSelected);
-        //Debug.Log("readyToMove: " + gameData.readyToMove);
-
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
-        GameObject pieceOriginalSquare = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
-
-        //before piece is moved
-        //Loop through pieces for state check
-        List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(HelperFunctions.findSquare(piece.position[0], piece.position[1]));
-        foreach (Piece pieceOnSquare in piecesOnSquare)
-        {
-            if (HelperFunctions.checkState(pieceOnSquare, "Crook")) {
-                if (piecesOnSquare.Count == 2)
-                {
-                    HelperFunctions.removeState(pieceOnSquare, "Jailed");
-                }
-            }
-
-            if (HelperFunctions.checkState(piece, "Jailer"))
-            {
-                HelperFunctions.removeState(pieceOnSquare, "Jailed");
-            }
-        }
-
-        HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
-        Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
-        
-        piece.hasMoved = true;
-        HelperFunctions.movePiece(piece, toAppend);
-
-        if (HelperFunctions.checkState(piece, "Piggyback"))
-        {
-            piecesOnSquare = new List<Piece> (HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
-            foreach (Piece pieceOnSquare in piecesOnSquare)
-            {
-                Debug.Log(pieceOnSquare.name + " is moved from Piggyback");
-
-                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
-                pieceOnSquare.hasMoved = true;
-                HelperFunctions.movePiece(pieceOnSquare, toAppend);
-            }
-        }
-
-        List<Piece> piecesOnSquare2 = new List<Piece>(HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
-        foreach (Piece pieceOnSquare in piecesOnSquare2)
-        {
-            if (HelperFunctions.checkState(pieceOnSquare, "Jockey"))
-            {
-                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
-                pieceOnSquare.hasMoved = true;
-                HelperFunctions.movePiece(pieceOnSquare, toAppend);
-            }
-        }
-
-        if (piece.stayTurn())
-        {
-            gameData.turn = gameData.turn * -1;
-            gameData.forceStayTurn = piece.color;
-        }
-        else
-        {
-            gameData.forceStayTurn = 0;
-        }
-
-        // After move collateral
-        if (HelperFunctions.checkState(piece, "Combustable"))
-        {
-            System.Random rand = new System.Random();
-            int random = rand.Next(1, 7);
-
-            if (random == 3)
-            {
-                List<int[]> collateral = null;
-
-                if (HelperFunctions.isPieceSurroundingState(piece, "Defuser"))
-                {
-                    collateral = new List<int[]>
-                    {
-                        new int[] { 0, 0 }
-                    };
-                }
-                else
-                {
-                    collateral = new List<int[]>
-                    {
-                        new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 },
-                        new int[] { -1, 0 }, new int[] { -1, 1 }, new int[] { -1, -1 },
-                        new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 0 }
-                    };
-                }
-
-                for (int i = 0; i < collateral.Count; i++)
-                {
-                    int[] col_coords = new int[]
-                    {
-                        piece.position[0] + collateral[i][0],
-                        piece.position[1] + collateral[i][1]
-                    };
-
-                    GameObject square = HelperFunctions.findSquare(col_coords[0], col_coords[1]);
-
-                    if (collateral[i][0] == 0 && collateral[i][1] == 0)
-                    {
-                        HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
-                    }
-
-                    if (!square) continue;
-
-                    List<Piece> sqPieces = HelperFunctions.getPiecesOnSquareBoardGrid(square);
-
-                    if (sqPieces == null || sqPieces.Count == 0) continue;
-
-                    HelperFunctions.collateralDeath(sqPieces);
-                }
-            }
-        }
-
-        if (HelperFunctions.checkState(piece, "Fragile"))
-        {
-            System.Random rand = new System.Random();
-            int random = rand.Next(1, 7);
-
-            if (random == 3)
-            {
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
-            }
-        }
-
-        //Updated Since Gamebot
-        //Call Interactive Move Methods Here
-        /*
-         * if (interactive move) { do stuff } 
-         */
-
-        //Check for Pawn Promote
-        //TODO Generalize to function
-        //TODO make sure this works
-        if (piece.promotesInto != "")
-        {
-            if (piece.position[1] == piece.promotingRow)
-            {
-                string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
-                HelperFunctions.forceRemove(piece);
-                HelperFunctions.initPiece(p, coords);
-            }
-        }
-
-        gameData.turn = gameData.turn * -1;
-
-        //Add pieces to list
-        Piece king;
-        if (piece.color == 1)
-        {
-            king = bKing;
-        }
-        else
-        {
-            king = wKing;
-        }
-
-        //Last minute things
-        //Heartbroken King Check
-        if (HelperFunctions.checkState(gameData.whiteKing, "Heartbroken"))
-        {
-            if (!HelperFunctions.isPieceTypeOnBoard("q", 1))
-            {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
-                HelperFunctions.initPiece(tempKing, gameData.whiteKing.position);
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.whiteKing));
-                gameData.whiteKing = tempKing;
-            }
-        }
-        else if (HelperFunctions.checkState(gameData.blackKing, "Heartbroken")) {
-            if (!HelperFunctions.isPieceTypeOnBoard("q", -1))
-            {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
-                HelperFunctions.initPiece(tempKing, gameData.blackKing.position);
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.blackKing));
-                gameData.blackKing = tempKing;
-            }
-        }
-
-        bool isInCheck = HelperFunctions.isCheck(king);
-        bool isInCheckMate = HelperFunctions.isCheckMate(king, true);
-
-        Debug.Log("Check: " + isInCheck);
-        Debug.Log("Checkmate: " + isInCheckMate);
-        gameData.check = isInCheck;
-
-        HelperFunctions.updatePointsOnBoard(panel);
-
-        if (isInCheckMate)
-        {
-            Invoke("toggleCheckmateUI", 1.5f);
-        }
-
-        gameData.selectedPiece = null;
-    }
-
-    public void toggleCheckmateUI()
-    {
-        checkmateUI.SetActive(true);
     }
 }

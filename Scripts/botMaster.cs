@@ -16,6 +16,7 @@ public class botMaster : MonoBehaviour
     public GameObject board2;
     public GameObject boardWrapper;
     public GameObject checkmateUI;
+    public HelperFunctions helper;
 
     // public Piece pawn, pawn2, pawn3, pawn4, pawn5, pawn6, pawn7, pawn8;
     // public Piece bpawn, bpawn2, bpawn3, bpawn4, bpawn5, bpawn6, bpawn7, bpawn8;
@@ -25,12 +26,7 @@ public class botMaster : MonoBehaviour
     // public Piece wQueen, bQueen;
     // public Piece wKing, bKing;
 
-    public PhotonView photonView;
-
     //public GameObject wp, bp, t, a;
-    public SidePanelAdjust panel;
-
-    private AudioSource moveSound;
 
     BotTemplate botWhite;
     BotTemplate botBlack;
@@ -41,61 +37,60 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        moveSound = GetComponent<AudioSource>();
-        photonView = GetComponent<PhotonView>();
-
         botWhite = new RandomBot(1);
         botBlack = new RandomBot(-1);
+        gameData.botWhite = botWhite;
+        gameData.botBlack = botBlack;
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
         List<Piece> botWhitePawns = BotHelperFunctions.filterPieces("Pawn", botWhite.pieces);
-        initPiece(botWhitePawns[0], new int[] { 1, 2 });
-        initPiece(botWhitePawns[1], new int[] { 2, 2 });
-        initPiece(botWhitePawns[2], new int[] { 3, 2 });
-        initPiece(botWhitePawns[3], new int[] { 4, 2 });
-        initPiece(botWhitePawns[4], new int[] { 5, 2 });
-        initPiece(botWhitePawns[5], new int[] { 6, 2 });
-        initPiece(botWhitePawns[6], new int[] { 7, 2 });
-        initPiece(botWhitePawns[7], new int[] { 8, 2 });
+        HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
+        HelperFunctions.initPiece(botWhitePawns[1], new int[] { 2, 2 });
+        HelperFunctions.initPiece(botWhitePawns[2], new int[] { 3, 2 });
+        HelperFunctions.initPiece(botWhitePawns[3], new int[] { 4, 2 });
+        HelperFunctions.initPiece(botWhitePawns[4], new int[] { 5, 2 });
+        HelperFunctions.initPiece(botWhitePawns[5], new int[] { 6, 2 });
+        HelperFunctions.initPiece(botWhitePawns[6], new int[] { 7, 2 });
+        HelperFunctions.initPiece(botWhitePawns[7], new int[] { 8, 2 });
 
         List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
         List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
         List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
-        List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("King", botWhite.pieces);
-        List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
-        initPiece(botWhiteRooks[0], new int[] { 1, 1 });
-        initPiece(botWhiteRooks[1], new int[] { 8, 1 });
-        initPiece(botWhiteBishops[0], new int[] { 3, 1 });
-        initPiece(botWhiteBishops[1], new int[] { 6, 1 });
-        initPiece(botWhiteKnights[0], new int[] { 2, 1 });
-        initPiece(botWhiteKnights[1], new int[] { 7, 1 });
-        initPiece(botWhiteQueen[0], new int[] { 4, 1 });
-        initPiece(botWhiteKing[0], new int[] { 5, 1 });
+        List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
+        List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
+        HelperFunctions.initPiece(botWhiteRooks[0], new int[] { 1, 1 });
+        HelperFunctions.initPiece(botWhiteRooks[1], new int[] { 8, 1 });
+        HelperFunctions.initPiece(botWhiteBishops[0], new int[] { 3, 1 });
+        HelperFunctions.initPiece(botWhiteBishops[1], new int[] { 6, 1 });
+        HelperFunctions.initPiece(botWhiteKnights[0], new int[] { 2, 1 });
+        HelperFunctions.initPiece(botWhiteKnights[1], new int[] { 7, 1 });
+        HelperFunctions.initPiece(botWhiteQueen[0], new int[] { 4, 1 });
+        HelperFunctions.initPiece(botWhiteKing[0], new int[] { 5, 1 });
 
         List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
-        initPiece(botBlackPawns[0], new int[] { 1, 2 });
-        initPiece(botBlackPawns[1], new int[] { 2, 2 });
-        initPiece(botBlackPawns[2], new int[] { 3, 2 });
-        initPiece(botBlackPawns[3], new int[] { 4, 2 });
-        initPiece(botBlackPawns[4], new int[] { 5, 2 });
-        initPiece(botBlackPawns[5], new int[] { 6, 2 });
-        initPiece(botBlackPawns[6], new int[] { 7, 2 });
-        initPiece(botBlackPawns[7], new int[] { 8, 2 });
+        HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
+        HelperFunctions.initPiece(botBlackPawns[1], new int[] { 2, 7 });
+        HelperFunctions.initPiece(botBlackPawns[2], new int[] { 3, 7 });
+        HelperFunctions.initPiece(botBlackPawns[3], new int[] { 4, 7 });
+        HelperFunctions.initPiece(botBlackPawns[4], new int[] { 5, 7 });
+        HelperFunctions.initPiece(botBlackPawns[5], new int[] { 6, 7 });
+        HelperFunctions.initPiece(botBlackPawns[6], new int[] { 7, 7 });
+        HelperFunctions.initPiece(botBlackPawns[7], new int[] { 8, 7 });
 
         List<Piece> botBlackRooks = BotHelperFunctions.filterPieces("Rook", botBlack.pieces);
         List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
         List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
-        List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("King", botBlack.pieces);
-        List<Piece> botBlackKing = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
-        initPiece(botBlackRooks[0], new int[] { 1, 1 });
-        initPiece(botBlackRooks[1], new int[] { 8, 1 });
-        initPiece(botBlackBishops[0], new int[] { 3, 1 });
-        initPiece(botBlackBishops[1], new int[] { 6, 1 });
-        initPiece(botBlackKnights[0], new int[] { 2, 1 });
-        initPiece(botBlackKnights[1], new int[] { 7, 1 });
-        initPiece(botBlackQueen[0], new int[] { 4, 1 });
-        initPiece(botBlackKing[0], new int[] { 5, 1 });
+        List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
+        List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
+        HelperFunctions.initPiece(botBlackRooks[0], new int[] { 1, 8 });
+        HelperFunctions.initPiece(botBlackRooks[1], new int[] { 8, 8 });
+        HelperFunctions.initPiece(botBlackBishops[0], new int[] { 3, 8 });
+        HelperFunctions.initPiece(botBlackBishops[1], new int[] { 6, 8 });
+        HelperFunctions.initPiece(botBlackKnights[0], new int[] { 2, 8 });
+        HelperFunctions.initPiece(botBlackKnights[1], new int[] { 7, 8 });
+        HelperFunctions.initPiece(botBlackQueen[0], new int[] { 4, 8 });
+        HelperFunctions.initPiece(botBlackKing[0], new int[] { 5, 8 });
 
         //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
         botWhitePawns[0].name = "w_p1";
@@ -140,10 +135,8 @@ public class botMaster : MonoBehaviour
 
         gameData.whiteKing = botWhiteKing[0];
         gameData.blackKing = botBlackKing[0];
-        panel.Initialize();
 
         yield return null;
-        HelperFunctions.updatePointsOnBoard(panel);
     }
 
     int turn = 1;
@@ -165,6 +158,7 @@ public class botMaster : MonoBehaviour
 
         Piece movePieceObj = null;
         int[] moveCoords = null;
+        long watchMS = 0;
 
         if (turn == 1)
         {
@@ -187,7 +181,9 @@ public class botMaster : MonoBehaviour
             Dictionary<Piece, int[]> nextMove = currentBot.nextMove();
             watch.Stop();
 
-            if (watch.ElapsedMilliseconds > 5000)
+            watchMS = watch.ElapsedMilliseconds;
+
+            if (watchMS > 5000)
             {
                 currentBot.penalty = true;
                 valid = false;
@@ -202,14 +198,23 @@ public class botMaster : MonoBehaviour
             }
         }
 
+        Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
+        gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
+        gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+        gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+        gameData.selectedToMovePiece = movePieceObj;
+
         if (valid)
         {
-            movePiece(movePieceObj, moveCoords);
+            helper.performPreMove();
+            helper.movePiece_(movePieceObj, moveCoords);
         }
         else
         {
+            Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
             var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
-            movePiece(randomMove.piece, randomMove.coords);
+            helper.performPreMove();
+            helper.movePiece_(randomMove.piece, randomMove.coords);
         }
 
         turn *= -1;
@@ -230,254 +235,5 @@ public class botMaster : MonoBehaviour
         }
 
         return false;
-    }
-
-    public void movePiece(Piece piece, int[] coords)
-    {
-
-        //Debug.Log("Flags");
-        //if (gameData.selected) Debug.Log("Selected: " + gameData.selected.name);
-        //if (gameData.selectedToMove) Debug.Log("SelectedToMove: " + gameData.selectedToMove.name);
-        //Debug.Log("isSelected: " + gameData.isSelected);
-        //Debug.Log("readyToMove: " + gameData.readyToMove);
-
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
-        GameObject pieceOriginalSquare = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
-
-        //before piece is moved
-        //Loop through pieces for state check
-        List<Piece> piecesOnSquare = HelperFunctions.getPiecesOnSquareBoardGrid(HelperFunctions.findSquare(piece.position[0], piece.position[1]));
-        foreach (Piece pieceOnSquare in piecesOnSquare)
-        {
-            if (HelperFunctions.checkState(pieceOnSquare, "Crook")) {
-                if (piecesOnSquare.Count == 2)
-                {
-                    HelperFunctions.removeState(pieceOnSquare, "Jailed");
-                }
-            }
-
-            if (HelperFunctions.checkState(piece, "Jailer"))
-            {
-                HelperFunctions.removeState(pieceOnSquare, "Jailed");
-            }
-        }
-
-        HelperFunctions.movePieceBoardGrid(piece, piece.position, coords);
-        Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
-        
-        piece.hasMoved = true;
-        HelperFunctions.movePiece(piece, toAppend);
-
-        if (HelperFunctions.checkState(piece, "Piggyback"))
-        {
-            piecesOnSquare = new List<Piece> (HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
-            foreach (Piece pieceOnSquare in piecesOnSquare)
-            {
-                Debug.Log(pieceOnSquare.name + " is moved from Piggyback");
-
-                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
-                pieceOnSquare.hasMoved = true;
-                HelperFunctions.movePiece(pieceOnSquare, toAppend);
-            }
-        }
-
-        List<Piece> piecesOnSquare2 = new List<Piece>(HelperFunctions.getPiecesOnSquareBoardGrid(pieceOriginalSquare));
-        foreach (Piece pieceOnSquare in piecesOnSquare2)
-        {
-            if (HelperFunctions.checkState(pieceOnSquare, "Jockey"))
-            {
-                HelperFunctions.movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
-                pieceOnSquare.hasMoved = true;
-                HelperFunctions.movePiece(pieceOnSquare, toAppend);
-            }
-        }
-
-        if (piece.stayTurn())
-        {
-            gameData.turn = gameData.turn * -1;
-            gameData.forceStayTurn = piece.color;
-        }
-        else
-        {
-            gameData.forceStayTurn = 0;
-        }
-
-        // After move collateral
-        if (HelperFunctions.checkState(piece, "Combustable"))
-        {
-            System.Random rand = new System.Random();
-            int random = rand.Next(1, 7);
-
-            if (random == 3)
-            {
-                List<int[]> collateral = null;
-
-                if (HelperFunctions.isPieceSurroundingState(piece, "Defuser"))
-                {
-                    collateral = new List<int[]>
-                    {
-                        new int[] { 0, 0 }
-                    };
-                }
-                else
-                {
-                    collateral = new List<int[]>
-                    {
-                        new int[] { 1, 0 }, new int[] { 1, 1 }, new int[] { 1, -1 },
-                        new int[] { -1, 0 }, new int[] { -1, 1 }, new int[] { -1, -1 },
-                        new int[] { 0, 1 }, new int[] { 0, -1 }, new int[] { 0, 0 }
-                    };
-                }
-
-                for (int i = 0; i < collateral.Count; i++)
-                {
-                    int[] col_coords = new int[]
-                    {
-                        piece.position[0] + collateral[i][0],
-                        piece.position[1] + collateral[i][1]
-                    };
-
-                    GameObject square = HelperFunctions.findSquare(col_coords[0], col_coords[1]);
-
-                    if (collateral[i][0] == 0 && collateral[i][1] == 0)
-                    {
-                        HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
-                    }
-
-                    if (!square) continue;
-
-                    List<Piece> sqPieces = HelperFunctions.getPiecesOnSquareBoardGrid(square);
-
-                    if (sqPieces == null || sqPieces.Count == 0) continue;
-
-                    HelperFunctions.collateralDeath(sqPieces);
-                }
-            }
-        }
-
-        if (HelperFunctions.checkState(piece, "Fragile"))
-        {
-            System.Random rand = new System.Random();
-            int random = rand.Next(1, 7);
-
-            if (random == 3)
-            {
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(piece));
-            }
-        }
-
-        //Updated Since Gamebot
-        //Call Interactive Move Methods Here
-        /*
-         * if (interactive move) { do stuff } 
-         */
-
-        //Check for Pawn Promote
-        //TODO Generalize to function
-        //TODO make sure this works
-        if (piece.promotesInto != "")
-        {
-            if (piece.position[1] == piece.promotingRow)
-            {
-                string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
-                HelperFunctions.forceRemove(piece);
-                initPiece(p, coords);
-            }
-        }
-
-        gameData.turn = gameData.turn * -1;
-
-        //Add pieces to list
-        Piece king;
-        if (piece.color == 1)
-        {
-            king = gameData.whiteKing;
-        }
-        else
-        {
-            king = gameData.blackKing;
-        }
-
-        //Last minute things
-        //Heartbroken King Check
-        if (HelperFunctions.checkState(gameData.whiteKing, "Heartbroken"))
-        {
-            if (!HelperFunctions.isPieceTypeOnBoard("q", 1))
-            {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
-                initPiece(tempKing, gameData.whiteKing.position);
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.whiteKing));
-                gameData.whiteKing = tempKing;
-            }
-        }
-        else if (HelperFunctions.checkState(gameData.blackKing, "Heartbroken")) {
-            if (!HelperFunctions.isPieceTypeOnBoard("q", -1))
-            {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
-                initPiece(tempKing, gameData.blackKing.position);
-                HelperFunctions.collateralDeath(HelperFunctions.pieceToList(gameData.blackKing));
-                gameData.blackKing = tempKing;
-            }
-        }
-
-        bool isInCheck = HelperFunctions.isCheck(king);
-        bool isInCheckMate = HelperFunctions.isCheckMate(king, true);
-
-        Debug.Log("Check: " + isInCheck);
-        Debug.Log("Checkmate: " + isInCheckMate);
-        gameData.check = isInCheck;
-
-        HelperFunctions.updatePointsOnBoard(panel);
-
-        if (isInCheckMate)
-        {
-            Invoke("toggleCheckmateUI", 1.5f);
-        }
-
-        gameData.selectedPiece = null;
-    }
-
-    public void toggleCheckmateUI()
-    {
-        checkmateUI.SetActive(true);
-    }
-
-    private void initPiece(Piece piece, int[] coords)
-    {
-        if (!gameData.piecesDict.ContainsKey(piece.go))
-        {
-            gameData.piecesDict.Add(piece.go, piece);
-        }
-
-        if (!gameData.allPiecesDict.ContainsKey(piece.go))
-        {
-            gameData.allPiecesDict.Add(piece.go, piece);
-        }
-
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
-        piece.position = HelperFunctions.findCoords(toAppend);
-
-        if (HelperFunctions.checkState(piece, "PAWN"))
-        {
-            piece.position[1] = piece.position[1] + 1;
-            toAppend = HelperFunctions.findSquare(piece.position[0], piece.position[1]);
-        }
-
-        if (HelperFunctions.checkState(piece, "Double"))
-        {
-            Piece doublePawn = HelperFunctions.Spawnables.create("Pawn", piece.color);
-            initPiece(doublePawn, piece.position);
-        }
-
-        piece.startSquare = new int[] { piece.position[0], piece.position[1] };
-
-        HelperFunctions.movePiece(piece, toAppend);
-
-        piece.alive = 1;
-
-        //piece.go.tag = piece.name;
-        HelperFunctions.updateBoardGrid(piece.position, piece, "a");
-        gameData.panelCodes.Add(piece.name);
     }
 }

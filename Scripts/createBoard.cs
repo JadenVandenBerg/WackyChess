@@ -20,6 +20,7 @@ public class createBoard : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("Created Board");
         float parentHeight = ParentPanel.GetComponent<RectTransform>().sizeDelta.y;
         float boardSize = parentHeight * 0.8f;
         float verticalOffset = (parentHeight - boardSize) / 2;

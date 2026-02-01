@@ -13,7 +13,7 @@ using System.Linq;
 public class BotHelperFunctions : MonoBehaviour
 {
 	public static List<Piece> getPiecesTypeRandom(string type, int color) {
-		List<string> pieces = getAllTypePieces(type);
+		List<string> pieces = getAllTypePieces(type, color);
 
 		List<Piece> selected = new List<Piece>();
 
@@ -31,7 +31,14 @@ public class BotHelperFunctions : MonoBehaviour
             System.Random rand = new System.Random();
 		    int index = rand.Next(pieces.Count);
 
-		    Type type_ = Type.GetType("" + pieces[index] + ", Assembly-CSharp");
+            Type type_ = Type.GetType(pieces[index] + ", Assembly-CSharp");
+
+            if (type_ == null)
+            {
+                i -= 1;
+                continue;
+            }
+
             Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
 
             selected.Add(piece);
@@ -41,18 +48,23 @@ public class BotHelperFunctions : MonoBehaviour
 		return selected;
 	}
 
-	private static List<string> getAllTypePieces(string type) {
+	private static List<string> getAllTypePieces(string type, int color) {
 
     	List<Type> allPieces = Lootbox.GetAllPieces();
     	List<string> eligiblePieces = new List<string>();
 
     	foreach (var piece_ in allPieces) {
 
-            Piece piece = (Piece)Activator.CreateInstance(piece_);
+            Piece piece = (Piece)Activator.CreateInstance(piece_, color, false);
             if (piece.baseType == type) {
     			eligiblePieces.Add(piece.name);
     		}
-    	}
+
+            if (piece.go != null)
+            {
+                Destroy(piece.go);
+            }
+        }
 
     	return eligiblePieces;
     }
@@ -71,8 +83,6 @@ public class BotHelperFunctions : MonoBehaviour
 
     //List so its easier to randomize. Each Dict has only one entry
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
-    	// REMAKE of the original algorithm from helperfunctions
-    	// TODO this function assumes gameData vars are set
 
     	List<List<List<Piece>>> oldBoardGrid = gameData.boardGrid;
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();

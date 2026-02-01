@@ -815,9 +815,8 @@ GameObject:
   - component: {fileID: 847635457}
   - component: {fileID: 847635459}
   - component: {fileID: 847635458}
-  - component: {fileID: 847635460}
-  - component: {fileID: 847635461}
   - component: {fileID: 847635462}
+  - component: {fileID: 847635463}
   m_Layer: 6
   m_Name: Board
   m_TagString: Untagged
@@ -923,7 +922,7 @@ MonoBehaviour:
   ParentPanel: {fileID: 847635450}
   sideUI: {fileID: 1755429839}
   backgroundUI: {fileID: 1770834307}
-  isOnline: True
+  isOnline: 
   TopProfilePanel: {fileID: 0}
   BottomProfilePanel: {fileID: 0}
 --- !u!20 &847635457
@@ -1082,44 +1081,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &847635460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847635450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15655d75a92ccfc418fb89e890128591, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  board2: {fileID: 847635450}
-  boardWrapper: {fileID: 1403881270}
-  helper: {fileID: 847635462}
-  photonView: {fileID: 847635461}
---- !u!114 &847635461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 847635450}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 1
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!114 &847635462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,11 +1093,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1feea5f8a838fcb40a6e72d03a394491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  onlineL: True
-  onlineGame: {fileID: 847635460}
+  onlineL: False
+  onlineGame: {fileID: 0}
   panel: {fileID: 1755429841}
   checkmateUI: {fileID: 346937145}
   moveSound: {fileID: 847635459}
+  isBotMatch: True
+--- !u!114 &847635463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 847635450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1189b29e1d85be34b87379aa419036bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::botMaster
+  board2: {fileID: 847635450}
+  boardWrapper: {fileID: 1403881270}
+  checkmateUI: {fileID: 346937145}
+  helper: {fileID: 847635462}
 --- !u!1 &990121894
 GameObject:
   m_ObjectHideFlags: 0

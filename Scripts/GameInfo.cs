@@ -41,6 +41,9 @@ public static class gameData
     public static int forceStayTurn { get; set; } = 0;
     public static List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
     public static List<String> panelCodes { get; set; } = new List<String>();
+    public static BotTemplate botWhite { get; set; } = null;
+    public static BotTemplate botBlack { get; set; } = null;
+    public static bool isBotMatch { get; set; } = false;
 }
 
 public static class tempInfo

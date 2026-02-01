@@ -67,4 +67,10 @@ public class LoadNewGame : MonoBehaviour
     {
         Application.Quit();
     }
+
+    public void loadGameBotMaster()
+    {
+        resetGame();
+        SceneManager.LoadScene(7);
+    }
 }

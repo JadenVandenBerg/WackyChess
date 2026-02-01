@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using Photon.Pun;
 
+/*
 public class Template : Piece
 {
     public bool disabled { get; set; } = false;
@@ -109,6 +110,7 @@ public class Template : Piece
         s.sprite = sp;
     }
 }
+*/
 
 public class SuperPawn : Piece
 {

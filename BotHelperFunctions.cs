@@ -126,4 +126,59 @@ public class BotHelperFunctions : MonoBehaviour
         return (randMovePiece, randMoveCoords);
     }
 
+    public static void movePieceBoardState(Piece piece, int[] coords, BoardState boardState)
+    {
+        if (coords[0] < 1 || coords[1] < 1)
+        {
+            return;
+        }
+
+        int[] position = boardState.getPosition(piece);
+        if (position == null) return;
+
+        updateBoardState(position, piece, "r", boardState);
+        gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece);
+    }
+
+    public static void updateBoardState(int[] coords, Piece piece, String action, BoardState boardState)
+    {
+        if (coords[0] < 1 || coords[1] < 1)
+        {
+            return;
+        }
+
+        var square = boardState.boardGrid[coords[0] - 1][coords[1] - 1];
+
+        if (action.ToLower() == "a" || action.ToLower() == "add")
+        {
+            bool alreadyExists = square.Any(p => p.name == piece.name);
+            if (!alreadyExists)
+            {
+                square.Add(piece);
+            }
+        }
+
+        if (action.ToLower() == "r" || action.ToLower() == "remove")
+        {
+            square.RemoveAll(p => p.name == piece.name);
+        }
+    }
+
+    public static BoardState copyBoardState(BoardState bs) {
+        BoardState copy = new BoardState();
+
+        copy.boardGrid = bs.boardGrid.Select(x =>
+            row.Select(y =>
+                new List<Piece>(y)
+            ).ToList()
+        ).ToList();
+
+        copy.whitePointsOnBoard = bs.whitePointsOnBoard;
+        copy.blackPointsOnBoard = bs.blackPointsOnBoard;
+
+        copy.inCheck = new int[] { bs.inCheck[0], bs.inCheck[1] }
+
+        return copy;
+    }
+
 }

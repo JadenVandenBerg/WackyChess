@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BotTemplate {
+	//TODO make sure these are set appropriately
 	public BoardState currentBoardState { get; set; } = new BoardState();
 	public List<Piece> pieces { get; set; } = new List<Piece>();
 	public List<Piece> opponentPieces { get; set; } = new List<Piece>();
@@ -88,5 +89,19 @@ public class BoardState {
 
 		whitePointsOnBoard = wp;
 		blackPointsOnBoard = bp;
+	}
+
+	public int[] getPiecePosition(Piece piece) {
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				foreach(Piece p in boardGrid[x][y]) {
+					if (piece.name == p.name) {
+						return new int[] { x + 1, y + 1 }
+					}
+				}
+			}
+		}
+
+		return null;
 	}
 }

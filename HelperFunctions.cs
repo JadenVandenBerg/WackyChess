@@ -2131,7 +2131,7 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static void movePieceBoardGrid(Piece piece, int[] position, int[] coords)
+    public static void movePieceBoardGrid(Piece piece, int[] position /*moveFrom*/, int[] coords /*moveTo*/)
     {
         if (position[0] < 1 || position[1] < 1 || coords[0] < 1 || coords[1] < 1)
         {

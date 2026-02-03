@@ -1506,6 +1506,7 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    //TODO maybe change this for bots
     public static void forceRemove(Piece deadPiece)
     {
         GameObject dead = deadPiece.go;
@@ -2798,6 +2799,27 @@ public class HelperFunctions : MonoBehaviour
         return allPieces;
     }
 
+    public static List<Piece> getPiecesOnBoardColor(int color)
+    {
+        List<Piece> allPieces = new List<Piece>();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                List<Piece> pieces = getPiecesOnSquareBoardGrid(findSquare(i, j));
+                allPieces.AddRange(pieces);
+            }
+        }
+
+        foreach(Piece p in allPieces) {
+            if (p.color != color) {
+                allPieces.Remove(p);
+            }
+        }
+
+        return allPieces;
+    }
+
     //TODO use new var Piece.baseType instead
     public static bool isPieceTypeOnBoard(string pieceType, int color)
     {
@@ -2889,13 +2911,23 @@ public class HelperFunctions : MonoBehaviour
 
         if (gameData.isBotMatch)
         {
-            if (piece.color == 1 && !gameData.botWhite.pieces.Contains(piece))
-            {
-                gameData.botWhite.pieces.Add(piece);
+            if (piece.color == 1) {
+                if (!gameData.botWhite.pieces.Contains(piece)) {
+                    gameData.botWhite.pieces.Add(piece);
+                }
+
+                if (!gameData.botBlack.opponentPieces.Contains(piece)) {
+                    gameData.botBlack.opponentPieces.Add(piece);
+                }
             }
-            else if(piece.color == -1 && !gameData.botBlack.pieces.Contains(piece))
-            {
-                gameData.botBlack.pieces.Add(piece);
+            else if (piece.color == -1) {
+                if (!gameData.botBlack.pieces.Contains(piece)) {
+                    gameData.botBlack.pieces.Add(piece);
+                }
+
+                if (!gameData.botWhite.opponentPieces.Contains(piece)) {
+                    gameData.botWhite.opponentPieces.Add(piece);
+                }
             }
         }
 
@@ -3180,7 +3212,6 @@ public class HelperFunctions : MonoBehaviour
             //TODO make it so you can only pass if there are less pieces than spaces
             if (gameData.abilityAdvanceNext)
             {
-                Debug.Log("Advancing Next Vomit");
                 refreshPanelHungry();
 
                 gameData.abilityAdvanceNext = false;
@@ -3193,7 +3224,6 @@ public class HelperFunctions : MonoBehaviour
                 resetBoardColours();
                 highlightSquare(tempInfo.tempSquare, Color.red);
 
-                Debug.Log(tempInfo.tempSquare);
                 if (tempInfo.tempSquare == null || gameData.selectedPiece.storage == null || gameData.selectedPiece.storage.Count == 0)
                 {
                     gameData.abilitySelected = "";

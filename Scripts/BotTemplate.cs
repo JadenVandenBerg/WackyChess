@@ -40,6 +40,14 @@ public abstract class BotTemplate {
 		pieces.AddRange(queens);
 	}
 
+	public List<Piece> getPieces() {
+		return HelperFunctions.getPiecesOnBoardColor(color);
+	}
+
+	public List<Piece> getOpponentPieces() {
+		return HelperFunctions.getPiecesOnBoardColor(color * -1);
+	}
+
 	// This function will be called to determine your pieces next move in the game
 	//Piece: The piece to be moved
 	//int[]: 1-indexed coords to move the piece ([1,1]:[8,8])
@@ -66,7 +74,6 @@ public class BoardState {
 	}
 
 	// Resets the board state based on the real value of the board
-	// TODO
 	public void refresh() {
 
 		boardGrid = gameData.boardGrid;
@@ -89,6 +96,8 @@ public class BoardState {
 
 		whitePointsOnBoard = wp;
 		blackPointsOnBoard = bp;
+
+		isInCheck = gameData.isInCheck;
 	}
 
 	public int[] getPiecePosition(Piece piece) {

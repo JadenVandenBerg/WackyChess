@@ -56,3 +56,55 @@ public static class tempInfo
     public static bool passed { get; set; } = false;
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 }
+
+public static class botTournament {
+    public static List<BotTemplate> competingBots = new List<BotTemplate>({
+        // new RandomBot(),
+        // new OneMoveBot(),
+        // new IdiotBot(),
+    });
+}
+
+/*
+Round 1
+1 v 8
+2 v 7
+3 v 6
+4 v 5
+
+Round 2
+1 v 5
+2 v 6
+3 v 7
+4 v 8
+
+Round 3
+1 v 2
+3 v 4
+5 v 6
+7 v 8
+
+Round 4
+1 v 7
+2 v 4
+3 v 5
+6 v 8
+
+Round 5
+1 v 3
+2 v 8
+4 v 6
+5 v 7
+
+Round 6
+1 v 4
+2 v 3
+5 v 8
+6 v 7
+
+Round 7
+1 v 6
+2 v 5
+3 v 8
+4 v 7
+*/

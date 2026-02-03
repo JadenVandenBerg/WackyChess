@@ -2916,7 +2916,7 @@ public class HelperFunctions : MonoBehaviour
         movePiece_(piece, coords);
     }
 
-    public void movePiece_(Piece piece, int[] coords)
+    public bool movePiece_(Piece piece, int[] coords)
     {
         //Delayed Piece Move
         if (tempInfo.delayedQueue == null)
@@ -3155,6 +3155,8 @@ public class HelperFunctions : MonoBehaviour
         }
 
         gameData.selectedPiece = null;
+
+        return isInCheck;
     }
 
     public void refreshPanelSelected()
@@ -3531,7 +3533,7 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public void performPreMove()
+    public bool performPreMove()
     {
         moveSound.Play();
 
@@ -3576,5 +3578,7 @@ public class HelperFunctions : MonoBehaviour
             //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
         }
+
+        return death;
     }
 }

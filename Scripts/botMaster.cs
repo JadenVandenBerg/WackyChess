@@ -141,6 +141,8 @@ public class botMaster : MonoBehaviour
 
     int turn = 1;
     bool isTurn = true;
+    int movesWithoutCapture = 0;
+    int subsequentChecks = 0;
 
     void Update()
     {
@@ -204,6 +206,8 @@ public class botMaster : MonoBehaviour
         gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
         gameData.selectedToMovePiece = movePieceObj;
 
+        bool death = false;
+        bool check = false;
         if (valid)
         {
             helper.performPreMove();
@@ -213,16 +217,31 @@ public class botMaster : MonoBehaviour
         {
             Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
             var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
-            helper.performPreMove();
-            helper.movePiece_(randomMove.piece, randomMove.coords);
+            death = helper.performPreMove();
+            check = helper.movePiece_(randomMove.piece, randomMove.coords);
         }
 
         turn *= -1;
         currentBot.currentBoardState.refresh();
 
+        if (!death && !check) {
+            movesWithoutCapture++;
+            subsequentChecks = 0;
+        }
+        else if (death) {
+            movesWithoutCapture = 0;
+            subsequentChecks = 0;
+        }
+        else if (check) {
+            subsequentChecks++;
+        }
+
+        if (subsequentChecks > 8 || movesWithoutCapture > 30) {
+            //GAME OVER, go to next match
+        }
+
         yield return new WaitForSeconds(3.0f);
         isTurn = true;
-
 
         //Check if check/update bot boardstate
     }

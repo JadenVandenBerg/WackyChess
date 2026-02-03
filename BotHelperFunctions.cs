@@ -83,8 +83,6 @@ public class BotHelperFunctions : MonoBehaviour
 
     //List so its easier to randomize. Each Dict has only one entry
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
-
-    	List<List<List<Piece>>> oldBoardGrid = gameData.boardGrid;
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
 
     	foreach (Piece piece in bot.pieces) {
@@ -100,7 +98,6 @@ public class BotHelperFunctions : MonoBehaviour
     	}
 
         return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
-
     }
 
     public static (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot)
@@ -179,6 +176,31 @@ public class BotHelperFunctions : MonoBehaviour
         copy.inCheck = new int[] { bs.inCheck[0], bs.inCheck[1] };
 
         return copy;
+    }
+
+    public static List<int> getPointsOnBoardState(BoardState bs) {
+        List<List<List<Piece>>> board = bs.boardGrid;
+        int wCount = 0;
+        int bCount = 0;
+
+        foreach (var x in board) {
+            foreach (var y in x) {
+                foreach (Piece piece in y) {
+                    if (piece.color == 1) {
+                        wCount += piece.points;
+                    }
+                    else {
+                        bCount += piece.points;
+                    }
+                }
+            }
+        }
+
+        List<int> l = new List<int>();
+        l.Add(wCount);
+        l.Add(bCount):
+
+        return l;
     }
 
 }

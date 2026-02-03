@@ -3,13 +3,13 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
-public class OneMoveBot : BotTemplate
+public class IdiotBot : BotTemplate
 {
-    public OneMoveBot(int botColor)
+    public IdiotBot(int botColor)
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "One Move Bot";
+        name = "Idiot";
 
         choosePieces();
     }
@@ -17,9 +17,9 @@ public class OneMoveBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        Piece bestMovePiece;
-        int[] bestMoveCoords;
-        int bestMoveDiff = -1000;
+        Piece worstMovePiece;
+        int[] worstMoveCoords;
+        int worstMoveDiff = +1000;
 
         var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.color);
 
@@ -73,11 +73,11 @@ public class OneMoveBot : BotTemplate
                     }
                 }
 
-                // Take the best outcome assuming the opponent captures the highest value piece it can
-                if (bestOppMoveDiff > bestMoveDiff) {
-                    bestMoveDiff = bestOppMoveDiff;
-                    bestMoveCoords = coords;
-                    bestMovePiece = piece;
+                // Take the worst outcome assuming the opponent captures the highest value piece it can
+                if (bestOppMoveDiff < worstMoveDiff) {
+                    worstMoveDiff = bestOppMoveDiff;
+                    worseMoveCoords = coords;
+                    worstMovePiece = piece;
                 }
             }
         }

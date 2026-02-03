@@ -52,8 +52,8 @@ public class Template : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/";
-    public String bImage { get; set; } = "Assets/Images/";
+    public String wImage { get; set; } = "Images/";
+    public String bImage { get; set; } = "Images/";
     public String name { get; set; } = "";
     public int[,] dependentMovesSet()
     {
@@ -90,24 +90,19 @@ public class Template : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 */
@@ -168,8 +163,8 @@ public class SuperPawn : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Extras/wSuperPawn.png";
-    public String bImage { get; set; } = "Assets/Images/Extras/bSuperPawn.png";
+    public String wImage { get; set; } = "Images/Extras/wSuperPawn";
+    public String bImage { get; set; } = "Images/Extras/bSuperPawn";
     public String name { get; set; } = "Super Pawn";
     public int[,] dependentMovesSet()
     {
@@ -206,23 +201,18 @@ public class SuperPawn : Piece
         go.name = "SuperPawn";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }

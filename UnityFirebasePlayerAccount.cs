@@ -11,6 +11,7 @@ using Firebase.Extensions;
 
 public class UnityFirestoreAccount : MonoBehaviour
 {
+    /*
     public FirebaseFirestore Firestore { get; private set; }
     public FirebaseAuth Auth { get; private set; }
     public FirebaseApp FirebaseAppInstance { get; private set; }
@@ -102,4 +103,5 @@ public class UnityFirestoreAccount : MonoBehaviour
 
         await docRef.UpdateAsync("Inventory", FieldValue.ArrayUnion(itemToAdd));
     }
+    */
 }

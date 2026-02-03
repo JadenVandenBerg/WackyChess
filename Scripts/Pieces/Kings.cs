@@ -34,8 +34,8 @@ public class King : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bKing.png";
+    public String wImage { get; set; } = "Images/Kings/wKing";
+    public String bImage { get; set; } = "Images/Kings/bKing";
     public String name { get; set; } = "King";
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
@@ -91,24 +91,19 @@ public class King : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -158,8 +153,8 @@ public class MurderousKing : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Kings/wMurderousKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bMurderousKing.png";
+    public String wImage { get; set; } = "Images/Kings/wMurderousKing";
+    public String bImage { get; set; } = "Images/Kings/bMurderousKing";
     public String name { get; set; } = "Murderous King";
     public int[,] dependentMovesSet()
     {
@@ -196,24 +191,19 @@ public class MurderousKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -263,8 +253,8 @@ public class GhoulKing : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Kings/wGhoulKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bGhoulKing.png";
+    public String wImage { get; set; } = "Images/Kings/wGhoulKing";
+    public String bImage { get; set; } = "Images/Kings/bGhoulKing";
     public String name { get; set; } = "Ghoul King";
     public int[,] dependentMovesSet()
     {
@@ -301,24 +291,19 @@ public class GhoulKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -368,8 +353,8 @@ public class OneTimeKing : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Kings/wOneTimeKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bOneTimeKing.png";
+    public String wImage { get; set; } = "Images/Kings/wOneTimeKing";
+    public String bImage { get; set; } = "Images/Kings/bOneTimeKing";
     public String name { get; set; } = "One Time King";
     public int[,] dependentMovesSet()
     {
@@ -406,24 +391,19 @@ public class OneTimeKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -454,8 +434,8 @@ public class ElectricKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wElectricKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bElectricKing.png";
+    public String wImage { get; set; } = "Images/Kings/wElectricKing";
+    public String bImage { get; set; } = "Images/Kings/bElectricKing";
     public String name { get; set; } = "Electric King";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -511,24 +491,19 @@ public class ElectricKing : Piece
         go.name = "ElectricKing";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -559,8 +534,8 @@ public class PortalKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wPortalKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bPortalKing.png";
+    public String wImage { get; set; } = "Images/Kings/wPortalKing";
+    public String bImage { get; set; } = "Images/Kings/bPortalKing";
     public String name { get; set; } = "PortalKing";
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
@@ -616,24 +591,19 @@ public class PortalKing : Piece
         go.name = "PortalKing";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -664,8 +634,8 @@ public class AtomicKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wAtomicKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bAtomicKing.png";
+    public String wImage { get; set; } = "Images/Kings/wAtomicKing";
+    public String bImage { get; set; } = "Images/Kings/bAtomicKing";
     public String name { get; set; } = "AtomicKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -721,24 +691,19 @@ public class AtomicKing : Piece
         go.name = "AtomicKing";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -769,8 +734,8 @@ public class LandmineKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wLandmineKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bLandmineKing.png";
+    public String wImage { get; set; } = "Images/Kings/wLandmineKing";
+    public String bImage { get; set; } = "Images/Kings/bLandmineKing";
     public String name { get; set; } = "LandmineKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -826,24 +791,19 @@ public class LandmineKing : Piece
         go.name = "LandmineKing";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -872,8 +832,8 @@ public class LiteKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wLiteKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bLiteKing.png";
+    public String wImage { get; set; } = "Images/Kings/wLiteKing";
+    public String bImage { get; set; } = "Images/Kings/bLiteKing";
     public String name { get; set; } = "LiteKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -929,24 +889,19 @@ public class LiteKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -977,8 +932,8 @@ public class HyperFastKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wHyperFastKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bHyperFastKing.png";
+    public String wImage { get; set; } = "Images/Kings/wHyperFastKing";
+    public String bImage { get; set; } = "Images/Kings/bHyperFastKing";
     public String name { get; set; } = "HyperFastKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -1034,24 +989,19 @@ public class HyperFastKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1082,8 +1032,8 @@ public class FastKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wFastKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bFastKing.png";
+    public String wImage { get; set; } = "Images/Kings/wFastKing";
+    public String bImage { get; set; } = "Images/Kings/bFastKing";
     public String name { get; set; } = "FastKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -1139,24 +1089,19 @@ public class FastKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1187,8 +1132,8 @@ public class FragileKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wFragileKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bFragileKing.png";
+    public String wImage { get; set; } = "Images/Kings/wFragileKing";
+    public String bImage { get; set; } = "Images/Kings/bFragileKing";
     public String name { get; set; } = "FragileKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -1244,24 +1189,19 @@ public class FragileKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1293,8 +1233,8 @@ public class SlidingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wSlidingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bSlidingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wSlidingKing";
+    public String bImage { get; set; } = "Images/Kings/bSlidingKing";
     public String name { get; set; } = "SlidingKing";
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
@@ -1350,24 +1290,19 @@ public class SlidingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1398,8 +1333,8 @@ public class CrowdingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wCrowdingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bCrowdingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wCrowdingKing";
+    public String bImage { get; set; } = "Images/Kings/bCrowdingKing";
     public String name { get; set; } = "CrowdingKing";
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
@@ -1455,24 +1390,19 @@ public class CrowdingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1503,8 +1433,8 @@ public class HungryKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wHungryKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bHungryKing.png";
+    public String wImage { get; set; } = "Images/Kings/wHungryKing";
+    public String bImage { get; set; } = "Images/Kings/bHungryKing";
     public String name { get; set; } = "HungryKing";
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
@@ -1560,24 +1490,19 @@ public class HungryKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1608,8 +1533,8 @@ public class CaptureTheFlagKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wCaptureTheFlagKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bCaptureTheFlagKing.png";
+    public String wImage { get; set; } = "Images/Kings/wCaptureTheFlagKing";
+    public String bImage { get; set; } = "Images/Kings/bCaptureTheFlagKing";
     public String name { get; set; } = "CaptureTheFlagKing";
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
@@ -1665,24 +1590,19 @@ public class CaptureTheFlagKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1713,8 +1633,8 @@ public class FreezingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wFreezingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bFreezingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wFreezingKing";
+    public String bImage { get; set; } = "Images/Kings/bFreezingKing";
     public String name { get; set; } = "FreezingKing";
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
@@ -1770,24 +1690,19 @@ public class FreezingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1818,8 +1733,8 @@ public class UndeadKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wUndeadKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bUndeadKing.png";
+    public String wImage { get; set; } = "Images/Kings/wUndeadKing";
+    public String bImage { get; set; } = "Images/Kings/bUndeadKing";
     public String name { get; set; } = "UndeadKing";
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
@@ -1875,24 +1790,19 @@ public class UndeadKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1923,8 +1833,8 @@ public class DefuserKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wDefuserKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bDefuserKing.png";
+    public String wImage { get; set; } = "Images/Kings/wDefuserKing";
+    public String bImage { get; set; } = "Images/Kings/bDefuserKing";
     public String name { get; set; } = "DefuserKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -1980,24 +1890,19 @@ public class DefuserKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2029,8 +1934,8 @@ public class Overlord : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wOverlord.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bOverlord.png";
+    public String wImage { get; set; } = "Images/Kings/wOverlord";
+    public String bImage { get; set; } = "Images/Kings/bOverlord";
     public String name { get; set; } = "Overlord";
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
@@ -2086,24 +1991,19 @@ public class Overlord : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2134,8 +2034,8 @@ public class BadKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wBadKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bBadKing.png";
+    public String wImage { get; set; } = "Images/Kings/wBadKing";
+    public String bImage { get; set; } = "Images/Kings/bBadKing";
     public String name { get; set; } = "BadKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2191,24 +2091,19 @@ public class BadKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2239,8 +2134,8 @@ public class SpittingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wSpittingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bSpittingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wSpittingKing";
+    public String bImage { get; set; } = "Images/Kings/bSpittingKing";
     public String name { get; set; } = "SpittingKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2296,24 +2191,19 @@ public class SpittingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2344,8 +2234,8 @@ public class SwitchingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wSwitchingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bSwitchingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wSwitchingKing";
+    public String bImage { get; set; } = "Images/Kings/bSwitchingKing";
     public String name { get; set; } = "SwitchingKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2401,24 +2291,19 @@ public class SwitchingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2449,8 +2334,8 @@ public class StackingKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wStackingKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bStackingKing.png";
+    public String wImage { get; set; } = "Images/Kings/wStackingKing";
+    public String bImage { get; set; } = "Images/Kings/bStackingKing";
     public String name { get; set; } = "StackingKing";
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
@@ -2506,24 +2391,19 @@ public class StackingKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2554,8 +2434,8 @@ public class PiggybackKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wPiggybackKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bPiggybackKing.png";
+    public String wImage { get; set; } = "Images/Kings/wPiggybackKing";
+    public String bImage { get; set; } = "Images/Kings/bPiggybackKing";
     public String name { get; set; } = "PiggybackKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2613,24 +2493,19 @@ public class PiggybackKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -2672,8 +2547,8 @@ public class ScaredyKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wScaredyKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bScaredyKing.png";
+    public String wImage { get; set; } = "Images/Kings/wScaredyKing";
+    public String bImage { get; set; } = "Images/Kings/bScaredyKing";
     public String name { get; set; } = "ScaredyKing";
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
@@ -2731,24 +2606,19 @@ public class ScaredyKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -2786,8 +2656,8 @@ public class DepressedKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wDepressedKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bDepressedKing.png";
+    public String wImage { get; set; } = "Images/Kings/wDepressedKing";
+    public String bImage { get; set; } = "Images/Kings/bDepressedKing";
     public String name { get; set; } = "DepressedKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2845,24 +2715,19 @@ public class DepressedKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -2902,8 +2767,8 @@ public class HeartbrokenKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wHeartbrokenKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bHeartbrokenKing.png";
+    public String wImage { get; set; } = "Images/Kings/wHeartbrokenKing";
+    public String bImage { get; set; } = "Images/Kings/bHeartbrokenKing";
     public String name { get; set; } = "HeartbrokenKing";
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
@@ -2961,24 +2826,19 @@ public class HeartbrokenKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -3020,8 +2880,8 @@ public class RulebreakerKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wRulebreakerKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bRulebreakerKing.png";
+    public String wImage { get; set; } = "Images/Kings/wRulebreakerKing";
+    public String bImage { get; set; } = "Images/Kings/bRulebreakerKing";
     public String name { get; set; } = "RulebreakerKing";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
@@ -3075,24 +2935,19 @@ public class RulebreakerKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3125,8 +2980,8 @@ public class DelayedKing : Piece
     public int[] position { get; set; } = { 0, 0 };
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Kings/wDelayedKing.png";
-    public String bImage { get; set; } = "Assets/Images/Kings/bDelayedKing.png";
+    public String wImage { get; set; } = "Images/Kings/wDelayedKing";
+    public String bImage { get; set; } = "Images/Kings/bDelayedKing";
     public String name { get; set; } = "DelayedKing";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
@@ -3180,23 +3035,18 @@ public class DelayedKing : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }

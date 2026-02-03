@@ -133,7 +133,7 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        int[] position = boardState.getPosition(piece);
+        int[] position = boardState.getPiecePosition(piece);
         if (position == null) return;
 
         updateBoardState(position, piece, "r", boardState);
@@ -168,7 +168,7 @@ public class BotHelperFunctions : MonoBehaviour
         BoardState copy = new BoardState();
 
         copy.boardGrid = bs.boardGrid.Select(x =>
-            row.Select(y =>
+            x.Select(y =>
                 new List<Piece>(y)
             ).ToList()
         ).ToList();
@@ -176,7 +176,7 @@ public class BotHelperFunctions : MonoBehaviour
         copy.whitePointsOnBoard = bs.whitePointsOnBoard;
         copy.blackPointsOnBoard = bs.blackPointsOnBoard;
 
-        copy.inCheck = new int[] { bs.inCheck[0], bs.inCheck[1] }
+        copy.inCheck = new int[] { bs.inCheck[0], bs.inCheck[1] };
 
         return copy;
     }

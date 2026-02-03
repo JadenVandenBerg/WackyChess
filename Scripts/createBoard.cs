@@ -17,7 +17,6 @@ public class createBoard : MonoBehaviour
     [Header("Profile UI")]
     public GameObject TopProfilePanel;
     public GameObject BottomProfilePanel;
-
     void Start()
     {
         Debug.Log("Created Board");

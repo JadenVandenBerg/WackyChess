@@ -96,7 +96,7 @@ public class BoardState {
 			for (int y = 0; y < 8; y++) {
 				foreach(Piece p in boardGrid[x][y]) {
 					if (piece.name == p.name) {
-						return new int[] { x + 1, y + 1 }
+						return new int[] { x + 1, y + 1 };
 					}
 				}
 			}

@@ -55,8 +55,8 @@ public class Bishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wBishop";
+    public String bImage { get; set; } = "Images/Bishops/bBishop";
     public String name { get; set; } = "Bishop";
 
     public int[,] dependentMovesSet()
@@ -95,24 +95,19 @@ public class Bishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -165,8 +160,8 @@ public class MurderousBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wMurderousBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bMurderousBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wMurderousBishop";
+    public String bImage { get; set; } = "Images/Bishops/bMurderousBishop";
     public String name { get; set; } = "Murderous Bishop";
     public int[,] dependentMovesSet()
     {
@@ -203,24 +198,15 @@ public class MurderousBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
+
+        Sprite sp;
 
         if (color == 1)
         {
-            fileData = File.ReadAllBytes(wImage);
+            sp = Resources.Load<Sprite>(wImage);
+        } else {
+            sp = Resources.Load<Sprite>(bImage);
         }
-        else
-        {
-            fileData = File.ReadAllBytes(bImage);
-        }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -273,8 +259,8 @@ public class GhostBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wGhostBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bGhostBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wGhostBishop";
+    public String bImage { get; set; } = "Images/Bishops/bGhostBishop";
     public String name { get; set; } = "Ghost Bishop";
     public int[,] dependentMovesSet()
     {
@@ -312,23 +298,17 @@ public class GhostBishop : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -381,8 +361,8 @@ public class GhoulBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wGhoulBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bGhoulBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wGhoulBishop";
+    public String bImage { get; set; } = "Images/Bishops/bGhoulBishop";
     public String name { get; set; } = "Ghoul Bishop";
     public int[,] dependentMovesSet()
     {
@@ -419,24 +399,19 @@ public class GhoulBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -489,8 +464,8 @@ public class OneTimeBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wOneTimeBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bOneTimeBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wOneTimeBishop";
+    public String bImage { get; set; } = "Images/Bishops/bOneTimeBishop";
     public String name { get; set; } = "One Time Bishop";
     public int[,] dependentMovesSet()
     {
@@ -527,24 +502,19 @@ public class OneTimeBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -597,8 +567,8 @@ public class ElectricBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wElectricBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bElectricBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wElectricBishop";
+    public String bImage { get; set; } = "Images/Bishops/bElectricBishop";
     public String name { get; set; } = "Electric Bishop";
 
     public int[,] dependentMovesSet()
@@ -637,24 +607,19 @@ public class ElectricBishop : Piece
         go.name = "ElectricBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -707,8 +672,8 @@ public class InfiniteBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wInfiniteBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bInfiniteBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wInfiniteBishop";
+    public String bImage { get; set; } = "Images/Bishops/bInfiniteBishop";
     public String name { get; set; } = "InfiniteBishop";
 
     public int[,] dependentMovesSet()
@@ -747,24 +712,19 @@ public class InfiniteBishop : Piece
         go.name = "InfiniteBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -817,8 +777,8 @@ public class PortalBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wPortalBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bPortalBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wPortalBishop";
+    public String bImage { get; set; } = "Images/Bishops/bPortalBishop";
     public String name { get; set; } = "PortalBishop";
 
     public int[,] dependentMovesSet()
@@ -857,24 +817,19 @@ public class PortalBishop : Piece
         go.name = "PortalBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -927,8 +882,8 @@ public class AtomicBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wAtomicBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bAtomicBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wAtomicBishop";
+    public String bImage { get; set; } = "Images/Bishops/bAtomicBishop";
     public String name { get; set; } = "AtomicBishop";
 
     public int[,] dependentMovesSet()
@@ -967,24 +922,19 @@ public class AtomicBishop : Piece
         go.name = "AtomicBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1037,8 +987,8 @@ public class LandmineBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wLandmineBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bLandmineBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wLandmineBishop";
+    public String bImage { get; set; } = "Images/Bishops/bLandmineBishop";
     public String name { get; set; } = "LandmineBishop";
 
     public int[,] dependentMovesSet()
@@ -1077,24 +1027,19 @@ public class LandmineBishop : Piece
         go.name = "LandmineBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1147,8 +1092,8 @@ public class ColorChangingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wColorChangingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bColorChangingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wColorChangingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bColorChangingBishop";
     public String name { get; set; } = "ColorChangingBishop";
 
     public int[,] dependentMovesSet()
@@ -1187,24 +1132,19 @@ public class ColorChangingBishop : Piece
         go.name = "ColorChangingBishop";
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1252,8 +1192,8 @@ public class LiteBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wLiteBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bLiteBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wLiteBishop";
+    public String bImage { get; set; } = "Images/Bishops/bLiteBishop";
     public String name { get; set; } = "LiteBishop";
 
     public int[,] dependentMovesSet()
@@ -1292,24 +1232,19 @@ public class LiteBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1362,8 +1297,8 @@ public class SuperGhostBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wSuperGhostBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bSuperGhostBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wSuperGhostBishop";
+    public String bImage { get; set; } = "Images/Bishops/bSuperGhostBishop";
     public String name { get; set; } = "SuperGhostBishop";
     public int[,] dependentMovesSet()
     {
@@ -1400,24 +1335,19 @@ public class SuperGhostBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1473,8 +1403,8 @@ public class Princess : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wPrincess.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bPrincess.png";
+    public String wImage { get; set; } = "Images/Bishops/wPrincess";
+    public String bImage { get; set; } = "Images/Bishops/bPrincess";
     public String name { get; set; } = "BishopPrincess";
 
     public int[,] dependentMovesSet()
@@ -1513,24 +1443,19 @@ public class Princess : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1583,8 +1508,8 @@ public class FragileBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wFragileBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bFragileBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wFragileBishop";
+    public String bImage { get; set; } = "Images/Bishops/bFragileBishop";
     public String name { get; set; } = "FragileBishop";
 
     public int[,] dependentMovesSet()
@@ -1623,24 +1548,19 @@ public class FragileBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1694,8 +1614,8 @@ public class RoyalBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wRoyalBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bRoyalBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wRoyalBishop";
+    public String bImage { get; set; } = "Images/Bishops/bRoyalBishop";
     public String name { get; set; } = "RoyalBishop";
 
     public int[,] dependentMovesSet()
@@ -1734,24 +1654,19 @@ public class RoyalBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1804,8 +1719,8 @@ public class BouncingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wBouncingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bBouncingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wBouncingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bBouncingBishop";
     public String name { get; set; } = "BouncingBishop";
 
     public int[,] dependentMovesSet()
@@ -1844,24 +1759,19 @@ public class BouncingBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1914,8 +1824,8 @@ public class CrowdingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wCrowdingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bCrowdingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wCrowdingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bCrowdingBishop";
     public String name { get; set; } = "CrowdingBishop";
 
     public int[,] dependentMovesSet()
@@ -1954,24 +1864,19 @@ public class CrowdingBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2024,8 +1929,8 @@ public class HungryBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wHungryBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bHungryBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wHungryBishop";
+    public String bImage { get; set; } = "Images/Bishops/bHungryBishop";
     public String name { get; set; } = "HungryBishop";
 
     public int[,] dependentMovesSet()
@@ -2064,24 +1969,19 @@ public class HungryBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2134,8 +2034,8 @@ public class CaptureTheFlagBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wCaptureTheFlagBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bCaptureTheFlagBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wCaptureTheFlagBishop";
+    public String bImage { get; set; } = "Images/Bishops/bCaptureTheFlagBishop";
     public String name { get; set; } = "CaptureTheFlagBishop";
 
     public int[,] dependentMovesSet()
@@ -2174,24 +2074,19 @@ public class CaptureTheFlagBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2244,8 +2139,8 @@ public class FreezingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wFreezingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bFreezingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wFreezingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bFreezingBishop";
     public String name { get; set; } = "FreezingBishop";
 
     public int[,] dependentMovesSet()
@@ -2284,24 +2179,19 @@ public class FreezingBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2354,8 +2244,8 @@ public class CloningBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wCloningBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bCloningBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wCloningBishop";
+    public String bImage { get; set; } = "Images/Bishops/bCloningBishop";
     public String name { get; set; } = "CloningBishop";
 
     public int[,] dependentMovesSet()
@@ -2394,24 +2284,19 @@ public class CloningBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2464,8 +2349,8 @@ public class UndeadBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wUndeadBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bUndeadBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wUndeadBishop";
+    public String bImage { get; set; } = "Images/Bishops/bUndeadBishop";
     public String name { get; set; } = "UndeadBishop";
 
     public int[,] dependentMovesSet()
@@ -2504,24 +2389,19 @@ public class UndeadBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2574,8 +2454,8 @@ public class PromotionBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wPromotionBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bPromotionBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wPromotionBishop";
+    public String bImage { get; set; } = "Images/Bishops/bPromotionBishop";
     public String name { get; set; } = "PromotionBishop";
 
     public int[,] dependentMovesSet()
@@ -2614,24 +2494,19 @@ public class PromotionBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2684,8 +2559,8 @@ public class DefuserBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wDefuserBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bDefuserBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wDefuserBishop";
+    public String bImage { get; set; } = "Images/Bishops/bDefuserBishop";
     public String name { get; set; } = "DefuserBishop";
 
     public int[,] dependentMovesSet()
@@ -2724,24 +2599,19 @@ public class DefuserBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2794,8 +2664,8 @@ public class SpittingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wSpittingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bSpittingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wSpittingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bSpittingBishop";
     public String name { get; set; } = "SpittingBishop";
 
     public int[,] dependentMovesSet()
@@ -2834,24 +2704,19 @@ public class SpittingBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2904,8 +2769,8 @@ public class PhantomBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wPhantomBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bPhantomBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wPhantomBishop";
+    public String bImage { get; set; } = "Images/Bishops/bPhantomBishop";
     public String name { get; set; } = "PhantomBishop";
 
     public int[,] dependentMovesSet()
@@ -2944,24 +2809,19 @@ public class PhantomBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3014,8 +2874,8 @@ public class StackingBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wStackingBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bStackingBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wStackingBishop";
+    public String bImage { get; set; } = "Images/Bishops/bStackingBishop";
     public String name { get; set; } = "StackingBishop";
 
     public int[,] dependentMovesSet()
@@ -3054,24 +2914,19 @@ public class StackingBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3124,8 +2979,8 @@ public class JailBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wJailBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bJailBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wJailBishop";
+    public String bImage { get; set; } = "Images/Bishops/bJailBishop";
     public String name { get; set; } = "JailBishop";
 
     public int[,] dependentMovesSet()
@@ -3164,24 +3019,19 @@ public class JailBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3236,8 +3086,8 @@ public class PiggybackBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wPiggybackBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bPiggybackBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wPiggybackBishop";
+    public String bImage { get; set; } = "Images/Bishops/bPiggybackBishop";
     public String name { get; set; } = "PiggybackBishop";
 
     public int[,] dependentMovesSet()
@@ -3276,24 +3126,19 @@ public class PiggybackBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -3357,8 +3202,8 @@ public class JockeyBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wJockeyBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bJockeyBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wJockeyBishop";
+    public String bImage { get; set; } = "Images/Bishops/bJockeyBishop";
     public String name { get; set; } = "JockeyBishop";
 
     public int[,] dependentMovesSet()
@@ -3397,24 +3242,19 @@ public class JockeyBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -3476,8 +3316,8 @@ public class DelayedBishop : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Bishops/wDelayedBishop.png";
-    public String bImage { get; set; } = "Assets/Images/Bishops/bDelayedBishop.png";
+    public String wImage { get; set; } = "Images/Bishops/wDelayedBishop";
+    public String bImage { get; set; } = "Images/Bishops/bDelayedBishop";
     public String name { get; set; } = "DelayedBishop";
 
     public int[,] dependentMovesSet()
@@ -3516,24 +3356,19 @@ public class DelayedBishop : Piece
         go.name = name;
 
         HelperFunctions.UpdateMovesForColor(this);
-        Image s = go.AddComponent<Image>();
-        byte[] fileData;
 
-        if (color == 1)
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 

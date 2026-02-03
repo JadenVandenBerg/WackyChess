@@ -56,8 +56,8 @@ public class Rook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wRook";
+    public String bImage { get; set; } = "Images/Rooks/bRook";
     public String name { get; set; } = "Rook";
     public int[,] dependentMovesSet()
     {
@@ -96,23 +96,17 @@ public class Rook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -165,8 +159,8 @@ public class MurderousRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wMurderousRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bMurderousRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wMurderousRook";
+    public String bImage { get; set; } = "Images/Rooks/bMurderousRook";
     public String name { get; set; } = "MurderousRook";
     public int[,] dependentMovesSet()
     {
@@ -204,23 +198,17 @@ public class MurderousRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -273,8 +261,8 @@ public class GhostRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wGhostRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bGhostRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wGhostRook";
+    public String bImage { get; set; } = "Images/Rooks/bGhostRook";
     public String name { get; set; } = "Ghost Rook";
     public int[,] dependentMovesSet()
     {
@@ -312,23 +300,17 @@ public class GhostRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -381,8 +363,8 @@ public class GhoulRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wGhoulRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bGhoulRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wGhoulRook";
+    public String bImage { get; set; } = "Images/Rooks/bGhoulRook";
     public String name { get; set; } = "Ghoul Rook";
     public int[,] dependentMovesSet()
     {
@@ -420,23 +402,17 @@ public class GhoulRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -489,8 +465,8 @@ public class OneTimeRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wOneTimeRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bOneTimeRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wOneTimeRook";
+    public String bImage { get; set; } = "Images/Rooks/bOneTimeRook";
     public String name { get; set; } = "One Time Rook";
     public int[,] dependentMovesSet()
     {
@@ -528,23 +504,17 @@ public class OneTimeRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -598,8 +568,8 @@ public class ElectricRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wElectricRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bElectricRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wElectricRook";
+    public String bImage { get; set; } = "Images/Rooks/bElectricRook";
     public String name { get; set; } = "Electric Rook";
     public int[,] dependentMovesSet()
     {
@@ -638,23 +608,17 @@ public class ElectricRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -708,8 +672,8 @@ public class InfiniteRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wInfiniteRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bInfiniteRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wInfiniteRook";
+    public String bImage { get; set; } = "Images/Rooks/bInfiniteRook";
     public String name { get; set; } = "InfiniteRook";
     public int[,] dependentMovesSet()
     {
@@ -748,23 +712,17 @@ public class InfiniteRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -818,8 +776,8 @@ public class PortalRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wPortalRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bPortalRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wPortalRook";
+    public String bImage { get; set; } = "Images/Rooks/bPortalRook";
     public String name { get; set; } = "PortalRook";
     public int[,] dependentMovesSet()
     {
@@ -858,23 +816,17 @@ public class PortalRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -928,8 +880,8 @@ public class AtomicRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wAtomicRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bAtomicRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wAtomicRook";
+    public String bImage { get; set; } = "Images/Rooks/bAtomicRook";
     public String name { get; set; } = "AtomicRook";
     public int[,] dependentMovesSet()
     {
@@ -968,23 +920,17 @@ public class AtomicRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1038,8 +984,8 @@ public class LandmineRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wLandmineRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bLandmineRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wLandmineRook";
+    public String bImage { get; set; } = "Images/Rooks/bLandmineRook";
     public String name { get; set; } = "LandmineRook";
     public int[,] dependentMovesSet()
     {
@@ -1078,23 +1024,17 @@ public class LandmineRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1143,8 +1083,8 @@ public class LiteRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wLiteRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bLiteRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wLiteRook";
+    public String bImage { get; set; } = "Images/Rooks/bLiteRook";
     public String name { get; set; } = "LiteRook";
     public int[,] dependentMovesSet()
     {
@@ -1183,23 +1123,17 @@ public class LiteRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1252,8 +1186,8 @@ public class SuperGhostRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wSuperGhostRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bSuperGhostRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wSuperGhostRook";
+    public String bImage { get; set; } = "Images/Rooks/bSuperGhostRook";
     public String name { get; set; } = "SuperGhostRook";
     public int[,] dependentMovesSet()
     {
@@ -1291,23 +1225,17 @@ public class SuperGhostRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1364,8 +1292,8 @@ public class Empress : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wEmpress.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bEmpress.png";
+    public String wImage { get; set; } = "Images/Rooks/wEmpress";
+    public String bImage { get; set; } = "Images/Rooks/bEmpress";
     public String name { get; set; } = "RookEmpress";
     public int[,] dependentMovesSet()
     {
@@ -1404,23 +1332,17 @@ public class Empress : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1474,8 +1396,8 @@ public class FragileRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wFragileRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bFragileRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wFragileRook";
+    public String bImage { get; set; } = "Images/Rooks/bFragileRook";
     public String name { get; set; } = "FragileRook";
     public int[,] dependentMovesSet()
     {
@@ -1514,23 +1436,17 @@ public class FragileRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1585,8 +1501,8 @@ public class RoyalRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wRoyalRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bRoyalRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wRoyalRook";
+    public String bImage { get; set; } = "Images/Rooks/bRoyalRook";
     public String name { get; set; } = "RoyalRook";
     public int[,] dependentMovesSet()
     {
@@ -1625,23 +1541,17 @@ public class RoyalRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1695,8 +1605,8 @@ public class MonochromeRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wMonochromeRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bMonochromeRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wMonochromeRook";
+    public String bImage { get; set; } = "Images/Rooks/bMonochromeRook";
     public String name { get; set; } = "MonochromeRook";
     public int[,] dependentMovesSet()
     {
@@ -1735,23 +1645,17 @@ public class MonochromeRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1805,8 +1709,8 @@ public class CrowdingRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wCrowdingRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bCrowdingRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wCrowdingRook";
+    public String bImage { get; set; } = "Images/Rooks/bCrowdingRook";
     public String name { get; set; } = "CrowdingRook";
     public int[,] dependentMovesSet()
     {
@@ -1845,23 +1749,17 @@ public class CrowdingRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -1915,8 +1813,8 @@ public class HungryRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wHungryRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bHungryRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wHungryRook";
+    public String bImage { get; set; } = "Images/Rooks/bHungryRook";
     public String name { get; set; } = "HungryRook";
     public int[,] dependentMovesSet()
     {
@@ -1955,23 +1853,17 @@ public class HungryRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2025,8 +1917,8 @@ public class CaptureTheFlagRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wCaptureTheFlagRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bCaptureTheFlagRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wCaptureTheFlagRook";
+    public String bImage { get; set; } = "Images/Rooks/bCaptureTheFlagRook";
     public String name { get; set; } = "CaptureTheFlagRook";
     public int[,] dependentMovesSet()
     {
@@ -2065,23 +1957,17 @@ public class CaptureTheFlagRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2135,8 +2021,8 @@ public class FreezingRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wFreezingRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bFreezingRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wFreezingRook";
+    public String bImage { get; set; } = "Images/Rooks/bFreezingRook";
     public String name { get; set; } = "FreezingRook";
     public int[,] dependentMovesSet()
     {
@@ -2175,23 +2061,17 @@ public class FreezingRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2245,8 +2125,8 @@ public class CloningRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wCloningRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bCloningRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wCloningRook";
+    public String bImage { get; set; } = "Images/Rooks/bCloningRook";
     public String name { get; set; } = "CloningRook";
     public int[,] dependentMovesSet()
     {
@@ -2285,23 +2165,17 @@ public class CloningRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2355,8 +2229,8 @@ public class UndeadRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wUndeadRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bUndeadRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wUndeadRook";
+    public String bImage { get; set; } = "Images/Rooks/bUndeadRook";
     public String name { get; set; } = "UndeadRook";
     public int[,] dependentMovesSet()
     {
@@ -2395,23 +2269,17 @@ public class UndeadRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2465,8 +2333,8 @@ public class PromotionRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wPromotionRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bPromotionRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wPromotionRook";
+    public String bImage { get; set; } = "Images/Rooks/bPromotionRook";
     public String name { get; set; } = "PromotionRook";
     public int[,] dependentMovesSet()
     {
@@ -2505,23 +2373,17 @@ public class PromotionRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2575,8 +2437,8 @@ public class DefuserRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wDefuserRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bDefuserRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wDefuserRook";
+    public String bImage { get; set; } = "Images/Rooks/bDefuserRook";
     public String name { get; set; } = "DefuserRook";
     public int[,] dependentMovesSet()
     {
@@ -2615,23 +2477,17 @@ public class DefuserRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2685,8 +2541,8 @@ public class SpittingRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wSpittingRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bSpittingRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wSpittingRook";
+    public String bImage { get; set; } = "Images/Rooks/bSpittingRook";
     public String name { get; set; } = "SpittingRook";
     public int[,] dependentMovesSet()
     {
@@ -2725,23 +2581,17 @@ public class SpittingRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2795,8 +2645,8 @@ public class PhantomRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wPhantomRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bPhantomRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wPhantomRook";
+    public String bImage { get; set; } = "Images/Rooks/bPhantomRook";
     public String name { get; set; } = "PhantomRook";
     public int[,] dependentMovesSet()
     {
@@ -2835,23 +2685,17 @@ public class PhantomRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -2905,8 +2749,8 @@ public class StackingRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wStackingRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bStackingRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wStackingRook";
+    public String bImage { get; set; } = "Images/Rooks/bStackingRook";
     public String name { get; set; } = "StackingRook";
     public int[,] dependentMovesSet()
     {
@@ -2945,23 +2789,17 @@ public class StackingRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3015,8 +2853,8 @@ public class JailRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wJailRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bJailRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wJailRook";
+    public String bImage { get; set; } = "Images/Rooks/bJailRook";
     public String name { get; set; } = "JailRook";
     public int[,] dependentMovesSet()
     {
@@ -3055,23 +2893,17 @@ public class JailRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3125,8 +2957,8 @@ public class Crook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wCrook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bCrook.png";
+    public String wImage { get; set; } = "Images/Rooks/wCrook";
+    public String bImage { get; set; } = "Images/Rooks/bCrook";
     public String name { get; set; } = "Crook";
     public int[,] dependentMovesSet()
     {
@@ -3165,23 +2997,17 @@ public class Crook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }
 
@@ -3237,8 +3063,8 @@ public class PiggybackRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wPiggybackRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bPiggybackRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wPiggybackRook";
+    public String bImage { get; set; } = "Images/Rooks/bPiggybackRook";
     public String name { get; set; } = "PiggybackRook";
     public int[,] dependentMovesSet()
     {
@@ -3277,23 +3103,17 @@ public class PiggybackRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -3358,8 +3178,8 @@ public class JockeyRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wJockeyRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bJockeyRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wJockeyRook";
+    public String bImage { get; set; } = "Images/Rooks/bJockeyRook";
     public String name { get; set; } = "JockeyRook";
     public int[,] dependentMovesSet()
     {
@@ -3398,23 +3218,17 @@ public class JockeyRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
     public int[] getPosition()
     {
@@ -3477,8 +3291,8 @@ public class DelayedRook : Piece
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
-    public String wImage { get; set; } = "Assets/Images/Rooks/wDelayedRook.png";
-    public String bImage { get; set; } = "Assets/Images/Rooks/bDelayedRook.png";
+    public String wImage { get; set; } = "Images/Rooks/wDelayedRook";
+    public String bImage { get; set; } = "Images/Rooks/bDelayedRook";
     public String name { get; set; } = "DelayedRook";
     public int[,] dependentMovesSet()
     {
@@ -3517,22 +3331,16 @@ public class DelayedRook : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
         Image s = go.AddComponent<Image>();
-        byte[] fileData;
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
+        if (sp == null)
         {
-            fileData = File.ReadAllBytes(wImage);
+            Debug.LogError("Failed to load sprite from Resources");
         }
         else
         {
-            fileData = File.ReadAllBytes(bImage);
+            s.sprite = sp;
+            s.preserveAspect = true;
         }
-
-        Texture2D texture2D = new Texture2D(2, 2);
-        texture2D.LoadImage(fileData);
-
-        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-
-        s.sprite = sp;
     }
 }

@@ -84,8 +84,24 @@ public class BotHelperFunctions : MonoBehaviour
     //List so its easier to randomize. Each Dict has only one entry
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
-
+        //urgent fix this
     	foreach (Piece piece in bot.pieces) {
+            int[] oldPiecePosition = { piece.position[0], piece.position[1] };
+            List<List<List<Piece>>> oldBoardGrid = gameData.boardGrid;
+            gameData.boardGrid = bot.currentBoardState.boardGrid;
+            //Debug.Log(piece.name + " OLD POS" + piece.position[0] + "," + piece.position[1]);
+            piece.position = bot.currentBoardState.getPiecePosition(piece);
+
+            if (piece.position == null)
+            {
+                piece.position = oldPiecePosition;
+                gameData.boardGrid = oldBoardGrid;
+
+                continue;
+            }
+
+            //Debug.Log(piece.name + " NEW POS" + piece.position[0] + "," + piece.position[1]);
+
     		List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
 
     		if (moves.Count > 0) {
@@ -95,9 +111,153 @@ public class BotHelperFunctions : MonoBehaviour
 
 	    		totalMoves.Add(pMoveDict);
     		}
+
+            piece.position = oldPiecePosition;
+            gameData.boardGrid = oldBoardGrid;
     	}
 
         return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+    }
+
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMovesNew(BotTemplate bot, int color)
+    {
+        List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
+
+
+
+        return (null, null);
+    }
+
+    public static List<int[]> getIsolatedStatePieceMoves(Piece piece, BoardState bs)
+    {
+        List<int[]> allMoves = new List<int[]>();
+
+        List<List<List<Piece>>> boardGrid = bs.boardGrid;
+        bool check = false;
+        //if is check TODO check = true
+
+        //todo maybe forcestayturn
+
+
+
+        return allMoves;
+    }
+
+    private static void isolatedIterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, BoardState bs, int[,] moveType, bool check, List<int[]> allMoves)
+    {
+        int color = piece.color;
+
+        if (HelperFunctions.checkState(piece, "Frozen") || HelperFunctions.checkState(piece, "Jailed"))
+        {
+            return;
+        }
+
+        if (HelperFunctions.checkPieceType(piece, "q"))
+        {
+            if (isolatedIsOppressorOnBoard(bs, piece.color))
+            {
+                return;
+            }
+        }
+
+        for (int i = 0; i < moveType.GetLength(0); i++)
+        {
+            //Portal
+            int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
+            int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
+            int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+
+            int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
+
+            if (HelperFunctions.checkState(piece, "Portal"))
+            {
+                newPos[0] = coordsP[0];
+                newPos[1] = coordsP[1];
+            }
+            else if (HelperFunctions.checkState(piece, "Bouncing"))
+            {
+                newPos[0] = coordsB[0];
+                newPos[1] = coordsB[1];
+            }
+
+            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPos[0], newPos[1], bs.boardGrid);
+            bool pieceIsNull = piecesOnCoords == null || piecesOnCoords.Count == 0;
+            bool pieceIsDiffColour = false;
+
+            if (!pieceIsNull)
+            {
+                pieceIsDiffColour = !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color);
+
+                if (HelperFunctions.checkPiecesDisabled(piecesOnCoords))
+                {
+                    pieceIsNull = true;
+                }
+
+                //checkSquareCrowdingEligible
+            }
+        }
+    }
+
+    public static List<int> isolatedGetColorsOnCoords(List<Piece> piecesOnCoords, bool ignoreDematerialized)
+    {
+        List<int> colors = new List<int>();
+
+        if (piecesOnCoords == null)
+        {
+            return colors;
+        }
+
+        foreach (Piece piece in piecesOnCoords)
+        {
+            if (piece.disabled || piece.alive == 0 || (ignoreDematerialized && HelperFunctions.checkState(piece, "Dematerialized")) || HelperFunctions.checkState(piece, "Jailed"))
+            {
+                continue;
+            }
+
+            colors.Add(piece.color);
+        }
+
+        return colors;
+    }
+
+    private static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
+    {
+        List<List<List<Piece>>> boardGrid = bs.boardGrid;
+
+        List<Piece> pieces = isolatedGetPiecesOnBoardGrid(boardGrid);
+        foreach (Piece p in pieces)
+        {
+            if (HelperFunctions.checkState(p, "Oppressive") && p.color != color)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static List<Piece> isolatedGetPiecesOnBoardGrid(List<List<List<Piece>>> boardGrid)
+    {
+        List<Piece> allPieces = new List<Piece>();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(i, j, boardGrid);
+                allPieces.AddRange(pieces);
+            }
+        }
+
+        return allPieces;
+    }
+
+    public static List<Piece> isolatedGetPiecesOnCoordsBoardGrid(int x, int y, List<List<List<Piece>>> boardGrid)
+    {
+        List<Piece> pieces = new List<Piece>();
+        
+        pieces = boardGrid[x][y];
+
+        return pieces;
     }
 
     public static (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot)
@@ -105,6 +265,7 @@ public class BotHelperFunctions : MonoBehaviour
         var botMoves = getAllPossibleBotMoves(bot, bot.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        //TODO add abilities
         Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
         System.Random rand = new System.Random();
@@ -178,10 +339,10 @@ public class BotHelperFunctions : MonoBehaviour
         return copy;
     }
 
-    public static List<int> getPointsOnBoardState(BoardState bs) {
+    public static List<float> getPointsOnBoardState(BoardState bs) {
         List<List<List<Piece>>> board = bs.boardGrid;
-        int wCount = 0;
-        int bCount = 0;
+        float wCount = 0;
+        float bCount = 0;
 
         foreach (var x in board) {
             foreach (var y in x) {
@@ -196,9 +357,9 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
-        List<int> l = new List<int>();
+        List<float> l = new List<float>();
         l.Add(wCount);
-        l.Add(bCount):
+        l.Add(bCount);
 
         return l;
     }

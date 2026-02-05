@@ -17,9 +17,9 @@ public class IdiotBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        Piece worstMovePiece;
-        int[] worstMoveCoords;
-        int worstMoveDiff = +1000;
+        Piece worstMovePiece = null;
+        int[] worstMoveCoords = null;
+        float worstMoveDiff = +1000;
 
         var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.color);
 
@@ -48,7 +48,7 @@ public class IdiotBot : BotTemplate
                 //best simulated move opponent can make
                 Piece bestOppMovePiece;
                 int[] bestOppMoveCoords;
-                int bestOppMoveDiff = +1000;
+                float bestOppMoveDiff = +1000;
 
                 foreach(Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp) {
                     KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
@@ -60,11 +60,11 @@ public class IdiotBot : BotTemplate
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
                         BotHelperFunctions.movePieceBoardState(piece, coords, cloneState_);
 
-                        int[] pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
-                        int botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        int oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
+                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                        int diff = botPoints - oppPoints;
+                        float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {
                             bestOppMoveDiff = diff;
                             bestOppMovePiece = pieceOpp;
@@ -76,14 +76,14 @@ public class IdiotBot : BotTemplate
                 // Take the worst outcome assuming the opponent captures the highest value piece it can
                 if (bestOppMoveDiff < worstMoveDiff) {
                     worstMoveDiff = bestOppMoveDiff;
-                    worseMoveCoords = coords;
+                    worstMoveCoords = coords;
                     worstMovePiece = piece;
                 }
             }
         }
 
         Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(bestMovePiece, bestMoveCoords);
+        moveDict.Add(worstMovePiece, worstMoveCoords);
 
         return moveDict;
     }

@@ -97,12 +97,17 @@ public class BoardState {
 		whitePointsOnBoard = wp;
 		blackPointsOnBoard = bp;
 
-		isInCheck = gameData.isInCheck;
+		inCheck = gameData.isInCheck;
 	}
 
 	public int[] getPiecePosition(Piece piece) {
+		if (boardGrid == null || boardGrid.Count == 0) return null;
+
 		for (int x = 0; x < 8; x++) {
+			if (boardGrid[x] == null) continue;
 			for (int y = 0; y < 8; y++) {
+				if (boardGrid[x][y] == null) continue;
+
 				foreach(Piece p in boardGrid[x][y]) {
 					if (piece.name == p.name) {
 						return new int[] { x + 1, y + 1 };

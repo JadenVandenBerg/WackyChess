@@ -58,11 +58,7 @@ public static class tempInfo
 }
 
 public static class botTournament {
-    public static List<BotTemplate> competingBots = new List<BotTemplate>({
-        // new RandomBot(),
-        // new OneMoveBot(),
-        // new IdiotBot(),
-    });
+    public static List<BotTemplate> competingBots = new List<BotTemplate>();
 }
 
 /*

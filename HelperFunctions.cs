@@ -297,6 +297,7 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
+    /*TODO Rewrite this for bots*/
     public static List<int[]> addMovesToCurrentMoveableCoords(Piece piece)
     {
         clearCurrentMoveableCoords();
@@ -718,6 +719,7 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
+    /*todo rewrite this for isolated boardstate*/
     public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
     {
         if (checkState(piece, "Frozen") || checkState(piece, "Jailed"))
@@ -2978,7 +2980,7 @@ public class HelperFunctions : MonoBehaviour
             tempInfo.delayedQueue.Enqueue(delayedMove);
 
             gameData.turn *= -1;
-            return;
+            return false;
         }
 
         //Debug.Log("Flags");

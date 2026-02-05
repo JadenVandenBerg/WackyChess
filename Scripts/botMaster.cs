@@ -30,15 +30,18 @@ public class botMaster : MonoBehaviour
 
     BotTemplate botWhite;
     BotTemplate botBlack;
+    bool started = false;
 
     IEnumerator Start()
     {
+        yield return new WaitForSeconds(1.0f);
+
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new RandomBot(1);
-        botBlack = new RandomBot(-1);
+        botWhite = new OneMoveBot(1);
+        botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -137,6 +140,7 @@ public class botMaster : MonoBehaviour
         gameData.blackKing = botBlackKing[0];
 
         yield return null;
+        started = true;
     }
 
     int turn = 1;
@@ -146,7 +150,7 @@ public class botMaster : MonoBehaviour
 
     void Update()
     {
-        if (!isTurn) return;
+        if (!isTurn || !started) return;
 
         isTurn = false;
 
@@ -155,6 +159,7 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
+        yield return new WaitForSeconds(1.5f);
         BotTemplate currentBot;
         bool valid = true;
 
@@ -200,16 +205,16 @@ public class botMaster : MonoBehaviour
             }
         }
 
-        Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
-        gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
-        gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
-        gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
-        gameData.selectedToMovePiece = movePieceObj;
-
         bool death = false;
         bool check = false;
         if (valid)
         {
+            gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
+            gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+            gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+            gameData.selectedToMovePiece = movePieceObj;
+
+            Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
             helper.performPreMove();
             helper.movePiece_(movePieceObj, moveCoords);
         }
@@ -217,6 +222,12 @@ public class botMaster : MonoBehaviour
         {
             Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
             var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
+
+            gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);
+            gameData.selectedToMove = HelperFunctions.findSquare(randomMove.piece.position[0], randomMove.piece.position[1]);
+            gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+            gameData.selectedToMovePiece = randomMove.piece;
+
             death = helper.performPreMove();
             check = helper.movePiece_(randomMove.piece, randomMove.coords);
         }
@@ -240,13 +251,18 @@ public class botMaster : MonoBehaviour
             //GAME OVER, go to next match
         }
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.5f);
         isTurn = true;
 
         //Check if check/update bot boardstate
     }
 
     public bool botValidateMove(Piece piece, int[] coords) {
+        if (piece == null || coords == null)
+        {
+            return false;
+        }
+
         List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
 
         if (HelperFunctions.isInList(moves, coords, false)) {

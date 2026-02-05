@@ -17,9 +17,10 @@ public class OneMoveBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        Piece bestMovePiece;
-        int[] bestMoveCoords;
-        int bestMoveDiff = -1000;
+        currentBoardState.refresh();
+        Piece bestMovePiece = null;
+        int[] bestMoveCoords = null;
+        float bestMoveDiff = -1000;
 
         var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.color);
 
@@ -48,7 +49,7 @@ public class OneMoveBot : BotTemplate
                 //best simulated move opponent can make
                 Piece bestOppMovePiece;
                 int[] bestOppMoveCoords;
-                int bestOppMoveDiff = +1000;
+                float bestOppMoveDiff = +1000;
 
                 foreach(Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp) {
                     KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
@@ -60,11 +61,11 @@ public class OneMoveBot : BotTemplate
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
                         BotHelperFunctions.movePieceBoardState(piece, coords, cloneState_);
 
-                        int[] pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
-                        int botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        int oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
+                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                        int diff = botPoints - oppPoints;
+                        float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {
                             bestOppMoveDiff = diff;
                             bestOppMovePiece = pieceOpp;
@@ -79,6 +80,8 @@ public class OneMoveBot : BotTemplate
                     bestMoveCoords = coords;
                     bestMovePiece = piece;
                 }
+
+                this.currentBoardState = originalBoardState;
             }
         }
 

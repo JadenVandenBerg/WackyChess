@@ -3613,4 +3613,43 @@ public class HelperFunctions : MonoBehaviour
 
         return death;
     }
+
+    public static Piece clonePiece(Piece original)
+    {
+        Type type = original.GetType();
+
+        Piece clone = (Piece)Activator.CreateInstance(type);
+
+        foreach (PropertyInfo prop in type.GetProperties(
+            BindingFlags.Instance | BindingFlags.Public))
+        {
+            if (!prop.CanRead || !prop.CanWrite)
+                continue;
+
+            object value = prop.GetValue(original);
+
+            if (value is int[,] array2D)
+            {
+                prop.SetValue(clone, (int[,])array2D.Clone());
+            }
+            else if (value is int[] array1D)
+            {
+                prop.SetValue(clone, (int[])array1D.Clone());
+            }
+            else if (value is List<Piece> list) //TODO might need to do a shallow clone here
+            {
+                var newList = new List<Piece>();
+                foreach (var p in list)
+                    newList.Add(clonePiece(p));
+
+                prop.SetValue(clone, newList);
+            }
+            else
+            {
+                prop.SetValue(clone, value);
+            }
+        }
+
+        return clone;
+    }
 }

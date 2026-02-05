@@ -194,7 +194,85 @@ public class BotHelperFunctions : MonoBehaviour
                 }
 
                 //checkSquareCrowdingEligible
+                if (isolatedCheckSquareCrowdingEligible(piece, piecesOnCoords)) {
+                    pieceIsNull = true;
+                }
+
+                //Check for states
+                if (HelperFunctions.checkStateOnSquare(piecesOnCoords, "Shield")) {
+                    continue;
+                }
+
+                if (HelperFunctions.checkStateOnSquare(piecesOnCoords, "CaptureTheFlag")) {
+                    bool _continue = false;
+                    foreach (Piece piece_ in piecesOnCoords) {
+                        if (HelperFunctions.checkCaptureTheFlag(piece_)) {
+                            _continue = true;
+                            break;
+                        }
+                    }
+
+                    if (_continue) {
+                        continue;
+                    }
+                }
             }
+
+            //TODO jump
+        }
+    }
+
+    private static bool isolatedCheckSquareCrowdingEligible(Piece piece, List<Piece> piecesOnCoords) {
+        // No pieces
+        if (piecesOnCoords == null || piecesOnCoords.Count == 0) {
+            return true;
+        }
+
+        int[] colorsOnCoords = isolatedGetColorsOnCoords(piecesOnCoords, true);
+
+        //Pieces different color
+        if (colorsOnCoords.Contains(piece.color * -1)) {
+            return false;
+        }
+
+        // Square contains more than one other piece (not crowding)
+        if (piecesOnSquare.Count > 1 && HelperFunctions.checkState(piece, "Crowding"))
+        {
+            foreach (Piece _piece in piecesOnCoords)
+            {
+                if (!HelperFunctions.checkState(_piece, "Crowding"))
+                {
+                    return false;
+                }
+            }
+
+            // If they are all crowding
+            return true;
+        }
+
+        //There is one piece on the square, piece is crowding
+        if (HelperFunctions.checkState(piece, "Crowding") && piecesOnCoords.Count == 1 && colorsOnCoords.Contains(piece.color)) {
+            return true;
+        }
+
+        //There is one piece on the square, piece is piggyback
+        if (piecesOnCoords.Count == 1 && HelperFunctions.checkState(piecesOnCoords[0], "Piggyback") && colorsOnCoords.Contains(piece.color)) {
+            return true;
+        }
+
+        //There is one piece on square, piece is jockey
+        if (piecesOnCoords.Count == 1 && HelperFunctions.checkState(piece, "Jockey") && colorsOnCoords.Contains(piece.color)) {
+            return true;
+        }
+
+        if (!HelperFunctions.checkState(piece, "Crowding"))
+        {
+            return false;
+        }
+        else
+        {
+            //Last case square contains one piece and its same color
+            return true;
         }
     }
 
@@ -284,6 +362,7 @@ public class BotHelperFunctions : MonoBehaviour
         return (randMovePiece, randMoveCoords);
     }
 
+    //TODO run movePiece on boardstate without actual move
     public static void movePieceBoardState(Piece piece, int[] coords, BoardState boardState)
     {
         if (coords[0] < 1 || coords[1] < 1)

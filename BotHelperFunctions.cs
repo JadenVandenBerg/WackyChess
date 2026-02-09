@@ -82,41 +82,46 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     //List so its easier to randomize. Each Dict has only one entry
-    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, int color) {
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
         //urgent fix this
-    	foreach (Piece piece in bot.pieces) {
-            int[] oldPiecePosition = { piece.position[0], piece.position[1] };
-            List<List<List<Piece>>> oldBoardGrid = gameData.boardGrid;
-            gameData.boardGrid = bot.currentBoardState.boardGrid;
-            //Debug.Log(piece.name + " OLD POS" + piece.position[0] + "," + piece.position[1]);
-            piece.position = bot.currentBoardState.getPiecePosition(piece);
+        List<Piece> pieces_ = getPiecesOnBoardState(bs, bot.color);
+        foreach (Piece piece in pieces_) {
 
-            if (piece.position == null)
-            {
-                piece.position = oldPiecePosition;
-                gameData.boardGrid = oldBoardGrid;
+    		List<int[]> moves = getIsolatedStatePieceMoves(piece, bs);
 
-                continue;
-            }
-
-            //Debug.Log(piece.name + " NEW POS" + piece.position[0] + "," + piece.position[1]);
-
-    		List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
-
-    		if (moves.Count > 0) {
+            if (moves.Count > 0) {
     			Dictionary<Piece, List<int[]>> pMoveDict = new Dictionary<Piece, List<int[]>>();
 
 	    		pMoveDict.Add(piece, moves);
 
 	    		totalMoves.Add(pMoveDict);
     		}
-
-            piece.position = oldPiecePosition;
-            gameData.boardGrid = oldBoardGrid;
-    	}
+        }
 
         return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+    }
+
+    public static List<Piece> getPiecesOnBoardState(BoardState bs, int color)
+    {
+        List<Piece> pieces = new List<Piece>();
+        List<List<List<Piece>>> boardGrid = bs.boardGrid;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece p in boardGrid[x][y])
+                {
+                    if (p.color == color)
+                    {
+                        pieces.Add(p);
+                    }
+                }
+            }
+        }
+
+        return pieces;
     }
 
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMovesNew(BotTemplate bot, int color)
@@ -138,15 +143,37 @@ public class BotHelperFunctions : MonoBehaviour
 
         //todo maybe forcestayturn
 
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveComparator, piece, bs, piece.moves, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.moveAndAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.attacksComparator, piece, bs, piece.attacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMovesComparator, piece, bs, piece.oneTimeMoves, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMoveAndAttacksComparator, piece, bs, piece.oneTimeMoveAndAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.murderousAttacksComparator, piece, bs, piece.murderousAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.conditionalAttacksComparator, piece, bs, piece.conditionalAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.jumpAttacksComparator, piece, bs, piece.jumpAttacks, check, allMoves);
 
+        //TODO fix dependentMoves for isolated state
+        piece.dependentMovesSet();
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.dependentAttacks, check, allMoves);
+
+        piece.interactiveMovesSet();
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.interactiveAttacks, check, allMoves);
+
+        HelperFunctions.updatePieceFlags(piece, check);
+        if (piece.flag == 1)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove1, check, allMoves);
+        }
+        else if (piece.flag == 2)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove2, check, allMoves);
+        }
 
         return allMoves;
     }
 
     private static void isolatedIterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, BoardState bs, int[,] moveType, bool check, List<int[]> allMoves)
     {
-        int color = piece.color;
-
         if (HelperFunctions.checkState(piece, "Frozen") || HelperFunctions.checkState(piece, "Jailed"))
         {
             return;
@@ -167,6 +194,7 @@ public class BotHelperFunctions : MonoBehaviour
             int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
             int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
 
+
             int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
 
             if (HelperFunctions.checkState(piece, "Portal"))
@@ -180,7 +208,12 @@ public class BotHelperFunctions : MonoBehaviour
                 newPos[1] = coordsB[1];
             }
 
-            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPos[0], newPos[1], bs.boardGrid);
+            if (newPos[0] > 8 || newPos[1] > 8 || newPos[0] <= 0 || newPos[1] <= 0)
+            {
+                continue;
+            }
+
+            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPos[0] - 1, newPos[1] - 1, bs.boardGrid);
             bool pieceIsNull = piecesOnCoords == null || piecesOnCoords.Count == 0;
             bool pieceIsDiffColour = false;
 
@@ -218,7 +251,30 @@ public class BotHelperFunctions : MonoBehaviour
                 }
             }
 
-            //TODO jump
+            bool jump;
+            if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Portal"))
+            {
+                if (HelperFunctions.isKnightPortalBackRank(piece, oldCoords, newPos))
+                {
+                    continue;
+                }
+
+                jump = HelperFunctions.isJumpPortal(piece, piece.position, newPos);
+            }
+            else if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Bouncing"))
+            {
+                jump = HelperFunctions.isJumpBouncing(piece, piece.position, newPos);
+            }
+            else
+            {
+                jump = HelperFunctions.isJump(piece, piece.position, newPos);
+            }
+
+            if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords))
+            {
+                //TODO maybe add check functionality
+                allMoves.Add(newPos);
+            }
         }
     }
 
@@ -228,7 +284,7 @@ public class BotHelperFunctions : MonoBehaviour
             return true;
         }
 
-        int[] colorsOnCoords = isolatedGetColorsOnCoords(piecesOnCoords, true);
+        List<int> colorsOnCoords = isolatedGetColorsOnCoords(piecesOnCoords, true);
 
         //Pieces different color
         if (colorsOnCoords.Contains(piece.color * -1)) {
@@ -236,7 +292,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         // Square contains more than one other piece (not crowding)
-        if (piecesOnSquare.Count > 1 && HelperFunctions.checkState(piece, "Crowding"))
+        if (piecesOnCoords.Count > 1 && HelperFunctions.checkState(piece, "Crowding"))
         {
             foreach (Piece _piece in piecesOnCoords)
             {
@@ -331,7 +387,12 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static List<Piece> isolatedGetPiecesOnCoordsBoardGrid(int x, int y, List<List<List<Piece>>> boardGrid)
     {
-        List<Piece> pieces = new List<Piece>();
+        if (x > 7 || y > 7 || x < 0 || y < 0)
+        {
+            return new List<Piece>();
+        }
+
+        List<Piece> pieces;
         
         pieces = boardGrid[x][y];
 
@@ -340,7 +401,7 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot)
     {
-        var botMoves = getAllPossibleBotMoves(bot, bot.color);
+        var botMoves = getAllPossibleBotMoves(bot, bot.currentBoardState, bot.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         //TODO add abilities

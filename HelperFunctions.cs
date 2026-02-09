@@ -9,6 +9,8 @@ using Photon.Pun;
 using System.IO;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
+
 
 public class HelperFunctions : MonoBehaviour
 {
@@ -353,6 +355,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
+        //todo use allMoves instead
         foreach (int[] move in gameData.currentMoveableCoords)
         {
             allMoves.Add(move);
@@ -2771,6 +2774,7 @@ public class HelperFunctions : MonoBehaviour
         return merged;
     }
 
+    //TODO maybe use states
     public static void updatePieceFlags(Piece piece, bool isInCheck)
     {
         if (piece.go.name.Contains("ProtectivePawn") || piece.go.name.Contains("ScaredyKing") || piece.go.name.Contains("DepressedKing"))
@@ -2950,7 +2954,10 @@ public class HelperFunctions : MonoBehaviour
         movePiece_(piece, coords);
     }
 
-    public bool movePiece_(Piece piece, int[] coords)
+    // 0 = ok
+    // 1 = check
+    // 2 = checkmate
+    public int movePiece_(Piece piece, int[] coords)
     {
         //Delayed Piece Move
         if (tempInfo.delayedQueue == null)
@@ -2980,7 +2987,7 @@ public class HelperFunctions : MonoBehaviour
             tempInfo.delayedQueue.Enqueue(delayedMove);
 
             gameData.turn *= -1;
-            return false;
+            return 0;
         }
 
         //Debug.Log("Flags");
@@ -3185,12 +3192,23 @@ public class HelperFunctions : MonoBehaviour
 
         if (isInCheckMate)
         {
-            Invoke("toggleCheckmateUI", 1.5f);
+            //Invoke("toggleCheckmateUI", 1.5f);
         }
 
         gameData.selectedPiece = null;
 
-        return isInCheck;
+        if (isInCheckMate)
+        {
+            return 2;
+        }
+        else if (isInCheck)
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public void refreshPanelSelected()

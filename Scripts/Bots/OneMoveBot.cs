@@ -22,7 +22,7 @@ public class OneMoveBot : BotTemplate
         int[] bestMoveCoords = null;
         float bestMoveDiff = -1000;
 
-        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.color);
+        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
@@ -37,12 +37,12 @@ public class OneMoveBot : BotTemplate
             foreach(int[] coords in _mL) {                
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+                //todo fix this
                 BotHelperFunctions.movePieceBoardState(piece, coords, cloneState);
 
                 //Simulate all opponent moves
-                //getallpossiblebotmoves uses bot.currentBoardState
                 this.currentBoardState = cloneState;
-                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, this.color * -1);
+                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
                 //Dictionary<Piece, List<string>> allAbilitiesOpp = botMovesOpp.piecesAbilities;
 

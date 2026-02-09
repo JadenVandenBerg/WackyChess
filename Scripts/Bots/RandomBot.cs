@@ -15,6 +15,7 @@ public class RandomBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
+        this.currentBoardState.refresh();
         var move = BotHelperFunctions.getRandomBotMove(this);
         Piece piece = move.piece;
         int[] coords = move.coords;

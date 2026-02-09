@@ -21,7 +21,7 @@ public class IdiotBot : BotTemplate
         int[] worstMoveCoords = null;
         float worstMoveDiff = +1000;
 
-        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.color);
+        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
@@ -41,7 +41,7 @@ public class IdiotBot : BotTemplate
                 //Simulate all opponent moves
                 //getallpossiblebotmoves uses bot.currentBoardState
                 this.currentBoardState = cloneState;
-                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, this.color * -1);
+                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
                 //Dictionary<Piece, List<string>> allAbilitiesOpp = botMovesOpp.piecesAbilities;
 

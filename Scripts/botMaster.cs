@@ -40,8 +40,8 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new OneMoveBot(1);
-        botBlack = new IdiotBot(-1);
+        botWhite = new RandomBot(1);
+        botBlack = new RandomBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -139,6 +139,9 @@ public class botMaster : MonoBehaviour
         gameData.whiteKing = botWhiteKing[0];
         gameData.blackKing = botBlackKing[0];
 
+        botWhite.currentBoardState.refresh();
+        botBlack.currentBoardState.refresh();
+
         yield return null;
         started = true;
     }
@@ -148,9 +151,11 @@ public class botMaster : MonoBehaviour
     int movesWithoutCapture = 0;
     int subsequentChecks = 0;
 
+    bool gameOver = false;
+
     void Update()
     {
-        if (!isTurn || !started) return;
+        if (!isTurn || !started || gameOver) return;
 
         isTurn = false;
 
@@ -159,7 +164,7 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         BotTemplate currentBot;
         bool valid = true;
 
@@ -206,7 +211,7 @@ public class botMaster : MonoBehaviour
         }
 
         bool death = false;
-        bool check = false;
+        int check = 0;
         if (valid)
         {
             gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
@@ -221,7 +226,8 @@ public class botMaster : MonoBehaviour
         else
         {
             Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
-            var randomMove = BotHelperFunctions.getRandomBotMove(currentBot);
+            Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+            var randomMove = performRandomBotMove(currentBot);
 
             gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);
             gameData.selectedToMove = HelperFunctions.findSquare(randomMove.piece.position[0], randomMove.piece.position[1]);
@@ -235,7 +241,7 @@ public class botMaster : MonoBehaviour
         turn *= -1;
         currentBot.currentBoardState.refresh();
 
-        if (!death && !check) {
+        if (!death && check == 0) {
             movesWithoutCapture++;
             subsequentChecks = 0;
         }
@@ -243,15 +249,22 @@ public class botMaster : MonoBehaviour
             movesWithoutCapture = 0;
             subsequentChecks = 0;
         }
-        else if (check) {
+        else if (check == 1) {
             subsequentChecks++;
         }
 
-        if (subsequentChecks > 8 || movesWithoutCapture > 30) {
+        if (subsequentChecks > 8 || movesWithoutCapture > 60) {
             //GAME OVER, go to next match
+            Debug.Log("Game Over - Tie");
+            gameOver = true;
         }
 
-        yield return new WaitForSeconds(1.5f);
+        if (check == 2)
+        {
+            Debug.Log("Game Over - Checkmate");
+        }
+
+        yield return new WaitForSeconds(1.0f);
         isTurn = true;
 
         //Check if check/update bot boardstate
@@ -270,5 +283,51 @@ public class botMaster : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static (Piece piece, int[] coords) performRandomBotMove(BotTemplate bot)
+    {
+        var botMoves = getAllPossibleMovesPenalty(bot, bot.color);
+
+        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        //TODO add abilities
+        Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
+
+        System.Random rand = new System.Random();
+
+        int dictIndex = rand.Next(allMoves.Count);
+
+        Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+        KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
+
+        Piece randMovePiece = pieceMovesKeyVal.Key;
+        List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
+
+        int coordIndex = rand.Next(randMoveCoordsList.Count);
+        int[] randMoveCoords = randMoveCoordsList[coordIndex];
+
+        return (randMovePiece, randMoveCoords);
+    }
+
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleMovesPenalty(BotTemplate bot, int color)
+    {
+        List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
+
+        foreach (Piece piece in bot.pieces)
+        {
+            List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
+
+            if (moves.Count > 0)
+            {
+                Dictionary<Piece, List<int[]>> pMoveDict = new Dictionary<Piece, List<int[]>>();
+
+                pMoveDict.Add(piece, moves);
+
+                totalMoves.Add(pMoveDict);
+            }
+        }
+
+        return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+
     }
 }

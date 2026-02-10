@@ -431,10 +431,10 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        int[] position = boardState.getPiecePosition(piece);
-        if (position == null) return;
+        // int[] position = boardState.getPiecePosition(piece);
+        // if (position == null) return;
 
-        updateBoardState(position, piece, "r", boardState);
+        updateBoardState(piece.position, piece, "r", boardState);
         gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece);
     }
 
@@ -502,6 +502,179 @@ public class BotHelperFunctions : MonoBehaviour
         l.Add(bCount);
 
         return l;
+    }
+
+    public static simulatePieceMove(BoardState bs, Piece piece, int[] coords) {
+        if (bs.delayedQueue == null) {
+            bs.delayedQueue = new DelayedQueue();
+        }
+        bs.delayedQueue.deIncrement();
+
+        bool delayedMoves = true;
+        while (delayedMoves) {
+            PieceMove moveToCheck = bs.delayedQueue.Peek();
+            if (moveToCheck != null && moveToCheck.turnsToRemove <= 0) {
+                moveToCheck = bs.delayedQueue.Dequeue();
+
+                isolatedDelayedMove(moveToCheck, bs);
+            }
+        }
+
+        //TODO
+    }
+
+    public static void isolatedDelayedMove(PieceMove pMove, BoardState bs) {
+        Piece piece = pMove.piece;
+        int[] coords = pMove.coords;
+
+        List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs);
+
+        if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color)) {
+            bool death = false;
+
+            if (piecesOnCoords.Count != 0) {
+                death = true;
+
+                if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1)) {
+                    death = false;
+                }
+                else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, "Dematerialized")) {
+                    death = false;
+                }
+                else if (isolatedCheckSquareCrowdingEligible(piece, piecesOnCoords)) {
+                    death = false;
+                }
+                else if (HelperFunctions.checkState(piece, "Dematerialized")) {
+                    death = false;
+                }
+            }
+
+            if (death) {
+                isolatedOnDeaths(piece, coords, bs);
+            }
+
+            piece.hasMoved = true;
+            movePieceBoardState(piece, coords, bs);
+        }
+    }
+
+    public static void isolatedOnDeaths(Piece attacker, int[] deadCoords, BoardState bs) {
+        List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs));
+
+        foreach (Piece piece in pieces) {
+            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
+            isolatedOnDeath(piece, attackerPiece, bs);
+        }
+    }
+
+    public static void isolatedOnDeath(Piece deadPiece, Piece attackerPiece) {
+        int[] attackerCoords = attackerPiece.position;
+        int[] deadPieceCoords = deadPiece.position;
+
+        bool skipCollateral = false;
+
+        //Infinite/Multi Lives
+        if (deadPiece.lives != 0) {
+            isolatedHandleMultipleLivesDeath(deadPiece, bs);
+
+            return;
+        }
+
+        //Hungry
+        if (HelperFunctions.checkState(deadPiece, "Electric")) {
+            System.Random rand = new System.Random();
+            int randNumber = rand.Next(1,3);
+
+            if (randomNumber == 1) {
+                isolatedRemovePiece(attackerPiece, bs);
+            }
+        }
+
+        //Electric
+        if (HelperFunctions.checkState(attackerPiece, "Hungry")) {
+            if (attackerPiece.storage == null) {
+                attackerPiece.storage = new List<Piece>();
+            }
+
+            attackerPiece.storage.Add(deadPiece);
+            skipCollateral = true;
+            isolatedRemovePiece(deadPiece, bs);
+
+            return;
+        }
+
+        //Spitting
+
+        if (HelperFunctions.checkState(attackerPiece, "Spitting")) {
+            if (attackerPiece.storage == null)
+            {
+                attackerPiece.storage = new List<Piece>();
+            }
+
+            if (attackerPiece.storage.Count < attackerPiece.storageLimit)
+            {
+                attackerPiece.storage.Add(deadPiece);
+                skipCollateral = true;
+                isolatedRemovePiece(deadPiece, bs);
+
+            }
+            else
+            {
+                List<Piece> piece = HelperFunctions.pieceToList(deadPiece);
+                isolatedCollateralDeath(piece);
+            }
+
+            return;
+        }
+
+        //TODO
+    }
+
+    public static void isolatedCollateralDeath(List<Piece> deadPieces, BoardState bs) {
+        foreach (Piece deadPiece in new List<Piece>(deadPieces))
+        {
+            if (HelperFunctions.checkState(deadPiece, "Shield") || HelperFunctions.checkCaptureTheFlag(deadPiece))
+            {
+                continue;
+            }
+
+            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ") during simulated move");
+            if (deadPiece.lives != 0)
+            {
+                isolatedHandleMultipleLivesDeath(deadPiece);
+
+                continue;
+            }
+            else
+            {
+                updateBoardState(deadPiece.position, deadPiece, "r", bs);
+                deadPiece.alive = 0;
+            }
+        }
+    }
+
+    public static void isolatedRemovePiece(Piece p, BoardState bs) {
+        updateBoardState(p.position, p,"r", bs);
+    }
+
+    public static void isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs) {
+        deadPiece.lives--;
+
+        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs)) {
+            movePieceBoardState(deadPiece, deadPiece.startSquare, bs);
+        }
+        else {
+            updateBoardState(deadPiece.position, deadPiece, "r", bs);
+        }
+    }
+
+    //Probably dont need
+    public static bool isolatedIsOnStartSquare(Piece p, BoardState bs) {
+        return false;
+    }
+
+    public static bool isolatedIsPieceOnStartSquare(Piece p, BoardState bs) {
+        return isolatedGetPiecesOnCoordsBoardGrid(piece.startSquare[0], piece.startSquare[1], bs.boardGrid).Count != 0;
     }
 
 }

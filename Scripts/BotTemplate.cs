@@ -63,6 +63,8 @@ public class BoardState {
 	// ie. List<Piece> a2 = boardGrid[0][1]
 	public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
 
+	public DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
+
 	public float whitePointsOnBoard { get; set; } = 0;
 	public float blackPointsOnBoard { get; set; } = 0;
 

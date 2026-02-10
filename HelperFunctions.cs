@@ -1567,6 +1567,8 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+
+    //TODO test for potential bug in killing dematerialized pieces that are stacked on other pieces
     public static void onDeath(Piece deadPiece, GameObject dead, Piece attackerPiece, GameObject attacker)
     {
         int[] attackerCoords = attackerPiece.position;

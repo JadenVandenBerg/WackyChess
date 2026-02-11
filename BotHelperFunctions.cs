@@ -504,7 +504,7 @@ public class BotHelperFunctions : MonoBehaviour
         return l;
     }
 
-    public static simulatePieceMove(BoardState bs, Piece piece, int[] coords) {
+    public static void simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
         if (bs.delayedQueue == null) {
             bs.delayedQueue = new DelayedQueue();
         }
@@ -513,21 +513,139 @@ public class BotHelperFunctions : MonoBehaviour
         bool delayedMoves = true;
         while (delayedMoves) {
             PieceMove moveToCheck = bs.delayedQueue.Peek();
-            if (moveToCheck != null && moveToCheck.turnsToRemove <= 0) {
+            if (moveToCheck != null && moveToCheck.turnsToRemove <= 0)
+            {
                 moveToCheck = bs.delayedQueue.Dequeue();
 
                 isolatedDelayedMove(moveToCheck, bs);
             }
+            else
+            {
+                delayedMoves = false;
+            }
         }
 
-        //TODO
+        if (HelperFunctions.checkState(piece, "Delayed"))
+        {
+            PieceMove delayedMove = new PieceMove(piece, coords, 2);
+            bs.delayedQueue.Enqueue(delayedMove);
+
+            return;
+        }
+
+        List<Piece> piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(piece.position[0], piece.position[1], bs.boardGrid);
+        foreach (Piece pieceOnSquare in piecesOnSquare)
+        {
+            if (HelperFunctions.checkState(pieceOnSquare, "Crook"))
+            {
+                if (piecesOnSquare.Count == 2)
+                {
+                    HelperFunctions.removeState(pieceOnSquare, "Jailed");
+                }
+            }
+
+            if (HelperFunctions.checkState(piece, "Jailer"))
+            {
+                HelperFunctions.removeState(pieceOnSquare, "Jailed");
+            }
+        }
+
+
+        int[] originalCoords = { piece.position[0], piece.position[1] };
+        movePieceBoardState(piece, coords, bs);
+        piece.hasMoved = true;
+
+        piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0], originalCoords[1], bs.boardGrid);
+        if (HelperFunctions.checkState(piece, "Piggyback"))
+        {
+            foreach (Piece pieceOnSquare in piecesOnSquare)
+            {
+                if (pieceOnSquare.color == piece.color)
+                {
+                    Debug.Log(pieceOnSquare.name + " is moved from Piggyback");
+
+                    movePieceBoardState(pieceOnSquare, coords, bs);
+                    pieceOnSquare.hasMoved = true;
+                }
+            }
+        }
+
+        piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0], originalCoords[1], bs.boardGrid);
+        foreach (Piece pieceOnSquare in piecesOnSquare)
+        {
+            if (HelperFunctions.checkState(pieceOnSquare, "Jockey"))
+            {
+                movePieceBoardState(pieceOnSquare, coords, bs);
+                pieceOnSquare.hasMoved = true;
+            }
+        }
+
+        if (piece.promotesInto != "")
+        {
+            if (piece.position[1] == piece.promotingRow)
+            {
+                string pname = piece.promotesInto;
+                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Destroy(p.go);
+                updateBoardState(piece.position, piece, "r", bs);
+                updateBoardState(coords, p, "a", bs);
+            }
+        }
+
+        Piece botBlackKing = filterPieces("King", bot.opponentPieces)[0];
+        Piece botWhiteKing = bot.king;
+
+        if (bot.color == -1)
+        {
+            botWhiteKing = filterPieces("King", bot.opponentPieces)[0];
+            botBlackKing = bot.king;
+        }
+
+        if (HelperFunctions.checkState(botWhiteKing, "Heartbroken"))
+        {
+            if (!isolatedIsPieceTypeOnBoard("q", 1, bs))
+            {
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Destroy(tempKing.go);
+
+                updateBoardState(botWhiteKing.position, tempKing, "a", bs);
+                updateBoardState(botWhiteKing.position, bot.king, "r", bs);
+                if (bot.color == 1) bot.king = tempKing;
+            }
+        }
+        if (HelperFunctions.checkState(botWhiteKing, "Heartbroken"))
+        {
+            if (!isolatedIsPieceTypeOnBoard("q", 1, bs))
+            {
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Destroy(tempKing.go);
+
+                updateBoardState(botWhiteKing.position, tempKing, "a", bs);
+                updateBoardState(botWhiteKing.position, bot.king, "r", bs);
+                if (bot.color == -1) bot.king = tempKing;
+            }
+        }
+    }
+
+    public static bool isolatedIsPieceTypeOnBoard(string pieceType, int color, BoardState bs)
+    {
+        List<Piece> pieces = getPiecesOnBoardState(bs, color);
+        foreach (Piece p in pieces)
+        {
+            if (p.name.Contains(pieceType))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void isolatedDelayedMove(PieceMove pMove, BoardState bs) {
         Piece piece = pMove.piece;
         int[] coords = pMove.coords;
 
-        List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs);
+        List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid);
 
         if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color)) {
             bool death = false;
@@ -559,40 +677,46 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     public static void isolatedOnDeaths(Piece attacker, int[] deadCoords, BoardState bs) {
-        List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs));
+        List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs.boardGrid));
 
         foreach (Piece piece in pieces) {
             Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
-            isolatedOnDeath(piece, attackerPiece, bs);
+            isolatedOnDeath(piece, attacker, bs);
         }
     }
 
-    public static void isolatedOnDeath(Piece deadPiece, Piece attackerPiece) {
+    public static void isolatedOnDeath(Piece deadPiece, Piece attackerPiece, BoardState bs)
+    {
         int[] attackerCoords = attackerPiece.position;
         int[] deadPieceCoords = deadPiece.position;
 
         bool skipCollateral = false;
 
         //Infinite/Multi Lives
-        if (deadPiece.lives != 0) {
+        if (deadPiece.lives != 0)
+        {
             isolatedHandleMultipleLivesDeath(deadPiece, bs);
 
             return;
         }
 
         //Hungry
-        if (HelperFunctions.checkState(deadPiece, "Electric")) {
+        if (HelperFunctions.checkState(deadPiece, "Electric"))
+        {
             System.Random rand = new System.Random();
-            int randNumber = rand.Next(1,3);
+            int randNumber = rand.Next(1, 3);
 
-            if (randomNumber == 1) {
+            if (randNumber == 1)
+            {
                 isolatedRemovePiece(attackerPiece, bs);
             }
         }
 
         //Electric
-        if (HelperFunctions.checkState(attackerPiece, "Hungry")) {
-            if (attackerPiece.storage == null) {
+        if (HelperFunctions.checkState(attackerPiece, "Hungry"))
+        {
+            if (attackerPiece.storage == null)
+            {
                 attackerPiece.storage = new List<Piece>();
             }
 
@@ -605,7 +729,8 @@ public class BotHelperFunctions : MonoBehaviour
 
         //Spitting
 
-        if (HelperFunctions.checkState(attackerPiece, "Spitting")) {
+        if (HelperFunctions.checkState(attackerPiece, "Spitting"))
+        {
             if (attackerPiece.storage == null)
             {
                 attackerPiece.storage = new List<Piece>();
@@ -621,13 +746,201 @@ public class BotHelperFunctions : MonoBehaviour
             else
             {
                 List<Piece> piece = HelperFunctions.pieceToList(deadPiece);
-                isolatedCollateralDeath(piece);
+                isolatedCollateralDeath(piece, bs);
             }
 
             return;
         }
 
-        //TODO
+        if (HelperFunctions.checkState(attackerPiece, "Stacking"))
+        {
+            string state = deadPiece.state;
+            string[] parts = state.Split('-');
+
+            foreach (string statePart in parts)
+            {
+                if (!attackerPiece.state.Contains(statePart))
+                {
+                    HelperFunctions.addState(attackerPiece, statePart);
+                }
+            }
+
+            string state2 = deadPiece.secondaryState;
+            string[] parts2 = state2.Split('-');
+
+            foreach (string statePart in parts2)
+            {
+                if (!attackerPiece.state.Contains(statePart))
+                {
+                    HelperFunctions.addState(attackerPiece, statePart);
+                }
+            }
+
+            string ability = deadPiece.ability;
+            string[] abilityParts = ability.Split('-');
+
+            foreach (string abilityPart in abilityParts)
+            {
+                if (!attackerPiece.ability.Contains(abilityPart))
+                {
+                    HelperFunctions.addAbility(attackerPiece, abilityPart);
+                }
+            }
+
+            //Moves
+            int[,] moves = HelperFunctions.combineMoveSets(attackerPiece.moves, deadPiece.moves);
+            int[,] oneTimeMoves = HelperFunctions.combineMoveSets(attackerPiece.oneTimeMoves, deadPiece.oneTimeMoves);
+            int[,] moveAndAttacks = HelperFunctions.combineMoveSets(attackerPiece.moveAndAttacks, deadPiece.moveAndAttacks);
+            int[,] oneTimeMoveAndAttacks = HelperFunctions.combineMoveSets(attackerPiece.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
+            int[,] murderousAttacks = HelperFunctions.combineMoveSets(attackerPiece.murderousAttacks, deadPiece.murderousAttacks);
+            int[,] conditionalAttacks = HelperFunctions.combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
+            int[,] attacks = HelperFunctions.combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
+            int[,] jumpAttacks = HelperFunctions.combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
+            int[,] dependentAttacks = HelperFunctions.combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
+            int[,] interactiveAttacks = HelperFunctions.combineMoveSets(attackerPiece.interactiveAttacks, deadPiece.interactiveAttacks);
+            int[,] positionIndependentMoves = HelperFunctions.combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
+            int[,] forceStayTurnMoves = HelperFunctions.combineMoveSets(attackerPiece.forceStayTurnMoves, deadPiece.forceStayTurnMoves);
+            int[,] flagMove1 = HelperFunctions.combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
+            int[,] flagMove2 = HelperFunctions.combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
+            int[,] pushMoves = HelperFunctions.combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
+            int[,] enPassantMoves = HelperFunctions.combineMoveSets(attackerPiece.enPassantMoves, deadPiece.enPassantMoves);
+
+            attackerPiece.moves = moves;
+            attackerPiece.oneTimeMoves = oneTimeMoves;
+            attackerPiece.moveAndAttacks = moveAndAttacks;
+            attackerPiece.oneTimeMoveAndAttacks = oneTimeMoveAndAttacks;
+            attackerPiece.murderousAttacks = murderousAttacks;
+            attackerPiece.conditionalAttacks = conditionalAttacks;
+            attackerPiece.attacks = attacks;
+            attackerPiece.jumpAttacks = jumpAttacks;
+            attackerPiece.dependentAttacks = dependentAttacks;
+            attackerPiece.interactiveAttacks = interactiveAttacks;
+            attackerPiece.positionIndependentMoves = positionIndependentMoves;
+            attackerPiece.forceStayTurnMoves = forceStayTurnMoves;
+            attackerPiece.flagMove1 = flagMove1;
+            attackerPiece.flagMove2 = flagMove2;
+            attackerPiece.pushMoves = pushMoves;
+            attackerPiece.enPassantMoves = enPassantMoves;
+
+            //maybe add promotion row and storage
+        }
+
+        if (HelperFunctions.checkState(attackerPiece, "Jailer"))
+        {
+            HelperFunctions.addState(deadPiece, "Jailed");
+
+            return;
+        }
+
+        if (HelperFunctions.checkState(deadPiece, "Crook") && deadPiece.color != attackerPiece.color)
+        {
+            HelperFunctions.addState(deadPiece, "Jailed");
+
+            return;
+        }
+
+        if (HelperFunctions.checkState(attackerPiece, "Medusa"))
+        {
+            if (attackerPiece.numSpawns != 0)
+            {
+                attackerPiece.numSpawns--;
+
+                int[] pos = deadPiece.position;
+                updateBoardState(pos, deadPiece, "r", bs);
+
+
+                Piece shieldPawn = HelperFunctions.Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                Destroy(shieldPawn.go);
+                updateBoardState(pos, deadPiece, "a", bs);
+            }
+        }
+
+        if (!skipCollateral)
+        {
+            if (attackerPiece.collateralType == 0)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, "Defuser", bs))
+                {
+                    isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
+                    return;
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    int[] coords = new int[] { attackerCoords[0] + attackerPiece.collateral[i, 0], attackerCoords[1] + attackerPiece.collateral[i, 1] };
+
+                    if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
+                    {
+                        isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    }
+
+                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid));
+                    isolatedCollateralDeath(pieces, bs);
+                }
+            }
+
+            if (attackerPiece.collateralType == 0)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, "Defuser", bs))
+                {
+                    isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
+                    return;
+                }
+
+                for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
+                {
+                    int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
+
+                    if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
+                    {
+                        isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
+                        isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    }
+
+                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid));
+                    isolatedCollateralDeath(pieces, bs);
+                }
+            }
+        }
+
+        deadPiece.alive = 0;
+        updateBoardState(deadPieceCoords, deadPiece, "r", bs);
+    }
+
+    public static bool isolatedIsPieceSurroundingState(Piece piece, string state, BoardState bs)
+    {
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 },  // down-left
+            new int[] { 0, 0 }  // on
+        };
+
+        foreach (var dir in directions)
+        {
+            int x = piece.position[0] + dir[0];
+            int y = piece.position[1] + dir[1];
+
+            List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid);
+
+            foreach (Piece p in pieces)
+            {
+                if (HelperFunctions.checkState(p, state))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public static void isolatedCollateralDeath(List<Piece> deadPieces, BoardState bs) {
@@ -641,7 +954,7 @@ public class BotHelperFunctions : MonoBehaviour
             Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ") during simulated move");
             if (deadPiece.lives != 0)
             {
-                isolatedHandleMultipleLivesDeath(deadPiece);
+                isolatedHandleMultipleLivesDeath(deadPiece, bs);
 
                 continue;
             }
@@ -674,7 +987,7 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     public static bool isolatedIsPieceOnStartSquare(Piece p, BoardState bs) {
-        return isolatedGetPiecesOnCoordsBoardGrid(piece.startSquare[0], piece.startSquare[1], bs.boardGrid).Count != 0;
+        return isolatedGetPiecesOnCoordsBoardGrid(p.startSquare[0], p.startSquare[1], bs.boardGrid).Count != 0;
     }
 
 }

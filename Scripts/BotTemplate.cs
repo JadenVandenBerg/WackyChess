@@ -55,6 +55,7 @@ public abstract class BotTemplate {
 	public Dictionary<Piece, int[]> nextMove();
 }
 
+//TODO make sure these are updated
 public class BoardState {
 
 	// Outer List: x-Axis
@@ -62,6 +63,11 @@ public class BoardState {
 	// Inner List: List of Pieces
 	// ie. List<Piece> a2 = boardGrid[0][1]
 	public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
+	public List<Piece> allPieces = new List<Piece>();
+	public List<Piece> whitePieces = new List<Piece>();
+	public List<Piece> blackPieces = new List<Piece>();
+	public Piece whiteKing;
+	public Piece blackKing;
 
 	public DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 
@@ -76,9 +82,9 @@ public class BoardState {
 	}
 
 	// Resets the board state based on the real value of the board
-	public void refresh() {
+	public void refresh(List<List<List<Piece>>> passedBoardGrid) {
 
-		boardGrid = gameData.boardGrid;
+		boardGrid = passedBoardGrid;
 
 		float wp = 0;
 		float bp = 0;
@@ -86,20 +92,28 @@ public class BoardState {
 		foreach (List<List<Piece>> llp in boardGrid) {
 			foreach (List<Piece> lp in llp) {
 				foreach (Piece piece in lp) {
+					allPieces.Add(piece);
 					if (piece.color == 1) {
 						wp += piece.points;
+						whitePieces.Add(piece);
 					}
 					else if (piece.color == -1) {
 						bp += piece.points;
+						blackPieces.Add(piece);
 					}
 				}
 			}
 		}
 
+		whiteKing = BotHelperFunctions.filterPieces("King", whitePieces)[0];
+		blackKing = BotHelperFunctions.filterPieces("King", blackPieces)[0];
+
 		whitePointsOnBoard = wp;
 		blackPointsOnBoard = bp;
 
 		inCheck = gameData.isInCheck;
+
+		delayedQueue = tempInfo.delayedQueue;
 	}
 
 	public int[] getPiecePosition(Piece piece) {

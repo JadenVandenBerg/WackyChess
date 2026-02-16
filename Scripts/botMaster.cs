@@ -40,8 +40,8 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new RandomBot(1);
-        botBlack = new RandomBot(-1);
+        botWhite = new OneMoveBot(1);
+        botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -130,6 +130,11 @@ public class botMaster : MonoBehaviour
         botBlackKing[0].name = "b_k1";
         botBlackQueen[0].name = "b_q1";
 
+        foreach (Piece piece in gameData.allPiecesDict.Values)
+        {
+            piece.go.name = piece.name;
+        }
+
         gameData.whiteRooks.Add(botWhiteRooks[0]);
         gameData.whiteRooks.Add(botWhiteRooks[1]);
 
@@ -139,8 +144,10 @@ public class botMaster : MonoBehaviour
         gameData.whiteKing = botWhiteKing[0];
         gameData.blackKing = botBlackKing[0];
 
-        botWhite.currentBoardState.refresh();
-        botBlack.currentBoardState.refresh();
+        botWhite.king = gameData.whiteKing;
+        botBlack.king = gameData.blackKing;
+
+        helper.updatePointsOnBoard();
 
         yield return null;
         started = true;
@@ -262,6 +269,7 @@ public class botMaster : MonoBehaviour
         if (check == 2)
         {
             Debug.Log("Game Over - Checkmate");
+            gameOver = true;
         }
 
         yield return new WaitForSeconds(1.0f);
@@ -298,6 +306,7 @@ public class botMaster : MonoBehaviour
         int dictIndex = rand.Next(allMoves.Count);
 
         Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+        //fix for checkamte
         KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
 
         Piece randMovePiece = pieceMovesKeyVal.Key;

@@ -106,7 +106,6 @@ public class Pawn : Piece
     }
 
 }
-
 public class TwoPawn : Piece
 {
     public bool disabled { get; set; } = false;
@@ -138,7 +137,7 @@ public class TwoPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { { 1,1}, { -1,1} };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1014,7 +1013,7 @@ public class OctaPawn : Piece
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
     public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, -1 },{ 1, 0 }, { -1, 0 } };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] moveAndAttacks { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
@@ -1406,7 +1405,7 @@ public class LitePawn : Piece
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
     public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { { 1, 1 },{ -1, 1 } };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
@@ -1517,7 +1516,7 @@ public class MurderousPawn : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Murderous";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1700,7 +1699,7 @@ public class GhoulPawn : Piece
     public float points { get; set; } = 1.5f;
     public bool disabled { get; set; } = false;
     public int[,] moves { get; set; } = { { 0, 1 } };
-    public int[,] attacks { get; set; } = { { 1, 1 },{ -1, 1 } };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };

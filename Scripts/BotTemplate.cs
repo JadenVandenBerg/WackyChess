@@ -1,7 +1,14 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Photon.Pun;
+using System.IO;
+using System.Collections;
+using System.Linq;
 public abstract class BotTemplate {
 	//TODO make sure these are set appropriately
 	public BoardState currentBoardState { get; set; } = new BoardState();
@@ -72,20 +79,24 @@ public class BoardState {
 	public int[] inCheck { get; set; } = new int[2];
 
 	public BoardState() {
-		refresh();
+		//refresh();
 	}
 
 	// Resets the board state based on the real value of the board
 	public void refresh() {
 
+		//boardGrid = gameData.boardGrid.Select(x => x.Select(y => new List<Piece>(y)).ToList()).ToList();
 		boardGrid = gameData.boardGrid;
 
 		float wp = 0;
 		float bp = 0;
 
-		foreach (List<List<Piece>> llp in boardGrid) {
-			foreach (List<Piece> lp in llp) {
-				foreach (Piece piece in lp) {
+		for (int x = 0; x < 8; x++)
+		{
+			for (int y = 0; y < 8; y++)
+			{
+				foreach (Piece piece in boardGrid[x][y])
+				{
 					if (piece.color == 1) {
 						wp += piece.points;
 					}
@@ -106,10 +117,7 @@ public class BoardState {
 		if (boardGrid == null || boardGrid.Count == 0) return null;
 
 		for (int x = 0; x < 8; x++) {
-			if (boardGrid[x] == null) continue;
 			for (int y = 0; y < 8; y++) {
-				if (boardGrid[x][y] == null) continue;
-
 				foreach(Piece p in boardGrid[x][y]) {
 					if (piece.name == p.name) {
 						return new int[] { x + 1, y + 1 };

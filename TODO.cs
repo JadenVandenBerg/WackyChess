@@ -19,3 +19,32 @@
 
 //Abilities Img
 */
+
+/*
+ * Projected Piece Points
+ * 
+ ***** Rooks
+ *
+ * SharedRook                   -1
+ * SweepingRook                 1
+ * AutoRook                     4
+ * HistoricallyAccurateCastle   4
+ * MusketRook                   4
+ * CastlerRook                  5
+ * JumpingRook                  6
+ * SuperRook                    7
+ * CrusherRook                  7
+ * FusionRook                   8
+ * DuplicateRook                8
+ * 
+ ***** Queens
+ *
+ * SharedQueen                  -1
+ * SweepingQueen                3
+ * AutoQueen                    5
+ * MusketQueen                  6
+ * CastlerQueen                 9
+ * PromotionQueen               10
+ * SuperQueen                   11
+ * FusionQueen                  14
+ */

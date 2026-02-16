@@ -48,7 +48,7 @@ public class onlineGame : MonoBehaviour
         pawn7 = new PromotingPawn(1, true);
         pawn8 = new LandminePawn(1, true);
 
-        wRook = new Rook(1, true);
+        wRook = new MurderousRook(1, true);
         wRook2 = new Empress(1, true);
         wBishop = new FragileBishop(1, true);
         wBishop2 = new ColorChangingBishop(1, true);

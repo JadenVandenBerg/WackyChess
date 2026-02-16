@@ -17,29 +17,40 @@ public class IdiotBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
+        currentBoardState.refresh();
+
+        BoardState ogBoardState = this.currentBoardState;
+
         Piece worstMovePiece = null;
         int[] worstMoveCoords = null;
         float worstMoveDiff = +1000;
 
+        BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
+        this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+        var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
         //Each piece
-        foreach(Dictionary<Piece, List<int[]>> movePair in allMoves) {
+        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
+            Piece realPiece = BotHelperFunctions.findPieceOnOtherBoardState(ogBoardState, piece.name);
             List<int[]> _mL = pieceMovesKeyVal.Value;
 
             //Loop through moves
             foreach(int[] coords in _mL) {                
+                BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                BotHelperFunctions.movePieceBoardState(piece, coords, cloneState);
 
-                //Simulate all opponent moves
-                //getallpossiblebotmoves uses bot.currentBoardState
+                Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
+                BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
+
+                BotHelperFunctions.debug_printBoardState(cloneState);
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
@@ -56,13 +67,19 @@ public class IdiotBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
+                        Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
+                        BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                        BotHelperFunctions.movePieceBoardState(piece, coords, cloneState_);
+                        BotHelperFunctions.simulatePieceMove(this, cloneState_, pieceOpp, coordsOpp);
+
+                        this.currentBoardState = originalBoardState_;
 
                         List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                        Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
 
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {
@@ -74,11 +91,13 @@ public class IdiotBot : BotTemplate
                 }
 
                 // Take the worst outcome assuming the opponent captures the highest value piece it can
-                if (bestOppMoveDiff < worstMoveDiff) {
+                if (bestOppMoveDiff <= worstMoveDiff) {
                     worstMoveDiff = bestOppMoveDiff;
                     worstMoveCoords = coords;
-                    worstMovePiece = piece;
+                    worstMovePiece = realPiece;
                 }
+
+                this.currentBoardState = originalBoardState;
             }
         }
 

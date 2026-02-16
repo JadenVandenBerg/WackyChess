@@ -123,7 +123,7 @@ public class MurderousRook : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Murderous";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -216,7 +216,7 @@ public class GhostRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 7;
+    public float points { get; set; } = 6.5f;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -420,7 +420,7 @@ public class OneTimeRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0f;
+    public float points { get; set; } = 1f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -522,7 +522,7 @@ public class ElectricRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -626,7 +626,7 @@ public class InfiniteRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 11;
+    public float points { get; set; } = 10;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -730,7 +730,7 @@ public class PortalRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 8;
+    public float points { get; set; } = 7.5f;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -834,7 +834,7 @@ public class AtomicRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -938,7 +938,7 @@ public class LandmineRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 8;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1042,7 +1042,7 @@ public class LiteRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 0;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1141,7 +1141,7 @@ public class SuperGhostRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5.5f;
+    public float points { get; set; } = 7f;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1243,7 +1243,7 @@ public class Empress : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1350,7 +1350,7 @@ public class FragileRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1454,7 +1454,7 @@ public class RoyalRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1559,7 +1559,7 @@ public class MonochromeRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1663,7 +1663,7 @@ public class CrowdingRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1871,7 +1871,7 @@ public class CaptureTheFlagRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -1975,7 +1975,7 @@ public class FreezingRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2079,7 +2079,7 @@ public class CloningRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 10;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2183,7 +2183,7 @@ public class UndeadRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2287,7 +2287,7 @@ public class PromotionRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2391,7 +2391,7 @@ public class DefuserRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2599,7 +2599,7 @@ public class PhantomRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 9;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2703,7 +2703,7 @@ public class StackingRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 9;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2807,7 +2807,7 @@ public class JailRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -2911,7 +2911,7 @@ public class Crook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 8;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -3015,7 +3015,7 @@ public class PiggybackRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -3130,7 +3130,7 @@ public class JockeyRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 0;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";
@@ -3245,7 +3245,7 @@ public class DelayedRook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
     public string baseType { get; set; } = "Rook";
     public int[] startSquare { get; set; } = null;

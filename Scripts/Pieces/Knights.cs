@@ -123,7 +123,7 @@ public class MurderousKnight : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Murderous";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

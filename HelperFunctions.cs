@@ -40,7 +40,7 @@ public class HelperFunctions : MonoBehaviour
         gameData.isBotMatch = botMatch == "True";
 
         panel.Initialize();
-        updatePointsOnBoard(panel);
+        updatePointsOnBoard();
 
         moveSound = GetComponent<AudioSource>();
     }
@@ -1361,7 +1361,7 @@ public class HelperFunctions : MonoBehaviour
         return twoDArray;
     }
 
-    public static void updatePointsOnBoard(SidePanelAdjust panel)
+    public void updatePointsOnBoard()
     {
         gameData.pointsOnBoard = new float[] { 0, 0 };
         for (int i = 1; i <= 8; i++)
@@ -1392,8 +1392,8 @@ public class HelperFunctions : MonoBehaviour
 
     public static void updatePointsOnUI(SidePanelAdjust panel)
     {
-        panel.whiteCountText.text = $"White: {gameData.pointsOnBoard[0]}";
-        panel.blackCountText.text = $"Black: {gameData.pointsOnBoard[1]}";
+        panel.whiteCountText.text = $"{gameData.botWhite.name}: {gameData.pointsOnBoard[0]}";
+        panel.blackCountText.text = $"{gameData.botBlack.name}: {gameData.pointsOnBoard[1]}";
 
         //String whoseTurn;
         //if (gameData.turn == 1)
@@ -1899,11 +1899,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 url = piece.wImage;
             }
-            byte[] f;
-            f = File.ReadAllBytes(url);
-            Texture2D t2d = new Texture2D(2, 2);
-            t2d.LoadImage(f);
-            Sprite s = Sprite.Create(t2d, new Rect(0, 0, t2d.width, t2d.height), new Vector2(0.5f, 0.5f));
+            Sprite s = Resources.Load<Sprite>(url);
             s.name = piece.name;
 
             squareImages.Add(s);
@@ -2338,6 +2334,8 @@ public class HelperFunctions : MonoBehaviour
 
         if (goNext)
         {
+            //Debug.Log("King: " + king.position[0] + " : " + king.position[1]);
+            //Debug.Log("Rook: " + rook.position[0] + " : " + rook.position[1]);
             kingSquare = findSquare(king.position[0], king.position[1]);
             rookSquare = findSquare(rook.position[0], rook.position[1]);
 
@@ -2779,6 +2777,7 @@ public class HelperFunctions : MonoBehaviour
     //TODO maybe use states
     public static void updatePieceFlags(Piece piece, bool isInCheck)
     {
+        Debug.Log("Updating Flags for: " + piece.name);
         if (piece.go.name.Contains("ProtectivePawn") || piece.go.name.Contains("ScaredyKing") || piece.go.name.Contains("DepressedKing"))
         {
             if (isInCheck)
@@ -2895,11 +2894,19 @@ public class HelperFunctions : MonoBehaviour
         }
 
         GameObject toAppend = findSquare(coords[0], coords[1]);
-        piece.position = findCoords(toAppend);
+        piece.position = coords;
 
         if (checkState(piece, "PAWN"))
         {
-            piece.position[1] = piece.position[1] + 1;
+            if (piece.color == 1)
+            {
+                piece.position[1] = piece.position[1] + 1;
+            }
+            else
+            {
+                piece.position[1] = piece.position[1] - 1;
+            }
+            
             toAppend = findSquare(piece.position[0], piece.position[1]);
         }
 
@@ -2915,7 +2922,7 @@ public class HelperFunctions : MonoBehaviour
 
         piece.alive = 1;
 
-        //piece.go.tag = piece.name;
+        //piece.go.name = piece.name;
 
         if (gameData.isBotMatch)
         {
@@ -3190,7 +3197,7 @@ public class HelperFunctions : MonoBehaviour
         Debug.Log("Checkmate: " + isInCheckMate);
         gameData.check = isInCheck;
 
-        updatePointsOnBoard(panel);
+        updatePointsOnBoard();
 
         if (isInCheckMate)
         {
@@ -3539,34 +3546,14 @@ public class HelperFunctions : MonoBehaviour
 
         GameObject square = findSquare(coords[0], coords[1]);
 
-        if (!getColorsOnSquare(square, true).Contains(piece.color)) {
-            bool death = false;
+        if (true/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
+            bool death;
             GameObject selectedToMoveGo = null;
 
-            if (square.transform.childCount != 0)
-            {
-                selectedToMoveGo = piece.go;
+            var deathVars = isDeath(selectedToMoveGo, square, piece, true);
 
-                death = true;
-                Debug.Log("Checking for Death");
-
-                if (!getColorsOnSquare(square, true).Contains(piece.color * -1))
-                {
-                    death = false;
-                }
-                else if (checkStateAllOnSquare(getPiecesOnSquare(square), "Dematerialized"))
-                {
-                    death = false;
-                }
-                else if (checkSquareCrowdingEligible(piece, getPiecesOnSquare(square)))
-                {
-                    death = false;
-                }
-                else if (checkState(piece, "Dematerialized"))
-                {
-                    death = false;
-                }
-            }
+            death = deathVars.death;
+            selectedToMoveGo = deathVars.selectedToMoveGo;
 
             if (death)
             {
@@ -3585,41 +3572,49 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public bool performPreMove()
+    public static (bool death, GameObject selectedToMoveGo) isDeath(GameObject selectedToMoveGo, GameObject square, Piece piece, bool fromDelayed)
     {
-        moveSound.Play();
-
         bool death = false;
-        GameObject selectedToMoveGo = null;
-
-        if (gameData.selected.transform.childCount != 0)
+        if (square.transform.childCount != 0)
         {
-            selectedToMoveGo = gameData.selectedToMovePiece.go;
+            selectedToMoveGo = piece.go;
 
             death = true;
             Debug.Log("Checking for Death");
 
-            if (!getColorsOnSquare(gameData.selected, true).Contains(gameData.selectedToMovePiece.color * -1))
+            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, "Murderous"))
             {
                 death = false;
             }
-            else if (checkStateAllOnSquare(getPiecesOnSquare(gameData.selected), "Dematerialized"))
+            else if (checkStateAllOnSquare(getPiecesOnSquare(square), "Dematerialized"))
             {
                 death = false;
             }
-            else if (checkSquareCrowdingEligible(gameData.selectedToMovePiece, getPiecesOnSquare(gameData.selected)))
+            else if (checkSquareCrowdingEligible(piece, getPiecesOnSquare(square)))
             {
                 death = false;
             }
-            else if (checkState(gameData.selectedToMovePiece, "Dematerialized"))
+            else if (checkState(piece, "Dematerialized"))
             {
                 death = false;
             }
-            else if (checkState(gameData.selectedToMovePiece, "Delayed"))
+            else if (checkState(piece, "Delayed") && !fromDelayed)
             {
                 death = false;
             }
         }
+
+        return (death, selectedToMoveGo);
+    }
+
+    public bool performPreMove()
+    {
+        moveSound.Play();
+
+        var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
+
+        bool death = deathVars.death;
+        GameObject selectedToMoveGo = deathVars.selectedToMoveGo;
 
         if (death)
         {
@@ -3638,35 +3633,75 @@ public class HelperFunctions : MonoBehaviour
     {
         Type type = original.GetType();
 
-        Piece clone = (Piece)Activator.CreateInstance(type);
+        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false);
+        Destroy(clone.go);
 
-        foreach (PropertyInfo prop in type.GetProperties(
-            BindingFlags.Instance | BindingFlags.Public))
+        clone.disabled = original.disabled;
+        clone.color = original.color;
+        clone.points = original.points;
+        clone.rarityLevel = original.rarityLevel;
+        clone.startSquare = original.startSquare?.ToArray();
+        clone.baseType = original.baseType;
+        clone.description = original.description;
+        clone.longDescription = original.longDescription;
+        clone.alive = original.alive;
+        clone.lives = original.lives;
+        clone.ability = original.ability.ToString();
+        clone.state = original.state.ToString();
+        clone.secondaryState = original.secondaryState.ToString();
+        clone.collateralType = original.collateralType;
+        clone.collateral = clone2dArray(original.collateral);
+        clone.size = original.size?.ToArray();
+        clone.promotesInto = original.promotesInto.ToString();
+        clone.promotingRow = original.promotingRow;
+        clone.canMoveTwice = original.canMoveTwice;
+        clone.storageLimit = original.storageLimit;
+        clone.storage = null;
+        clone.moves = clone2dArray(original.moves);
+        clone.oneTimeMoves = clone2dArray(original.oneTimeMoves);
+        clone.moveAndAttacks = clone2dArray(original.moveAndAttacks);
+        clone.oneTimeMoveAndAttacks = clone2dArray(original.oneTimeMoveAndAttacks);
+        clone.murderousAttacks = clone2dArray(original.murderousAttacks);
+        clone.condition = original.condition;
+        clone.conditionalAttacks = clone2dArray(original.conditionalAttacks);
+        clone.jumpAttacks = clone2dArray(original.jumpAttacks);
+        clone.attacks = clone2dArray(original.attacks);
+        clone.dependentAttacks = clone2dArray(original.dependentAttacks);
+        clone.interactiveAttacks = clone2dArray(original.interactiveAttacks);
+        clone.positionIndependentMoves = clone2dArray(original.positionIndependentMoves);
+        clone.forceStayTurnMoves = clone2dArray(original.forceStayTurnMoves);
+        clone.flagMove1 = clone2dArray(original.flagMove1);
+        clone.flagMove2 = clone2dArray(original.flagMove2);
+        clone.pushMoves = clone2dArray(original.pushMoves);
+        clone.enPassantMoves = clone2dArray(original.enPassantMoves);
+        clone.position = original.position?.ToArray();
+        clone.hasMoved = original.hasMoved;
+        clone.wImage = original.wImage.ToString();
+        clone.bImage = original.bImage.ToString();
+        clone.name = original.name.ToString();
+        clone.flag = original.flag;
+        clone.spawnable = original.spawnable.ToString();
+        clone.numSpawns = original.numSpawns;
+
+        return clone;
+    }
+
+    public static int[,] clone2dArray(int[,] arr)
+    {
+        int[,] clone = null;
+        if (arr != null)
         {
-            if (!prop.CanRead || !prop.CanWrite)
-                continue;
+            int rows = arr.GetLength(0);
+            int cols = arr.GetLength(1);
 
-            object value = prop.GetValue(original);
+            clone = new int[rows, cols];
 
-            if (value is int[,] array2D)
+            for (int i = 0; i < rows; i++)
             {
-                prop.SetValue(clone, (int[,])array2D.Clone());
-            }
-            else if (value is int[] array1D)
-            {
-                prop.SetValue(clone, (int[])array1D.Clone());
-            }
-            else if (value is List<Piece> list) //TODO might need to do a shallow clone here
-            {
-                var newList = new List<Piece>();
-                foreach (var p in list)
-                    newList.Add(clonePiece(p));
-
-                prop.SetValue(clone, newList);
-            }
-            else
-            {
-                prop.SetValue(clone, value);
+                for (int j = 0; j < cols; j++)
+                {
+                    clone[i, j] = arr[i, j];
+                }
             }
         }
 

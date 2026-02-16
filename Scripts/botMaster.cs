@@ -246,7 +246,7 @@ public class botMaster : MonoBehaviour
         }
 
         turn *= -1;
-        currentBot.currentBoardState.refresh();
+        currentBot.currentBoardState.refresh(gameData.boardGrid);
 
         if (!death && check == 0) {
             movesWithoutCapture++;

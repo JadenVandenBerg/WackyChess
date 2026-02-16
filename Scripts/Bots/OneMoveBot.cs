@@ -17,7 +17,7 @@ public class OneMoveBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        currentBoardState.refresh();
+        currentBoardState.refresh(gameData.boardGrid);
 
         BoardState ogBoardState = this.currentBoardState;
         

@@ -666,13 +666,16 @@ public class BotHelperFunctions : MonoBehaviour
                 string pname = piece.promotesInto;
                 Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
                 Destroy(p.go);
-                updateBoardState(piece.position, piece, "r", bs);
+                updateBoardState(new int[] { piece.position[0] - 1, piece.position[1] - 1 }, piece, "r", bs);
                 updateBoardState(coords, p, "a", bs);
             }
         }
 
         Piece botBlackKing = filterPieces("King", bot.opponentPieces)[0];
         Piece botWhiteKing = bot.king;
+
+        int[] botWhiteKingPos = new int[] { botWhiteKing.position[0] - 1, botWhiteKing.position[1] - 1 };
+        int[] botBlackKingPos = new int[] { botBlackKing.position[0] - 1, botBlackKing.position[1] - 1 };
 
         if (bot.color == -1)
         {
@@ -687,8 +690,8 @@ public class BotHelperFunctions : MonoBehaviour
                 Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
                 Destroy(tempKing.go);
 
-                updateBoardState(botWhiteKing.position, tempKing, "a", bs);
-                updateBoardState(botWhiteKing.position, bot.king, "r", bs);
+                updateBoardState(botWhiteKingPos, tempKing, "a", bs);
+                updateBoardState(botWhiteKingPos, bot.king, "r", bs);
                 if (bot.color == 1) bot.king = tempKing;
             }
         }
@@ -700,8 +703,8 @@ public class BotHelperFunctions : MonoBehaviour
                 Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
                 Destroy(tempKing.go);
 
-                updateBoardState(botBlackKing.position, tempKing, "a", bs);
-                updateBoardState(botBlackKing.position, bot.king, "r", bs);
+                updateBoardState(botBlackKingPos, tempKing, "a", bs);
+                updateBoardState(botBlackKingPos, bot.king, "r", bs);
                 if (bot.color == -1) bot.king = tempKing;
             }
         }

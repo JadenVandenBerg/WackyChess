@@ -233,7 +233,15 @@ public class botMaster : MonoBehaviour
         else
         {
             Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
-            Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+            if (movePieceObj != null)
+            {
+                Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+            }
+            else
+            {
+                Debug.Log("No Move Provided or Penalty");
+            }
+            
             var randomMove = performRandomBotMove(currentBot);
 
             gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);

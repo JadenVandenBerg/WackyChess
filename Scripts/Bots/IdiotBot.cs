@@ -47,10 +47,10 @@ public class IdiotBot : BotTemplate
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
-                Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
+                //Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
                 BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
 
-                BotHelperFunctions.debug_printBoardState(cloneState);
+                //BotHelperFunctions.debug_printBoardState(cloneState);
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
@@ -67,7 +67,7 @@ public class IdiotBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
-                        Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
+                        //Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
                         BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
@@ -79,7 +79,7 @@ public class IdiotBot : BotTemplate
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                        Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
+                        //Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
 
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {

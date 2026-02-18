@@ -166,6 +166,8 @@ public interface Piece
      * Switch: When you castle, king and rook switch instead of normal castle
      * PAWN: Start an extra square forward
      * Double: Starts as two pawns
+     * Protective: Moves like a queen when in check //used for flag moves
+     * Scaredy: Moves 2 squares when in check //used for flag moves
      */
     public String state { get; set; }
     public String secondaryState { get; set; }

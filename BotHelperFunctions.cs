@@ -388,7 +388,7 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static List<Piece> isolatedGetPiecesOnCoordsBoardGrid(int x, int y, List<List<List<Piece>>> boardGrid, bool debug)
     {
-        if (debug) Debug.Log("Getting Pieces on Coords: " + (x + 1) + "," + (y + 1));
+        //if (debug) Debug.Log("Getting Pieces on Coords: " + (x + 1) + "," + (y + 1));
         if (x > 7 || y > 7 || x < 0 || y < 0)
         {
             return new List<Piece>();
@@ -451,7 +451,7 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        Debug.Log("Accessing: " + coords[0] + "," + coords[1]);
+        //Debug.Log("Accessing: " + coords[0] + "," + coords[1]);
         var square = boardState.boardGrid[coords[0]][coords[1]];
 
         if (action.ToLower() == "a" || action.ToLower() == "add")
@@ -534,7 +534,7 @@ public class BotHelperFunctions : MonoBehaviour
     {
         bool death = false;
 
-        Debug.Log("Pre Checking for Death");
+        //Debug.Log("Pre Checking for Death");
 
         if (piecesOnCoords.Count != 0)
         {
@@ -572,7 +572,7 @@ public class BotHelperFunctions : MonoBehaviour
         ///////TODO PIECE PRE MOVE
 
         coords = new int[] { coords[0] - 1, coords[1] - 1 };
-        Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
+        //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
 
         if (coords[0] < 0 || coords[0] >= 8 || coords[1] < 0 || coords[1] >= 8)
         {

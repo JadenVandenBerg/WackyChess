@@ -2558,7 +2558,7 @@ public class ScaredyKing : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Scaredy";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -2667,7 +2667,7 @@ public class DepressedKing : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Depressed";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;

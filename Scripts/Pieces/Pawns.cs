@@ -5029,7 +5029,7 @@ public class ProtectivePawn : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Protective";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;

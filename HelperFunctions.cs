@@ -2777,8 +2777,8 @@ public class HelperFunctions : MonoBehaviour
     //TODO maybe use states
     public static void updatePieceFlags(Piece piece, bool isInCheck)
     {
-        Debug.Log("Updating Flags for: " + piece.name);
-        if (piece.go.name.Contains("ProtectivePawn") || piece.go.name.Contains("ScaredyKing") || piece.go.name.Contains("DepressedKing"))
+        //Debug.Log("Updating Flags for: " + piece.name);
+        if (checkState(piece, "Protective") || checkState(piece, "Scaredy") || checkState(piece, "Depressed"))
         {
             if (isInCheck)
             {
@@ -3682,6 +3682,7 @@ public class HelperFunctions : MonoBehaviour
         clone.flag = original.flag;
         clone.spawnable = original.spawnable.ToString();
         clone.numSpawns = original.numSpawns;
+        clone.go = null;
 
         return clone;
     }

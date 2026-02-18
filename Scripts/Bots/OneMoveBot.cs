@@ -47,10 +47,10 @@ public class OneMoveBot : BotTemplate
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
-                //Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
+                Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
                 BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
 
-                BotHelperFunctions.debug_printBoardState(cloneState);
+                //BotHelperFunctions.debug_printBoardState(cloneState);
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;

@@ -2181,34 +2181,6 @@ public class HelperFunctions : MonoBehaviour
         return colors.Contains(color);
     }
 
-    public static List<int[]> getCollateralSquares(Piece p) {
-        collateral = new List<int[]>
-        {
-            new int[] { 1, 1 },
-            new int[] { 1, 0 },
-            new int[] { 1, -1 },
-            new int[] { 0, -1 },
-            new int[] { -1, -1 },
-            new int[] { -1, 0 },
-            new int[] { -1, 1 },
-            new int[] { 0, 1 }
-        };
-
-        if (p.collateral != null)
-        {
-            collateral = p.collateral;
-        }
-
-        if (collateral.Count == 0)
-        {
-            return null;
-        }
-
-        foreach (int[] collat in collateral) {
-            int[] coords = new int[] { piece.position[0] + collat[0], piece.position[1] + collat[1] };
-        }
-    }
-
     public static GameObject hungryPieceNextBarf(Piece hungryPiece, ref List<int[]> collateral)
     {
         if (collateral == null)

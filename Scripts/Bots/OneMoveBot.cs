@@ -26,11 +26,9 @@ public class OneMoveBot : BotTemplate
         float bestMoveDiff = -1000;
 
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
-        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
-        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
@@ -38,7 +36,7 @@ public class OneMoveBot : BotTemplate
         foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
-            Piece realPiece = BotHelperFunctions.findPieceOnOtherBoardState(ogBoardState, piece.name);
+            Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece.name);
             List<int[]> _mL = pieceMovesKeyVal.Value;
 
             //Loop through moves

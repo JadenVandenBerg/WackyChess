@@ -69,6 +69,43 @@ public class BotHelperFunctions : MonoBehaviour
     	return eligiblePieces;
     }
 
+    public static List<int[]> isolatedGetCollateralSquares(Piece p, BoardState bs) {
+        List<int[]> possibleCoords = new List<int[]>();
+        collateral = new List<int[]>
+        {
+            new int[] { 1, 1 },
+            new int[] { 1, 0 },
+            new int[] { 1, -1 },
+            new int[] { 0, -1 },
+            new int[] { -1, -1 },
+            new int[] { -1, 0 },
+            new int[] { -1, 1 },
+            new int[] { 0, 1 }
+        };
+
+        if (p.collateral != null)
+        {
+            collateral = p.collateral;
+        }
+
+        if (collateral.Count == 0)
+        {
+            return null;
+        }
+
+        foreach (int[] collat in collateral) {
+            int[] coords = new int[] { piece.position[0] + collat[0], piece.position[1] + collat[1] };
+
+            if (isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid).Count > 0) {
+                continue;
+            }
+
+            possibleCoords.Add(coords);
+        }
+
+        return possibleCoords;
+    }
+
     public static List<Piece> filterPieces(string type, List<Piece> pieces) {
     	List<Piece> filteredPieces = new List<Piece>();
 
@@ -81,10 +118,59 @@ public class BotHelperFunctions : MonoBehaviour
         return filteredPieces;
     }
 
+    public class PieceAbility {
+        public Piece piece;
+        public string ability;
+        public int[] coords;
+        public List<Piece> placePieces;
+        public List<int[]> placeCoords;
+
+        public PieceAbility(Piece piece, string ability, int[] coords, List<Piece> placePieces, List<int[]> placeCoords) {
+            this.piece = piece;
+            this.ability = ability;
+            this.coords = new int[] { coords[0], coords[1] }
+            this.placePieces = placePieces;
+            this.placeCoords = placeCoords;
+        }
+    }
+
+    public static List<PieceAbility> getAllPossibleBotAbilities(BotTemplate bot, BoardState bs, int color) {
+        List<Piece> pieces = color == 1 ? bs.whitePieces : bs.blackPieces;
+        List<PieceAbility> pieceAbilities = new List<PieceAbility>();
+
+        foreach(Piece piece in pieces) {
+            string[] abilityNames = piece.ability.Split("-");
+
+            foreach (string ability in abilityNames) {
+                if (ability == "Vomit") {
+                    //TODO right now all storage is null
+                    if (piece.storage != null && piece.storage.Count < 1) {
+                        continue;
+                    }
+                    else if (piece.storage == null) {
+                        continue;
+                    }
+
+                    List<Piece> placePieces = new List<Piece>();
+
+                    foreach (Piece storedPiece in piece.storage) {
+                        placePieces.Add(storedPiece);
+                    }
+
+                    List<int[]> possibleCoords = isolatedGetCollateralSquares(piece, bs);
+
+                    PieceAbility vomit = new PieceAbility(piece, "Vomit", null, placePieces, possibleCoords);
+                    pieceAbilities.Add(vomit);
+                }
+                //TODO
+            }
+        }
+    }
+
     //List so its easier to randomize. Each Dict has only one entry
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
-        //urgent fix this
+
         List<Piece> pieces_ = getPiecesOnBoardState(bs, color);
         foreach (Piece piece in pieces_) {
 
@@ -1129,5 +1215,20 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         return null;
+    }
+
+    public static Piece getOriginalPieceFromClone(Piece p) {
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece ogPiece in gameData.boardGrid[x][y]) {
+                    if (ogPiece.name == p.name) {
+                        return ogPiece;
+                    }
+                }
+            }
+
+        }
     }
 }

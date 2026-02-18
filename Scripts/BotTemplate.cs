@@ -92,7 +92,7 @@ public class BoardState {
 	public void refresh(List<List<List<Piece>>> passedBoardGrid) {
 
 		//boardGrid = gameData.boardGrid.Select(x => x.Select(y => new List<Piece>(y)).ToList()).ToList();
-		boardGrid = gameData.boardGrid;
+		boardGrid = passedBoardGrid;
 
 		float wp = 0;
 		float bp = 0;
@@ -124,6 +124,8 @@ public class BoardState {
 		inCheck = gameData.isInCheck;
 
 		delayedQueue = tempInfo.delayedQueue;
+
+		BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
 	}
 
 	public int[] getPiecePosition(Piece piece) {

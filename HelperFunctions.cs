@@ -1093,7 +1093,7 @@ public class HelperFunctions : MonoBehaviour
     {
         if (botMatch == "True")
         {
-            Debug.Log("BOT MATCH DEATH");
+            //Debug.Log("BOT MATCH DEATH");
             Piece p = gameData.allPiecesDict[go];
             if (p.color == 1)
             {
@@ -1105,21 +1105,21 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        Debug.Log("Online Death: " + online);
+        //Debug.Log("Online Death: " + online);
         if (online)
         {
             PhotonView pv = go.GetComponent<PhotonView>();
 
             if (pv == null)
             {
-                Debug.LogWarning($"No PhotonView -> {go.name}");
+                //Debug.LogWarning($"No PhotonView -> {go.name}");
                 Destroy(go);
                 return;
             }
 
             if (pv.ViewID == 0)
             {
-                Debug.LogWarning($"ViewID is 0 -> {go.name}");
+                //Debug.LogWarning($"ViewID is 0 -> {go.name}");
                 Destroy(go);
                 return;
             }
@@ -1130,7 +1130,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"Not owner -> {go.name}");
+                //Debug.LogWarning($"Not owner -> {go.name}");
             }
         }
         else
@@ -3580,7 +3580,7 @@ public class HelperFunctions : MonoBehaviour
             selectedToMoveGo = piece.go;
 
             death = true;
-            Debug.Log("Checking for Death");
+            //Debug.Log("Checking for Death");
 
             if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, "Murderous"))
             {

@@ -3,6 +3,18 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
+class Move
+{
+    public Piece p;
+    public int[] coords;
+
+    public Move(Piece piece, int[] coords)
+    {
+        this.p = piece;
+        this.coords = coords;
+    }
+}
+
 public class OneMoveBot : BotTemplate
 {
     public OneMoveBot(int botColor)
@@ -32,11 +44,13 @@ public class OneMoveBot : BotTemplate
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
+        List<Move> validMoves = new List<Move>();
+
         //Each piece
         foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
-            Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece.name);
+            Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece);
             List<int[]> _mL = pieceMovesKeyVal.Value;
 
             //Loop through moves
@@ -45,7 +59,7 @@ public class OneMoveBot : BotTemplate
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
-                Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
+                //Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
                 BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
 
                 //BotHelperFunctions.debug_printBoardState(cloneState);
@@ -65,7 +79,7 @@ public class OneMoveBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
-                        Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
+                        //Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
                         BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
@@ -77,7 +91,7 @@ public class OneMoveBot : BotTemplate
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                        Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
+                        //Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
 
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {
@@ -89,19 +103,33 @@ public class OneMoveBot : BotTemplate
                 }
 
                 // Take the best outcome assuming the opponent captures the highest value piece it can
-                if (bestOppMoveDiff > bestMoveDiff) {
-                    Debug.Log("NEW BEST MOVE FOUIND: " + piece.name + " -> " + bestOppMoveDiff);
+                if (bestOppMoveDiff >= bestMoveDiff) {
+
+                    if (bestOppMoveDiff > bestMoveDiff)
+                    {
+                        validMoves.Clear();
+                    }
+
+                    //Debug.Log("NEW BEST MOVE FOUIND: " + piece.name + " -> " + bestOppMoveDiff);
                     bestMoveDiff = bestOppMoveDiff;
                     bestMoveCoords = coords;
                     bestMovePiece = realPiece;
+
+                    validMoves.Add(new Move(bestMovePiece, bestMoveCoords));
                 }
 
                 this.currentBoardState = originalBoardState;
             }
         }
 
+        System.Random rand = new System.Random();
+        int rndIdx = rand.Next(validMoves.Count);
+
+        Move sendMove = validMoves[rndIdx];
+
+        Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
         Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(bestMovePiece, bestMoveCoords);
+        moveDict.Add(sendMove.p, sendMove.coords);
 
         return moveDict;
     }

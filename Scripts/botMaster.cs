@@ -206,12 +206,17 @@ public class botMaster : MonoBehaviour
             {
                 currentBot.penalty = true;
                 valid = false;
+                movePieceObj = null;
+
+                Debug.Log("BOT HAS RECIEVED A PENALTY. MOVE TOOK " + watchMS + "ms.");
             }
             else
             {
                 KeyValuePair<Piece, int[]> movePair = nextMove.First();
                 movePieceObj = movePair.Key;
                 moveCoords = movePair.Value;
+
+                Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
 
                 valid = botValidateMove(movePieceObj, moveCoords);
             }
@@ -227,12 +232,12 @@ public class botMaster : MonoBehaviour
             gameData.selectedToMovePiece = movePieceObj;
 
             Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
-            helper.performPreMove();
-            helper.movePiece_(movePieceObj, moveCoords);
+            death = helper.performPreMove();
+            check = helper.movePiece_(movePieceObj, moveCoords);
         }
         else
         {
-            Debug.Log("MOVE IS INVALID - PERFORMING RANDOM MOVE");
+            Debug.Log("MOVE BY " + currentBot.color + " IS INVALID - PERFORMING RANDOM MOVE");
             if (movePieceObj != null)
             {
                 Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
@@ -241,7 +246,7 @@ public class botMaster : MonoBehaviour
             {
                 Debug.Log("No Move Provided or Penalty");
             }
-            
+
             var randomMove = performRandomBotMove(currentBot);
 
             gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);
@@ -268,7 +273,7 @@ public class botMaster : MonoBehaviour
             subsequentChecks++;
         }
 
-        if (subsequentChecks > 8 || movesWithoutCapture > 60) {
+        if (subsequentChecks > 8 || movesWithoutCapture > 30) {
             //GAME OVER, go to next match
             Debug.Log("Game Over - Tie");
             gameOver = true;

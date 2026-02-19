@@ -71,16 +71,16 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static List<int[]> isolatedGetCollateralSquares(Piece p, BoardState bs) {
         List<int[]> possibleCoords = new List<int[]>();
-        collateral = new List<int[]>
+        int[,] collateral = new int[,]
         {
-            new int[] { 1, 1 },
-            new int[] { 1, 0 },
-            new int[] { 1, -1 },
-            new int[] { 0, -1 },
-            new int[] { -1, -1 },
-            new int[] { -1, 0 },
-            new int[] { -1, 1 },
-            new int[] { 0, 1 }
+            {  1,  1 },
+            {  1,  0 },
+            {  1, -1 },
+            {  0, -1 },
+            { -1, -1 },
+            { -1,  0 },
+            { -1,  1 },
+            {  0,  1 }
         };
 
         if (p.collateral != null)
@@ -88,15 +88,24 @@ public class BotHelperFunctions : MonoBehaviour
             collateral = p.collateral;
         }
 
-        if (collateral.Count == 0)
+        if (collateral.Length == 0)
         {
             return null;
         }
 
-        foreach (int[] collat in collateral) {
-            int[] coords = new int[] { piece.position[0] + collat[0], piece.position[1] + collat[1] };
+        for (int i = 0; i < collateral.GetLength(0); i++)
+        {
+            int xOffset = collateral[i, 0];
+            int yOffset = collateral[i, 1];
 
-            if (isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid).Count > 0) {
+            int[] coords = new int[]
+            {
+                p.position[0] + xOffset,
+                p.position[1] + yOffset
+            };
+
+            if (isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false).Count > 0)
+            {
                 continue;
             }
 
@@ -128,7 +137,7 @@ public class BotHelperFunctions : MonoBehaviour
         public PieceAbility(Piece piece, string ability, int[] coords, List<Piece> placePieces, List<int[]> placeCoords) {
             this.piece = piece;
             this.ability = ability;
-            this.coords = new int[] { coords[0], coords[1] }
+            this.coords = new int[] { coords[0], coords[1] };
             this.placePieces = placePieces;
             this.placeCoords = placeCoords;
         }
@@ -165,6 +174,8 @@ public class BotHelperFunctions : MonoBehaviour
                 //TODO
             }
         }
+
+        return pieceAbilities;
     }
 
     //List so its easier to randomize. Each Dict has only one entry
@@ -626,27 +637,27 @@ public class BotHelperFunctions : MonoBehaviour
         {
             death = true;
 
-            Debug.Log("Checking for Death");
+            //Debug.Log("Checking for Death");
 
             if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous"))
             {
                 death = false;
-                Debug.Log("NO death. Piece is same colour. Colour: " + piece.color);
+                //Debug.Log("NO death. Piece is same colour. Colour: " + piece.color);
             }
             else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, "Dematerialized"))
             {
                 death = false;
-                Debug.Log("NO death. Pieces are dematerialized");
+                //Debug.Log("NO death. Pieces are dematerialized");
             }
             else if (isolatedCheckSquareCrowdingEligible(piece, piecesOnCoords))
             {
                 death = false;
-                Debug.Log("NO death. Piece is crowding");
+                //Debug.Log("NO death. Piece is crowding");
             }
             else if (HelperFunctions.checkState(piece, "Dematerialized"))
             {
                 death = false;
-                Debug.Log("NO death. Piece is dematerialized");
+                //Debug.Log("NO death. Piece is dematerialized");
             }
         }
 
@@ -665,7 +676,8 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
+        //List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
+        List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
         bool death = isolatedIsDeath(piecesOnCoordsPreDeath, piece);
 
         if (death)
@@ -822,7 +834,7 @@ public class BotHelperFunctions : MonoBehaviour
             if (piecesOnCoords.Count != 0) {
                 death = true;
 
-                Debug.LogWarning("Checking for death");
+                //Debug.LogWarning("Checking for death");
 
                 if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous")) {
                     death = false;
@@ -851,7 +863,7 @@ public class BotHelperFunctions : MonoBehaviour
         List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs.boardGrid, false));
 
         foreach (Piece piece in pieces) {
-            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
+            //Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
             isolatedOnDeath(piece, attacker, bs);
         }
     }
@@ -1077,7 +1089,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         deadPiece.alive = 0;
-        Debug.Log("DEAD DEAD DEAD");
+        //Debug.Log("DEAD DEAD DEAD");
         updateBoardState(new int[] { deadPieceCoords[0] - 1, deadPieceCoords[1] - 1 }, deadPiece, "r", bs);
     }
 
@@ -1230,5 +1242,7 @@ public class BotHelperFunctions : MonoBehaviour
             }
 
         }
+
+        return null;
     }
 }

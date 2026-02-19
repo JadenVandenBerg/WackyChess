@@ -6,11 +6,11 @@
 //There is a problem with piecesOnSquareBoardGrid after collateral
 //Take account for abilities when checking for check and checkmate
 //When spawning new pieces, add them to BotPieces
+//Portal and Bouncing does not account for Ghoul/Ghost/Dematerialized states
 
 //Feature
 //Side panel only show selectable pieces
 //Add abilities to RandomMove functions
-//Finish delayed queue
 
 //Refactor
 

@@ -488,7 +488,7 @@ public class HelperFunctions : MonoBehaviour
 
                 if (x == toX && y == toY)
                 {
-                    GameObject destSquare = findSquare(x, y);
+                    //GameObject destSquare = findSquare(x, y);
                     if (!(crossedBackRank || jumpedPiece))
                     {
                         anyPathFound = true;

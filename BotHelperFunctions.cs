@@ -289,21 +289,23 @@ public class BotHelperFunctions : MonoBehaviour
         {
             //Portal
             int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
-            int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
-            int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+            //int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
+            //int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
 
 
             int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
 
             if (HelperFunctions.checkState(piece, "Portal"))
             {
-                newPos[0] = coordsP[0];
-                newPos[1] = coordsP[1];
+                //newPos[0] = coordsP[0];
+                //newPos[1] = coordsP[1];
+                newPos = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
             }
             else if (HelperFunctions.checkState(piece, "Bouncing"))
             {
-                newPos[0] = coordsB[0];
-                newPos[1] = coordsB[1];
+                //newPos[0] = coordsB[0];
+                //newPos[1] = coordsB[1];
+                newPos = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
             }
 
             if (newPos[0] > 8 || newPos[1] > 8 || newPos[0] <= 0 || newPos[1] <= 0)
@@ -357,15 +359,15 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                jump = HelperFunctions.isJumpPortal(piece, piece.position, newPos);
+                jump = isolatedIsJumpPortal(piece, piece.position, newPos, bs);
             }
             else if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Bouncing"))
             {
-                jump = HelperFunctions.isJumpBouncing(piece, piece.position, newPos);
+                jump = isolatedIsJumpBouncing(piece, piece.position, newPos, bs);
             }
             else
             {
-                jump = HelperFunctions.isJump(piece, piece.position, newPos);
+                jump = isolatedIsJump(piece, piece.position, newPos, bs);
             }
 
             if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords))
@@ -374,6 +376,177 @@ public class BotHelperFunctions : MonoBehaviour
                 allMoves.Add(newPos);
             }
         }
+    }
+
+    public static bool isolatedIsJump(Piece piece, int[] from, int[] to, BoardState bs) {
+       int dirX, dirY;
+
+        if (from[0] > to[0])
+        {
+            dirX = -1;
+        }
+        else if (from[0] == to[0])
+        {
+            dirX = 0;
+        }
+        else
+        {
+            dirX = 1;
+        }
+
+        if (from[1] > to[1])
+        {
+            dirY = -1;
+        }
+        else if (from[1] == to[1])
+        {
+            dirY = 0;
+        }
+        else
+        {
+            dirY = 1;
+        }
+
+        int diff = Mathf.Abs(from[0] - to[0]);
+        if (Mathf.Abs(from[1] - to[1]) > diff)
+        {
+            diff = Mathf.Abs(from[1] - to[1]);
+        }
+
+        for (int i = 1; i <= diff - 1; i++)
+        {
+            int x = from[0] + (i * dirX);
+            int y = from[1] + (i * dirY);
+
+            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
+
+            //GameObject square = findSquare(from[0] + (i * dirX), from[1] + (i * dirY));
+            if ((checkState(piece, "Ghost") && !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1))
+                || (HelperFunctions.checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1))) {
+                continue;
+            }
+
+            return true;
+            /*
+            if (square != null && isPieceOnSquare(square))
+            {
+                List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
+                if (checkState(piece, "Ghost") && isColorNotOnSquare(square, piece.color * -1)
+                    || checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && isColorNotOnSquare(square, piece.color * -1))
+                {
+                    continue;
+                }
+
+                return true;
+            }
+            */
+        }
+        return false;
+    }
+
+    public static bool isolatedIsJumpBouncing(Piece piece, int[] from, int[] to, BoardState bs)
+    {
+        int fromX = from[0];
+        int fromY = from[1];
+        int toX = to[0];
+        int toY = to[1];
+
+        int[] coords = { fromX, fromY };
+
+        int[,] directions = new int[,]
+        {
+            { 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 }
+        };
+
+        for (int j = 0; j < 4; j++)
+        {
+            coords[0] = fromX;
+            coords[1] = fromY;
+            for (int i = 0; i < 14; i++)
+            {
+                coords[0] = coords[0] + directions[j, 0];
+                coords[1] = coords[1] + directions[j, 1];
+                int[] newCoords = HelperFunctions.adjustCoordsForBouncing(piece, coords[0], coords[1]);
+
+                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newCoords[0], newCoords[1], bs.boardGrid, false);
+
+                if (newCoords[0] == toX && newCoords[1] == toY)
+                {
+                    return false;
+                }
+
+                if (piecesOnCoords.Count > 0)
+                {
+                    break;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public static bool isolatedIsJumpPortal(Piece piece, int[] from, int[] to, BoardState bs) {
+        int fromX = from[0];
+        int fromY = from[1];
+        int toX = to[0];
+        int toY = to[1];
+
+        int[][] directions = new int[][]
+        {
+            new int[] { 1, 0 },  // right
+            new int[] {-1, 0 },  // left
+            new int[] { 0, 1 },  // up
+            new int[] { 0, -1 }, // down
+            new int[] { 1, 1 },  // up-right
+            new int[] {-1, 1 },  // up-left
+            new int[] { 1, -1 }, // down-right
+            new int[] {-1, -1 }  // down-left
+        };
+
+        bool anyPathFound = false;
+        foreach (var dir in directions)
+        {
+            int x = fromX;
+            int y = fromY;
+            //bool crossedBackRank = false;
+            //bool jumpedPiece = false;
+
+            for (int step = 0; step < 8; step++)
+            {
+                x += dir[0];
+                y += dir[1];
+
+                if (y == 0 && piece.color == 1 || y == 9 && piece.color == -1) {
+                    //crossedBackRank = true;
+                    break;
+                };
+
+                if (x < 1) x = 8;
+                if (x > 8) x = 1;
+                if (y < 1) y = 8;
+                if (y > 8) y = 1;
+
+                if (x == fromX && y == fromY) break;
+
+                if (x == toX && y == toY)
+                {
+                    //if (!(crossedBackRank || jumpedPiece))
+                    //{
+                        //anyPathFound = true;
+                        return true;
+                    //}
+                }
+
+                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
+                if (piecesOnCoords.Count > 0)
+                {
+                    //jumpedPiece = true;
+                    break;
+                }
+            }
+        }
+
+        return true;
     }
 
     private static bool isolatedCheckSquareCrowdingEligible(Piece piece, List<Piece> piecesOnCoords) {

@@ -39,6 +39,7 @@ public class OneMoveBot : BotTemplate
 
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+        //TODO test this timing
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;

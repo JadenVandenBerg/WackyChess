@@ -57,6 +57,20 @@ public static class tempInfo
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 }
 
+public static readonly (int dx, int dy)[] globalDirectionsNoZero =
+{
+    (1, 0), (-1, 0),
+    (0, 1), (0, -1),
+    (1, 1), (-1, 1),
+    (1, -1), (-1, -1)
+};
+
+public static readonly (int dx, int dy)[] globalDiagionalDirectionsNoZero =
+{
+    (1, 1), (-1, -1),
+    (-1, 1), (1, -1)
+};
+
 public static class botTournament {
     public static List<BotTemplate> competingBots = new List<BotTemplate>();
 }

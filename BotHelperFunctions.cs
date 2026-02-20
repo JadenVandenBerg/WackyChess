@@ -285,41 +285,53 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
+        bool isPortal = HelperFunctions.checkState(piece, "Portal");
+        bool isBouncing = HelperFunctions.checkState(piece, "Bouncing");
+
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
             //Portal
-            int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
-            int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
-            int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+            //int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
+            int oldCoordsX, oldCoordsY;
+            oldCoordsX = moveType[i, 0] + piece.position[0];
+            oldCoordsY = moveType[i, 1] + piece.position[1];
+            
+            //int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
+            int newPosX = oldCoordsX;
+            int newPosY = oldCoordsY;
 
-
-            int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
-
-            if (HelperFunctions.checkState(piece, "Portal"))
+            if (isPortal)
             {
-                newPos[0] = coordsP[0];
-                newPos[1] = coordsP[1];
+                int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoordsX, oldCoordsY);
+                //newPos[0] = coordsP[0];
+                //newPos[1] = coordsP[1];
+                newPosX = coordsP[0];
+                newPosY = coordsP[1];
                 //newPos = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
             }
-            else if (HelperFunctions.checkState(piece, "Bouncing"))
+            else if (isBouncing)
             {
-                newPos[0] = coordsB[0];
-                newPos[1] = coordsB[1];
+                int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoordsX, oldCoordsY);
+                //newPos[0] = coordsB[0];
+                //newPos[1] = coordsB[1];
+                newPosX = coordsB[0];
+                newPosY = coordsB[1];
                 //newPos = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
             }
 
-            if (newPos[0] > 8 || newPos[1] > 8 || newPos[0] <= 0 || newPos[1] <= 0)
+            if (newPosX > 8 || newPosY > 8 || newPosX <= 0 || newPosY <= 0)
             {
                 continue;
             }
 
-            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPos[0] - 1, newPos[1] - 1, bs.boardGrid, false);
+            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPosX - 1, newPosY - 1, bs.boardGrid, false);
             bool pieceIsNull = piecesOnCoords == null || piecesOnCoords.Count == 0;
             bool pieceIsDiffColour = false;
 
             if (!pieceIsNull)
             {
-                pieceIsDiffColour = !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color);
+                //pieceIsDiffColour = !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color);
+                pieceIsDiffColour = !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color)
 
                 if (HelperFunctions.checkPiecesDisabled(piecesOnCoords))
                 {
@@ -352,43 +364,43 @@ public class BotHelperFunctions : MonoBehaviour
             }
 
             bool jump;
-            if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Portal"))
+            if (isPortal && !((oldCoordsX == newPosX) && (oldCoordsY == newPosY)))
             {
-                if (HelperFunctions.isKnightPortalBackRank(piece, oldCoords, newPos))
+                if (HelperFunctions.isKnightPortalBackRank_(piece, oldCoordsX, oldCoordsY, newPosX, newPosY))
                 {
                     continue;
                 }
 
-                //jump = isolatedIsJumpPortal(piece, piece.position, newPos, bs);
-                jump = HelperFunctions.isJumpPortal(piece, piece.position, newPos);
+                jump = isolatedIsJumpPortal(piece, piece.position, newPosX, newPosY, bs);
+                //jump = HelperFunctions.isJumpPortal(piece, piece.position, newPos);
             }
-            else if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Bouncing"))
+            else if (isBouncing && !((oldCoordsX == newPosX) && (oldCoordsY == newPosY)))
             {
-                //jump = isolatedIsJumpBouncing(piece, piece.position, newPos, bs);
-                jump = HelperFunctions.isJumpBouncing(piece, piece.position, newPos);
+                jump = isolatedIsJumpBouncing(piece, piece.position, newPosX, newPosY, bs);
+                //jump = HelperFunctions.isJumpBouncing(piece, piece.position, newPos);
             }
             else
             {
-                jump = isolatedIsJump(piece, piece.position, newPos, bs);
+                jump = isolatedIsJump(piece, piece.position, newPosX, newPosY, bs);
                 //jump = HelperFunctions.isJump(piece, piece.position, newPos);
             }
 
             if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords))
             {
                 //TODO maybe add check functionality
-                allMoves.Add(newPos);
+                allMoves.Add(new int[] { newPosX, newPosY });
             }
         }
     }
 
-    public static bool isolatedIsJump(Piece piece, int[] from, int[] to, BoardState bs) {
+    public static bool isolatedIsJump(Piece piece, int[] from, int toX, int toY, BoardState bs) {
        int dirX, dirY;
 
-        if (from[0] > to[0])
+        if (from[0] > toX)
         {
             dirX = -1;
         }
-        else if (from[0] == to[0])
+        else if (from[0] == toX)
         {
             dirX = 0;
         }
@@ -397,11 +409,11 @@ public class BotHelperFunctions : MonoBehaviour
             dirX = 1;
         }
 
-        if (from[1] > to[1])
+        if (from[1] > toY)
         {
             dirY = -1;
         }
-        else if (from[1] == to[1])
+        else if (from[1] == toY)
         {
             dirY = 0;
         }
@@ -410,10 +422,10 @@ public class BotHelperFunctions : MonoBehaviour
             dirY = 1;
         }
 
-        int diff = Mathf.Abs(from[0] - to[0]);
-        if (Mathf.Abs(from[1] - to[1]) > diff)
+        int diff = Mathf.Abs(from[0] - toX);
+        if (Mathf.Abs(from[1] - toY) > diff)
         {
-            diff = Mathf.Abs(from[1] - to[1]);
+            diff = Mathf.Abs(from[1] - toY);
         }
 
         bool isGhost = HelperFunctions.checkState(piece, "Ghost");
@@ -453,6 +465,41 @@ public class BotHelperFunctions : MonoBehaviour
         return false;
     }
 
+    public static bool isolatedIsJumpBouncing(Piece piece, int[] from, int toX, int toY, BoardState bs)
+    {
+        int fromX = from[0];
+        int fromY = from[1];
+
+        foreach (var (dx, dy) in globalDiagionalDirectionsNoZero)
+        {
+            int x = fromX;
+            int y = fromY;
+
+            for (int i = 0; i < 14; i++)
+            {
+                x += dx;
+                y += dy;
+
+                int[] newCoords = HelperFunctions.adjustCoordsForBouncing(piece, x, y);
+                int newX = newCoords[0];
+                int newY = newCoords[1];
+
+                if (newX == toX && newY == toY) {
+                    return false;
+                }
+
+                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX, newY, bs.boardGrid, false);
+
+                if (piecesOnCoords.Count > 0) {
+                    break;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /*
     public static bool isolatedIsJumpBouncing(Piece piece, int[] from, int[] to, BoardState bs)
     {
         int fromX = from[0];
@@ -493,13 +540,13 @@ public class BotHelperFunctions : MonoBehaviour
 
         return true;
     }
+    */
 
-    public static bool isolatedIsJumpPortal(Piece piece, int[] from, int[] to, BoardState bs) {
+    public static bool isolatedIsJumpPortal(Piece piece, int[] from, int toX, int toY, BoardState bs) {
         int fromX = from[0];
         int fromY = from[1];
-        int toX = to[0];
-        int toY = to[1];
 
+        /*
         int[][] directions = new int[][]
         {
             new int[] { 1, 0 },  // right
@@ -511,9 +558,10 @@ public class BotHelperFunctions : MonoBehaviour
             new int[] { 1, -1 }, // down-right
             new int[] {-1, -1 }  // down-left
         };
+        */
 
         //bool anyPathFound = false;
-        foreach (var dir in directions)
+        foreach (var (dx, dy) in globalDirectionsNoZero)
         {
             int x = fromX;
             int y = fromY;
@@ -522,8 +570,10 @@ public class BotHelperFunctions : MonoBehaviour
 
             for (int step = 0; step < 8; step++)
             {
-                x += dir[0];
-                y += dir[1];
+                //x += dir[0];
+                //y += dir[1];
+                x += dx;
+                y += dy;
 
                 if (y == 0 && piece.color == 1 || y == 9 && piece.color == -1) {
                     //crossedBackRank = true;
@@ -546,8 +596,8 @@ public class BotHelperFunctions : MonoBehaviour
                     //}
                 }
 
-                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
-                if (piecesOnCoords.Count > 0)
+                //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
+                if (bs.boardGrid[x - 1][y - 1].Count > 0)
                 {
                     //jumpedPiece = true;
                     break;
@@ -564,10 +614,16 @@ public class BotHelperFunctions : MonoBehaviour
             return true;
         }
 
+        /*
         List<int> colorsOnCoords = isolatedGetColorsOnCoords(piecesOnCoords, true);
 
         //Pieces different color
         if (colorsOnCoords.Contains(piece.color * -1)) {
+            return false;
+        }
+        */
+
+        if (isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1)) {
             return false;
         }
 
@@ -586,18 +642,21 @@ public class BotHelperFunctions : MonoBehaviour
             return true;
         }
 
+        int piecesOnCoordsCount = piecesOnCoords.Count;
+        bool sameColorOnCoords = isolatedIsColorOnCoords(piecesOnCoords, true, piece.color)
+
         //There is one piece on the square, piece is crowding
-        if (HelperFunctions.checkState(piece, "Crowding") && piecesOnCoords.Count == 1 && colorsOnCoords.Contains(piece.color)) {
+        if (HelperFunctions.checkState(piece, "Crowding") && piecesOnCoordsCount == 1 && sameColorOnCoords) {
             return true;
         }
 
         //There is one piece on the square, piece is piggyback
-        if (piecesOnCoords.Count == 1 && HelperFunctions.checkState(piecesOnCoords[0], "Piggyback") && colorsOnCoords.Contains(piece.color)) {
+        if (piecesOnCoordsCount == 1 && HelperFunctions.checkState(piecesOnCoords[0], "Piggyback") && sameColorOnCoords) {
             return true;
         }
 
         //There is one piece on square, piece is jockey
-        if (piecesOnCoords.Count == 1 && HelperFunctions.checkState(piece, "Jockey") && colorsOnCoords.Contains(piece.color)) {
+        if (piecesOnCoordsCount == 1 && HelperFunctions.checkState(piece, "Jockey") && sameColorOnCoords) {
             return true;
         }
 
@@ -632,6 +691,23 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         return colors;
+    }
+
+    public static bool isolatedIsColorOnCoords(List<Piece> piecesOnCoords, bool ignoreDematerialized, int color)
+    {
+        foreach (Piece piece in piecesOnCoords)
+        {
+            if (/*piece.disabled || piece.alive == 0 || */(ignoreDematerialized && HelperFunctions.checkState(piece, "Dematerialized")) || HelperFunctions.checkState(piece, "Jailed"))
+            {
+                continue;
+            }
+
+            if (piece.color == color) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
@@ -670,7 +746,8 @@ public class BotHelperFunctions : MonoBehaviour
         //if (debug) Debug.Log("Getting Pieces on Coords: " + (x + 1) + "," + (y + 1));
         if (x > 7 || y > 7 || x < 0 || y < 0)
         {
-            return new List<Piece>();
+            //return new List<Piece>();
+            return null;
         }
 
         List<Piece> pieces;
@@ -821,7 +898,7 @@ public class BotHelperFunctions : MonoBehaviour
 
             //Debug.Log("Checking for Death");
 
-            if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous"))
+            if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1)*/ !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous"))
             {
                 death = false;
                 //Debug.Log("NO death. Piece is same colour. Colour: " + piece.color);
@@ -1010,7 +1087,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
 
-        if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color)) {
+        if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color)*/!isolatedIsColorOnCoords(piecesOnCoords, true, piece.color)) {
             bool death = false;
 
             if (piecesOnCoords.Count != 0) {
@@ -1018,7 +1095,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                 //Debug.LogWarning("Checking for death");
 
-                if (!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous")) {
+                if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1)*/!isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) && !HelperFunctions.checkState(piece, "Murderous")) {
                     death = false;
                 }
                 else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, "Dematerialized")) {

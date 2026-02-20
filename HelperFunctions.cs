@@ -722,6 +722,31 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
+    public static bool isKnightPortalBackRank_(Piece piece, int oldX, int oldY, int newX, int newY)
+    {
+        if (!piece.name.Contains("n"))
+        {
+            return false;
+        }
+
+        if (piece.color == 1)
+        {
+            if (newY >= 7 && oldY <= 2)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (newY <= 2 && oldY >= 7)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /*todo rewrite this for isolated boardstate*/
     public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
     {

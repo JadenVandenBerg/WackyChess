@@ -289,23 +289,23 @@ public class BotHelperFunctions : MonoBehaviour
         {
             //Portal
             int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
-            //int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
-            //int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+            int[] coordsP = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
+            int[] coordsB = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
 
 
             int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
 
             if (HelperFunctions.checkState(piece, "Portal"))
             {
-                //newPos[0] = coordsP[0];
-                //newPos[1] = coordsP[1];
-                newPos = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
+                newPos[0] = coordsP[0];
+                newPos[1] = coordsP[1];
+                //newPos = HelperFunctions.adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
             }
             else if (HelperFunctions.checkState(piece, "Bouncing"))
             {
-                //newPos[0] = coordsB[0];
-                //newPos[1] = coordsB[1];
-                newPos = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+                newPos[0] = coordsB[0];
+                newPos[1] = coordsB[1];
+                //newPos = HelperFunctions.adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
             }
 
             if (newPos[0] > 8 || newPos[1] > 8 || newPos[0] <= 0 || newPos[1] <= 0)
@@ -359,15 +359,18 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                jump = isolatedIsJumpPortal(piece, piece.position, newPos, bs);
+                //jump = isolatedIsJumpPortal(piece, piece.position, newPos, bs);
+                jump = HelperFunctions.isJumpPortal(piece, piece.position, newPos);
             }
             else if (HelperFunctions.isCoordsDifferent(oldCoords, newPos) && HelperFunctions.checkState(piece, "Bouncing"))
             {
-                jump = isolatedIsJumpBouncing(piece, piece.position, newPos, bs);
+                //jump = isolatedIsJumpBouncing(piece, piece.position, newPos, bs);
+                jump = HelperFunctions.isJumpBouncing(piece, piece.position, newPos);
             }
             else
             {
                 jump = isolatedIsJump(piece, piece.position, newPos, bs);
+                //jump = HelperFunctions.isJump(piece, piece.position, newPos);
             }
 
             if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords))
@@ -413,33 +416,39 @@ public class BotHelperFunctions : MonoBehaviour
             diff = Mathf.Abs(from[1] - to[1]);
         }
 
+        bool isGhost = HelperFunctions.checkState(piece, "Ghost");
+        int enemyColor = piece.color * -1;
+
         for (int i = 1; i <= diff - 1; i++)
         {
             int x = from[0] + (i * dirX);
             int y = from[1] + (i * dirY);
 
-            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
+            List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x - 1, y - 1, bs.boardGrid, false);
 
-            //GameObject square = findSquare(from[0] + (i * dirX), from[1] + (i * dirY));
-            if ((checkState(piece, "Ghost") && !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1))
-                || (HelperFunctions.checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1))) {
-                continue;
-            }
-
-            return true;
-            /*
-            if (square != null && isPieceOnSquare(square))
+            foreach (Piece p in piecesOnCoords)
             {
-                List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
-                if (checkState(piece, "Ghost") && isColorNotOnSquare(square, piece.color * -1)
-                    || checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && isColorNotOnSquare(square, piece.color * -1))
+                if (HelperFunctions.checkState(p, "Ghoul") && p.color == piece.color)
                 {
+                    // Your Ghoul
                     continue;
                 }
 
+                if (HelperFunctions.checkState(p, "Dematerialized") && p.color == piece.color)
+                {
+                    // Your Dematerialized
+                    continue;
+                }
+
+                if (isGhost && p.color != piece.color)
+                {
+                    // Your piece is a ghost, your piece
+                    continue;
+                }
+
+                //Debug.Log("MOVE FROM " + piece.position[0] + "," + piece.position[1] + " to " + x + "," + y + " is a JUMP");
                 return true;
             }
-            */
         }
         return false;
     }
@@ -503,7 +512,7 @@ public class BotHelperFunctions : MonoBehaviour
             new int[] {-1, -1 }  // down-left
         };
 
-        bool anyPathFound = false;
+        //bool anyPathFound = false;
         foreach (var dir in directions)
         {
             int x = fromX;
@@ -1308,7 +1317,7 @@ public class BotHelperFunctions : MonoBehaviour
                 continue;
             }
 
-            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ") during simulated move");
+            //Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ") during simulated move");
             if (deadPiece.lives != 0)
             {
                 isolatedHandleMultipleLivesDeath(deadPiece, bs);

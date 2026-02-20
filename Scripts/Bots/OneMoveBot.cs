@@ -40,7 +40,9 @@ public class OneMoveBot : BotTemplate
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
         //TODO test this timing
+
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
+        
 
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
@@ -49,6 +51,7 @@ public class OneMoveBot : BotTemplate
 
         //Each piece
         foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
             Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece);
@@ -121,6 +124,11 @@ public class OneMoveBot : BotTemplate
 
                 this.currentBoardState = originalBoardState;
             }
+
+            watch.Stop();
+
+            var watchMS = watch.ElapsedMilliseconds;
+            Debug.LogWarning("Looped through " + piece.name + " in " + watchMS);
         }
 
         System.Random rand = new System.Random();

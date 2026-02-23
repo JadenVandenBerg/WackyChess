@@ -1753,9 +1753,11 @@ public class OnePawnLite : Piece
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -1775,17 +1777,17 @@ public class OnePawnLite : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnLite";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnLite.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnLite.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnLite";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnLite";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -1810,7 +1812,7 @@ public class OnePawnLite : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnLite(int color, bool online)
     {
         if (online)
@@ -1842,10 +1844,12 @@ public class OnePawnU : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -1865,17 +1869,17 @@ public class OnePawnU : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnU";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnU.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnU.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnU";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnU";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -1900,7 +1904,7 @@ public class OnePawnU : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnU(int color, bool online)
     {
         if (online)
@@ -1931,11 +1935,13 @@ public class OnePawnUD : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -1955,17 +1961,17 @@ public class OnePawnUD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnUD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnUD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnUD.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnUD";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnUD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -1990,7 +1996,7 @@ public class OnePawnUD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnUD(int color, bool online)
     {
         if (online)
@@ -2022,10 +2028,12 @@ public class OnePawnD : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2045,17 +2053,17 @@ public class OnePawnD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnD.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnD";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2080,7 +2088,7 @@ public class OnePawnD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnD(int color, bool online)
     {
         if (online)
@@ -2111,11 +2119,13 @@ public class OnePawnLR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2135,17 +2145,17 @@ public class OnePawnLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnLR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2170,7 +2180,7 @@ public class OnePawnLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnLR(int color, bool online)
     {
         if (online)
@@ -2201,11 +2211,13 @@ public class OnePawnDLDR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2225,17 +2237,17 @@ public class OnePawnDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2260,7 +2272,7 @@ public class OnePawnDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnDLDR(int color, bool online)
     {
         if (online)
@@ -2291,11 +2303,13 @@ public class OnePawnULUUR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2315,17 +2329,17 @@ public class OnePawnULUUR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnULUUR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnULUUR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnULUUR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnULUUR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnULUUR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2350,7 +2364,7 @@ public class OnePawnULUUR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnULUUR(int color, bool online)
     {
         if (online)
@@ -2383,9 +2397,11 @@ public class OnePawnULURD : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2405,17 +2421,17 @@ public class OnePawnULURD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnULURD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnULURD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnULURD.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnULURD";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnULURD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2440,7 +2456,7 @@ public class OnePawnULURD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnULURD(int color, bool online)
     {
         if (online)
@@ -2473,9 +2489,11 @@ public class OnePawnUDLDR : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2495,17 +2513,17 @@ public class OnePawnUDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnUDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnUDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnUDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnUDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnUDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2530,7 +2548,7 @@ public class OnePawnUDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnUDLDR(int color, bool online)
     {
         if (online)
@@ -2561,11 +2579,13 @@ public class OnePawnDLDDR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2585,17 +2605,17 @@ public class OnePawnDLDDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnDLDDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnDLDDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnDLDDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnDLDDR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnDLDDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2620,7 +2640,7 @@ public class OnePawnDLDDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnDLDDR(int color, bool online)
     {
         if (online)
@@ -2651,11 +2671,13 @@ public class OnePawnULURLR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2675,17 +2697,17 @@ public class OnePawnULURLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnULURLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnULURLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnULURLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnULURLR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnULURLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2710,7 +2732,7 @@ public class OnePawnULURLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnULURLR(int color, bool online)
     {
         if (online)
@@ -2740,12 +2762,14 @@ public class OnePawnULURLR : Piece
 public class OnePawnULUURLR : Piece
 {
     public int color { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2765,17 +2789,17 @@ public class OnePawnULUURLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OnePawnULUURLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOnePawnULUURLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOnePawnULUURLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOnePawnULUURLR";
+    public String bImage { get; set; } = "Images/Pawns/bOnePawnULUURLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2800,7 +2824,7 @@ public class OnePawnULUURLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OnePawnULUURLR(int color, bool online)
     {
         if (online)
@@ -2832,10 +2856,12 @@ public class TwoPawnLite : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2855,17 +2881,17 @@ public class TwoPawnLite : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnLite";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnLite.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnLite.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnLite";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnLite";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2890,7 +2916,7 @@ public class TwoPawnLite : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnLite(int color, bool online)
     {
         if (online)
@@ -2922,10 +2948,12 @@ public class TwoPawnU : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -2945,17 +2973,17 @@ public class TwoPawnU : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnU";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnU.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnU.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnU";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnU";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -2980,7 +3008,7 @@ public class TwoPawnU : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnU(int color, bool online)
     {
         if (online)
@@ -3012,10 +3040,12 @@ public class TwoPawnD : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3035,17 +3065,17 @@ public class TwoPawnD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnD.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnD";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3070,7 +3100,7 @@ public class TwoPawnD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnD(int color, bool online)
     {
         if (online)
@@ -3104,8 +3134,10 @@ public class TwoPawnUD : Piece
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
+    public int rarityLevel { get; set; } = 1;
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3125,17 +3157,17 @@ public class TwoPawnUD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnUD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnUD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnUD.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnUD";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnUD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3160,7 +3192,7 @@ public class TwoPawnUD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnUD(int color, bool online)
     {
         if (online)
@@ -3192,10 +3224,12 @@ public class TwoPawnLR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3215,17 +3249,17 @@ public class TwoPawnLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnLR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3250,7 +3284,7 @@ public class TwoPawnLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnLR(int color, bool online)
     {
         if (online)
@@ -3281,11 +3315,13 @@ public class TwoPawnDLDR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3305,17 +3341,17 @@ public class TwoPawnDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3340,7 +3376,7 @@ public class TwoPawnDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnDLDR(int color, bool online)
     {
         if (online)
@@ -3370,12 +3406,14 @@ public class TwoPawnDLDR : Piece
 public class TwoPawnULUUR : Piece
 {
     public int color { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3395,17 +3433,17 @@ public class TwoPawnULUUR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnULUUR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnULUUR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnULUUR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnULUUR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnULUUR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3430,7 +3468,7 @@ public class TwoPawnULUUR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnULUUR(int color, bool online)
     {
         if (online)
@@ -3463,9 +3501,11 @@ public class TwoPawnUDLDR : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3485,17 +3525,17 @@ public class TwoPawnUDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnUDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnUDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnUDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnUDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnUDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3520,7 +3560,7 @@ public class TwoPawnUDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnUDLDR(int color, bool online)
     {
         if (online)
@@ -3553,9 +3593,11 @@ public class TwoPawnDLDDR : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3575,17 +3617,17 @@ public class TwoPawnDLDDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnDLDDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnDLDDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnDLDDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnDLDDR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnDLDDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3610,7 +3652,7 @@ public class TwoPawnDLDDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnDLDDR(int color, bool online)
     {
         if (online)
@@ -3643,9 +3685,11 @@ public class TwoPawnULURD : Piece
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
+    public int rarityLevel { get; set; } = 1;
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3665,17 +3709,17 @@ public class TwoPawnULURD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnULURD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnULURD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnULURD.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnULURD";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnULURD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3700,7 +3744,7 @@ public class TwoPawnULURD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnULURD(int color, bool online)
     {
         if (online)
@@ -3732,10 +3776,12 @@ public class TwoPawnUDLR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3755,17 +3801,17 @@ public class TwoPawnUDLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnUDLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnUDLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnUDLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnUDLR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnUDLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3790,7 +3836,7 @@ public class TwoPawnUDLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnUDLR(int color, bool online)
     {
         if (online)
@@ -3821,11 +3867,13 @@ public class TwoPawnULURLR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3845,17 +3893,17 @@ public class TwoPawnULURLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnULURLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnULURLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnULURLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnULURLR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnULURLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3880,7 +3928,7 @@ public class TwoPawnULURLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnULURLR(int color, bool online)
     {
         if (online)
@@ -3911,11 +3959,13 @@ public class TwoPawnULURDLDR : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -3935,17 +3985,17 @@ public class TwoPawnULURDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnULURDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnULURDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnULURDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnULURDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnULURDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -3970,7 +4020,7 @@ public class TwoPawnULURDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnULURDLDR(int color, bool online)
     {
         if (online)
@@ -4002,10 +4052,12 @@ public class TwoPawnULUURLR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4025,17 +4077,17 @@ public class TwoPawnULUURLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "TwoPawnULUURLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wTwoPawnULUURLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bTwoPawnULUURLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wTwoPawnULUURLR";
+    public String bImage { get; set; } = "Images/Pawns/bTwoPawnULUURLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4060,7 +4112,7 @@ public class TwoPawnULUURLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public TwoPawnULUURLR(int color, bool online)
     {
         if (online)
@@ -4091,11 +4143,13 @@ public class OneTwoPawnLite : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4115,17 +4169,17 @@ public class OneTwoPawnLite : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnLite";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnLite.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnLite.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnLite";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnLite";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4150,7 +4204,7 @@ public class OneTwoPawnLite : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnLite(int color, bool online)
     {
         if (online)
@@ -4181,11 +4235,13 @@ public class OneTwoPawnU : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4205,17 +4261,17 @@ public class OneTwoPawnU : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnU";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnU.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnU.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnU";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnU";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4240,7 +4296,7 @@ public class OneTwoPawnU : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnU(int color, bool online)
     {
         if (online)
@@ -4271,11 +4327,13 @@ public class OneTwoPawnD : Piece
 {
     public int color { get; set; } = 1;
     public float points { get; set; } = 0;
+    public int rarityLevel { get; set; } = 1;
     public bool disabled { get; set; } = false;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4295,17 +4353,17 @@ public class OneTwoPawnD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnD.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnD";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4330,7 +4388,7 @@ public class OneTwoPawnD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnD(int color, bool online)
     {
         if (online)
@@ -4362,10 +4420,12 @@ public class OneTwoPawnUD : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4385,17 +4445,17 @@ public class OneTwoPawnUD : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnUD";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnUD.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnUD.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnUD";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnUD";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4420,7 +4480,7 @@ public class OneTwoPawnUD : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnUD(int color, bool online)
     {
         if (online)
@@ -4452,10 +4512,12 @@ public class OneTwoPawnLR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4475,17 +4537,17 @@ public class OneTwoPawnLR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnLR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnLR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnLR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnLR";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnLR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4510,7 +4572,7 @@ public class OneTwoPawnLR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnLR(int color, bool online)
     {
         if (online)
@@ -4542,10 +4604,12 @@ public class OneTwoPawnDLDR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4565,17 +4629,17 @@ public class OneTwoPawnDLDR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnDLDR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnDLDR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnDLDR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnDLDR";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnDLDR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4600,7 +4664,7 @@ public class OneTwoPawnDLDR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnDLDR(int color, bool online)
     {
         if (online)
@@ -4632,10 +4696,12 @@ public class OneTwoPawnULUUR : Piece
     public int color { get; set; } = 1;
     public float points { get; set; } = 1;
     public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
     public string baseType { get; set; } = "Pawn";
     public int[,] moves { get; set; } = { { 0, 1 },{ 0, 2 } };
     public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
-    public int[,] oneTimeMovesAndAttacks { get; set; } = { };
+    public int numSpawns { get; set; } = 0;
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
@@ -4655,17 +4721,17 @@ public class OneTwoPawnULUUR : Piece
     public GameObject go { get; set; } = null;
     public String name { get; set; } = "OneTwoPawnULUUR";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Assets/Images/Pawns/wOneTwoPawnULUUR.png";
-    public String bImage { get; set; } = "Assets/Images/Pawns/bOneTwoPawnULUUR.png";
+    public String wImage { get; set; } = "Images/Pawns/wOneTwoPawnULUUR";
+    public String bImage { get; set; } = "Images/Pawns/bOneTwoPawnULUUR";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
-    public int lives { get; set; } = 1;
+    public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
     public String promotesInto { get; set; } = "SuperPawn";
@@ -4690,7 +4756,7 @@ public class OneTwoPawnULUUR : Piece
     }
             
     public int flag { get; set; } = 0;
-    public Piece spawnable { get; set; } = null;
+    public string spawnable { get; set; } = "";
     public OneTwoPawnULUUR(int color, bool online)
     {
         if (online)

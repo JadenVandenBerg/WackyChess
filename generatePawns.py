@@ -91,6 +91,9 @@ def GeneratePawns():
             cs += f"\n    public float points {{ get; set; }} = {CalcPoints(moves[move], attacks[attack])};"
             cs += f"\n    public bool disabled {{ get; set; }} = false;"
             cs += f'\n    public string baseType {{ get; set; }} = "Pawn";'
+            cs += f"\n    public int rarityLevel {{ get; set; }} = 1;"
+            cs += f"\n    public int numSpawns {{ get; set; }} = 0;"
+            cs += f'\n    public string spawnable {{ get; set; }} = "";'
             cs += f"\n    public int[,] moves {{ get; set; }} = {GenMoves(moves[move])};"
             cs += f"\n    public int[,] oneTimeMoves {{ get; set; }} = {{ {{ 0, 2 }} }};"
             cs += f"\n    public int[,] oneTimeMovesAndAttacks {{ get; set; }} = {{ }};"
@@ -113,17 +116,17 @@ def GeneratePawns():
             cs += f"\n    public GameObject go {{ get; set; }} = null;"
             cs += f'\n    public String name {{ get; set; }} = "{name}";'
             cs += f"\n    public bool hasMoved {{ get; set; }} = false;"
-            cs += f'\n    public String wImage {{ get; set; }} = "Assets/Images/Pawns/w{name}.png";'
-            cs += f'\n    public String bImage {{ get; set; }} = "Assets/Images/Pawns/b{name}.png";'
+            cs += f'\n    public String wImage {{ get; set; }} = "Images/Pawns/w{name}";'
+            cs += f'\n    public String bImage {{ get; set; }} = "Images/Pawns/b{name}";'
             cs += f'\n    public int[] startSquare {{ get; set; }} = null;'
             cs += f'\n    public String description {{ get; set; }} = "";'
             cs += f'\n    public String longDescription {{ get; set; }} = "";'
             cs += f'\n    public int alive {{ get; set; }} = 1;'
-            cs += f'\n    public int lives {{ get; set; }} = 1;'
+            cs += f'\n    public int lives {{ get; set; }} = 0;'
             cs += f'\n    public String ability {{ get; set; }} = "None";'
             cs += f'\n    public String state {{ get; set; }} = "Normal";'
             cs += f'\n    public String secondaryState {{ get; set; }} = "Normal";'
-            cs += f'\n    public int collateralType {{ get; set; }} = 0;'
+            cs += f'\n    public int collateralType {{ get; set; }} = -1;'
             cs += f'\n    public int[,] collateral {{ get; set; }} = null;'
             cs += f'\n    public int[] size {{ get; set; }} = new int[] {{ 1, 1 }};'
             cs += f'\n    public String promotesInto {{ get; set; }} = "SuperPawn";'

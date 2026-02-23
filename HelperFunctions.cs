@@ -53,7 +53,7 @@ public class HelperFunctions : MonoBehaviour
         if (!p.hasMoved)
         {
             go.GetComponent<RectTransform>().sizeDelta = new Vector2(toAppend.GetComponent<RectTransform>().sizeDelta.x * 0.8f, toAppend.GetComponent<RectTransform>().sizeDelta.y * 0.8f);
-            go.AddComponent<PhotonView>();
+            if (online) go.AddComponent<PhotonView>();
         }
     }
     public static void movePieceNoImage(Piece p, GameObject toAppend)
@@ -1549,8 +1549,8 @@ public class HelperFunctions : MonoBehaviour
                 deadPiece.alive = 0;
             }
 
-            Debug.LogWarning("IN COLLATERAL");
-            BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
+            //Debug.LogWarning("IN COLLATERAL");
+            //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         }
     }
 

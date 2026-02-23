@@ -349,7 +349,7 @@ public class botMaster : MonoBehaviour
             gameOver = true;
         }
 
-        BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
+        //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         yield return new WaitForSeconds(1.0f);
         isTurn = true;
 

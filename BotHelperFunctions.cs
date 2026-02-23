@@ -767,6 +767,7 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static bool isolatedIsJumpBouncing(Piece piece, int[] from, int toX, int toY, BoardState bs)
     {
+        //TODO this does not work at all
         int fromX = from[0];
         int fromY = from[1];
 
@@ -1250,8 +1251,6 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static void simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
 
-        ///////TODO PIECE PRE MOVE
-
         coords = new int[] { coords[0] - 1, coords[1] - 1 };
         //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
 
@@ -1270,6 +1269,7 @@ public class BotHelperFunctions : MonoBehaviour
             isolatedOnDeaths(destroyer, coords, bs);
         }
 
+        tempInfo.attackerDied = false;
         if (bs.delayedQueue == null) {
             bs.delayedQueue = new DelayedQueue();
         }
@@ -1316,7 +1316,14 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         int[] originalCoords = { piece.position[0], piece.position[1] };
-        movePieceBoardState(piece, coords, bs);
+        if (!tempInfo.attackerDied)
+        {
+            movePieceBoardState(piece, coords, bs);
+        }
+        else
+        {
+            updateBoardState(coords, piece, "r", bs);
+        }
 
         List<Piece> piecesOnSquare2 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0], originalCoords[1], bs.boardGrid, false);
         if (HelperFunctions.checkState(piece, "Piggyback"))
@@ -1632,6 +1639,7 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
                     isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
+                    tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1642,6 +1650,7 @@ public class BotHelperFunctions : MonoBehaviour
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
                     {
                         isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                        tempInfo.attackerDied = true;
                     }
 
                     List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false));
@@ -1655,6 +1664,7 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
                     isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
+                    tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1666,6 +1676,7 @@ public class BotHelperFunctions : MonoBehaviour
                     {
                         isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
                         isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                        tempInfo.attackerDied = true;
                     }
 
                     List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false));

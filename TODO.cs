@@ -20,6 +20,9 @@
 
 //Refactor
 
+//Optimize
+//Remove gameObject creation from cloned pieces constructors
+
 //Pieces IMG
 /*
 

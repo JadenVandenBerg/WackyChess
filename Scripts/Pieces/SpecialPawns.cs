@@ -7,23 +7,19 @@ using System.IO;
 using System.Collections.Generic;
 using Photon.Pun;
 
-public class King : Piece
+public class MurderousPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
     public int[,] forceStayTurnMoves { get; set; } = { };
@@ -32,131 +28,56 @@ public class King : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "MurderousPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wKing";
-    public String bImage { get; set; } = "Images/Kings/bKing";
-    public String name { get; set; } = "King";
-    public int rarityLevel { get; set; } = 0;
+
+    public String wImage { get; set; } = "Images/Pawns/wMurderousPawn";
+    public String bImage { get; set; } = "Images/Pawns/bMurderousPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. Or Killing them, since you can do that too.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public King(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-}
-
-public class MurderousKing : Piece
-{
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "Like a normal king, but you can kill your own pieces to get out of a pinch!";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Murderous";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-
-    public String wImage { get; set; } = "Images/Kings/wMurderousKing";
-    public String bImage { get; set; } = "Images/Kings/bMurderousKing";
-    public String name { get; set; } = "Murderous King";
     public int[,] dependentMovesSet()
     {
-        return new int[,] { }; ;
+        //Simulate Murderous
+        dependentAttacks = new int[,] { };
+
+        GameObject newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 1);
+        if (newSquare != null)
+        {
+            if (HelperFunctions.isPieceOnSquare(newSquare) && HelperFunctions.getColorsOnSquare(newSquare, true).Contains(this.color))
+            {
+                newSquare = HelperFunctions.findSquare(this.position[0], this.position[1] + 2);
+                if (HelperFunctions.isPieceOnSquare(newSquare) && this.hasMoved == false)
+                {
+                    HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 0, 2 });
+                }
+            }
+        }
+
+        return dependentAttacks;
     }
 
     public int[,] interactiveMovesSet()
     {
-        return new int[,] { }; ;
+        return new int[,] { };
     }
 
     public bool stayTurn()
@@ -169,7 +90,7 @@ public class MurderousKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public MurderousKing(int color, bool online)
+    public MurderousPawn(int color, bool online)
     {
         if (online)
         {
@@ -181,7 +102,7 @@ public class MurderousKing : Piece
         }
         this.color = color;
 
-        go.name = name;
+        go.name = "MurderousPawn";
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -193,63 +114,154 @@ public class MurderousKing : Piece
     }
 }
 
-public class GhoulKing : Piece
+public class GhostPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 2;
-    public int rarityLevel { get; set; } = 2;
+    public float points { get; set; } = 1;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "Ghost Pawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wGhostPawn";
+    public String bImage { get; set; } = "Images/Pawns/bGhostPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "Like a normal king, but other pieces can go through it.";
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. This piece can move through your other pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Ghost";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        dependentAttacks = new int[,] { };
+
+        return dependentAttacks;
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public GhostPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+        this.color = color;
+
+        go.name = this.name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class GhoulPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 2f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { { 0, 2 } };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "Ghoul Pawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wGhoulPawn";
+    public String bImage { get; set; } = "Images/Pawns/bGhoulPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "Normal pawn, but your pieces can move through this piece.";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-
-    public String wImage { get; set; } = "Images/Kings/wGhoulKing";
-    public String bImage { get; set; } = "Images/Kings/bGhoulKing";
-    public String name { get; set; } = "Ghoul King";
     public int[,] dependentMovesSet()
     {
-        return new int[,] { }; ;
+        return new int[,] { };
     }
 
     public int[,] interactiveMovesSet()
     {
-        return new int[,] { }; ;
+        return new int[,] { };
     }
 
     public bool stayTurn()
@@ -262,7 +274,7 @@ public class GhoulKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public GhoulKing(int color, bool online)
+    public GhoulPawn(int color, bool online)
     {
         if (online)
         {
@@ -274,7 +286,7 @@ public class GhoulKing : Piece
         }
         this.color = color;
 
-        go.name = name;
+        go.name = this.name;
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -286,63 +298,81 @@ public class GhoulKing : Piece
     }
 }
 
-public class OneTimeKing : Piece
+public class OneTimePawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -6;
-    public int rarityLevel { get; set; } = 2;
+    public float points { get; set; } = -0.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { };
+    public int[,] attacks { get; set; } = { };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 }, { 0, 1 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { { 1, 1 }, { -1, 1 } };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "One Time Pawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wOneTimePawn";
+    public String bImage { get; set; } = "Images/Pawns/bOneTimePawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "Like a normal king, but can only move once.";
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "Normal pawn, but can only move once.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-
-    public String wImage { get; set; } = "Images/Kings/wOneTimeKing";
-    public String bImage { get; set; } = "Images/Kings/bOneTimeKing";
-    public String name { get; set; } = "One Time King";
     public int[,] dependentMovesSet()
     {
-        return new int[,] { }; ;
+        dependentAttacks = new int[,] { };
+
+        GameObject newSquare = HelperFunctions.findSquare(this.position[0] + 1, this.position[1] + 1);
+        if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare)))
+        {
+            if (HelperFunctions.isPieceOnSquare(newSquare) || HelperFunctions.isColorNotOnSquare(newSquare, this.color))
+            {
+                HelperFunctions.addTo2DArray(dependentAttacks, new int[] { 1, 1 });
+            }
+        }
+
+        newSquare = HelperFunctions.findSquare(this.position[0] + -1, this.position[1] + 1);
+        if (newSquare != null && !HelperFunctions.isJump(this, this.position, HelperFunctions.findCoords(newSquare)))
+        {
+            if (HelperFunctions.isPieceOnSquare(newSquare) || HelperFunctions.isColorNotOnSquare(newSquare, this.color))
+            {
+                HelperFunctions.addTo2DArray(dependentAttacks, new int[] { -1, 1 });
+            }
+        }
+
+        return dependentAttacks;
     }
 
     public int[,] interactiveMovesSet()
     {
-        return new int[,] { }; ;
+        return new int[,] { };
     }
 
     public bool stayTurn()
@@ -355,7 +385,7 @@ public class OneTimeKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public OneTimeKing(int color, bool online)
+    public OneTimePawn(int color, bool online)
     {
         if (online)
         {
@@ -367,7 +397,7 @@ public class OneTimeKing : Piece
         }
         this.color = color;
 
-        go.name = name;
+        go.name = this.name;
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -379,22 +409,18 @@ public class OneTimeKing : Piece
     }
 }
 
-public class ElectricKing : Piece
+public class ElectricPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -404,25 +430,28 @@ public class ElectricKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "Electric Pawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wElectricKing";
-    public String bImage { get; set; } = "Images/Kings/bElectricKing";
-    public String name { get; set; } = "Electric King";
-    public int rarityLevel { get; set; } = 2;
+    public String wImage { get; set; } = "Images/Pawns/wElectricPawn";
+    public String bImage { get; set; } = "Images/Pawns/bElectricPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "Protect this piece! It cannot move very fast, but if this piece dies or gets checkmated you lose the game.";
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "This piece moves like a pawn. On its capture, there is a 50% chance the capturing piece will die.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -447,7 +476,7 @@ public class ElectricKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ElectricKing(int color, bool online)
+    public ElectricPawn(int color, bool online)
     {
         if (online)
         {
@@ -460,7 +489,7 @@ public class ElectricKing : Piece
 
         this.color = color;
 
-        go.name = "ElectricKing";
+        go.name = "Electric Pawn";
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -472,22 +501,18 @@ public class ElectricKing : Piece
     }
 }
 
-public class PortalKing : Piece
+public class ShieldPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
+    public float points { get; set; } = 2f;
+    public bool disabled { get; set; } = false;
     public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -497,31 +522,246 @@ public class PortalKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "Shield Pawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wPortalKing";
-    public String bImage { get; set; } = "Images/Kings/bPortalKing";
-    public String name { get; set; } = "PortalKing";
-    public int rarityLevel { get; set; } = 5;
+
+    public String wImage { get; set; } = "Images/Pawns/wShieldPawn";
+    public String bImage { get; set; } = "Images/Pawns/bShieldPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Shield";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public ShieldPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = "Shield Pawn";
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class InfinitePawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 4;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "Infinite Pawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wInfinitePawn";
+    public String bImage { get; set; } = "Images/Pawns/bInfinitePawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = -1;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "None";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public InfinitePawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = "InfinitePawn";
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class PortalPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 2f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PortalPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wPortalPawn";
+    public String bImage { get; set; } = "Images/Pawns/bPortalPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
     public int[,] dependentMovesSet()
     {
+        /*int[,] portalMoves = new int[,] { };
+        if (position[0] == 1)
+        {
+            int posY_ = position[1] + 1 * color;
+            GameObject square = HelperFunctions.findSquare(8, posY_);
+            Piece piece = HelperFunctions.getPieceOnSquareDebug(square);
+            Debug.Log(HelperFunctions.findCoords(square)[0] + " " + HelperFunctions.findCoords(square)[1]);
+            if (piece != null && piece.color != color)
+            {
+                Debug.Log("HERE");
+                portalMoves = HelperFunctions.addTo2DArray(portalMoves, new int[] { 7, 1 });
+            }
+        }
+        else if (position[0] == 8)
+        {
+            int posY_ = position[1] + 1;
+            GameObject square = HelperFunctions.findSquare(1, posY_);
+            Piece piece = HelperFunctions.getPieceOnSquareDebug(square);
+            if (piece != null && piece.color != color)
+            {
+                portalMoves = HelperFunctions.addTo2DArray(portalMoves, new int[] { -7, 1 });
+            }
+        }
+
+        return portalMoves;*/
         return new int[,] { };
     }
 
@@ -540,7 +780,7 @@ public class PortalKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PortalKing(int color, bool online)
+    public PortalPawn(int color, bool online)
     {
         if (online)
         {
@@ -553,7 +793,7 @@ public class PortalKing : Piece
 
         this.color = color;
 
-        go.name = "PortalKing";
+        go.name = "PortalPawn";
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -565,22 +805,18 @@ public class PortalKing : Piece
     }
 }
 
-public class AtomicKing : Piece
+public class AtomicPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 4;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -590,25 +826,29 @@ public class AtomicKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "AtomicPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wAtomicKing";
-    public String bImage { get; set; } = "Images/Kings/bAtomicKing";
-    public String name { get; set; } = "AtomicKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wAtomicPawn";
+    public String bImage { get; set; } = "Images/Pawns/bAtomicPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -633,7 +873,7 @@ public class AtomicKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public AtomicKing(int color, bool online)
+    public AtomicPawn(int color, bool online)
     {
         if (online)
         {
@@ -646,7 +886,7 @@ public class AtomicKing : Piece
 
         this.color = color;
 
-        go.name = "AtomicKing";
+        go.name = "AtomicPawn";
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -658,22 +898,18 @@ public class AtomicKing : Piece
     }
 }
 
-public class LandmineKing : Piece
+public class LandminePawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 4;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -683,25 +919,29 @@ public class LandmineKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "LandminePawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wLandmineKing";
-    public String bImage { get; set; } = "Images/Kings/bLandmineKing";
-    public String name { get; set; } = "LandmineKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wLandminePawn";
+    public String bImage { get; set; } = "Images/Pawns/bLandminePawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -726,7 +966,7 @@ public class LandmineKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LandmineKing(int color, bool online)
+    public LandminePawn(int color, bool online)
     {
         if (online)
         {
@@ -739,7 +979,7 @@ public class LandmineKing : Piece
 
         this.color = color;
 
-        go.name = "LandmineKing";
+        go.name = "LandminePawn";
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -751,48 +991,50 @@ public class LandmineKing : Piece
     }
 }
 
-public class LiteKing : Piece
+public class SpontaneouslyCombustingPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -8;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
+    public float points { get; set; } = -2f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false; 
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "SpontaneouslyCombustingPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wLiteKing";
-    public String bImage { get; set; } = "Images/Kings/bLiteKing";
-    public String name { get; set; } = "LiteKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wSpontaneouslyCombustingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bSpontaneouslyCombustingPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Combustable";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -817,7 +1059,7 @@ public class LiteKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LiteKing(int color, bool online)
+    public SpontaneouslyCombustingPawn(int color, bool online)
     {
         if (online)
         {
@@ -842,22 +1084,18 @@ public class LiteKing : Piece
     }
 }
 
-public class HyperFastKing : Piece
+public class SuperGhostPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -5;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 3, 3 }, { -3, 3 }, { 3, -3 }, { -3, -3 }, { 0, 3 }, { 3, 0 }, { 0, -3 }, { -3, 0 }
-    };
+    public float points { get; set; } = 2.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false; 
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -867,25 +1105,28 @@ public class HyperFastKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "SuperGhostPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wHyperFastKing";
-    public String bImage { get; set; } = "Images/Kings/bHyperFastKing";
-    public String name { get; set; } = "HyperFastKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wSuperGhostPawn";
+    public String bImage { get; set; } = "Images/Pawns/bSuperGhostPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "This piece can move up one square, and attack diagonally up one square. These pieces are effective at protecting your more important pieces. This piece can move through your other pieces.";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Ghost";
+    public String secondaryState { get; set; } = "Ghoul";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -910,7 +1151,7 @@ public class HyperFastKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public HyperFastKing(int color, bool online)
+    public SuperGhostPawn(int color, bool online)
     {
         if (online)
         {
@@ -920,10 +1161,9 @@ public class HyperFastKing : Piece
         {
             if (go == null) go = new GameObject();
         }
-
         this.color = color;
 
-        go.name = name;
+        go.name = this.name;
 
         HelperFunctions.UpdateMovesForColor(this);
 
@@ -935,22 +1175,18 @@ public class HyperFastKing : Piece
     }
 }
 
-public class FastKing : Piece
+public class FragilePawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -2;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 2, 2 }, { -2, 2 }, { 2, -2 }, { -2, -2 }, { 0, 2 }, { 2, 0 }, { 0, -2 }, { -2, 0 }
-    };
+    public float points { get; set; } = 0.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -960,118 +1196,29 @@ public class FastKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wFastKing";
-    public String bImage { get; set; } = "Images/Kings/bFastKing";
-    public String name { get; set; } = "FastKing";
-    public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public FastKing(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-}
-
-public class FragileKing : Piece
-{
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -4;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "FragilePawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wFragileKing";
-    public String bImage { get; set; } = "Images/Kings/bFragileKing";
-    public String name { get; set; } = "FragileKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wFragilePawn";
+    public String bImage { get; set; } = "Images/Pawns/bFragilePawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1096,7 +1243,7 @@ public class FragileKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FragileKing(int color, bool online)
+    public FragilePawn(int color, bool online)
     {
         if (online)
         {
@@ -1121,23 +1268,18 @@ public class FragileKing : Piece
     }
 }
 
-public class SlidingKing : Piece
+public class CrowdingPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 0 }, { -1, 0 }, { 2, 0 }, { -2, 0 }, { 3, 0 }, { -3, 0 }, { 4, 0 }, { -4, 0 },
-        { 5, 0 }, { -5, 0 }, { 6, 0 }, { -6, 0 }, { 7, 0 }, { -7, 0 }, { 8, 0 }, { -8, 0 },
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1147,118 +1289,29 @@ public class SlidingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wSlidingKing";
-    public String bImage { get; set; } = "Images/Kings/bSlidingKing";
-    public String name { get; set; } = "SlidingKing";
-    public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public SlidingKing(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-}
-
-public class CrowdingKing : Piece
-{
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "CrowdingPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wCrowdingKing";
-    public String bImage { get; set; } = "Images/Kings/bCrowdingKing";
-    public String name { get; set; } = "CrowdingKing";
-    public int rarityLevel { get; set; } = 3;
+
+    public String wImage { get; set; } = "Images/Pawns/wCrowdingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bCrowdingPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1283,7 +1336,7 @@ public class CrowdingKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public CrowdingKing(int color, bool online)
+    public CrowdingPawn(int color, bool online)
     {
         if (online)
         {
@@ -1308,22 +1361,18 @@ public class CrowdingKing : Piece
     }
 }
 
-public class HungryKing : Piece
+public class HungryPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1333,25 +1382,29 @@ public class HungryKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "HungryPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wHungryKing";
-    public String bImage { get; set; } = "Images/Kings/bHungryKing";
-    public String name { get; set; } = "HungryKing";
-    public int rarityLevel { get; set; } = 3;
+
+    public String wImage { get; set; } = "Images/Pawns/wHungryPawn";
+    public String bImage { get; set; } = "Images/Pawns/bHungryPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "Vomit-CastleLeft-CastleRight";
+    public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1376,7 +1429,7 @@ public class HungryKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public HungryKing(int color, bool online)
+    public HungryPawn(int color, bool online)
     {
         if (online)
         {
@@ -1401,22 +1454,18 @@ public class HungryKing : Piece
     }
 }
 
-public class FreezingKing : Piece
+public class CaptureTheFlagPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1426,25 +1475,29 @@ public class FreezingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "CaptureTheFlagPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wFreezingKing";
-    public String bImage { get; set; } = "Images/Kings/bFreezingKing";
-    public String name { get; set; } = "FreezingKing";
-    public int rarityLevel { get; set; } = 3;
+
+    public String wImage { get; set; } = "Images/Pawns/wCaptureTheFlagPawn";
+    public String bImage { get; set; } = "Images/Pawns/bCaptureTheFlagPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "Freeze-CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "CaptureTheFlag";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1469,7 +1522,7 @@ public class FreezingKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FreezingKing(int color, bool online)
+    public CaptureTheFlagPawn(int color, bool online)
     {
         if (online)
         {
@@ -1494,22 +1547,18 @@ public class FreezingKing : Piece
     }
 }
 
-public class UndeadKing : Piece
+public class FreezingPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 2;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 2f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1519,25 +1568,308 @@ public class UndeadKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "FreezingPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wUndeadKing";
-    public String bImage { get; set; } = "Images/Kings/bUndeadKing";
-    public String name { get; set; } = "UndeadKing";
-    public int rarityLevel { get; set; } = 3;
+
+    public String wImage { get; set; } = "Images/Pawns/wFreezingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bFreezingPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "Spawn-CastleLeft-CastleRight";
+    public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public FreezingPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class CloningPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 2.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "CloningPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wCloningPawn";
+    public String bImage { get; set; } = "Images/Pawns/bCloningPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "Spawn";
+    public String state { get; set; } = "Normal";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "Pawn";
+    public int numSpawns { get; set; } = 2;
+
+    public CloningPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class ZombiePawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 0.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { };
+    public int[,] oneTimeMoves { get; set; } = { };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { { 0, 1 } };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "ZombiePawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wZombiePawn";
+    public String bImage { get; set; } = "Images/Pawns/bZombiePawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Normal";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public ZombiePawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class UndeadPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 0.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "UndeadPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wUndeadPawn";
+    public String bImage { get; set; } = "Images/Pawns/bUndeadPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "Spawn";
+    public String state { get; set; } = "Normal";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1562,7 +1894,7 @@ public class UndeadKing : Piece
     public string spawnable { get; set; } = "ZombiePawn";
     public int numSpawns { get; set; } = 3;
 
-    public UndeadKing(int color, bool online)
+    public UndeadPawn(int color, bool online)
     {
         if (online)
         {
@@ -1587,209 +1919,18 @@ public class UndeadKing : Piece
     }
 }
 
-public class DefuserKing : Piece
+public class PromotionPawn : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 2; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wDefuserKing";
-    public String bImage { get; set; } = "Images/Kings/bDefuserKing";
-    public String name { get; set; } = "DefuserKing";
-    public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Defuser";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public DefuserKing(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-}
-
-public class Overlord : Piece
-{
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 8;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },
-        { 2, 2 }, { -2, 2 }, { 2, -2 }, { -2, -2 }, { 0, 2 }, { 2, 0 }, { 0, -2 }, { -2, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wOverlord";
-    public String bImage { get; set; } = "Images/Kings/bOverlord";
-    public String name { get; set; } = "Overlord";
-    public int rarityLevel { get; set; } = 5;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public Overlord(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-}
-
-public class BadKing : Piece
-{
+    public float points { get; set; } = 0f;
     public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1799,25 +1940,29 @@ public class BadKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PromotionPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wBadKing";
-    public String bImage { get; set; } = "Images/Kings/bBadKing";
-    public String name { get; set; } = "BadKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wPromotionPawn";
+    public String bImage { get; set; } = "Images/Pawns/bPromotionPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Uncastle";
+    public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "Knight";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -1842,7 +1987,7 @@ public class BadKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public BadKing(int color, bool online)
+    public PromotionPawn(int color, bool online)
     {
         if (online)
         {
@@ -1867,22 +2012,18 @@ public class BadKing : Piece
     }
 }
 
-public class SpittingKing : Piece
+public class DefuserPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1892,25 +2033,122 @@ public class SpittingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "DefuserPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wSpittingKing";
-    public String bImage { get; set; } = "Images/Kings/bSpittingKing";
-    public String name { get; set; } = "SpittingKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wDefuserPawn";
+    public String bImage { get; set; } = "Images/Pawns/bDefuserPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "Spit-CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Defuser";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public DefuserPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class SpittingPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "SpittingPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wSpittingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bSpittingPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = 1;
@@ -1935,7 +2173,7 @@ public class SpittingKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SpittingKing(int color, bool online)
+    public SpittingPawn(int color, bool online)
     {
         if (online)
         {
@@ -1960,22 +2198,18 @@ public class SpittingKing : Piece
     }
 }
 
-public class SwitchingKing : Piece
+public class PhantomPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 2.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -1985,25 +2219,29 @@ public class SwitchingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PhantomPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wSwitchingKing";
-    public String bImage { get; set; } = "Images/Kings/bSwitchingKing";
-    public String name { get; set; } = "SwitchingKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wPhantomPawn";
+    public String bImage { get; set; } = "Images/Pawns/bPhantomPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Switch";
+    public String ability { get; set; } = "Dematerialize";
+    public String state { get; set; } = "Normal";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2028,7 +2266,7 @@ public class SwitchingKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SwitchingKing(int color, bool online)
+    public PhantomPawn(int color, bool online)
     {
         if (online)
         {
@@ -2053,22 +2291,18 @@ public class SwitchingKing : Piece
     }
 }
 
-public class StackingKing : Piece
+public class SplittingPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 9;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -2078,25 +2312,215 @@ public class StackingKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "SplittingPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wStackingKing";
-    public String bImage { get; set; } = "Images/Kings/bStackingKing";
-    public String name { get; set; } = "StackingKing";
-    public int rarityLevel { get; set; } = 5;
+
+    public String wImage { get; set; } = "Images/Pawns/wSplittingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bSplittingPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "Split";
+    public String state { get; set; } = "Normal";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public SplittingPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class PromotingPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PromotingPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wPromotingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bPromotingPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Normal";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 7;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public PromotingPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class StackingPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 3f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "StackingPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wStackingPawn";
+    public String bImage { get; set; } = "Images/Pawns/bStackingPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2121,7 +2545,7 @@ public class StackingKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public StackingKing(int color, bool online)
+    public StackingPawn(int color, bool online)
     {
         if (online)
         {
@@ -2146,22 +2570,18 @@ public class StackingKing : Piece
     }
 }
 
-public class PiggybackKing : Piece
+public class JailPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { }; 
+    public float points { get; set; } = 0f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -2171,19 +2591,116 @@ public class PiggybackKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "JailPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wPiggybackKing";
-    public String bImage { get; set; } = "Images/Kings/bPiggybackKing";
-    public String name { get; set; } = "PiggybackKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wJailPawn";
+    public String bImage { get; set; } = "Images/Pawns/bJailPawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Jailer";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public JailPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+}
+
+public class PiggybackPawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PiggybackPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wPiggybackPawn";
+    public String bImage { get; set; } = "Images/Pawns/bPiggybackPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
     public String state { get; set; } = "Piggyback";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
@@ -2191,7 +2708,7 @@ public class PiggybackKing : Piece
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2216,7 +2733,7 @@ public class PiggybackKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PiggybackKing(int color, bool online)
+    public PiggybackPawn(int color, bool online)
     {
         if (online)
         {
@@ -2239,6 +2756,7 @@ public class PiggybackKing : Piece
         s.sprite = sp;
         s.preserveAspect = true;
     }
+
     public int[] getPosition()
     {
         return position;
@@ -2250,156 +2768,166 @@ public class PiggybackKing : Piece
     }
 }
 
-public class ScaredyKing : Piece
+public class JockeyPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
     public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "JockeyPawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wJockeyPawn";
+    public String bImage { get; set; } = "Images/Pawns/bJockeyPawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Jockey";
+    public String secondaryState { get; set; } = "Normal";
+    public int stackable { get; set; } = 0;
+    public int reverseStackable { get; set; } = 0;
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public JockeyPawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+
+    public int[] getPosition()
+    {
+        return position;
+    }
+
+    public void setPosition(int[] pos)
+    {
+        this.position = pos;
+    }
+}
+
+public class ProtectivePawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 2.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
     public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { }; //Flag: Not in check
     public int[,] flagMove2 { get; set; } = {
-        { 2, 2 }, { -2, 2 }, { 2, -2 }, { -2, -2 }, { 0, 2 }, { 2, 0 }, { 0, -2 }, { -2, 0 }
+        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
+        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
+        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
+        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 },
+        { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 0, 5 }, { 0, 6 }, { 0, 7 }, { 0, 8 },
+        { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 }, { 7, 0 }, { 8, 0 },
+        { 0, -1 }, { 0, -2 }, { 0, -3 }, { 0, -4 }, { 0, -5 }, { 0, -6 }, { 0, -7 }, { 0, -8 },
+        { -1, 0 }, { -2, 0 }, { -3, 0 }, { -4, 0 }, { -5, 0 }, { -6, 0 }, { -7, 0 }, { -8, 0 }
     }; //Flag: In check
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wScaredyKing";
-    public String bImage { get; set; } = "Images/Kings/bScaredyKing";
-    public String name { get; set; } = "ScaredyKing";
-    public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Scaredy";
-    public String secondaryState { get; set; } = "Normal";
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public ScaredyKing(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
-}
-
-public class DepressedKing : Piece
-{
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -3;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
+    public int[,] jumpAttacks { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }; //Flag: Not in check
-    public int[,] flagMove2 { get; set; } = { }; //Flag: In check
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "ProtectivePawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wDepressedKing";
-    public String bImage { get; set; } = "Images/Kings/bDepressedKing";
-    public String name { get; set; } = "DepressedKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wProtectivePawn";
+    public String bImage { get; set; } = "Images/Pawns/bProtectivePawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Depressed";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Protective";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2424,7 +2952,7 @@ public class DepressedKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DepressedKing(int color, bool online)
+    public ProtectivePawn(int color, bool online)
     {
         if (online)
         {
@@ -2447,6 +2975,7 @@ public class DepressedKing : Piece
         s.sprite = sp;
         s.preserveAspect = true;
     }
+
     public int[] getPosition()
     {
         return position;
@@ -2458,22 +2987,18 @@ public class DepressedKing : Piece
     }
 }
 
-public class HeartbrokenKing : Piece
+public class PAWN : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -2;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 1.5f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -2483,27 +3008,31 @@ public class HeartbrokenKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "PAWN";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wHeartbrokenKing";
-    public String bImage { get; set; } = "Images/Kings/bHeartbrokenKing";
-    public String name { get; set; } = "HeartbrokenKing";
-    public int rarityLevel { get; set; } = 2;
+
+    public String wImage { get; set; } = "Images/Pawns/wPAWN!";
+    public String bImage { get; set; } = "Images/Pawns/bPAWN!";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Heartbroken";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "PAWN";
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2528,7 +3057,7 @@ public class HeartbrokenKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public HeartbrokenKing(int color, bool online)
+    public PAWN(int color, bool online)
     {
         if (online)
         {
@@ -2551,6 +3080,7 @@ public class HeartbrokenKing : Piece
         s.sprite = sp;
         s.preserveAspect = true;
     }
+
     public int[] getPosition()
     {
         return position;
@@ -2562,24 +3092,18 @@ public class HeartbrokenKing : Piece
     }
 }
 
-public class RulebreakerKing : Piece
+public class DoublePawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int rarityLevel { get; set; } = 3;
-    public string baseType { get; set; } = "King";
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 2f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -2589,23 +3113,31 @@ public class RulebreakerKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "DoublePawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wRulebreakerKing";
-    public String bImage { get; set; } = "Images/Kings/bRulebreakerKing";
-    public String name { get; set; } = "RulebreakerKing";
+
+    public String wImage { get; set; } = "Images/Pawns/wDoublePawn";
+    public String bImage { get; set; } = "Images/Pawns/bDoublePawn";
+    public int rarityLevel { get; set; } = 1;
     public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Rulebreaker";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Double";
     public String secondaryState { get; set; } = "Normal";
+    public int stackable { get; set; } = 0;
+    public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2630,7 +3162,110 @@ public class RulebreakerKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public RulebreakerKing(int color, bool online)
+    public DoublePawn(int color, bool online)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+        }
+
+        this.color = color;
+
+        go.name = name;
+
+        HelperFunctions.UpdateMovesForColor(this);
+
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+        s.sprite = sp;
+        s.preserveAspect = true;
+    }
+
+    public int[] getPosition()
+    {
+        return position;
+    }
+
+    public void setPosition(int[] pos)
+    {
+        this.position = pos;
+    }
+}
+
+public class OppressivePawn : Piece
+{
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 3f;
+    public bool disabled { get; set; } = false;
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
+    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
+    public int[,] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public int[,] conditionalAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
+    public int[,] dependentAttacks { get; set; } = { };
+    public int[,] interactiveAttacks { get; set; } = { };
+    public int[,] positionIndependentMoves { get; set; } = { };
+    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] flagMove1 { get; set; } = { };
+    public int[,] flagMove2 { get; set; } = { };
+    public int[,] pushMoves { get; set; } = { };
+    public int[,] enPassantMoves { get; set; } = { };
+    public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
+    public GameObject go { get; set; } = null;
+    public String name { get; set; } = "OppressivePawn";
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Pawns/wOppressivePawn";
+    public String bImage { get; set; } = "Images/Pawns/bOppressivePawn";
+    public int rarityLevel { get; set; } = 1;
+    public int[] startSquare { get; set; } = null;
+    public string baseType { get; set; } = "Pawn";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Oppressive";
+    public String secondaryState { get; set; } = "Normal";
+    public int collateralType { get; set; } = -1;
+    public int[,] collateral { get; set; } = null;
+    public int[] size { get; set; } = new int[] { 1, 1 };
+    public String promotesInto { get; set; } = "SuperPawn";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public int[,] dependentMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public int[,] interactiveMovesSet()
+    {
+        return new int[,] { };
+    }
+
+    public bool stayTurn()
+    {
+        canMoveTwice = 0;
+        return false;
+    }
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public OppressivePawn(int color, bool online)
     {
         if (online)
         {
@@ -2655,24 +3290,20 @@ public class RulebreakerKing : Piece
     }
 }
 
-public class DelayedKing : Piece
+public class DelayedPawn : Piece
 {
-    public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = -5;
-    public int rarityLevel { get; set; } = 2;
-    public string baseType { get; set; } = "King";
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
+    public float points { get; set; } = 0f;
+    public bool disabled { get; set; } = false;
+    public int rarityLevel { get; set; } = 1;
+    public string baseType { get; set; } = "Pawn";
+    public int[,] moves { get; set; } = { { 0, 1 } };
+    public int[,] oneTimeMoves { get; set; } = { { 0, 2 } };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
     public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
@@ -2682,23 +3313,27 @@ public class DelayedKing : Piece
     public int[,] pushMoves { get; set; } = { };
     public int[,] enPassantMoves { get; set; } = { };
     public int[] position { get; set; } = { 0, 0 };
+    public int[,] jumpAttacks { get; set; } = { };
+    public int[,] moveAndAttacks { get; set; } = { };
+    public PhotonView photonView { get; set; } = null;
     public GameObject go { get; set; } = null;
+    public String name { get; set; } = "DelayedPawn";
     public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wDelayedKing";
-    public String bImage { get; set; } = "Images/Kings/bDelayedKing";
-    public String name { get; set; } = "DelayedKing";
+
+    public String wImage { get; set; } = "Images/Pawns/wDelayedPawn";
+    public String bImage { get; set; } = "Images/Pawns/bDelayedPawn";
     public int[] startSquare { get; set; } = null;
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "Normal";
+    public String ability { get; set; } = "None";
+    public String state { get; set; } = "Delayed";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
+    public String promotesInto { get; set; } = "SuperPawn";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2723,7 +3358,7 @@ public class DelayedKing : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DelayedKing(int color, bool online)
+    public DelayedPawn(int color, bool online)
     {
         if (online)
         {

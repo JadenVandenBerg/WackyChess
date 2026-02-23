@@ -98,15 +98,8 @@ public class Rook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -200,15 +193,8 @@ public class MurderousRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -302,15 +288,8 @@ public class GhostRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -404,15 +383,8 @@ public class GhoulRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -506,15 +478,8 @@ public class OneTimeRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -610,15 +575,8 @@ public class ElectricRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -714,15 +672,8 @@ public class InfiniteRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -818,15 +769,8 @@ public class PortalRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -922,15 +866,8 @@ public class AtomicRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1026,15 +963,8 @@ public class LandmineRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1125,15 +1055,8 @@ public class LiteRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1227,15 +1150,8 @@ public class SuperGhostRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1334,15 +1250,8 @@ public class Empress : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1438,15 +1347,8 @@ public class FragileRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1543,15 +1445,8 @@ public class RoyalRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1647,15 +1542,8 @@ public class MonochromeRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1751,15 +1639,8 @@ public class CrowdingRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1855,15 +1736,8 @@ public class HungryRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1959,15 +1833,8 @@ public class CaptureTheFlagRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2063,15 +1930,8 @@ public class FreezingRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2167,15 +2027,8 @@ public class CloningRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2271,15 +2124,8 @@ public class UndeadRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2375,15 +2221,8 @@ public class PromotionRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2479,15 +2318,8 @@ public class DefuserRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2583,15 +2415,8 @@ public class SpittingRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2687,15 +2512,8 @@ public class PhantomRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2791,15 +2609,8 @@ public class StackingRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2895,15 +2706,8 @@ public class JailRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2999,15 +2803,8 @@ public class Crook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -3105,15 +2902,8 @@ public class PiggybackRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
     public int[] getPosition()
     {
@@ -3220,15 +3010,8 @@ public class JockeyRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
     public int[] getPosition()
     {
@@ -3333,14 +3116,7 @@ public class DelayedRook : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }

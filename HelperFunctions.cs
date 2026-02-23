@@ -1805,6 +1805,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
+                    tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1816,6 +1817,7 @@ public class HelperFunctions : MonoBehaviour
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
                     {
                         collateralDeath(pieceToList(attackerPiece));
+                        tempInfo.attackerDied = true;
                     }
 
                     if (!square) continue;
@@ -1832,6 +1834,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
+                    tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1844,6 +1847,7 @@ public class HelperFunctions : MonoBehaviour
                     {
                         collateralDeath(pieceToList(attackerPiece));
                         collateralDeath(pieceToList(deadPiece));
+                        tempInfo.attackerDied = true;
                     }
 
                     if (!square) continue;
@@ -3054,6 +3058,8 @@ public class HelperFunctions : MonoBehaviour
     // 2 = checkmate
     public int movePiece_(Piece piece, int[] coords)
     {
+        tempInfo.attackerDied = false;
+
         //Delayed Piece Move
         if (tempInfo.delayedQueue == null)
         {
@@ -3113,7 +3119,13 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        movePieceBoardGrid(piece, piece.position, coords);
+        if (!tempInfo.attackerDied) {
+            movePieceBoardGrid(piece, piece.position, coords);
+        }
+        else {
+            updateBoardGrid(piece.position, piece, "r");
+        }
+        
         //Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
 
         piece.hasMoved = true;

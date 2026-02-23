@@ -55,6 +55,7 @@ public static class tempInfo
     public static bool selectedFromPanel { get; set; } = false;
     public static bool passed { get; set; } = false;
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
+    public static bool attackerDied { get; set; } = false;
 }
 
 public static class globalDefs

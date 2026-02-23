@@ -94,15 +94,8 @@ public class Template : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 */
@@ -205,14 +198,7 @@ public class SuperPawn : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }

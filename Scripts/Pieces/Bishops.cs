@@ -99,15 +99,8 @@ public class Bishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -300,15 +293,8 @@ public class GhostBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -403,15 +389,8 @@ public class GhoulBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -506,15 +485,8 @@ public class OneTimeBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -611,15 +583,8 @@ public class ElectricBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -716,15 +681,8 @@ public class InfiniteBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -821,15 +779,8 @@ public class PortalBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -926,15 +877,8 @@ public class AtomicBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1031,15 +975,8 @@ public class LandmineBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1136,15 +1073,8 @@ public class ColorChangingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1236,15 +1166,8 @@ public class LiteBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1339,15 +1262,8 @@ public class SuperGhostBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1447,15 +1363,8 @@ public class Princess : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1552,15 +1461,8 @@ public class FragileBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1658,15 +1560,8 @@ public class RoyalBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1763,15 +1658,8 @@ public class BouncingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1868,15 +1756,8 @@ public class CrowdingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -1973,15 +1854,8 @@ public class HungryBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2078,15 +1952,8 @@ public class CaptureTheFlagBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2183,15 +2050,8 @@ public class FreezingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2288,15 +2148,8 @@ public class CloningBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2393,15 +2246,8 @@ public class UndeadBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2498,15 +2344,8 @@ public class PromotionBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2603,15 +2442,8 @@ public class DefuserBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2708,15 +2540,8 @@ public class SpittingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2813,15 +2638,8 @@ public class PhantomBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -2918,15 +2736,8 @@ public class StackingBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -3023,15 +2834,8 @@ public class JailBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -3130,15 +2934,8 @@ public class PiggybackBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
     public int[] getPosition()
     {
@@ -3246,15 +3043,8 @@ public class JockeyBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
     public int[] getPosition()
     {
@@ -3360,15 +3150,8 @@ public class DelayedBishop : Piece
         Image s = go.AddComponent<Image>();
         Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 

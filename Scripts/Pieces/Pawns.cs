@@ -1605,7 +1605,7 @@ public class GhostPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { { 0, 2 } };
+    public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
     public int[,] forceStayTurnMoves { get; set; } = { };
@@ -2751,7 +2751,7 @@ public class SuperGhostPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { { 0, 2 } };
+    public int[,] dependentAttacks { get; set; } = { };
     public int[,] interactiveAttacks { get; set; } = { };
     public int[,] positionIndependentMoves { get; set; } = { };
     public int[,] forceStayTurnMoves { get; set; } = { };

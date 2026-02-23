@@ -147,7 +147,7 @@ public interface Piece
      * Combustable: May explode after every turn (1/6)
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move
-     * Uncastle: Can't castle (not implemented yet)
+     * Uncastle: Can't castle
      * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start)
      * Electric: Has a change of killing pieces that capture it (1/2)
      * Crook: Can't be captured, only jailed

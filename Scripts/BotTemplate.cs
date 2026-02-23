@@ -17,6 +17,7 @@ public abstract class BotTemplate {
 	public Piece king { get; set; } = null;
 	public bool penalty { get; set; } = false;
 	public string name { get; set; } = "Template";
+	public bool debug { get; set; } = false;
 
 	//1: white, -1: black
 	public int color { get; set; } = 0;
@@ -92,7 +93,7 @@ public class BoardState {
 	public void refresh(List<List<List<Piece>>> passedBoardGrid) {
 
 		//boardGrid = gameData.boardGrid.Select(x => x.Select(y => new List<Piece>(y)).ToList()).ToList();
-		boardGrid = passedBoardGrid;
+		boardGrid = BotHelperFunctions.copyBoardGrid(passedBoardGrid);
 
 		float wp = 0;
 		float bp = 0;

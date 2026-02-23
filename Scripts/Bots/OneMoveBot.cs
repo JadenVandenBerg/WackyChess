@@ -29,20 +29,23 @@ public class OneMoveBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        currentBoardState.refresh(gameData.boardGrid);
+        this.debug = true;
+        //currentBoardState.refresh(gameData.boardGrid);
 
         BoardState ogBoardState = this.currentBoardState;
         
-        Piece bestMovePiece = null;
-        int[] bestMoveCoords = null;
+        Piece bestMovePiece;
+        int[] bestMoveCoords;
         float bestMoveDiff = -1000;
 
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-        //TODO test this timing
 
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
-        
+        this.debug = false;
+
+        //BotHelperFunctions.debug_printBoardState(currentBoardState);
+
 
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
         //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
@@ -66,7 +69,6 @@ public class OneMoveBot : BotTemplate
                 //Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
                 BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
 
-                //BotHelperFunctions.debug_printBoardState(cloneState);
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
@@ -91,7 +93,7 @@ public class OneMoveBot : BotTemplate
 
                         this.currentBoardState = originalBoardState_;
 
-                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
+                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, true);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
@@ -128,7 +130,7 @@ public class OneMoveBot : BotTemplate
             watch.Stop();
 
             var watchMS = watch.ElapsedMilliseconds;
-            Debug.LogWarning("Looped through " + piece.name + " in " + watchMS);
+            //Debug.LogWarning("Looped through " + piece.name + " in " + watchMS);
         }
 
         System.Random rand = new System.Random();

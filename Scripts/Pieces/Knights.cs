@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.IO;
 using System.Collections.Generic;
 using Photon.Pun;
+
 public class Knight : Piece
 {
     public bool disabled { get; set; } = false;
@@ -114,7 +115,7 @@ public class MurderousKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -321,7 +322,7 @@ public class OneTimeKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0f;
+    public float points { get; set; } = 1f;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -433,7 +434,7 @@ public class ElectricKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
+    public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -537,7 +538,7 @@ public class InfiniteKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 12;
+    public float points { get; set; } = 9;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -745,7 +746,7 @@ public class AtomicKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6.5f;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -849,7 +850,7 @@ public class LandmineKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -953,7 +954,7 @@ public class LiteKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 0;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1054,7 +1055,7 @@ public class SpiderKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1160,7 +1161,7 @@ public class DisabledKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1263,7 +1264,7 @@ public class Elephant : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1366,7 +1367,7 @@ public class SniperElephant : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1573,7 +1574,7 @@ public class FragileKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1677,7 +1678,7 @@ public class SinisterMinisterKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 9;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1781,7 +1782,7 @@ public class RoyalKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1887,7 +1888,7 @@ public class CrowdingKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -1991,7 +1992,7 @@ public class HungryKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2095,7 +2096,7 @@ public class CaptureTheFlagKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2199,7 +2200,7 @@ public class FreezingKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2303,7 +2304,7 @@ public class CloningKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2407,7 +2408,7 @@ public class UndeadKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2511,7 +2512,7 @@ public class PromotionKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2615,7 +2616,7 @@ public class LongKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2719,7 +2720,7 @@ public class DefuserKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -2823,7 +2824,7 @@ public class Hippocamelus : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3033,7 +3034,7 @@ public class PhantomKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 4;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3137,7 +3138,7 @@ public class StackingKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 5;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3241,7 +3242,7 @@ public class JailKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3345,7 +3346,7 @@ public class PiggybackKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3460,7 +3461,7 @@ public class JockeyKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Knight";
@@ -3575,7 +3576,7 @@ public class DelayedKnight : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public string baseType { get; set; } = "Knight";
     public int[] startSquare { get; set; } = null;

@@ -111,7 +111,7 @@ public class MurderousKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "King";
@@ -211,7 +211,7 @@ public class GhoulKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "King";
@@ -311,7 +311,7 @@ public class OneTimeKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -6;
     public int rarityLevel { get; set; } = 2;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "King";
@@ -411,7 +411,7 @@ public class ElectricKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -511,7 +511,7 @@ public class PortalKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
+    public float points { get; set; } = 5;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -611,7 +611,7 @@ public class AtomicKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -711,7 +711,7 @@ public class LandmineKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -811,7 +811,7 @@ public class LiteKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -8;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
@@ -909,7 +909,7 @@ public class HyperFastKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -5;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1009,7 +1009,7 @@ public class FastKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -2;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1109,7 +1109,7 @@ public class FragileKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -4;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1310,7 +1310,7 @@ public class CrowdingKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 4;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1410,7 +1410,7 @@ public class HungryKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1506,111 +1506,11 @@ public class HungryKing : Piece
     }
 }
 
-public class CaptureTheFlagKing : Piece
-{
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;  
-    public int[,] conditionalAttacks { get; set; } = {  };
-    public int[,] attacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
-    public String wImage { get; set; } = "Images/Kings/wCaptureTheFlagKing";
-    public String bImage { get; set; } = "Images/Kings/bCaptureTheFlagKing";
-    public String name { get; set; } = "CaptureTheFlagKing";
-    public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
-    public string baseType { get; set; } = "King";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public String ability { get; set; } = "CastleLeft-CastleRight";
-    public String state { get; set; } = "CaptureTheFlag";
-    public String secondaryState { get; set; } = "Normal";
-    public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
-    public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
-
-    public CaptureTheFlagKing(int color, bool online)
-    {
-        if (online)
-        {
-            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
-        }
-        else
-        {
-            if (go == null) go = new GameObject();
-        }
-
-        this.color = color;
-
-        go.name = name;
-
-        HelperFunctions.UpdateMovesForColor(this);
-
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
-
-        if (sp == null)
-        {
-            Debug.LogError("Failed to load sprite from Resources");
-        }
-        else
-        {
-            s.sprite = sp;
-            s.preserveAspect = true;
-        }
-    }
-}
-
 public class FreezingKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 4;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1710,7 +1610,7 @@ public class UndeadKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 2;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -1809,7 +1709,7 @@ public class UndeadKing : Piece
 public class DefuserKing : Piece
 {
     public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
+    public int color { get; set; } = 2; //1 White, -1 Black
     public float points { get; set; } = 0;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
@@ -1910,7 +1810,7 @@ public class Overlord : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 8;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2011,7 +1911,7 @@ public class BadKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2045,7 +1945,7 @@ public class BadKing : Piece
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public String state { get; set; } = "Uncastle";
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2111,7 +2011,7 @@ public class SpittingKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2311,7 +2211,7 @@ public class StackingKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 9;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2411,7 +2311,7 @@ public class PiggybackKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2522,7 +2422,7 @@ public class ScaredyKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 6;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2635,7 +2535,7 @@ public class DepressedKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -3;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
@@ -2744,7 +2644,7 @@ public class HeartbrokenKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -2;
     public int[,] moves { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = {
@@ -2855,7 +2755,7 @@ public class RulebreakerKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 3;
     public string baseType { get; set; } = "King";
     public int[,] moves { get; set; } = { };
@@ -2955,7 +2855,7 @@ public class DelayedKing : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
+    public float points { get; set; } = -5;
     public int rarityLevel { get; set; } = 2;
     public string baseType { get; set; } = "King";
     public int[,] moves { get; set; } = { };

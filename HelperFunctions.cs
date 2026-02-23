@@ -798,7 +798,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     //pieceIsDiffColour = pieceOnSquare.color != color;
                     pieceIsDiffColour = !getColorsOnSquare(goHighlight, true).Contains(piece.color);
-                    
+
                     if (checkPiecesDisabled(piecesOnSquare))
                     {
                         pieceIsNull = true;
@@ -1529,10 +1529,28 @@ public class HelperFunctions : MonoBehaviour
                     gameData.piecesDict.Remove(dead);
                 }
 
+                if (gameData.isBotMatch)
+                {
+                    if (deadPiece.color == 1)
+                    {
+                        gameData.botWhite.pieces.Remove(deadPiece);
+                        gameData.botBlack.opponentPieces.Remove(deadPiece);
+                    }
+                    else
+                    {
+                        gameData.botWhite.opponentPieces.Remove(deadPiece);
+                        gameData.botBlack.pieces.Remove(deadPiece);
+                    }
+                }
+
                 updateBoardGrid(deadPiece.position, deadPiece, "r");
+                
                 DestroyWrapper(dead);
                 deadPiece.alive = 0;
             }
+
+            Debug.LogWarning("IN COLLATERAL");
+            BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         }
     }
 
@@ -1543,6 +1561,20 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.piecesDict.ContainsKey(dead))
         {
             gameData.piecesDict.Remove(dead);
+        }
+
+        if (gameData.isBotMatch)
+        {
+            if (deadPiece.color == 1)
+            {
+                gameData.botWhite.pieces.Remove(deadPiece);
+                gameData.botBlack.opponentPieces.Remove(deadPiece);
+            }
+            else
+            {
+                gameData.botWhite.opponentPieces.Remove(deadPiece);
+                gameData.botBlack.pieces.Remove(deadPiece);
+            }
         }
 
         updateBoardGrid(deadPiece.position, deadPiece, "r");
@@ -1667,7 +1699,7 @@ public class HelperFunctions : MonoBehaviour
             // Abilities / States
             string state = deadPiece.state;
             string[] parts = state.Split('-');
-            
+
             foreach (string statePart in parts)
             {
                 if (!attackerPiece.state.Contains(statePart))
@@ -1778,7 +1810,7 @@ public class HelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
                 {
-                    int[] coords = new int[] { attackerCoords[0] + attackerPiece.collateral[i, 0], attackerCoords[1] + attackerPiece.collateral[i, 1] };
+                    int[] coords = new int[] { deadPieceCoords[0] + attackerPiece.collateral[i, 0], deadPieceCoords[1] + attackerPiece.collateral[i, 1] };
                     GameObject square = findSquare(coords[0], coords[1]);
 
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
@@ -1826,6 +1858,20 @@ public class HelperFunctions : MonoBehaviour
         if (gameData.piecesDict.ContainsKey(dead))
         {
             gameData.piecesDict.Remove(dead);
+        }
+
+        if (gameData.isBotMatch)
+        {
+            if (deadPiece.color == 1)
+            {
+                gameData.botWhite.pieces.Remove(deadPiece);
+                gameData.botBlack.opponentPieces.Remove(deadPiece);
+            }
+            else
+            {
+                gameData.botWhite.opponentPieces.Remove(deadPiece);
+                gameData.botBlack.pieces.Remove(deadPiece);
+            }
         }
 
         updateBoardGrid(deadPieceCoords, deadPiece, "r");
@@ -2052,7 +2098,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (piece.disabled || piece.alive == 0 || ( ignoreDematerialized && checkState(piece, "Dematerialized")) || checkState(piece, "Jailed"))
+            if (piece.disabled || piece.alive == 0 || (ignoreDematerialized && checkState(piece, "Dematerialized")) || checkState(piece, "Jailed"))
             {
                 continue;
             }
@@ -2343,6 +2389,11 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
+        if (checkState(king, "Uncastle"))
+        {
+            return false;
+        }
+
         bool goNext = false;
         if (king.alive == 1 && rook.alive == 1 && !king.hasMoved && !rook.hasMoved)
         {
@@ -2589,7 +2640,7 @@ public class HelperFunctions : MonoBehaviour
             int x = piece.position[0] + dir[0];
             int y = piece.position[1] + dir[1];
 
-            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count < 0)
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count == 0)
             {
                 return false;
             }
@@ -2646,7 +2697,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 continue;
             }
-            
+
             string[] abilityNames = piece.ability.Split("-");
             List<string> abilities = new List<string>();
 
@@ -2698,7 +2749,7 @@ public class HelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    if (!areSurroundingSquaresFull(piece))
+                    if (areSurroundingSquaresFull(piece))
                     {
                         continue;
                     }
@@ -2716,14 +2767,14 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (abilityName == "Dematerialize")
                 {
-                    if (piece.state == "Dematerialized")
+                    if (checkState(piece, "Dematerialized"))
                     {
                         continue;
                     }
                 }
                 else if (abilityName == "Materialize")
                 {
-                    if (piece.state != "Dematerialized")
+                    if (!checkState(piece, "Dematerialized"))
                     {
                         continue;
                     }
@@ -2741,6 +2792,16 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return pieceAbilities;
+    }
+
+    public static bool checkBounds(int x, int y)
+    {
+        if (x > 8 || y > 8 || x < 1 || y < 1)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public static bool isPieceSurroundingState(Piece piece, string state)
@@ -3174,6 +3235,14 @@ public class HelperFunctions : MonoBehaviour
             {
                 string pname = piece.promotesInto;
                 Piece p = Spawnables.create(pname, piece.color);
+
+                if (piece.storage != null)
+                {
+                    foreach (Piece p_ in p.storage)
+                    {
+                        forceRemove(p_);
+                    }
+                }
                 forceRemove(piece);
                 initPiece(p, coords);
             }
@@ -3575,6 +3644,11 @@ public class HelperFunctions : MonoBehaviour
             bool death;
             GameObject selectedToMoveGo = null;
 
+            if (piece.go == null)
+            {
+                return; //Delayed Piece Died
+            }
+
             var deathVars = isDeath(selectedToMoveGo, square, piece, true);
 
             death = deathVars.death;
@@ -3641,9 +3715,11 @@ public class HelperFunctions : MonoBehaviour
         bool death = deathVars.death;
         GameObject selectedToMoveGo = deathVars.selectedToMoveGo;
 
-        if (death)
+        if (death && selectedToMoveGo != null)
         {
-            Piece destroyer = gameData.piecesDict[selectedToMoveGo];
+            //TODO bug null sometimes example when hungrypiece promotes
+            //Piece destroyer = gameData.piecesDict[selectedToMoveGo];
+            Piece destroyer = gameData.selectedToMovePiece;
 
             Debug.Log("DESTROYING: " + gameData.selectedPiece.name + ". Square: " + findCoords(gameData.selected)[0] + "," + findCoords(gameData.selected)[1]);
             onDeaths(destroyer, selectedToMoveGo, gameData.selected);

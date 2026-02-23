@@ -10,6 +10,8 @@ using System.Xml.Linq;
 using System.Net.NetworkInformation;
 using Photon.Pun;
 using System.Linq;
+using System.IO;
+using System.Text;
 
 public class botMaster : MonoBehaviour
 {
@@ -32,10 +34,10 @@ public class botMaster : MonoBehaviour
     BotTemplate botBlack;
     bool started = false;
 
+    BotGameStatus bgs = new BotGameStatus();
+
     IEnumerator Start()
     {
-        yield return new WaitForSeconds(1.0f);
-
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
@@ -44,6 +46,9 @@ public class botMaster : MonoBehaviour
         botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
+
+        bgs.white = "OneMoveBot";
+        bgs.black = "IdiotBot";
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
@@ -94,6 +99,16 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botBlackKnights[1], new int[] { 7, 8 });
         HelperFunctions.initPiece(botBlackQueen[0], new int[] { 4, 8 });
         HelperFunctions.initPiece(botBlackKing[0], new int[] { 5, 8 });
+
+        foreach (Piece wp in botWhite.pieces)
+        {
+            bgs.whitePieces.Add(wp.name);
+        }
+
+        foreach (Piece wp in botBlack.pieces)
+        {
+            bgs.blackPieces.Add(wp.name);
+        }
 
         //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
         botWhitePawns[0].name = "w_p1";
@@ -147,6 +162,11 @@ public class botMaster : MonoBehaviour
         botWhite.king = gameData.whiteKing;
         botBlack.king = gameData.blackKing;
 
+        botWhite.currentBoardState.refresh(gameData.boardGrid);
+        List<float> points = BotHelperFunctions.getPointsOnBoardState(botWhite.currentBoardState, false);
+        bgs.whitePoints = points[0];
+        bgs.blackPoints = points[1];
+
         helper.updatePointsOnBoard();
 
         yield return null;
@@ -172,8 +192,14 @@ public class botMaster : MonoBehaviour
     IEnumerator BotTurn()
     {
         yield return new WaitForSeconds(1.0f);
+
+        resetBotPieces(botWhite);
+        resetBotPieces(botBlack);
+        botWhite.currentBoardState.refresh(gameData.boardGrid);
+        botBlack.currentBoardState.refresh(gameData.boardGrid);
+
         BotTemplate currentBot;
-        bool valid = true;
+        bool valid;
 
         Piece movePieceObj = null;
         int[] moveCoords = null;
@@ -181,6 +207,7 @@ public class botMaster : MonoBehaviour
 
         if (turn == 1)
         {
+            bgs.numTurns++;
             currentBot = botWhite;
         }
         else
@@ -209,6 +236,15 @@ public class botMaster : MonoBehaviour
                 movePieceObj = null;
 
                 Debug.Log("BOT HAS RECIEVED A PENALTY. MOVE TOOK " + watchMS + "ms.");
+
+                if (currentBot.color == 1)
+                {
+                    bgs.whitePenalties++;
+                }
+                else
+                {
+                    bgs.blackPenalties++;
+                }
             }
             else
             {
@@ -259,7 +295,7 @@ public class botMaster : MonoBehaviour
         }
 
         turn *= -1;
-        currentBot.currentBoardState.refresh(gameData.boardGrid);
+        //currentBot.currentBoardState.refresh(gameData.boardGrid);
 
         if (!death && check == 0) {
             movesWithoutCapture++;
@@ -277,16 +313,51 @@ public class botMaster : MonoBehaviour
             //GAME OVER, go to next match
             Debug.Log("Game Over - Tie");
             gameOver = true;
+
+            if (subsequentChecks > 8)
+            {
+                bgs.result = "Draw by Subsequent Checks";
+            }
+            else
+            {
+                bgs.result = "Draw by Moves Without Capture";
+            }
         }
 
         if (check == 2)
         {
-            Debug.Log("Game Over - Checkmate");
+            if (!gameData.staleMate)
+            {
+                Debug.Log("Game Over - Checkmate");
+                bgs.result = "Won by Checkmate";
+                if (turn == -1)
+                {
+                    bgs.winner = "White";
+                }
+                else
+                {
+                    bgs.winner = "Black";
+                }
+            }
+            else
+            {
+                Debug.Log("Game Over - Stalemate");
+                bgs.result = "Draw by Stalemate";
+            }
+            
+
             gameOver = true;
         }
 
+        BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         yield return new WaitForSeconds(1.0f);
         isTurn = true;
+
+        if (gameOver)
+        {
+            printBGS(bgs);
+            yield return new WaitForSeconds(5f);
+        }
 
         //Check if check/update bot boardstate
     }
@@ -351,5 +422,65 @@ public class botMaster : MonoBehaviour
 
         return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
 
+    }
+
+    public static void printBGS(BotGameStatus bgs)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("Game Ended");
+        sb.AppendLine(bgs.white + " (White) vs (Black) " + bgs.black);
+        sb.AppendLine(bgs.winner + " " + bgs.result);
+        sb.AppendLine("The match took " + bgs.numTurns + " turns");
+        sb.AppendLine("Penalties: " + bgs.white + ": " + bgs.whitePenalties + ", " + bgs.black + ": " + bgs.blackPenalties);
+
+        sb.AppendLine(bgs.white + " started with " + bgs.whitePoints + "pts");
+        sb.AppendLine(bgs.black + " started with " + bgs.blackPoints + "pts");
+
+        sb.AppendLine(bgs.white + " pieces:");
+        foreach (string p in bgs.whitePieces)
+            sb.Append(p + " ");
+        sb.AppendLine();
+
+        sb.AppendLine(bgs.black + " pieces:");
+        foreach (string p in bgs.blackPieces)
+            sb.Append(p + " ");
+        sb.AppendLine();
+
+        string logText = sb.ToString();
+
+        // Console output
+        Debug.LogWarning(logText);
+
+        // File path (SAFE location)
+        string filePath = Path.Combine(Application.persistentDataPath, "MatchHistory.txt");
+
+        // Append instead of overwrite
+        File.AppendAllText(filePath, logText + "\n------------------------\n");
+
+        Debug.Log("Saved match log to: " + filePath);
+    }
+
+    public static void resetBotPieces(BotTemplate bot)
+    {
+        bot.pieces.Clear();
+        bot.opponentPieces.Clear();
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece p in gameData.boardGrid[x][y])
+                {
+                    if (p.color == bot.color)
+                    {
+                        bot.pieces.Add(p);
+                    }
+                    else
+                    {
+                        bot.opponentPieces.Add(p);
+                    }
+                }
+            }
+        }
     }
 }

@@ -57,19 +57,52 @@ public static class tempInfo
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 }
 
-public static readonly (int dx, int dy)[] globalDirectionsNoZero =
+public static class globalDefs
 {
-    (1, 0), (-1, 0),
-    (0, 1), (0, -1),
-    (1, 1), (-1, 1),
-    (1, -1), (-1, -1)
-};
+    public static readonly (int dx, int dy)[] globalDirectionsNoZero =
+    {
+        (1, 0), (-1, 0),
+        (0, 1), (0, -1),
+        (1, 1), (-1, 1),
+        (1, -1), (-1, -1)
+    };
 
-public static readonly (int dx, int dy)[] globalDiagionalDirectionsNoZero =
+    public static readonly (int dx, int dy)[] globalDiagionalDirectionsNoZero =
+    {
+        (1, 1), (-1, -1),
+        (-1, 1), (1, -1)
+    };
+
+    public static readonly (int dx, int dy)[] globalDirections =
+    {
+        (1, 0), (-1, 0),
+        (0, 1), (0, -1),
+        (1, 1), (-1, 1),
+        (1, -1), (-1, -1),
+        (0, 0)
+    };
+}
+
+public class BotGameStatus
 {
-    (1, 1), (-1, -1),
-    (-1, 1), (1, -1)
-};
+    public string white;
+    public string black;
+
+    public List<string> whitePieces = new List<string>();
+    public List<string> blackPieces = new List<string>();
+
+    public string result;
+    public string winner;
+
+    public float whitePoints;
+    public float blackPoints;
+
+    public int whitePenalties = 0;
+    public int blackPenalties = 0;
+
+    public int numTurns = 0;
+}
+
 
 public static class botTournament {
     public static List<BotTemplate> competingBots = new List<BotTemplate>();

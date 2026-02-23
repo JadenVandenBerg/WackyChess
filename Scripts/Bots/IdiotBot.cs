@@ -75,7 +75,7 @@ public class IdiotBot : BotTemplate
 
                         this.currentBoardState = originalBoardState_;
 
-                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_);
+                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, false);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
@@ -104,7 +104,7 @@ public class IdiotBot : BotTemplate
         Debug.Log("SENDING MOVE: " + worstMovePiece.name + " to " + worstMoveCoords[0] + "," + worstMoveCoords[1]);
 
         Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(worstMovePiece, worstMoveCoords);
+        moveDict.Add(BotHelperFunctions.getOriginalPieceFromClone(worstMovePiece), worstMoveCoords);
 
         return moveDict;
     }

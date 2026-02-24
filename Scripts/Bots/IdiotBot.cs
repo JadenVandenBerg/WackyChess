@@ -17,22 +17,17 @@ public class IdiotBot : BotTemplate
     override
     public Dictionary<Piece, int[]> nextMove()
     {
-        currentBoardState.refresh(gameData.boardGrid);
-
-        BoardState ogBoardState = this.currentBoardState;
-
         Piece worstMovePiece = null;
         int[] worstMoveCoords = null;
         float worstMoveDiff = +1000;
 
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
-        var botMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
-        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
-        //Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
+        List<Move> validMoves = new List<Move>();
 
         //Each piece
         foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
@@ -46,15 +41,11 @@ public class IdiotBot : BotTemplate
                 BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-
-                //Debug.Log("ANALYZING MOVE: " + piece.name + " to " + coords[0] + "," + coords[1]);
                 BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
 
-                //BotHelperFunctions.debug_printBoardState(cloneState);
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                 List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
-                //Dictionary<Piece, List<string>> allAbilitiesOpp = botMovesOpp.piecesAbilities;
 
                 //best simulated move opponent can make
                 Piece bestOppMovePiece;
@@ -67,7 +58,6 @@ public class IdiotBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
-                        //Debug.Log("ANALYZING OPP MOVE: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
                         BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
                         BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
@@ -78,8 +68,6 @@ public class IdiotBot : BotTemplate
                         List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, false);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                        //Debug.Log("ANALYZED MOVE: " + piece.name + " to " + coords[0] + "," + coords[1] + " botPoints: " + botPoints + " oppPoints: " + oppPoints);
 
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {
@@ -92,17 +80,28 @@ public class IdiotBot : BotTemplate
 
                 // Take the worst outcome assuming the opponent captures the highest value piece it can
                 if (bestOppMoveDiff <= worstMoveDiff) {
+                    if (bestOppMoveDiff < bestMoveDiff)
+                    {
+                        validMoves.Clear();
+                    }
+
                     worstMoveDiff = bestOppMoveDiff;
                     worstMoveCoords = coords;
                     worstMovePiece = realPiece;
+
+                    validMoves.Add(new Move(worstMovePiece, worstMoveCoords));
                 }
 
                 this.currentBoardState = originalBoardState;
             }
         }
 
-        Debug.Log("SENDING MOVE: " + worstMovePiece.name + " to " + worstMoveCoords[0] + "," + worstMoveCoords[1]);
+        System.Random rand = new System.Random();
+        int rndIdx = rand.Next(validMoves.Count);
 
+        Move sendMove = validMoves[rndIdx];
+
+        Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
         Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
         moveDict.Add(BotHelperFunctions.getOriginalPieceFromClone(worstMovePiece), worstMoveCoords);
 

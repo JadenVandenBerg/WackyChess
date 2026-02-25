@@ -104,9 +104,100 @@ public class BotGameStatus
     public int numTurns = 0;
 }
 
+public static readonly List<(int botOne, int botTwo)[]> botTournamentMatches =
+    new List<(int botOne, int botTwo)[]>
+{
+    new (int botOne, int botTwo)[]
+    {
+        (1, 8),
+        (2, 7),
+        (3, 6),
+        (4, 5)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 5),
+        (2, 6),
+        (3, 7),
+        (4, 8)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 2),
+        (3, 4),
+        (5, 6),
+        (7, 8)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 7),
+        (2, 4),
+        (3, 5),
+        (6, 8)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 3),
+        (2, 8),
+        (4, 6),
+        (5, 7)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 4),
+        (2, 3),
+        (5, 8),
+        (6, 7)
+    },
+    new (int botOne, int botTwo)[]
+    {
+        (1, 6),
+        (2, 5),
+        (3, 8),
+        (4, 7)
+    }
+};
 
-public static class botTournament {
-    public static List<BotTemplate> competingBots = new List<BotTemplate>();
+public class botTournament {
+    public List<string> competingBots = new List<string>();
+    public int round = 1;
+    public int match = 1;
+
+    public botTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight) {
+        competingBots.Add(botOne);
+        competingBots.Add(botTwo);
+        competingBots.Add(botThree);
+        competingBots.Add(botFour);
+        competingBots.Add(botFive);
+        competingBots.Add(botSix);
+        competingBots.Add(botSeven);
+        competingBots.Add(botEight);
+    }
+
+    public (string botWhite, string botBlack) nextGame() {
+        string botOne = botTournamentMatches[round - 1][match - 1][0];
+        string botTwo = botTournamentMatches[round - 1][match - 1][1];
+
+        match++;
+        if (match > 8) {
+            match = 1;
+            round++;
+
+            if (round > 8) {
+                return null;
+            }
+        }
+
+        Random rand = new System.Random();
+        int randNumber = rand.Next(1, 3);
+
+        if (randNumber == 1) {
+            return (botOne, botTwo);
+        }
+        else {
+            return (botTwo, botOne);
+        }
+    }
 }
 
 /*

@@ -43,12 +43,12 @@ public class botMaster : MonoBehaviour
         gameData.board = board2;
 
         botWhite = new OneMoveBot(1);
-        botBlack = new IdiotBot(-1);
+        botBlack = new OneMoveBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
-        bgs.white = "OneMoveBot";
-        bgs.black = "IdiotBot";
+        bgs.white = botWhite.name;
+        bgs.black = botBlack.name;
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
@@ -191,7 +191,7 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);
@@ -350,7 +350,7 @@ public class botMaster : MonoBehaviour
         }
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         isTurn = true;
 
         if (gameOver)

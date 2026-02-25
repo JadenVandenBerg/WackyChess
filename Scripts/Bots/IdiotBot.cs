@@ -22,6 +22,7 @@ public class IdiotBot : BotTemplate
         float worstMoveDiff = +1000;
 
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
+        BoardState ogBoardState = this.currentBoardState;
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
@@ -80,7 +81,7 @@ public class IdiotBot : BotTemplate
 
                 // Take the worst outcome assuming the opponent captures the highest value piece it can
                 if (bestOppMoveDiff <= worstMoveDiff) {
-                    if (bestOppMoveDiff < bestMoveDiff)
+                    if (bestOppMoveDiff < worstMoveDiff)
                     {
                         validMoves.Clear();
                     }

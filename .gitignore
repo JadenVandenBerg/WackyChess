@@ -85,7 +85,7 @@ crashlytics-build.properties
 /[Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Core/Property Providers.meta
 
 # Ignore all .meta files
-
+*.meta
 
 # Ignore Photon directory
 Photon/

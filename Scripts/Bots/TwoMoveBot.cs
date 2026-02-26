@@ -36,71 +36,15 @@ public class TwoMoveBot : BotTemplate
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
-        var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
-
         List<float> startPoints = BotHelperFunctions.getPointsOnBoardState(this.currentBoardState, true);
         float botPoints = this.color == 1 ? startPoints[0] : startPoints[1];
         float oppPoints = this.color == -1 ? startPoints[0] : startPoints[1];
 
         float startingDiff = botPoints - oppPoints;
 
-        List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
+        MoveState ogMoveState = new MoveState(this.currentBoardState, 0, 0, null, null);
+
         List<Move> validMoves = new List<Move>();
-
-        //Each piece
-        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            List<int[]> _mL = pieceMovesKeyVal.Value;
-
-            //Loop through moves
-            foreach(int[] coords in _mL) {
-                BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
-                BoardState originalBoardState = this.currentBoardState;
-                BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
-
-                this.currentBoardState = cloneState;
-                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
-                List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
-
-                //best simulated move opponent can make
-                float bestOppMoveDiff = +1000;
-                BoardState bestMoveOppBS = null;
-
-                foreach(Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp) {
-                    KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
-                    Piece pieceOpp = pieceMovesKeyValOpp.Key;
-                    List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
-
-                    foreach(int[] coordsOpp in _mLOpp) {
-                        BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
-                        BoardState originalBoardState_ = this.currentBoardState;
-                        BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                        BotHelperFunctions.simulatePieceMove(this, cloneState_, pieceOpp, coordsOpp);
-
-                        this.currentBoardState = originalBoardState_;
-
-                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, true);
-                        float botPoints_ = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        float oppPoints_ = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                        float diff = botPoints_ - oppPoints_;
-                        if (diff < bestOppMoveDiff) {
-                            bestOppMoveDiff = diff;
-                            bestMoveOppBS = cloneState_;
-                        }
-                    }
-                }
-
-                float realDiff = startingDiff - bestOppMoveDiff;
-
-                MoveState ms = new MoveState(bestMoveOppBS, 1, realDiff, piece, coords);
-                moveStates.Add(ms);
-
-                this.currentBoardState = originalBoardState;
-            }
-        }
 
         float bestDiff = -100;
         List<MoveState> bestMoveStates = new List<MoveState>();
@@ -120,7 +64,7 @@ public class TwoMoveBot : BotTemplate
         		}
         	}
 
-        	if (next.diff < -1 || next.moveIter >= 2) {
+        	if (next.diff < -5 || next.moveIter >= 2) {
         		continue;
         	}
 

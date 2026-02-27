@@ -33,8 +33,8 @@ public class OneMoveBot : BotTemplate
         int[] bestMoveCoords;
         float bestMoveDiff = -1000;
 
-        BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
-        this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+        //BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
+        //this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
@@ -50,10 +50,13 @@ public class OneMoveBot : BotTemplate
 
             //Loop through moves
             foreach(int[] coords in _mL) {
-                BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
+                //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                 BoardState originalBoardState = this.currentBoardState;
-                BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
+                //BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+                BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, piece, coords);
+
+                if (this.color == 1) Debug.LogWarning("Analyzing Move: " + piece.name + " to " + coords[0] + "," + coords[1]);
+                if (this.color == 1) BotHelperFunctions.debug_printBoardState(cloneState);
 
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
@@ -70,16 +73,18 @@ public class OneMoveBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
-                        BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
+                        //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
-                        BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                        BotHelperFunctions.simulatePieceMove(this, cloneState_, pieceOpp, coordsOpp);
+                        //BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
+                        BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
 
                         this.currentBoardState = originalBoardState_;
 
                         List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, true);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                        if (this.color == 1) Debug.LogWarning("Points on board after " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
 
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff) {

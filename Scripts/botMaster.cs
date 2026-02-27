@@ -232,7 +232,6 @@ public class botMaster : MonoBehaviour
             if (watchMS > 5000)
             {
                 currentBot.penalty = true;
-                valid = false;
                 movePieceObj = null;
 
                 Debug.Log("BOT HAS RECIEVED A PENALTY. MOVE TOOK " + watchMS + "ms.");
@@ -246,16 +245,14 @@ public class botMaster : MonoBehaviour
                     bgs.blackPenalties++;
                 }
             }
-            else
-            {
-                KeyValuePair<Piece, int[]> movePair = nextMove.First();
-                movePieceObj = movePair.Key;
-                moveCoords = movePair.Value;
 
-                Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+            KeyValuePair<Piece, int[]> movePair = nextMove.First();
+            movePieceObj = movePair.Key;
+            moveCoords = movePair.Value;
 
-                valid = botValidateMove(movePieceObj, moveCoords);
-            }
+            Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+
+            valid = botValidateMove(movePieceObj, moveCoords);
         }
 
         bool death = false;
@@ -298,7 +295,10 @@ public class botMaster : MonoBehaviour
         //currentBot.currentBoardState.refresh(gameData.boardGrid);
 
         if (!death && check == 0) {
-            movesWithoutCapture++;
+            if (turn == -1)
+            {
+                movesWithoutCapture++;
+            }
             subsequentChecks = 0;
         }
         else if (death) {

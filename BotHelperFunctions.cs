@@ -9,6 +9,7 @@ using Photon.Pun;
 using System.IO;
 using System.Collections;
 using System.Linq;
+using System.Text;
 
 public class BotHelperFunctions : MonoBehaviour
 {
@@ -440,6 +441,9 @@ public class BotHelperFunctions : MonoBehaviour
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
 
+        resetPiecePositions(null, bs.boardGrid);
+        //bs = copyBoardState(bs);
+
         if (color == 1 && bot.debug == true)
         {
            // Debug.Log("PRINTINT BS IN MOVE");
@@ -675,7 +679,7 @@ public class BotHelperFunctions : MonoBehaviour
                 jump = isolatedIsJump(piece, piece.position, newPosX, newPosY, bs);
                 if (!isBouncing && !isPortal)
                 {
-                    previousWasJump = true;
+                    previousWasJump = jump;
                 }
                 else
                 {
@@ -752,7 +756,7 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                if (isGhost && p.color != piece.color)
+                if (isGhost && p.color == piece.color)
                 {
                     // Your piece is a ghost, your piece
                     continue;
@@ -1249,14 +1253,19 @@ public class BotHelperFunctions : MonoBehaviour
         return death;
     }
 
-    public static void simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
+    public static BoardState simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
+
+        // Reset positions and clone bs
+        resetPiecePositions(null, bs.boardGrid);
+        bs = copyBoardState(bs);
+
 
         coords = new int[] { coords[0] - 1, coords[1] - 1 };
         //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
 
         if (coords[0] < 0 || coords[0] >= 8 || coords[1] < 0 || coords[1] >= 8)
         {
-            return;
+            return null;
         }
 
         //List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
@@ -1295,7 +1304,7 @@ public class BotHelperFunctions : MonoBehaviour
             PieceMove delayedMove = new PieceMove(piece, coords, 2);
             bs.delayedQueue.Enqueue(delayedMove);
 
-            return;
+            return bs;
         }
 
         List<Piece> piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(piece.position[0], piece.position[1], bs.boardGrid, false);
@@ -1397,6 +1406,8 @@ public class BotHelperFunctions : MonoBehaviour
                 if (bot.color == -1) bot.king = tempKing;
             }
         }
+
+        return bs;
     }
 
     public static bool isolatedIsPieceTypeOnBoard(string pieceType, int color, BoardState bs)
@@ -1798,7 +1809,10 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static void debug_printBoardState(BoardState bs)
     {
-        Debug.LogWarning("Pieces on Board State");
+        StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("Pieces on Board State");
+
         List<List<List<Piece>>> boardGrid = bs.boardGrid;
 
         for (int x = 0; x < 8; x++)
@@ -1807,17 +1821,19 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach(Piece p in boardGrid[x][y])
                 {
-                    Debug.LogWarning(p.name + " found on " + (x + 1) + "," + (y + 1));
+                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1));
                 }
             }
         }
 
-        Debug.LogWarning("Pieces on Board State END");
+        Debug.LogWarning(sb.ToString());
     }
 
     public static void debug_printBoardGrid(List<List<List<Piece>>> bg)
     {
-        Debug.LogWarning("Pieces on Board State");
+        StringBuilder sb = new StringBuilder();
+
+        sb.AppendLine("Pieces on Board Grid");
         List<List<List<Piece>>> boardGrid = bg;
 
         for (int x = 0; x < 8; x++)
@@ -1826,12 +1842,12 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach (Piece p in boardGrid[x][y])
                 {
-                    Debug.LogWarning(p.name + " found on " + (x + 1) + "," + (y + 1));
+                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1));
                 }
             }
         }
 
-        Debug.LogWarning("Pieces on Board State END");
+        Debug.LogWarning(sb.ToString());
     }
 
     public static Piece findPieceOnOtherBoardState(BoardState bs, string pName)

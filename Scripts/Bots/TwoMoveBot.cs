@@ -43,8 +43,7 @@ public class TwoMoveBot : BotTemplate
         float startingDiff = botPoints - oppPoints;
 
         MoveState ogMoveState = new MoveState(this.currentBoardState, 0, 0, null, null);
-
-        List<Move> validMoves = new List<Move>();
+        moveStates.Add(ogMoveState);
 
         float bestDiff = -100;
         List<MoveState> bestMoveStates = new List<MoveState>();
@@ -64,7 +63,7 @@ public class TwoMoveBot : BotTemplate
         		}
         	}
 
-        	if (next.diff < -5 || next.moveIter >= 2) {
+        	if (next.diff < -2 || next.moveIter >= 2) {
         		continue;
         	}
 
@@ -114,7 +113,15 @@ public class TwoMoveBot : BotTemplate
 
                     float realDiff = startingDiff - bestOppMoveDiff;
 
-                    MoveState ms = new MoveState(bestMoveOppBS, next.moveIter + 1, realDiff, next.leadingPiece, next.leadingCoords);
+                    MoveState ms;
+                    if (next.moveIter == 0)
+                    {
+                        ms = new MoveState(bestMoveOppBS, next.moveIter + 1, realDiff, piece_, coords);
+                    }
+                    else
+                    {
+                        ms = new MoveState(bestMoveOppBS, next.moveIter + 1, realDiff, next.leadingPiece, next.leadingCoords);
+                    }
                     moveStates.Add(ms);
                 }
             }
@@ -123,7 +130,7 @@ public class TwoMoveBot : BotTemplate
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(bestMoveStates.Count);
 
-        Piece sendP = bestMoveStates[rndIdx].leadingPiece;
+        Piece sendP = BotHelperFunctions.getOriginalPieceFromClone(bestMoveStates[rndIdx].leadingPiece);
         int[] sendC = bestMoveStates[rndIdx].leadingCoords;
 
         Move sendMove = new Move(sendP, sendC);

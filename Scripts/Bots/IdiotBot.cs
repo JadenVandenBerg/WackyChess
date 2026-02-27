@@ -21,9 +21,7 @@ public class IdiotBot : BotTemplate
         int[] worstMoveCoords = null;
         float worstMoveDiff = +1000;
 
-        BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
         BoardState ogBoardState = this.currentBoardState;
-        this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
@@ -34,15 +32,15 @@ public class IdiotBot : BotTemplate
         foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
-            Piece realPiece = BotHelperFunctions.findPieceOnOtherBoardState(ogBoardState, piece.name);
+            Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece);
             List<int[]> _mL = pieceMovesKeyVal.Value;
 
             //Loop through moves
             foreach(int[] coords in _mL) {                
-                BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
+                //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                 BoardState originalBoardState = this.currentBoardState;
-                BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                BotHelperFunctions.simulatePieceMove(this, cloneState, piece, coords);
+                //BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
+                BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, piece, coords);
 
                 this.currentBoardState = cloneState;
                 var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
@@ -59,10 +57,10 @@ public class IdiotBot : BotTemplate
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                     foreach(int[] coordsOpp in _mLOpp) {
-                        BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
+                        //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
                         BoardState originalBoardState_ = this.currentBoardState;
-                        BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                        BotHelperFunctions.simulatePieceMove(this, cloneState_, pieceOpp, coordsOpp);
+                        //BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
+                        BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
 
                         this.currentBoardState = originalBoardState_;
 

@@ -67,10 +67,10 @@ public class TwoMoveBot : BotTemplate
         		continue;
         	}
 
-        	BotHelperFunctions.resetPiecePositions(null, next.bs.boardGrid);
-        	BoardState clone = BotHelperFunctions.copyBoardState(next.bs);
+        	//BotHelperFunctions.resetPiecePositions(null, next.bs.boardGrid);
+        	//BoardState clone = BotHelperFunctions.copyBoardState(next.bs);
 
-        	var allBotMoves = BotHelperFunctions.getAllPossibleBotMoves(this, clone, this.color);
+        	var allBotMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
             List<Dictionary<Piece, List<int[]>>> allBotMoves_ = allBotMoves.pieceMoveList;
 
             foreach (Dictionary<Piece, List<int[]>> movePair in allBotMoves_) {
@@ -79,9 +79,9 @@ public class TwoMoveBot : BotTemplate
                 List<int[]> mL__ = pieceMovesKeyVal_.Value;
 
                 foreach (int[] coords in mL__) {
-                    BotHelperFunctions.resetPiecePositions(null, clone.boardGrid);
-                    BoardState cloneState = BotHelperFunctions.copyBoardState(next.bs);
-                    BotHelperFunctions.simulatePieceMove(this, cloneState, piece_, coords);
+                    //BotHelperFunctions.resetPiecePositions(null, clone.boardGrid);
+                    //BoardState cloneState = BotHelperFunctions.copyBoardState(next.bs);
+                    BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, next.bs, piece_, coords);
 
                     var botMovesOpp_ = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
                     List<Dictionary<Piece, List<int[]>>> allMovesOpp_ = botMovesOpp_.pieceMoveList;
@@ -95,9 +95,9 @@ public class TwoMoveBot : BotTemplate
                         List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
                         foreach (int[] coordsOpp in _mLOpp) {
-                            BotHelperFunctions.resetPiecePositions(null, cloneState.boardGrid);
-                            BoardState cloneState_ = BotHelperFunctions.copyBoardState(cloneState);
-                            BotHelperFunctions.simulatePieceMove(this, cloneState_, pieceOpp, coordsOpp);
+                            //BotHelperFunctions.resetPiecePositions(null, cloneState.boardGrid);
+                            //BoardState cloneState_ = BotHelperFunctions.copyBoardState(cloneState);
+                            BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, cloneState, pieceOpp, coordsOpp);
 
                             List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, true);
                             float botPoints_ = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];

@@ -226,12 +226,33 @@ public class BotHelperFunctions : MonoBehaviour
         return false;
     }
 
+    public static string removeDuplicateAbilities(string pieceAbilities)
+    {
+        if (!string.IsNullOrEmpty(pieceAbilities))
+        {
+            var unique = new List<string>();
+
+            foreach (var a in pieceAbilities.Split('-'))
+            {
+                if (!unique.Contains(a))
+                {
+                    unique.Add(a);
+                }
+            }
+
+            pieceAbilities = string.Join("-", unique);
+        }
+
+        return pieceAbilities;
+    }
+
     public static List<PieceAbility> getAllPossibleBotAbilities(BotTemplate bot, BoardState bs, int color) {
-        List<Piece> pieces = color == 1 ? bs.whitePieces : bs.blackPieces;
+        //List<Piece> pieces = color == 1 ? bs.whitePieces : bs.blackPieces;
+        List<Piece> pieces = getPiecesOnBoardState(bs, color);
         List<PieceAbility> pieceAbilities = new List<PieceAbility>();
 
         foreach(Piece piece in pieces) {
-            string[] abilityNames = piece.ability.Split("-");
+            string[] abilityNames = removeDuplicateAbilities(piece.ability).Split("-");
 
             foreach (string ability in abilityNames) {
                 if (ability == "Vomit")
@@ -430,7 +451,8 @@ public class BotHelperFunctions : MonoBehaviour
         {
             this.piece = piece;
             this.ability = ability;
-            this.coords = new int[] { coords[0], coords[1] };
+            this.coords = coords;
+            if (coords != null) this.coords = new int[] { coords[0], coords[1] };
             this.placePieces = placePieces;
             this.placeCoords = placeCoords;
             this.secondPiece = secondPiece;
@@ -438,7 +460,7 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     //List so its easier to randomize. Each Dict has only one entry
-    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, List<PieceAbility> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
 
         resetPiecePositions(null, bs.boardGrid);
@@ -465,7 +487,9 @@ public class BotHelperFunctions : MonoBehaviour
     		}
         }
 
-        return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+        List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
+
+        return (totalMoves, pieceAbility);
     }
 
     public static List<Piece> getPiecesOnBoardState(BoardState bs, int color)
@@ -793,7 +817,7 @@ public class BotHelperFunctions : MonoBehaviour
                     return false;
                 }
 
-                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX, newY, bs.boardGrid, false);
+                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX - 1, newY - 1, bs.boardGrid, false);
 
                 if (piecesOnCoords.Count > 0) {
                     break;
@@ -1068,7 +1092,6 @@ public class BotHelperFunctions : MonoBehaviour
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
         //TODO add abilities
-        Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
 
         System.Random rand = new System.Random();
 

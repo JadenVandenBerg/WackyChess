@@ -43,7 +43,7 @@ public class botMaster : MonoBehaviour
         gameData.board = board2;
 
         botWhite = new OneMoveBot(1);
-        botBlack = new OneMoveBot(-1);
+        botBlack = new SavageBeastBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -179,6 +179,7 @@ public class botMaster : MonoBehaviour
     int subsequentChecks = 0;
 
     bool gameOver = false;
+    bool kingDead = false;
 
     void Update()
     {
@@ -294,6 +295,42 @@ public class botMaster : MonoBehaviour
         turn *= -1;
         //currentBot.currentBoardState.refresh(gameData.boardGrid);
 
+        if (!HelperFunctions.isPieceBaseTypeOnBoard("King", 1))
+        {
+            if (HelperFunctions.isPieceBaseTypeOnBoard("King", -1))
+            {
+                Debug.Log("Game Over - King Death");
+                bgs.result = "Won by opposing king death";
+                bgs.winner = "Black";
+            }
+            else
+            {
+                Debug.Log("Game Over - Tie");
+                bgs.result = "Draw by both kings death";
+            }
+
+            kingDead = true;
+            gameOver = true;
+        }
+
+        if (!HelperFunctions.isPieceBaseTypeOnBoard("King", -1))
+        {
+            if (HelperFunctions.isPieceBaseTypeOnBoard("King", 1))
+            {
+                Debug.Log("Game Over - King Death");
+                bgs.result = "Won by opposing king death";
+                bgs.winner = "White";
+            }
+            else
+            {
+                Debug.Log("Game Over - Tie");
+                bgs.result = "Draw by both kings death";
+            }
+
+            kingDead = true;
+            gameOver = true;
+        }
+
         if (!death && check == 0) {
             if (turn == -1)
             {
@@ -309,7 +346,7 @@ public class botMaster : MonoBehaviour
             subsequentChecks++;
         }
 
-        if (subsequentChecks > 8 || movesWithoutCapture > 30) {
+        if (subsequentChecks > 8 || movesWithoutCapture > 25) {
             //GAME OVER, go to next match
             Debug.Log("Game Over - Tie");
             gameOver = true;
@@ -341,10 +378,12 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                Debug.Log("Game Over - Stalemate");
-                bgs.result = "Draw by Stalemate";
+                if (!kingDead)
+                {
+                    Debug.Log("Game Over - Stalemate");
+                    bgs.result = "Draw by Stalemate";
+                }
             }
-            
 
             gameOver = true;
         }

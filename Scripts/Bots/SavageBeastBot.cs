@@ -1,27 +1,15 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 using System.Linq;
 
-class Move
+public class SavageBeastBot : BotTemplate
 {
-    public Piece p;
-    public int[] coords;
-
-    public Move(Piece piece, int[] coords)
-    {
-        this.p = piece;
-        this.coords = coords;
-    }
-}
-
-public class OneMoveBot : BotTemplate
-{
-    public OneMoveBot(int botColor)
+    public SavageBeastBot(int botColor)
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "One Move Bot";
+        name = "Savage Beastbot";
 
         choosePieces();
     }
@@ -31,36 +19,24 @@ public class OneMoveBot : BotTemplate
     {
         Piece bestMovePiece;
         int[] bestMoveCoords;
-        float bestMoveDiff = -1000;
+        int bestBoardControlDiff = -1000;
 
         var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
 
         List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
-        List<BotHelperFunctions.PieceAbility> pieceAbilities = botMovesCLONE.piecesAbilities;
-
-        Debug.Log(this.name + " has " + pieceAbilities.Count + " abilities.");
-        foreach (BotHelperFunctions.PieceAbility pa in pieceAbilities)
-        {
-            Debug.Log("Piece " + pa.piece.name + " has ability: " + pa.ability);
-
-            if (pa.ability == "Spawn")
-            {
-                Debug.Log(pa.ability + " on " + pa.coords[0] + "," + pa.coords[1]);
-            }
-        }
-
-
         List<Move> validMoves = new List<Move>();
 
         //Each piece
-        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
+        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE)
+        {
             KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
             Piece piece = pieceMovesKeyVal.Key;
             Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece);
             List<int[]> _mL = pieceMovesKeyVal.Value;
 
             //Loop through moves
-            foreach(int[] coords in _mL) {
+            foreach (int[] coords in _mL)
+            {
                 BoardState originalBoardState = this.currentBoardState;
                 BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, piece, coords);
 
@@ -75,17 +51,24 @@ public class OneMoveBot : BotTemplate
                 Piece bestOppMovePiece;
                 int[] bestOppMoveCoords;
                 float bestOppMoveDiff = +1000;
+                int bestOppBoardControlDiff = +1000;
 
-                foreach(Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp) {
+                foreach (Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp)
+                {
                     KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
                     Piece pieceOpp = pieceMovesKeyValOpp.Key;
                     List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
-                    foreach(int[] coordsOpp in _mLOpp) {
+                    foreach (int[] coordsOpp in _mLOpp)
+                    {
                         BoardState originalBoardState_ = this.currentBoardState;
                         BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
 
                         this.currentBoardState = originalBoardState_;
+
+                        List<int> boardControlOnBS = getBoardControlOnBoardState(cloneState_);
+                        int botBoardControl = this.color == 1 ? boardControlOnBS[0] : boardControlOnBS[1];
+                        int oppBoardControl = this.color == -1 ? boardControlOnBS[0] : boardControlOnBS[1];
 
                         List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, true);
                         float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
@@ -94,22 +77,25 @@ public class OneMoveBot : BotTemplate
                         //if (this.color == 1) Debug.LogWarning("Points on board after " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
 
                         float diff = botPoints - oppPoints;
-                        if (diff < bestOppMoveDiff) {
+                        if (diff < bestOppMoveDiff)
+                        {
                             bestOppMoveDiff = diff;
                             bestOppMovePiece = pieceOpp;
                             bestOppMoveCoords = coordsOpp;
+                            bestOppBoardControlDiff = botBoardControl - oppBoardControl;
                         }
                     }
                 }
 
                 // Take the best outcome assuming the opponent captures the highest value piece it can
-                if (bestOppMoveDiff >= bestMoveDiff) {
-                    if (bestOppMoveDiff > bestMoveDiff)
+                if (bestOppBoardControlDiff >= bestBoardControlDiff)
+                {
+                    if (bestOppBoardControlDiff > bestBoardControlDiff)
                     {
                         validMoves.Clear();
                     }
 
-                    bestMoveDiff = bestOppMoveDiff;
+                    bestBoardControlDiff = bestOppBoardControlDiff;
                     bestMoveCoords = coords;
                     bestMovePiece = realPiece;
 
@@ -130,5 +116,52 @@ public class OneMoveBot : BotTemplate
         moveDict.Add(sendMove.p, sendMove.coords);
 
         return moveDict;
+    }
+
+    private List<int> getBoardControlOnBoardState(BoardState bs)
+    {
+        List<int> boardControl = new List<int>();
+
+        var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
+        List<Dictionary<Piece, List<int[]>>> listBotWhiteMoves = botMovesWhite.pieceMoveList;
+
+        var botMovesBlack = BotHelperFunctions.getAllPossibleBotMoves(this, bs, -1);
+        List<Dictionary<Piece, List<int[]>>> listBotBlackMoves = botMovesBlack.pieceMoveList;
+
+        List<int[]> uniqueCoords = new List<int[]>();
+        foreach(Dictionary<Piece, List<int[]>> movePair in listBotWhiteMoves)
+        {
+            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
+            Piece piece = pieceMovesKeyVal.Key;
+            List<int[]> _mL = pieceMovesKeyVal.Value;
+
+            foreach (int[] coords in _mL)
+            {
+                if (!uniqueCoords.Contains(coords))
+                {
+                    uniqueCoords.Add(coords);
+                }
+            }
+        }
+        boardControl.Add(uniqueCoords.Count);
+
+        uniqueCoords = new List<int[]>();
+        foreach (Dictionary<Piece, List<int[]>> movePair in listBotBlackMoves)
+        {
+            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
+            Piece piece = pieceMovesKeyVal.Key;
+            List<int[]> _mL = pieceMovesKeyVal.Value;
+
+            foreach (int[] coords in _mL)
+            {
+                if (!uniqueCoords.Contains(coords))
+                {
+                    uniqueCoords.Add(coords);
+                }
+            }
+        }
+        boardControl.Add(uniqueCoords.Count);
+
+        return boardControl;
     }
 }

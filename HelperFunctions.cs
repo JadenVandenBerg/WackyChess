@@ -1653,7 +1653,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Hungry
-        if (checkState(attackerPiece, "Hungry"))
+        if (checkState(attackerPiece, "Hungry")) //TODO deadPiece
         {
             if (attackerPiece.storage == null)
             {
@@ -1828,7 +1828,7 @@ public class HelperFunctions : MonoBehaviour
             }
 
             //Collateral (Attackee)
-            if (deadPiece.collateralType == 1)
+            if (deadPiece.collateralType == 1) //Kill on death
             {
                 if (isPieceSurroundingState(deadPiece, "Defuser"))
                 {
@@ -2447,6 +2447,12 @@ public class HelperFunctions : MonoBehaviour
 
         int x1 = findCoords(s1)[0];
         int x2 = findCoords(s2)[0];
+
+        if (x1 == x2)
+        {
+            return new List<Piece>();
+        }
+
         int dir = (x1 - x2) / Math.Abs(x1 - x2);
 
 
@@ -2621,7 +2627,22 @@ public class HelperFunctions : MonoBehaviour
         }
         else
         {
-            piece.ability = piece.ability + "-" + ability;
+            var abilities = piece.ability.Split('-');
+
+            bool exists = false;
+            foreach (var a in abilities)
+            {
+                if (a == ability)
+                {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists)
+            {
+                piece.ability += "-" + ability;
+            }
         }
     }
 
@@ -2888,7 +2909,7 @@ public class HelperFunctions : MonoBehaviour
         {
             for (int j = 0; j < 8; j++)
             {
-                List<Piece> pieces = getPiecesOnSquareBoardGrid(findSquare(i, j));
+                List<Piece> pieces = getPiecesOnSquareBoardGrid(findSquare(i + 1, j + 1));
                 allPieces.AddRange(pieces);
             }
         }
@@ -2924,6 +2945,20 @@ public class HelperFunctions : MonoBehaviour
         foreach(Piece p in pieces)
         {
             if (p.name.Contains(pieceType) && p.color == color)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static bool isPieceBaseTypeOnBoard(string pieceType, int color)
+    {
+        List<Piece> pieces = getPiecesOnBoard();
+        foreach (Piece p in pieces)
+        {
+            if (p.baseType == pieceType && p.color == color)
             {
                 return true;
             }
@@ -3058,8 +3093,6 @@ public class HelperFunctions : MonoBehaviour
     // 2 = checkmate
     public int movePiece_(Piece piece, int[] coords)
     {
-        tempInfo.attackerDied = false;
-
         //Delayed Piece Move
         if (tempInfo.delayedQueue == null)
         {
@@ -3121,15 +3154,14 @@ public class HelperFunctions : MonoBehaviour
 
         if (!tempInfo.attackerDied) {
             movePieceBoardGrid(piece, piece.position, coords);
+            piece.hasMoved = true;
+            movePiece(piece, toAppend);
         }
         else {
             updateBoardGrid(piece.position, piece, "r");
         }
-        
+        tempInfo.attackerDied = false;
         //Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
-
-        piece.hasMoved = true;
-        movePiece(piece, toAppend);
 
         if (checkState(piece, "Piggyback"))
         {
@@ -3769,7 +3801,7 @@ public class HelperFunctions : MonoBehaviour
         clone.promotingRow = original.promotingRow;
         clone.canMoveTwice = original.canMoveTwice;
         clone.storageLimit = original.storageLimit;
-        clone.storage = null;
+        clone.storage = original.storage;
         clone.moves = clone2dArray(original.moves);
         clone.oneTimeMoves = clone2dArray(original.oneTimeMoves);
         clone.moveAndAttacks = clone2dArray(original.moveAndAttacks);

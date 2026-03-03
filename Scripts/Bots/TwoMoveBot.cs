@@ -30,7 +30,7 @@ public class TwoMoveBot : BotTemplate
 	}
 
 	override
-    public Dictionary<Piece, int[]> nextMove()
+    public NextMove nextMove()
     {
         List<MoveState> moveStates = new List<MoveState>();
         BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
@@ -136,9 +136,11 @@ public class TwoMoveBot : BotTemplate
         Move sendMove = new Move(sendP, sendC);
 
         Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
-        Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(sendMove.p, sendMove.coords);
+        //Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
+        //moveDict.Add(sendMove.p, sendMove.coords);
 
-        return moveDict;
+        NextMove move = new NextMove(sendMove);
+
+        return move;
     }
 }

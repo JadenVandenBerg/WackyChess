@@ -12,6 +12,7 @@ using Photon.Pun;
 using System.Linq;
 using System.IO;
 using System.Text;
+using static BotHelperFunctions;
 
 public class botMaster : MonoBehaviour
 {
@@ -216,6 +217,8 @@ public class botMaster : MonoBehaviour
             currentBot = botBlack;
         }
 
+        NextMove selectedMove = null;
+
         if (currentBot.penalty)
         {
             Debug.Log("Bot " + currentBot.name + " has a penalty. Executing random move");
@@ -225,7 +228,27 @@ public class botMaster : MonoBehaviour
         else
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            Dictionary<Piece, int[]> nextMove = currentBot.nextMove();
+            NextMove nextMove = currentBot.nextMove();
+
+            Move mv = null;
+            PieceAbility pa = null;
+            if (nextMove.moveType == "move")
+            {
+                mv = nextMove.move;
+
+                movePieceObj = mv.p;
+                moveCoords = mv.coords;
+            }
+            else if (nextMove.moveType == "ability")
+            {
+                pa = nextMove.ability;
+
+                movePieceObj = pa.piece;
+                moveCoords = pa.coords;
+            }
+
+            selectedMove = nextMove;
+
             watch.Stop();
 
             watchMS = watch.ElapsedMilliseconds;
@@ -247,13 +270,16 @@ public class botMaster : MonoBehaviour
                 }
             }
 
-            KeyValuePair<Piece, int[]> movePair = nextMove.First();
-            movePieceObj = movePair.Key;
-            moveCoords = movePair.Value;
-
             Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
 
-            valid = botValidateMove(movePieceObj, moveCoords);
+            if (nextMove.moveType == "move")
+            {
+                valid = botValidateMove(movePieceObj, moveCoords);
+            } else
+            {
+                valid = false;
+                //TODO
+            }
         }
 
         bool death = false;
@@ -266,8 +292,16 @@ public class botMaster : MonoBehaviour
             gameData.selectedToMovePiece = movePieceObj;
 
             Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
-            death = helper.performPreMove();
-            check = helper.movePiece_(movePieceObj, moveCoords);
+            if (selectedMove.moveType == "move")
+            {
+                death = helper.performPreMove();
+                check = helper.movePiece_(movePieceObj, moveCoords);
+            }
+            else
+            {
+                //TODO check and death
+                helper.executeAbility(selectedMove.ability);
+            }
         }
         else
         {
@@ -288,8 +322,16 @@ public class botMaster : MonoBehaviour
             gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
             gameData.selectedToMovePiece = randomMove.piece;
 
-            death = helper.performPreMove();
-            check = helper.movePiece_(randomMove.piece, randomMove.coords);
+            if (selectedMove.moveType == "move")
+            {
+                death = helper.performPreMove();
+                check = helper.movePiece_(movePieceObj, moveCoords);
+            }
+            else
+            {
+                //TODO check and death
+                helper.executeAbility(selectedMove.ability);
+            }
         }
 
         turn *= -1;
@@ -399,6 +441,8 @@ public class botMaster : MonoBehaviour
         }
 
         //Check if check/update bot boardstate
+
+        HelperFunctions.resetBoardColours();
     }
 
     public bool botValidateMove(Piece piece, int[] coords) {

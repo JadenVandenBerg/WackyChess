@@ -440,12 +440,12 @@ public class BotHelperFunctions : MonoBehaviour
 
     public class PieceAbility
     {
-        public Piece piece;
-        public string ability;
-        public int[] coords;
-        public List<Piece> placePieces;
-        public List<int[]> placeCoords;
-        public Piece secondPiece;
+        public Piece piece; //The piece with the ability
+        public string ability; //Ability name
+        public int[] coords; //Coords for abilities with one action (ie. Spawning, Freezing)
+        public List<Piece> placePieces; //Pieces for abilities with multiple actions. Only hungry for now
+        public List<int[]> placeCoords; //Coords for abilities with multiple actions. Only hungry for now
+        public Piece secondPiece; //The second piece used in abilities. Used for castling/spawning
 
         public PieceAbility(Piece piece, string ability, int[] coords, List<Piece> placePieces, List<int[]> placeCoords, Piece secondPiece)
         {

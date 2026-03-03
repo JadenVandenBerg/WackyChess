@@ -15,7 +15,7 @@ public class IdiotBot : BotTemplate
     }
 
     override
-    public Dictionary<Piece, int[]> nextMove()
+    public NextMove nextMove()
     {
         Piece worstMovePiece = null;
         int[] worstMoveCoords = null;
@@ -101,9 +101,11 @@ public class IdiotBot : BotTemplate
         Move sendMove = validMoves[rndIdx];
 
         Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
-        Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(BotHelperFunctions.getOriginalPieceFromClone(worstMovePiece), worstMoveCoords);
+        //Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
+        //moveDict.Add(sendMove.p, sendMove.coords);
 
-        return moveDict;
+        NextMove move = new NextMove(sendMove);
+
+        return move;
     }
 }

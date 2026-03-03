@@ -9,6 +9,27 @@ using Photon.Pun;
 using System.IO;
 using System.Collections;
 using System.Linq;
+using static BotHelperFunctions;
+
+public class NextMove
+{
+	public string moveType; //move, ability
+	public Move move;
+	public PieceAbility ability;
+
+	public NextMove(Move move)
+    {
+		this.moveType = "move";
+		this.move = move;
+    }
+
+	public NextMove(PieceAbility pa)
+    {
+		this.moveType = "ability";
+		this.ability = pa;
+    }
+}
+
 public abstract class BotTemplate {
 	//TODO make sure these are set appropriately
 	public BoardState currentBoardState { get; set; } = new BoardState();
@@ -60,7 +81,7 @@ public abstract class BotTemplate {
 	//Piece: The piece to be moved
 	//int[]: 1-indexed coords to move the piece ([1,1]:[8,8])
 	abstract
-	public Dictionary<Piece, int[]> nextMove();
+	public NextMove nextMove();
 }
 
 //TODO make sure these are updated

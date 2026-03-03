@@ -207,7 +207,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static void resetBoardColours()
     {
-        Debug.Log("Reset Board Colours");
+        //Debug.Log("Reset Board Colours");
 
         gameData.isSelected = false;
         //gameData.selected = null;
@@ -1624,6 +1624,17 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    public static void onDeathsDontIncludeAttacker(Piece attackerPiece, GameObject attacker, GameObject squareDead)
+    {
+        List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(squareDead));
+        pieces.Remove(attackerPiece);
+
+        foreach (Piece piece in pieces)
+        {
+            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+            onDeath(piece, piece.go, attackerPiece, attacker);
+        }
+    }
 
     //TODO test for potential bug in killing dematerialized pieces that are stacked on other pieces
     public static void onDeath(Piece deadPiece, GameObject dead, Piece attackerPiece, GameObject attacker)
@@ -3080,6 +3091,183 @@ public class HelperFunctions : MonoBehaviour
         checkmateUI.SetActive(true);
     }
 
+    public void executeAbility(BotHelperFunctions.PieceAbility pieceAbility)
+    {
+        Piece piece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.piece);
+        string ability = pieceAbility.ability;
+        int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
+
+        List<Piece> placePieces = new List<Piece>();
+        foreach (Piece placePiece in pieceAbility.placePieces)
+        {
+            placePieces.Add(BotHelperFunctions.getOriginalPieceFromClone(placePiece));
+        }
+        List<int[]> placeCoords = pieceAbility.placeCoords;
+        Piece secondPiece = pieceAbility.secondPiece;
+        
+        if (ability == "Vomit")
+        {
+            int numPieces = placePieces.Count;
+            int numCoords = placeCoords.Count;
+
+            string debugMsg = "Ability: Vomit -> ";
+            foreach(Piece _p in placePieces)
+            {
+                debugMsg += _p.name + ", ";
+            }
+            Debug.LogWarning(debugMsg);
+
+            if (numPieces >= numCoords)
+            {
+                foreach (int[] coords_ in placeCoords)
+                {
+                    System.Random rand = new System.Random();
+                    int idx = rand.Next(numPieces);
+
+                    Piece p_ = placePieces[idx];
+                    placePieces.Remove(p_);
+
+                    updateBoardGrid(coords_, p_, "a");
+                    restorePieceImageToBoard(p_);
+                    initPiece(p_, coords_);
+
+                    piece.storage.Remove(p_);
+                }
+
+                foreach(Piece p_ in placePieces)
+                {
+                    piece.storage.Remove(p_);
+                    forceRemove(p_);
+                }
+            }
+            else
+            {
+                foreach (Piece p_ in placePieces)
+                {
+                    System.Random rand = new System.Random();
+                    int idx = rand.Next(numCoords);
+
+                    int[] c_ = placeCoords[idx];
+                    placeCoords.Remove(c_);
+
+                    updateBoardGrid(c_, p_, "a");
+                    restorePieceImageToBoard(p_);
+                    initPiece(p_, c_);
+
+                    piece.storage.Remove(p_);
+                }
+            }
+        }
+        else if (ability == "CastleLeft")
+        {
+            Debug.LogWarning("Ability: CastleLeft -> " + piece.name + " " + secondPiece.name);
+            int[] kingCoords = coords;
+            int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
+
+            //King
+            movePieceBoardGrid(piece, piece.position, kingCoords);
+            //Rook
+            movePieceBoardGrid(secondPiece, secondPiece.position, rookCoords);
+
+            piece.hasMoved = true;
+            secondPiece.hasMoved = true;
+
+            removeAbility(piece, "CastleLeft");
+            removeAbility(piece, "CastleRight");
+        }
+        else if (ability == "CastleRight")
+        {
+            Debug.LogWarning("Ability: CastleRight -> " + piece.name + " " + secondPiece.name);
+            int[] kingCoords = coords;
+            int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
+
+            //King
+            movePieceBoardGrid(piece, piece.position, kingCoords);
+            //Rook
+            movePieceBoardGrid(secondPiece, secondPiece.position, rookCoords);
+
+            piece.hasMoved = true;
+            secondPiece.hasMoved = true;
+
+            removeAbility(piece, "CastleLeft");
+            removeAbility(piece, "CastleRight");
+        }
+        else if (ability == "Unfreeze")
+        {
+            Debug.LogWarning("Ability: Unfreeze -> " + piece.name);
+            removeState(piece, "Frozen");
+        }
+        else if (ability == "Freeze")
+        {
+            Debug.LogWarning("Ability: Freeze -> " + piece.name);
+            addState(secondPiece, "Frozen");
+        }
+        else if (ability == "Spawn")
+        {
+            Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords[0] + "," + coords[1]);
+
+            Piece spawned = Spawnables.create(piece.spawnable, piece.color);
+            piece.numSpawns--;
+            initPiece(spawned, coords);
+        }
+        else if (ability == "Spit")
+        {
+            Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
+
+            collateralDeath(getPiecesOnSquare(findSquare(coords[0], coords[1])));
+
+            initPiece(secondPiece, coords);
+            updateBoardGrid(coords, secondPiece, "a");
+            restorePieceImageToBoard(secondPiece);
+
+            piece.storage.Remove(secondPiece);
+        }
+        else if (ability == "Dematerialize")
+        {
+            Debug.LogWarning("Ability: Dematerialize -> " + piece.name);
+
+            addState(piece, "Dematerialized");
+            removeAbility(piece, "Dematerialize");
+            addAbility(piece, "Materialize");
+
+            Image img = piece.go.GetComponent<Image>();
+            Color c = img.color;
+            c.a = 0.5f;
+            img.color = c;
+            resetBoardColours();
+        }
+        else if (ability == "Materialize")
+        {
+            Debug.LogWarning("Ability: Materialize -> " + piece.name);
+
+            removeState(piece, "Dematerialized");
+            addAbility(piece, "Dematerialize");
+            removeAbility(piece, "Materialize");
+
+            onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords[0], coords[1]));
+
+            Image img = piece.go.GetComponent<Image>();
+            Color c = img.color;
+            c.a = 1f;
+            img.color = c;
+            resetBoardColours();
+        }
+        else if (ability == "Split")
+        {
+            Debug.LogWarning("Ability: Split -> " + piece.name);
+
+            removeAbility(piece, "Split");
+
+            forceRemove(piece);
+
+            Piece leftPawn = Spawnables.create("LeftPawn", piece.color);
+            initPiece(leftPawn, coords);
+
+            Piece rightPawn = Spawnables.create("RightPawn", piece.color);
+            initPiece(rightPawn, coords);
+        }
+    }
+
     [PunRPC]
     public void MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
@@ -3708,10 +3896,6 @@ public class HelperFunctions : MonoBehaviour
             piece.hasMoved = true;
             movePieceBoardGrid(piece, piece.position, coords);
             movePiece(piece, square);
-        }
-        else
-        {
-            Debug.Log("Move Invalid");
         }
     }
 

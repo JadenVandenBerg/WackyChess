@@ -13,16 +13,15 @@ public class RandomBot : BotTemplate
     }
 
     override
-    public Dictionary<Piece, int[]> nextMove()
+    public NextMove nextMove()
     {
         this.currentBoardState.refresh(gameData.boardGrid);
         var move = BotHelperFunctions.getRandomBotMove(this);
         Piece piece = move.piece;
         int[] coords = move.coords;
 
-        Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(piece, coords);
-
-        return moveDict;
+        Move sendMove = new Move(piece, coords);
+        NextMove move_ = new NextMove(sendMove);
+        return move_;
     }
 }

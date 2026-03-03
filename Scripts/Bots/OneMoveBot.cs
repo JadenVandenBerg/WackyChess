@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
-class Move
+public class Move
 {
     public Piece p;
     public int[] coords;
@@ -27,7 +27,7 @@ public class OneMoveBot : BotTemplate
     }
 
     override
-    public Dictionary<Piece, int[]> nextMove()
+    public NextMove nextMove()
     {
         Piece bestMovePiece;
         int[] bestMoveCoords;
@@ -126,9 +126,11 @@ public class OneMoveBot : BotTemplate
         Move sendMove = validMoves[rndIdx];
 
         Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
-        Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        moveDict.Add(sendMove.p, sendMove.coords);
+        //Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
+        //moveDict.Add(sendMove.p, sendMove.coords);
 
-        return moveDict;
+        NextMove move = new NextMove(sendMove);
+
+        return move;
     }
 }

@@ -3,33 +3,36 @@ using UnityEngine;
 using System.Collections;
 using System.Linq;
 
-class MoveState {
-	public BoardState bs;
-	public int moveIter = 0;
-	public float diff = 0;
-	public Piece leadingPiece;
-	public int[] leadingCoords = new int[] { };
+class MoveState
+{
+    public BoardState bs;
+    public int moveIter = 0;
+    public float diff = 0;
+    public Piece leadingPiece;
+    public int[] leadingCoords = new int[] { };
 
-	public MoveState(BoardState bs, int moveIter, float diff, Piece leadingPiece, int[] leadingCoords) {
-		this.bs = bs;
-		this.moveIter = moveIter;
-		this.diff = diff;
-		this.leadingPiece = leadingPiece;
-		this.leadingCoords = leadingCoords;
-	}
+    public MoveState(BoardState bs, int moveIter, float diff, Piece leadingPiece, int[] leadingCoords)
+    {
+        this.bs = bs;
+        this.moveIter = moveIter;
+        this.diff = diff;
+        this.leadingPiece = leadingPiece;
+        this.leadingCoords = leadingCoords;
+    }
 }
 
 public class TwoMoveBot : BotTemplate
 {
-	public TwoMoveBot(int botColor) {
-		color = botColor;
-		pieces = new List<Piece>();
-		name = "Two Move Bot";
+    public TwoMoveBot(int botColor)
+    {
+        color = botColor;
+        pieces = new List<Piece>();
+        name = "Two Move Bot";
 
-		choosePieces();
-	}
+        choosePieces();
+    }
 
-	override
+    override
     public NextMove nextMove()
     {
         List<MoveState> moveStates = new List<MoveState>();
@@ -48,37 +51,61 @@ public class TwoMoveBot : BotTemplate
         float bestDiff = -100;
         List<MoveState> bestMoveStates = new List<MoveState>();
 
-        while (moveStates.Count > 0) {
-        	MoveState next = moveStates[0];
-        	moveStates.Remove(next);
+        while (moveStates.Count > 0)
+        {
+            MoveState next = moveStates[0];
+            moveStates.Remove(next);
 
-        	if (next.moveIter >= 2) {
-        		if (next.diff >= bestDiff) {
-        			if (next.diff > bestDiff) {
-        				bestMoveStates.Clear();
-        			}
+            if (next.moveIter >= 2)
+            {
+                if (next.diff >= bestDiff)
+                {
+                    if (next.diff > bestDiff)
+                    {
+                        bestMoveStates.Clear();
+                    }
 
-        			bestMoveStates.Add(next);
-        			bestDiff = next.diff;
-        		}
-        	}
+                    bestMoveStates.Add(next);
+                    bestDiff = next.diff;
+                }
+            }
 
-        	if (next.diff < -2 || next.moveIter >= 2) {
-        		continue;
-        	}
+            if (next.diff < -2 || next.moveIter >= 2)
+            {
+                continue;
+            }
 
-        	//BotHelperFunctions.resetPiecePositions(null, next.bs.boardGrid);
-        	//BoardState clone = BotHelperFunctions.copyBoardState(next.bs);
+            //Don't look at next move if no captures
+            if (next.diff == 0 && next.moveIter != 0)
+            {
+                if (next.diff >= bestDiff)
+                {
+                    if (next.diff > bestDiff)
+                    {
+                        bestMoveStates.Clear();
+                    }
 
-        	var allBotMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
+                    bestMoveStates.Add(next);
+                    bestDiff = next.diff;
+                }
+
+                continue;
+            }
+
+            //BotHelperFunctions.resetPiecePositions(null, next.bs.boardGrid);
+            //BoardState clone = BotHelperFunctions.copyBoardState(next.bs);
+
+            var allBotMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
             List<Dictionary<Piece, List<int[]>>> allBotMoves_ = allBotMoves.pieceMoveList;
 
-            foreach (Dictionary<Piece, List<int[]>> movePair in allBotMoves_) {
+            foreach (Dictionary<Piece, List<int[]>> movePair in allBotMoves_)
+            {
                 KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal_ = movePair.First();
                 Piece piece_ = pieceMovesKeyVal_.Key;
                 List<int[]> mL__ = pieceMovesKeyVal_.Value;
 
-                foreach (int[] coords in mL__) {
+                foreach (int[] coords in mL__)
+                {
                     //BotHelperFunctions.resetPiecePositions(null, clone.boardGrid);
                     //BoardState cloneState = BotHelperFunctions.copyBoardState(next.bs);
                     BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, next.bs, piece_, coords);
@@ -89,12 +116,14 @@ public class TwoMoveBot : BotTemplate
                     BoardState bestMoveOppBS = null;
                     float bestOppMoveDiff = +1000;
 
-                    foreach (Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp_) {
+                    foreach (Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp_)
+                    {
                         KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
                         Piece pieceOpp = pieceMovesKeyValOpp.Key;
                         List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
 
-                        foreach (int[] coordsOpp in _mLOpp) {
+                        foreach (int[] coordsOpp in _mLOpp)
+                        {
                             //BotHelperFunctions.resetPiecePositions(null, cloneState.boardGrid);
                             //BoardState cloneState_ = BotHelperFunctions.copyBoardState(cloneState);
                             BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, cloneState, pieceOpp, coordsOpp);
@@ -104,7 +133,8 @@ public class TwoMoveBot : BotTemplate
                             float oppPoints_ = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
                             float diff = botPoints_ - oppPoints_;
-                            if (diff < bestOppMoveDiff) {
+                            if (diff < bestOppMoveDiff)
+                            {
                                 bestOppMoveDiff = diff;
                                 bestMoveOppBS = cloneState_;
                             }

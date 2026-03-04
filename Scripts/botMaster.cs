@@ -43,7 +43,7 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new OneMoveBot(1);
+        botWhite = new Bloodbot(1);
         botBlack = new SavageBeastBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
@@ -54,6 +54,20 @@ public class botMaster : MonoBehaviour
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
         List<Piece> botWhitePawns = BotHelperFunctions.filterPieces("Pawn", botWhite.pieces);
+        /*
+        List<Piece> botWhitePawns = new List<Piece>
+        {
+            getPieceTypeInstance("JockeyPawn", 1),
+            getPieceTypeInstance("TwoPawnDLDR", 1),
+            getPieceTypeInstance("HungryPawn", 1),
+            getPieceTypeInstance("TwoPawnLR", 1),
+            getPieceTypeInstance("FragilePawn", 1),
+            getPieceTypeInstance("PAWN", 1),
+            getPieceTypeInstance("JailPawn", 1),
+            getPieceTypeInstance("LeftPawn", 1),
+        };
+        */
+
         HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
         HelperFunctions.initPiece(botWhitePawns[1], new int[] { 2, 2 });
         HelperFunctions.initPiece(botWhitePawns[2], new int[] { 3, 2 });
@@ -64,10 +78,44 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botWhitePawns[7], new int[] { 8, 2 });
 
         List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
+        /*
+        List<Piece> botWhiteRooks = new List<Piece>
+        {
+            getPieceTypeInstance("PortalRook", 1),
+            getPieceTypeInstance("DefuserRook", 1),
+        };
+        */
         List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
+        /*
+        List<Piece> botWhiteBishops = new List<Piece>
+        {
+            getPieceTypeInstance("HungryBishop", 1),
+            getPieceTypeInstance("SuperGhostBishop", 1),
+        };
+        */
         List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
+        /*
+        List<Piece> botWhiteKnights = new List<Piece>
+        {
+            getPieceTypeInstance("HungryKnight", 1),
+            getPieceTypeInstance("LongKnight", 1),
+        };
+        */
         List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
+        /*
+        List<Piece> botWhiteKing = new List<Piece>
+        {
+            getPieceTypeInstance("StackingKing", 1)
+        };
+        */
         List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
+        /*
+        List<Piece> botWhiteQueen = new List<Piece>
+        {
+            getPieceTypeInstance("AtomicQueen", 1)
+        };
+        */
+
         HelperFunctions.initPiece(botWhiteRooks[0], new int[] { 1, 1 });
         HelperFunctions.initPiece(botWhiteRooks[1], new int[] { 8, 1 });
         HelperFunctions.initPiece(botWhiteBishops[0], new int[] { 3, 1 });
@@ -78,6 +126,20 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botWhiteKing[0], new int[] { 5, 1 });
 
         List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
+        /*
+        List<Piece> botBlackPawns = new List<Piece>
+        {
+            getPieceTypeInstance("OneTwoPawnULUUR", -1),
+            getPieceTypeInstance("CloningPawn", -1),
+            getPieceTypeInstance("OneTwoPawnLite", -1),
+            getPieceTypeInstance("OneTwoPawnD", -1),
+            getPieceTypeInstance("SuperGhostPawn", -1),
+            getPieceTypeInstance("TwoPawnLR", -1),
+            getPieceTypeInstance("DelayedPawn", -1),
+            getPieceTypeInstance("OnePawnULUURLR", -1),
+        };
+        */
+
         HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
         HelperFunctions.initPiece(botBlackPawns[1], new int[] { 2, 7 });
         HelperFunctions.initPiece(botBlackPawns[2], new int[] { 3, 7 });
@@ -88,10 +150,43 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botBlackPawns[7], new int[] { 8, 7 });
 
         List<Piece> botBlackRooks = BotHelperFunctions.filterPieces("Rook", botBlack.pieces);
+        /*
+        List<Piece> botBlackRooks = new List<Piece>
+        {
+            getPieceTypeInstance("PromotionRook", -1),
+            getPieceTypeInstance("PortalRook", -1),
+        };
+        */
         List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
+        /*
+        List<Piece> botBlackBishops = new List<Piece>
+        {
+            getPieceTypeInstance("JailBishop", -1),
+            getPieceTypeInstance("BouncingBishop", -1),
+        };
+        */
         List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
+        /*
+        List<Piece> botBlackKnights = new List<Piece>
+        {
+            getPieceTypeInstance("UndeadKnight", -1),
+            getPieceTypeInstance("JailKnight", -1),
+        };
+        */
         List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
+        /*
+        List<Piece> botBlackKing = new List<Piece>
+        {
+            getPieceTypeInstance("Overlord", -1),
+        };
+        */
         List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
+        /*
+        List<Piece> botBlackQueen = new List<Piece>
+        {
+            getPieceTypeInstance("PhantomQueen", -1),
+        };
+        */
         HelperFunctions.initPiece(botBlackRooks[0], new int[] { 1, 8 });
         HelperFunctions.initPiece(botBlackRooks[1], new int[] { 8, 8 });
         HelperFunctions.initPiece(botBlackBishops[0], new int[] { 3, 8 });
@@ -256,7 +351,6 @@ public class botMaster : MonoBehaviour
             if (watchMS > 5000)
             {
                 currentBot.penalty = true;
-                movePieceObj = null;
 
                 Debug.Log("BOT HAS RECIEVED A PENALTY. MOVE TOOK " + watchMS + "ms.");
 
@@ -277,6 +371,7 @@ public class botMaster : MonoBehaviour
                 valid = botValidateMove(movePieceObj, moveCoords);
             } else
             {
+                Debug.Log("Valid temporarily false due to ability");
                 valid = false;
                 //TODO
             }
@@ -316,6 +411,8 @@ public class botMaster : MonoBehaviour
             }
 
             var randomMove = performRandomBotMove(currentBot);
+            movePieceObj = randomMove.piece;
+            moveCoords = randomMove.coords;
 
             gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);
             gameData.selectedToMove = HelperFunctions.findSquare(randomMove.piece.position[0], randomMove.piece.position[1]);

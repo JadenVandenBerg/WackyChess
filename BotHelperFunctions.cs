@@ -49,7 +49,15 @@ public class BotHelperFunctions : MonoBehaviour
 		return selected;
 	}
 
-	private static List<string> getAllTypePieces(string type, int color) {
+    public static Piece getPieceTypeInstance(string type, int color)
+    {
+        Type type_ = Type.GetType(type + ", Assembly-CSharp");
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
+
+        return piece;
+    }
+
+    private static List<string> getAllTypePieces(string type, int color) {
 
     	List<Type> allPieces = Lootbox.GetAllPieces();
     	List<string> eligiblePieces = new List<string>();
@@ -1276,6 +1284,153 @@ public class BotHelperFunctions : MonoBehaviour
         return death;
     }
 
+    public static BoardState simulatePieceAbility(BotTemplate bot, BoardState bs, PieceAbility pieceAbility)
+    {
+        // Reset positions and clone bs
+        resetPiecePositions(null, bs.boardGrid);
+        bs = copyBoardState(bs);
+
+        Piece piece = pieceAbility.piece;
+        string ability = pieceAbility.ability;
+        int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
+
+        List<Piece> placePieces = pieceAbility.placePieces;
+        List<int[]> placeCoords = pieceAbility.placeCoords;
+        Piece secondPiece = pieceAbility.secondPiece;
+
+        if (ability == "Vomit")
+        {
+            int numPieces = placePieces.Count;
+            int numCoords = placeCoords.Count;
+
+            if (numPieces >= numCoords)
+            {
+                foreach (int[] coords_ in placeCoords)
+                {
+                    System.Random rand = new System.Random();
+                    int idx = rand.Next(numPieces);
+
+                    Piece p_ = placePieces[idx];
+                    placePieces.Remove(p_);
+
+                    updateBoardState(coords_, p_, "a", bs);
+
+                    piece.storage.Remove(p_);
+                }
+
+                foreach (Piece p_ in placePieces)
+                {
+                    piece.storage.Remove(p_);
+                }
+            }
+            else
+            {
+                foreach (Piece p_ in placePieces)
+                {
+                    System.Random rand = new System.Random();
+                    int idx = rand.Next(numCoords);
+
+                    int[] c_ = placeCoords[idx];
+                    placeCoords.Remove(c_);
+
+                    updateBoardState(c_, p_, "a", bs);
+
+                    piece.storage.Remove(p_);
+                }
+            }
+        }
+        else if (ability == "CastleLeft")
+        {
+            int[] kingCoords = coords;
+            int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
+
+            //King
+            movePieceBoardState(piece, kingCoords, bs);
+            //Rook
+            movePieceBoardState(secondPiece, rookCoords, bs);
+
+            piece.hasMoved = true;
+            secondPiece.hasMoved = true;
+
+            HelperFunctions.removeAbility(piece, "CastleLeft");
+            HelperFunctions.removeAbility(piece, "CastleRight");
+        }
+        else if (ability == "CastleRight")
+        {
+            int[] kingCoords = coords;
+            int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
+
+            //King
+            movePieceBoardState(piece, kingCoords, bs);
+            //Rook
+            movePieceBoardState(secondPiece, rookCoords, bs);
+
+            piece.hasMoved = true;
+            secondPiece.hasMoved = true;
+
+            HelperFunctions.removeAbility(piece, "CastleLeft");
+            HelperFunctions.removeAbility(piece, "CastleRight");
+        }
+        else if (ability == "Unfreeze")
+        {
+            HelperFunctions.removeAbility(piece, "Unfreeze");
+            HelperFunctions.removeState(piece, "Frozen");
+        }
+        else if (ability == "Freeze")
+        {
+            HelperFunctions.addState(secondPiece, "Frozen");
+        }
+        else if (ability == "Spawn")
+        {
+            Piece spawned = HelperFunctions.Spawnables.create(piece.spawnable, piece.color);
+            piece.numSpawns--;
+            if (piece.numSpawns <= 0)
+            {
+                HelperFunctions.removeAbility(piece, "Spawn");
+            }
+            Destroy(spawned.go);
+            updateBoardState(coords, spawned, "a", bs);
+        }
+        else if (ability == "Spit")
+        {
+            isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false), bs);
+
+            updateBoardState(coords, secondPiece, "a", bs);
+
+            piece.storage.Remove(secondPiece);
+        }
+        else if (ability == "Dematerialize")
+        {
+            HelperFunctions.addState(piece, "Dematerialized");
+            HelperFunctions.removeAbility(piece, "Dematerialize");
+            HelperFunctions.addAbility(piece, "Materialize");
+        }
+        else if (ability == "Materialize")
+        {
+            HelperFunctions.removeState(piece, "Dematerialized");
+            HelperFunctions.addAbility(piece, "Dematerialize");
+            HelperFunctions.removeAbility(piece, "Materialize");
+
+            isolatedOnDeathsDontIncludeAttacker(piece, coords, bs);
+        }
+        else if (ability == "Split")
+        {
+            HelperFunctions.removeAbility(piece, "Split");
+
+            updateBoardState(piece.position, piece, "r", bs);
+
+            Piece leftPawn = HelperFunctions.Spawnables.create("LeftPawn", piece.color);
+            Destroy(leftPawn.go);
+            updateBoardState(piece.position, leftPawn, "a", bs);
+
+            Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color);
+            Destroy(rightPawn.go);
+            updateBoardState(piece.position, rightPawn, "a", bs);
+        }
+
+        return bs;
+    }
+
     public static BoardState simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
 
         // Reset positions and clone bs
@@ -1490,6 +1645,18 @@ public class BotHelperFunctions : MonoBehaviour
         List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs.boardGrid, false));
 
         foreach (Piece piece in pieces) {
+            //Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
+            isolatedOnDeath(piece, attacker, bs);
+        }
+    }
+
+    public static void isolatedOnDeathsDontIncludeAttacker(Piece attacker, int[] deadCoords, BoardState bs)
+    {
+        List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords[0], deadCoords[1], bs.boardGrid, false));
+        pieces.Remove(attacker);
+
+        foreach (Piece piece in pieces)
+        {
             //Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
             isolatedOnDeath(piece, attacker, bs);
         }

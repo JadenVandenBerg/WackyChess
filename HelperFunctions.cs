@@ -755,9 +755,9 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
-        if (fromTotal && (checkState(piece, "Jailer"))) {
+        /*if (fromTotal && (checkState(piece, "Jailer"))) {
             return;
-        }
+        }*/
 
         if (checkPieceType(piece, "q")) {
             if (isOppressorOnBoard(piece.color))
@@ -872,6 +872,7 @@ public class HelperFunctions : MonoBehaviour
                             //Debug.Log("MOVE ACCEPTED");
                             if (highlight && piece == highlightPiece) goHighlight.GetComponent<Image>().color = highlightColor;
                             if (changeValue) gameData.currentMoveableCoordsAllPieces.Add(newPos);
+
                             allMoves.Add(newPos);
                         }
                     }
@@ -1936,23 +1937,30 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, string state)
     {
-        if (piecesOnSquare == null)
+        if (piecesOnSquare == null || piecesOnSquare.Count == 0)
         {
             return false;
         }
 
         List<string> states = state.Split('-').ToList();
+
         foreach (Piece piece in piecesOnSquare)
         {
+            bool hasState = false;
+
             foreach (string s in states)
             {
-                if (piece.state == s || piece.secondaryState.Contains(s))
+                if (checkState(piece, s))
                 {
+                    hasState = true;
                     break;
                 }
             }
 
-            return false;
+            if (!hasState)
+            {
+                return false;
+            }
         }
 
         return true;
@@ -3196,6 +3204,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Unfreeze -> " + piece.name);
             removeState(piece, "Frozen");
+            removeAbility(piece, "Unfreeze");
         }
         else if (ability == "Freeze")
         {
@@ -3208,6 +3217,12 @@ public class HelperFunctions : MonoBehaviour
 
             Piece spawned = Spawnables.create(piece.spawnable, piece.color);
             piece.numSpawns--;
+
+            if (piece.numSpawns <= 0)
+            {
+                removeAbility(piece, "Spawn");
+            }
+
             initPiece(spawned, coords);
         }
         else if (ability == "Spit")

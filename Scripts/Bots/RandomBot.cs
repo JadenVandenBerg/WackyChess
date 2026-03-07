@@ -16,12 +16,19 @@ public class RandomBot : BotTemplate
     public NextMove nextMove()
     {
         this.currentBoardState.refresh(gameData.boardGrid);
-        var move = BotHelperFunctions.getRandomBotMove(this);
-        Piece piece = move.piece;
-        int[] coords = move.coords;
+        this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
-        Move sendMove = new Move(piece, coords);
-        NextMove move_ = new NextMove(sendMove);
+        NextMove move_ = BotHelperFunctions.getRandomBotMove(this);
+
+        if (move_.moveType == "move")
+        {
+            move_.move.p = BotHelperFunctions.getOriginalPieceFromClone(move_.move.p);
+        }
+        else
+        {
+            move_.ability.piece = BotHelperFunctions.getOriginalPieceFromClone(move_.ability.piece);
+        }
+
         return move_;
     }
 }

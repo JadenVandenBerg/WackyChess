@@ -3,12 +3,11 @@
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
 //Need to rotate black pieces
-//There is a problem with piecesOnSquareBoardGrid after collateral
 //Take account for abilities when checking for check and checkmate
 //When spawning new pieces, add them to BotPieces
 //Portal and Bouncing does not account for Ghoul/Ghost/Dematerialized states
 //When a stacking piece captures a delayed piece, it becomes delayed too early
-//BUG refreshing boardState not working properly
+// piggyback not working, king should not be able to ride
 
 //Feature
 //Side panel only show selectable pieces

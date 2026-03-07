@@ -164,6 +164,13 @@ public class BotTournament {
         },
         new (int botOne, int botTwo)[]
         {
+            (1, 6),
+            (2, 5),
+            (3, 8),
+            (4, 7)
+        },
+        new (int botOne, int botTwo)[]
+        {
             (1, 2),
             (3, 4),
             (5, 6),
@@ -178,13 +185,6 @@ public class BotTournament {
         },
         new (int botOne, int botTwo)[]
         {
-            (1, 3),
-            (2, 8),
-            (4, 6),
-            (5, 7)
-        },
-        new (int botOne, int botTwo)[]
-        {
             (1, 4),
             (2, 3),
             (5, 8),
@@ -192,11 +192,11 @@ public class BotTournament {
         },
         new (int botOne, int botTwo)[]
         {
-            (1, 6),
-            (2, 5),
-            (3, 8),
-            (4, 7)
-        }
+            (1, 3),
+            (2, 8),
+            (4, 6),
+            (5, 7)
+        },
     };
 }
 
@@ -214,10 +214,10 @@ Round 2
 4 v 8
 
 Round 3
-1 v 2
-3 v 4
-5 v 6
-7 v 8
+1 v 6
+2 v 5
+3 v 8
+4 v 7
 
 Round 4
 1 v 7
@@ -226,20 +226,20 @@ Round 4
 6 v 8
 
 Round 5
-1 v 3
-2 v 8
-4 v 6
-5 v 7
-
-Round 6
 1 v 4
 2 v 3
 5 v 8
 6 v 7
 
+Round 6
+1 v 3
+2 v 8
+4 v 6
+5 v 7
+
 Round 7
-1 v 6
-2 v 5
-3 v 8
-4 v 7
+1 v 2
+3 v 4
+5 v 6
+7 v 8
 */

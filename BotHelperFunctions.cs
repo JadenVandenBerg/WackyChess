@@ -284,7 +284,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                     List<int[]> possibleCoords = isolatedGetCollateralSquares(piece, bs);
 
-                    PieceAbility vomit = new PieceAbility(piece, "Vomit", null, placePieces, possibleCoords, null);
+                    PieceAbility vomit = new PieceAbility(piece, "Vomit", piece.position, placePieces, possibleCoords, null);
                     pieceAbilities.Add(vomit);
                 }
                 else if (ability == "CastleLeft")
@@ -324,7 +324,7 @@ public class BotHelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    PieceAbility unFreeze = new PieceAbility(piece, "Unfreeze", null, null, null, null);
+                    PieceAbility unFreeze = new PieceAbility(piece, "Unfreeze", piece.position, null, null, null);
                     pieceAbilities.Add(unFreeze);
                 }
                 else if (ability == "Freeze")
@@ -404,7 +404,7 @@ public class BotHelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    PieceAbility dematerialize = new PieceAbility(piece, "Dematerialize", null, null, null, null);
+                    PieceAbility dematerialize = new PieceAbility(piece, "Dematerialize", piece.position, null, null, null);
                     pieceAbilities.Add(dematerialize);
                 }
                 else if (ability == "Materialize")
@@ -414,12 +414,12 @@ public class BotHelperFunctions : MonoBehaviour
                         continue;
                     }
 
-                    PieceAbility materialize = new PieceAbility(piece, "Materialize", null, null, null, null);
+                    PieceAbility materialize = new PieceAbility(piece, "Materialize", piece.position, null, null, null);
                     pieceAbilities.Add(materialize);
                 }
                 else if (ability == "Split")
                 {
-                    PieceAbility split = new PieceAbility(piece, "Split", null, null, null, null);
+                    PieceAbility split = new PieceAbility(piece, "Split", piece.position, null, null, null);
                     pieceAbilities.Add(split);
                 }
             }
@@ -471,14 +471,8 @@ public class BotHelperFunctions : MonoBehaviour
     public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, List<PieceAbility> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color) {
     	List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
 
-        resetPiecePositions(null, bs.boardGrid);
+        //resetPiecePositions(null, bs.boardGrid);
         //bs = copyBoardState(bs);
-
-        if (color == 1 && bot.debug == true)
-        {
-           // Debug.Log("PRINTINT BS IN MOVE");
-            //debug_printBoardState(bs);
-        }
         
         List<Piece> pieces_ = getPiecesOnBoardState(bs, color);
         foreach (Piece piece in pieces_) {
@@ -498,6 +492,42 @@ public class BotHelperFunctions : MonoBehaviour
         List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
 
         return (totalMoves, pieceAbility);
+    }
+
+    public static List<NextMove> getAllPossibleBotMovesAndAbilities(BotTemplate bot, BoardState bs, int color)
+    {
+        //resetPiecePositions(null, bs.boardGrid);
+        //bs = copyBoardState(bs);
+
+        var botMoves = getAllPossibleBotMoves(bot, bs, color);
+
+        List<Dictionary<Piece, List<int[]>>> allMovesBot = botMoves.pieceMoveList;
+        List<PieceAbility> allAbilitiesBot = botMoves.piecesAbilities;
+
+        List<NextMove> allMoves = new List<NextMove>();
+
+        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesBot)
+        {
+            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
+            Piece piece = pieceMovesKeyVal.Key;
+            List<int[]> _mL = pieceMovesKeyVal.Value;
+
+            foreach (int[] coords in _mL)
+            {
+                Move mv = new Move(piece, coords);
+                NextMove pieceMove = new NextMove(mv);
+
+                allMoves.Add(pieceMove);
+            }
+        }
+
+        foreach(PieceAbility pa in allAbilitiesBot)
+        {
+            NextMove pieceAbility = new NextMove(pa);
+            allMoves.Add(pieceAbility);
+        }
+
+        return allMoves;
     }
 
     public static List<Piece> getPiecesOnBoardState(BoardState bs, int color)
@@ -520,15 +550,6 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         return pieces;
-    }
-
-    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleBotMovesNew(BotTemplate bot, int color)
-    {
-        List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
-
-
-
-        return (null, null);
     }
 
     public static List<int[]> getIsolatedStatePieceMoves(Piece piece, BoardState bs)
@@ -1094,12 +1115,11 @@ public class BotHelperFunctions : MonoBehaviour
         return pieces;
     }
 
-    public static (Piece piece, int[] coords) getRandomBotMove(BotTemplate bot)
+    public static (Piece piece, int[] coords) getRandomBotMove_legacy(BotTemplate bot)
     {
         var botMoves = getAllPossibleBotMoves(bot, bot.currentBoardState, bot.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
-        //TODO add abilities
 
         System.Random rand = new System.Random();
 
@@ -1117,9 +1137,49 @@ public class BotHelperFunctions : MonoBehaviour
         return (randMovePiece, randMoveCoords);
     }
 
+    public static NextMove getRandomBotMove(BotTemplate bot)
+    {
+        var botMoves = getAllPossibleBotMoves(bot, bot.currentBoardState, bot.color);
+
+        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        List<PieceAbility> allAbilities = botMoves.piecesAbilities;
+
+        int totalCount = allMoves.Count + allAbilities.Count;
+
+        System.Random rand = new System.Random();
+        int dictIndex = rand.Next(totalCount);
+
+        NextMove next;
+
+        if (dictIndex >= allMoves.Count)
+        {
+            dictIndex -= allMoves.Count;
+
+            PieceAbility ability = allAbilities[dictIndex];
+            next = new NextMove(ability);
+        }
+        else
+        {
+            Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
+
+            Piece randMovePiece = pieceMovesKeyVal.Key;
+            List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
+
+            int coordIndex = rand.Next(randMoveCoordsList.Count);
+            int[] randMoveCoords = randMoveCoordsList[coordIndex];
+
+            Move move_ = new Move(randMovePiece, randMoveCoords);
+            next = new NextMove(move_);
+        }
+
+        return next;
+    }
+
     //TODO run movePiece on boardstate without actual move
     public static void movePieceBoardState(Piece piece, int[] coords, BoardState boardState)
     {
+        //Debug.LogWarning("Attempted move of " + piece.name + " from " + piece.position[0] + "," + piece.position[1] + " to " + (coords[0] + 1) + "," + (coords[1] + 1));
         if (coords[0] < 0 || coords[1] < 0)
         {
             return;
@@ -1132,7 +1192,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         updateBoardState(position, piece, "r", boardState);
         updateBoardState(coords, piece, "a", boardState);
-        piece.position = coords;
+        piece.position = new int[] { coords[0] + 1, coords[1] + 1 };
         piece.hasMoved = true;
     }
 
@@ -1159,7 +1219,7 @@ public class BotHelperFunctions : MonoBehaviour
         if (action.ToLower() == "r" || action.ToLower() == "remove")
         {
             int ok = square.RemoveAll(p => p.name == piece.name);
-            //Debug.LogWarning("Removed " + ok + " " + piece.name);
+            //Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + (coords[0] + 1) + "," + (coords[1] + 1));
         }
     }
 
@@ -1284,15 +1344,17 @@ public class BotHelperFunctions : MonoBehaviour
         return death;
     }
 
-    public static BoardState simulatePieceAbility(BotTemplate bot, BoardState bs, PieceAbility pieceAbility)
+    public static BoardState simulatePieceAbility(BotTemplate bot, BoardState bs_, PieceAbility pieceAbility)
     {
         // Reset positions and clone bs
-        resetPiecePositions(null, bs.boardGrid);
-        bs = copyBoardState(bs);
+        resetPiecePositions(null, bs_.boardGrid);
+        BoardState bs = copyBoardState(bs_);
 
         Piece piece = pieceAbility.piece;
         string ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
+        int[] adjustedCoords = new int[] { coords[0] - 1, coords[1] - 1 };
+        int[] adjustedPiecePosition = new int[] { piece.position[0] - 1, piece.position[1] - 1 };
 
         List<Piece> placePieces = pieceAbility.placePieces;
         List<int[]> placeCoords = pieceAbility.placeCoords;
@@ -1344,10 +1406,13 @@ public class BotHelperFunctions : MonoBehaviour
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
 
+            int[] adjustedKingCoords = new int[] { kingCoords[0] - 1, kingCoords[1] - 1 };
+            int[] adjustedRookCoords = new int[] { rookCoords[0] - 1, rookCoords[1] - 1 };
+
             //King
-            movePieceBoardState(piece, kingCoords, bs);
+            movePieceBoardState(piece, adjustedKingCoords, bs);
             //Rook
-            movePieceBoardState(secondPiece, rookCoords, bs);
+            movePieceBoardState(secondPiece, adjustedRookCoords, bs);
 
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
@@ -1360,10 +1425,13 @@ public class BotHelperFunctions : MonoBehaviour
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
 
+            int[] adjustedKingCoords = new int[] { kingCoords[0] - 1, kingCoords[1] - 1 };
+            int[] adjustedRookCoords = new int[] { rookCoords[0] - 1, rookCoords[1] - 1 };
+
             //King
-            movePieceBoardState(piece, kingCoords, bs);
+            movePieceBoardState(piece, adjustedKingCoords, bs);
             //Rook
-            movePieceBoardState(secondPiece, rookCoords, bs);
+            movePieceBoardState(secondPiece, adjustedRookCoords, bs);
 
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
@@ -1389,13 +1457,13 @@ public class BotHelperFunctions : MonoBehaviour
                 HelperFunctions.removeAbility(piece, "Spawn");
             }
             Destroy(spawned.go);
-            updateBoardState(coords, spawned, "a", bs);
+            updateBoardState(adjustedCoords, spawned, "a", bs);
         }
         else if (ability == "Spit")
         {
             isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false), bs);
 
-            updateBoardState(coords, secondPiece, "a", bs);
+            updateBoardState(adjustedCoords, secondPiece, "a", bs);
 
             piece.storage.Remove(secondPiece);
         }
@@ -1417,35 +1485,33 @@ public class BotHelperFunctions : MonoBehaviour
         {
             HelperFunctions.removeAbility(piece, "Split");
 
-            updateBoardState(piece.position, piece, "r", bs);
+            updateBoardState(adjustedPiecePosition, piece, "r", bs);
 
             Piece leftPawn = HelperFunctions.Spawnables.create("LeftPawn", piece.color);
             Destroy(leftPawn.go);
-            updateBoardState(piece.position, leftPawn, "a", bs);
+            updateBoardState(adjustedPiecePosition, leftPawn, "a", bs);
 
             Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color);
             Destroy(rightPawn.go);
-            updateBoardState(piece.position, rightPawn, "a", bs);
+            updateBoardState(adjustedPiecePosition, rightPawn, "a", bs);
         }
 
         return bs;
     }
 
-    public static BoardState simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, int[] coords) {
-
+    public static BoardState simulatePieceMove(BotTemplate bot, BoardState bs_, Piece piece, int[] coords) {
         // Reset positions and clone bs
-        resetPiecePositions(null, bs.boardGrid);
-        bs = copyBoardState(bs);
-
+        resetPiecePositions(null, bs_.boardGrid);
+        BoardState bs = copyBoardState(bs_);
 
         coords = new int[] { coords[0] - 1, coords[1] - 1 };
         //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
-
+        /*
         if (coords[0] < 0 || coords[0] >= 8 || coords[1] < 0 || coords[1] >= 8)
         {
             return null;
         }
-
+        */
         //List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
         List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
         bool death = isolatedIsDeath(piecesOnCoordsPreDeath, piece);
@@ -1490,7 +1556,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             if (HelperFunctions.checkState(pieceOnSquare, "Crook"))
             {
-                if (piecesOnSquare.Count == 2)
+                if (piecesOnSquare.Count == 2) //why 2
                 {
                     HelperFunctions.removeState(pieceOnSquare, "Jailed");
                 }
@@ -1550,14 +1616,14 @@ public class BotHelperFunctions : MonoBehaviour
         Piece botBlackKing = filterPieces("King", bot.opponentPieces)[0];
         Piece botWhiteKing = bot.king;
 
-        int[] botWhiteKingPos = new int[] { botWhiteKing.position[0] - 1, botWhiteKing.position[1] - 1 };
-        int[] botBlackKingPos = new int[] { botBlackKing.position[0] - 1, botBlackKing.position[1] - 1 };
-
         if (bot.color == -1)
         {
             botWhiteKing = filterPieces("King", bot.opponentPieces)[0];
             botBlackKing = bot.king;
         }
+
+        int[] botWhiteKingPos = new int[] { botWhiteKing.position[0] - 1, botWhiteKing.position[1] - 1 };
+        int[] botBlackKingPos = new int[] { botBlackKing.position[0] - 1, botBlackKing.position[1] - 1 };
 
         if (HelperFunctions.checkState(botWhiteKing, "Heartbroken"))
         {
@@ -1584,7 +1650,6 @@ public class BotHelperFunctions : MonoBehaviour
                 if (bot.color == -1) bot.king = tempKing;
             }
         }
-
         return bs;
     }
 
@@ -2060,6 +2125,10 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     public static Piece getOriginalPieceFromClone(Piece p) {
+        if (p == null) {
+            return null;
+        }
+
         for (int x = 0; x < 8; x++)
         {
             for (int y = 0; y < 8; y++)

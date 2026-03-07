@@ -43,8 +43,8 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new Bloodbot(1);
-        botBlack = new SavageBeastBot(-1);
+        botWhite = new OneMoveBot(1);
+        botBlack = new OneMoveBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -324,6 +324,8 @@ public class botMaster : MonoBehaviour
         {
             var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
+            watch.Stop();
+            watchMS = watch.ElapsedMilliseconds;
 
             Move mv = null;
             PieceAbility pa = null;
@@ -342,11 +344,9 @@ public class botMaster : MonoBehaviour
                 moveCoords = pa.coords;
             }
 
+            movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
             selectedMove = nextMove;
-
-            watch.Stop();
-
-            watchMS = watch.ElapsedMilliseconds;
 
             if (watchMS > 5000)
             {
@@ -371,14 +371,14 @@ public class botMaster : MonoBehaviour
                 valid = botValidateMove(movePieceObj, moveCoords);
             } else
             {
-                Debug.Log("Valid temporarily false due to ability");
-                valid = false;
-                //TODO
+                valid = botValidateAbility(pa, currentBot);
             }
         }
 
-        bool death = false;
-        int check = 0;
+        movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
+        bool death;
+        int check;
         if (valid)
         {
             gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
@@ -394,8 +394,9 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                //TODO check and death
-                helper.executeAbility(selectedMove.ability);
+                var deathVars = helper.executeAbility(selectedMove.ability);
+                death = deathVars.death;
+                check = deathVars.check;
             }
         }
         else
@@ -410,24 +411,34 @@ public class botMaster : MonoBehaviour
                 Debug.Log("No Move Provided or Penalty");
             }
 
-            var randomMove = performRandomBotMove(currentBot);
-            movePieceObj = randomMove.piece;
-            moveCoords = randomMove.coords;
+            NextMove randomMove = performRandomBotMove_(currentBot);
 
-            gameData.selected = HelperFunctions.findSquare(randomMove.coords[0], randomMove.coords[1]);
-            gameData.selectedToMove = HelperFunctions.findSquare(randomMove.piece.position[0], randomMove.piece.position[1]);
+            if (randomMove.moveType == "move")
+            {
+                movePieceObj = randomMove.move.p;
+                moveCoords = randomMove.move.coords;
+            }
+            else if (randomMove.moveType == "ability")
+            {
+                movePieceObj = randomMove.ability.piece;
+                moveCoords = randomMove.ability.coords;
+            }
+
+            gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
+            gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
             gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
-            gameData.selectedToMovePiece = randomMove.piece;
+            gameData.selectedToMovePiece = movePieceObj;
 
-            if (selectedMove.moveType == "move")
+            if (randomMove.moveType == "move")
             {
                 death = helper.performPreMove();
                 check = helper.movePiece_(movePieceObj, moveCoords);
             }
             else
             {
-                //TODO check and death
-                helper.executeAbility(selectedMove.ability);
+                var deathVars = helper.executeAbility(randomMove.ability);
+                death = deathVars.death;
+                check = deathVars.check;
             }
         }
 
@@ -485,21 +496,6 @@ public class botMaster : MonoBehaviour
             subsequentChecks++;
         }
 
-        if (subsequentChecks > 8 || movesWithoutCapture > 25) {
-            //GAME OVER, go to next match
-            Debug.Log("Game Over - Tie");
-            gameOver = true;
-
-            if (subsequentChecks > 8)
-            {
-                bgs.result = "Draw by Subsequent Checks";
-            }
-            else
-            {
-                bgs.result = "Draw by Moves Without Capture";
-            }
-        }
-
         if (check == 2)
         {
             if (!gameData.staleMate)
@@ -525,6 +521,22 @@ public class botMaster : MonoBehaviour
             }
 
             gameOver = true;
+        }
+
+        if (subsequentChecks > 8 || movesWithoutCapture > 25)
+        {
+            //GAME OVER, go to next match
+            Debug.Log("Game Over - Tie");
+            gameOver = true;
+
+            if (subsequentChecks > 8)
+            {
+                bgs.result = "Draw by Subsequent Checks";
+            }
+            else
+            {
+                bgs.result = "Draw by Moves Without Capture";
+            }
         }
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
@@ -562,8 +574,11 @@ public class botMaster : MonoBehaviour
         var botMoves = getAllPossibleMovesPenalty(bot, bot.color);
 
         List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
-        //TODO add abilities
-        Dictionary<Piece, List<string>> allAbilities = botMoves.piecesAbilities;
+
+        if (allMoves.Count == 0)
+        {
+            return (null, null);
+        }
 
         System.Random rand = new System.Random();
 
@@ -582,7 +597,152 @@ public class botMaster : MonoBehaviour
         return (randMovePiece, randMoveCoords);
     }
 
-    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, Dictionary<Piece, List<string>> piecesAbilities) getAllPossibleMovesPenalty(BotTemplate bot, int color)
+    public static NextMove performRandomBotMove_(BotTemplate bot)
+    {
+        var botMoves = getAllPossibleMovesPenalty(bot, bot.color);
+
+        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        List<PieceAbility> allAbilities = botMoves.pieceAbilities;
+
+        int totalCount = allMoves.Count + allAbilities.Count;
+
+        System.Random rand = new System.Random();
+        int dictIndex = rand.Next(totalCount);
+
+        NextMove next;
+
+        if (dictIndex >= allMoves.Count)
+        {
+            dictIndex -= allMoves.Count;
+
+            PieceAbility ability = allAbilities[dictIndex];
+            next = new NextMove(ability);
+        }
+        else
+        {
+            Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
+
+            Piece randMovePiece = pieceMovesKeyVal.Key;
+            List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
+
+            int coordIndex = rand.Next(randMoveCoordsList.Count);
+            int[] randMoveCoords = randMoveCoordsList[coordIndex];
+
+            Move move_ = new Move(randMovePiece, randMoveCoords);
+            next = new NextMove(move_);
+        }
+
+        return next;
+    }
+
+    public bool botValidateAbility(PieceAbility pa, BotTemplate bot)
+    {
+        BoardState bs = new BoardState();
+        bs.refresh(gameData.boardGrid);
+
+        List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, bot.color);
+
+        foreach (PieceAbility pa_ in pieceAbilities)
+        {
+            if (pa_.ability != pa.ability)
+            {
+                continue;
+            }
+
+            if (pa_.piece.name != pa.piece.name)
+            {
+                continue;
+            }
+
+            if (pa_.coords != null && pa.coords != null)
+            {
+                if (pa_.coords[0] != pa.coords[0])
+                {
+                    continue;
+                }
+
+                if (pa_.coords[1] != pa.coords[1])
+                {
+                    continue;
+                }
+            }
+
+            if (pa_.secondPiece != null && pa.piece != null)
+            {
+                if (pa_.secondPiece.name != pa.secondPiece.name)
+                {
+                    continue;
+                }
+            }
+
+            bool breaked = false;
+
+            if (pa_.placePieces != null && pa.placePieces != null)
+            {
+                foreach (Piece p_ in pa_.placePieces)
+                {
+
+                    bool matched = false;
+
+                    foreach (Piece p in pa.placePieces)
+                    {
+                        if (p_.name == p.name)
+                        {
+                            matched = true;
+                        }
+                    }
+
+                    if (!matched)
+                    {
+                        breaked = true;
+                        break;
+                    }
+                }
+            }
+
+            if (breaked == true)
+            {
+                continue;
+            }
+
+            bool breakedCoords = false;
+
+            if (pa_.placeCoords != null && pa.placeCoords != null)
+            {
+                foreach (int[] c_ in pa_.placeCoords)
+                {
+
+                    bool matchedCoords = false;
+
+                    foreach (int[] c in pa.placeCoords)
+                    {
+                        if (c[0] == c_[0] && c[1] == c_[1])
+                        {
+                            matchedCoords = true;
+                        }
+                    }
+
+                    if (!matchedCoords)
+                    {
+                        breakedCoords = true;
+                        break;
+                    }
+                }
+            }
+
+            if (breakedCoords == true)
+            {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, List<PieceAbility> pieceAbilities) getAllPossibleMovesPenalty(BotTemplate bot, int color)
     {
         List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
 
@@ -600,7 +760,12 @@ public class botMaster : MonoBehaviour
             }
         }
 
-        return (totalMoves, HelperFunctions.getAllEligibleAbilities(color));
+        BoardState bs = new BoardState();
+        bs.refresh(gameData.boardGrid);
+
+        List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
+
+        return (totalMoves, pieceAbility);
 
     }
 

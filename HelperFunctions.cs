@@ -378,6 +378,11 @@ public class HelperFunctions : MonoBehaviour
         string newX = x.ToString();
         string newY = y.ToString();
 
+        if (gameData.board == null)
+        {
+            return null;
+        }
+
         for (int i = 0; i < gameData.board.transform.childCount; i++)
         {
             GameObject child = gameData.board.transform.GetChild(i).gameObject;
@@ -3099,18 +3104,31 @@ public class HelperFunctions : MonoBehaviour
         checkmateUI.SetActive(true);
     }
 
-    public void executeAbility(BotHelperFunctions.PieceAbility pieceAbility)
+    public (bool death, int check) executeAbility(BotHelperFunctions.PieceAbility pieceAbility)
     {
+        bool death = false;
+        int check = 0;
+
         Piece piece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.piece);
         string ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
 
         List<Piece> placePieces = new List<Piece>();
-        foreach (Piece placePiece in pieceAbility.placePieces)
+        if (pieceAbility.placePieces != null)
         {
-            placePieces.Add(BotHelperFunctions.getOriginalPieceFromClone(placePiece));
+            foreach (Piece placePiece in pieceAbility.placePieces)
+            {
+                Piece thePiece = BotHelperFunctions.getOriginalPieceFromClone(placePiece);
+                if (thePiece != null) placePieces.Add(thePiece);
+            }
         }
-        List<int[]> placeCoords = pieceAbility.placeCoords;
+
+        List<int[]> placeCoords = new List<int[]>();
+        if (pieceAbility.placeCoords != null)
+        {
+            placeCoords = pieceAbility.placeCoords;
+        }
+
         Piece secondPiece = pieceAbility.secondPiece;
         
         if (ability == "Vomit")
@@ -3230,6 +3248,7 @@ public class HelperFunctions : MonoBehaviour
             Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
 
             collateralDeath(getPiecesOnSquare(findSquare(coords[0], coords[1])));
+            death = true;
 
             initPiece(secondPiece, coords);
             updateBoardGrid(coords, secondPiece, "a");
@@ -3259,6 +3278,8 @@ public class HelperFunctions : MonoBehaviour
             addAbility(piece, "Dematerialize");
             removeAbility(piece, "Materialize");
 
+            death = true;
+
             onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords[0], coords[1]));
 
             Image img = piece.go.GetComponent<Image>();
@@ -3281,6 +3302,42 @@ public class HelperFunctions : MonoBehaviour
             Piece rightPawn = Spawnables.create("RightPawn", piece.color);
             initPiece(rightPawn, coords);
         }
+
+        Piece king;
+        if (piece.color == 1)
+        {
+            king = gameData.blackKing;
+        }
+        else
+        {
+            king = gameData.whiteKing;
+        }
+
+        bool isInCheck = isCheck(king);
+        bool isInCheckMate = isCheckMate(king, true);
+
+        Debug.Log("Check: " + isInCheck);
+        Debug.Log("Checkmate: " + isInCheckMate);
+        gameData.check = isInCheck;
+
+        updatePointsOnBoard();
+
+        gameData.selectedPiece = null;
+
+        if (isInCheckMate)
+        {
+            check = 2;
+        }
+        else if (isInCheck)
+        {
+            check = 1;
+        }
+        else
+        {
+            check = 0;
+        }
+
+        return (death, check);
     }
 
     [PunRPC]

@@ -284,6 +284,11 @@ public class BotHelperFunctions : MonoBehaviour
 
                     List<int[]> possibleCoords = isolatedGetCollateralSquares(piece, bs);
 
+                    if (possibleCoords.Count == 0)
+                    {
+                        continue;
+                    }
+
                     PieceAbility vomit = new PieceAbility(piece, "Vomit", piece.position, placePieces, possibleCoords, null);
                     pieceAbilities.Add(vomit);
                 }
@@ -1365,6 +1370,8 @@ public class BotHelperFunctions : MonoBehaviour
             int numPieces = placePieces.Count;
             int numCoords = placeCoords.Count;
 
+            Debug.Log("Simulating Vomit: " + numPieces + " : " + numCoords);
+
             if (numPieces >= numCoords)
             {
                 foreach (int[] coords_ in placeCoords)
@@ -1375,7 +1382,9 @@ public class BotHelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    updateBoardState(coords_, p_, "a", bs);
+                    int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
+
+                    updateBoardState(coords__, p_, "a", bs);
 
                     piece.storage.Remove(p_);
                 }
@@ -1394,6 +1403,8 @@ public class BotHelperFunctions : MonoBehaviour
 
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
+
+                    c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
                     updateBoardState(c_, p_, "a", bs);
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 using System.Linq;
+using static BotHelperFunctions;
 
 public class IdiotBot : BotTemplate
 {
@@ -17,95 +18,125 @@ public class IdiotBot : BotTemplate
     override
     public NextMove nextMove()
     {
-        Piece worstMovePiece = null;
-        int[] worstMoveCoords = null;
-        float worstMoveDiff = +1000;
-
-        BoardState ogBoardState = this.currentBoardState;
-
-        var botMovesCLONE = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
-
-        List<Dictionary<Piece, List<int[]>>> allMovesCLONE = botMovesCLONE.pieceMoveList;
-        List<Move> validMoves = new List<Move>();
+        float worstMoveDiff = -1000;
+        List<NextMove> validMoves = new List<NextMove>();
+        List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
         //Each piece
-        foreach (Dictionary<Piece, List<int[]>> movePair in allMovesCLONE) {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            Piece realPiece = BotHelperFunctions.getOriginalPieceFromClone(piece);
-            List<int[]> _mL = pieceMovesKeyVal.Value;
+        foreach (NextMove nextMove in allMoves)
+        {
+            Piece piece;
+            int[] coords;
 
-            //Loop through moves
-            foreach(int[] coords in _mL) {                
-                //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
-                BoardState originalBoardState = this.currentBoardState;
-                //BoardState cloneState = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, piece, coords);
+            string moveType = nextMove.moveType;
 
-                this.currentBoardState = cloneState;
-                var botMovesOpp = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
-                List<Dictionary<Piece, List<int[]>>> allMovesOpp = botMovesOpp.pieceMoveList;
+            if (moveType == "move")
+            {
+                Move mv = nextMove.move;
 
-                //best simulated move opponent can make
-                Piece bestOppMovePiece;
-                int[] bestOppMoveCoords;
-                float bestOppMoveDiff = +1000;
-
-                foreach(Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp) {
-                    KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
-                    Piece pieceOpp = pieceMovesKeyValOpp.Key;
-                    List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
-
-                    foreach(int[] coordsOpp in _mLOpp) {
-                        //BotHelperFunctions.resetPiecePositions(null, this.currentBoardState.boardGrid);
-                        BoardState originalBoardState_ = this.currentBoardState;
-                        //BoardState cloneState_ = BotHelperFunctions.copyBoardState(this.currentBoardState);
-                        BoardState cloneState_ = BotHelperFunctions.simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-
-                        this.currentBoardState = originalBoardState_;
-
-                        List<float> pointsOnBoard = BotHelperFunctions.getPointsOnBoardState(cloneState_, false);
-                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                        float diff = botPoints - oppPoints;
-                        if (diff < bestOppMoveDiff) {
-                            bestOppMoveDiff = diff;
-                            bestOppMovePiece = pieceOpp;
-                            bestOppMoveCoords = coordsOpp;
-                        }
-                    }
-                }
-
-                // Take the worst outcome assuming the opponent captures the highest value piece it can
-                if (bestOppMoveDiff <= worstMoveDiff) {
-                    if (bestOppMoveDiff < worstMoveDiff)
-                    {
-                        validMoves.Clear();
-                    }
-
-                    worstMoveDiff = bestOppMoveDiff;
-                    worstMoveCoords = coords;
-                    worstMovePiece = realPiece;
-
-                    validMoves.Add(new Move(worstMovePiece, worstMoveCoords));
-                }
-
-                this.currentBoardState = originalBoardState;
+                piece = mv.p;
+                coords = mv.coords;
             }
+            else // moveType == "ability" guarenteed
+            {
+                PieceAbility pa = nextMove.ability;
+
+                piece = pa.piece;
+                coords = pa.coords;
+            }
+
+            BoardState originalBoardState = this.currentBoardState;
+
+            BoardState cloneState;
+            if (moveType == "move")
+            {
+                cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+            }
+            else
+            {
+                cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+            }
+            this.currentBoardState = cloneState;
+
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+
+            NextMove worstOppNextMove;
+            float worstOppMoveDiff = +1000;
+
+            foreach (NextMove nextMoveOpp in allMovesOpp)
+            {
+                Piece pieceOpp;
+                int[] coordsOpp;
+
+                string moveTypeOpp = nextMoveOpp.moveType;
+
+                if (moveTypeOpp == "move")
+                {
+                    Move mv = nextMoveOpp.move;
+
+                    pieceOpp = mv.p;
+                    coordsOpp = mv.coords;
+                }
+                else // moveType == "ability" guarenteed
+                {
+                    PieceAbility pa = nextMoveOpp.ability;
+
+                    pieceOpp = pa.piece;
+                    coordsOpp = pa.coords;
+                }
+
+                BoardState originalBoardState_ = this.currentBoardState;
+                BoardState cloneState_;
+                if (moveTypeOpp == "move")
+                {
+                    cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
+                }
+                else
+                {
+                    cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
+                }
+                this.currentBoardState = originalBoardState_;
+
+                List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
+                float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                float diff = botPoints - oppPoints;
+                if (diff < worstOppMoveDiff)
+                {
+                    worstOppMoveDiff = diff;
+                    worstOppNextMove = nextMoveOpp;
+                }
+            }
+
+            if (worstOppMoveDiff <= worstMoveDiff)
+            {
+                if (worstOppMoveDiff > worstMoveDiff)
+                {
+                    validMoves.Clear();
+                }
+
+                worstMoveDiff = worstOppMoveDiff;
+
+                validMoves.Add(nextMove);
+            }
+
+            this.currentBoardState = originalBoardState;
+
         }
 
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves.Count);
 
-        Move sendMove = validMoves[rndIdx];
-
-        Debug.Log("SENDING MOVE: " + sendMove.p.name + " to " + sendMove.coords[0] + "," + sendMove.coords[1]);
-        //Dictionary<Piece, int[]> moveDict = new Dictionary<Piece, int[]>();
-        //moveDict.Add(sendMove.p, sendMove.coords);
-
-        NextMove move = new NextMove(sendMove);
-
+        NextMove move = validMoves[rndIdx];
+        if (move.moveType == "move")
+        {
+            move.move.p = getOriginalPieceFromClone(move.move.p);
+        }
+        else
+        {
+            move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
+        }
         return move;
     }
 }

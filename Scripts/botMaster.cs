@@ -43,8 +43,8 @@ public class botMaster : MonoBehaviour
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new OneMoveBot(1);
-        botBlack = new OneMoveBot(-1);
+        botWhite = new FiveXRandomBot(1);
+        botBlack = new Abilibot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 

@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 using System.Linq;
 using static BotHelperFunctions;
 
-public class SavageBeastBot : BotTemplate
+public class Abilibot : BotTemplate
 {
-    public SavageBeastBot(int botColor)
+    public Abilibot(int botColor)
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "Savage Beastbot";
+        name = "Abilibot";
 
         choosePieces();
     }
@@ -18,14 +17,31 @@ public class SavageBeastBot : BotTemplate
     override
     public NextMove nextMove()
     {
-        int[] bestMoveCoords;
-        int bestBoardControlDiff = -1000;
-
+        float bestMoveDiff = -1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+        List<NextMove> allMovesReal = new List<NextMove>();
+
+        List<NextMove> abilities = new List<NextMove>();
+        foreach (NextMove mv in allMoves)
+        {
+            if (mv.moveType == "ability")
+            {
+                abilities.Add(mv);
+            }
+        }
+
+        if (abilities.Count > 0)
+        {
+            allMovesReal.AddRange(abilities);
+        }
+        else
+        {
+            allMovesReal.AddRange(allMoves);
+        }
 
         //Each piece
-        foreach (NextMove nextMove in allMoves)
+        foreach (NextMove nextMove in allMovesReal)
         {
             Piece piece;
             int[] coords;
@@ -62,10 +78,8 @@ public class SavageBeastBot : BotTemplate
 
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
-            //best simulated move opponent can make
-            NextMove bestOppMove;
+            NextMove bestOppNextMove;
             float bestOppMoveDiff = +1000;
-            int bestOppBoardControlDiff = +1000;
 
             foreach (NextMove nextMoveOpp in allMovesOpp)
             {
@@ -101,40 +115,37 @@ public class SavageBeastBot : BotTemplate
                 }
                 this.currentBoardState = originalBoardState_;
 
-                List<int> boardControlOnBS = getBoardControlOnBoardState(cloneState_);
-                int botBoardControl = this.color == 1 ? boardControlOnBS[0] : boardControlOnBS[1];
-                int oppBoardControl = this.color == -1 ? boardControlOnBS[0] : boardControlOnBS[1];
-
                 List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
                 float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                //if (this.color == 1) Debug.LogWarning("Points on board after " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
+                //Debug.Log("Testing a move by " + piece.name + " and opp " + pieceOpp.name + " results in " + (botPoints - 100) + " : " + (oppPoints - 100));
+                //if (this.color == 1) Debug.LogWarning("Points on board after " + moveType + "," + moveTypeOpp + " " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
+
+                //debug_printBoardState(cloneState_);
 
                 float diff = botPoints - oppPoints;
                 if (diff < bestOppMoveDiff)
                 {
                     bestOppMoveDiff = diff;
-                    bestOppMove = nextMoveOpp;
-                    bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+                    bestOppNextMove = nextMoveOpp;
                 }
-
-                // Take the best outcome assuming the opponent captures the highest value piece it can
-                if (bestOppBoardControlDiff >= bestBoardControlDiff)
-                {
-                    if (bestOppBoardControlDiff > bestBoardControlDiff)
-                    {
-                        validMoves.Clear();
-                    }
-
-                    bestBoardControlDiff = bestOppBoardControlDiff;
-                    bestMoveCoords = coords;
-
-                    validMoves.Add(nextMove);
-                }
-
-                this.currentBoardState = originalBoardState;
             }
+
+            if (bestOppMoveDiff >= bestMoveDiff)
+            {
+                if (bestOppMoveDiff > bestMoveDiff)
+                {
+                    validMoves.Clear();
+                }
+
+                bestMoveDiff = bestOppMoveDiff;
+
+                validMoves.Add(nextMove);
+            }
+
+            this.currentBoardState = originalBoardState;
+
         }
 
         System.Random rand = new System.Random();
@@ -150,52 +161,5 @@ public class SavageBeastBot : BotTemplate
             move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
         }
         return move;
-    }
-
-    private List<int> getBoardControlOnBoardState(BoardState bs)
-    {
-        List<int> boardControl = new List<int>();
-
-        var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
-        List<Dictionary<Piece, List<int[]>>> listBotWhiteMoves = botMovesWhite.pieceMoveList;
-
-        var botMovesBlack = BotHelperFunctions.getAllPossibleBotMoves(this, bs, -1);
-        List<Dictionary<Piece, List<int[]>>> listBotBlackMoves = botMovesBlack.pieceMoveList;
-
-        List<int[]> uniqueCoords = new List<int[]>();
-        foreach(Dictionary<Piece, List<int[]>> movePair in listBotWhiteMoves)
-        {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            List<int[]> _mL = pieceMovesKeyVal.Value;
-
-            foreach (int[] coords in _mL)
-            {
-                if (!uniqueCoords.Contains(coords))
-                {
-                    uniqueCoords.Add(coords);
-                }
-            }
-        }
-        boardControl.Add(uniqueCoords.Count);
-
-        uniqueCoords = new List<int[]>();
-        foreach (Dictionary<Piece, List<int[]>> movePair in listBotBlackMoves)
-        {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            List<int[]> _mL = pieceMovesKeyVal.Value;
-
-            foreach (int[] coords in _mL)
-            {
-                if (!uniqueCoords.Contains(coords))
-                {
-                    uniqueCoords.Add(coords);
-                }
-            }
-        }
-        boardControl.Add(uniqueCoords.Count);
-
-        return boardControl;
     }
 }

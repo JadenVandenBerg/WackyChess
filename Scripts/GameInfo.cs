@@ -64,6 +64,68 @@ public static class nonResettables
     public static BotTournamentSmall botTournamentSmall { get; set; } = null;
     public static BotTournament botTournament { get; set; } = null;
     public static bool isBotTournament { get; set; } = false;
+
+    public static void calculateElo(Bot botA, Bot botB, string winner)
+    {
+        double expectedScoreA =
+            1.0 / (1.0 + Math.Pow(10, (botB.elo - botA.elo) / 400.0));
+
+        double scoreA;
+
+        if (string.IsNullOrEmpty(winner))
+        {
+            scoreA = 0.5;
+        }
+        else if (winner == botA.name)
+        {
+            scoreA = 1;
+        }
+        else
+        {
+            scoreA = 0;
+        }
+
+        int delta = (int)Math.Round(64 * (scoreA - expectedScoreA));
+
+        botA.elo += delta;
+        botB.elo -= delta;
+
+        botA.peakElo = Math.Max(botA.peakElo, botA.elo);
+        botB.peakElo = Math.Max(botB.peakElo, botB.elo);
+    }
+
+    public static void postBotMatch(string botAName, string botBName, string winner)
+    {
+        List<Bot> bots = JsonSerializer.Deserialize<List<Bot>>(
+            File.ReadAllText("bots.json")
+        );
+
+        Bot botA = bots.First(b => b.name == botAName);
+        Bot botB = bots.First(b => b.name == botBName);
+
+        calculateElo(botA, botB, winner);
+
+        if (string.IsNullOrEmpty(winner))
+        {
+            botA.drawsTotal++;
+            botB.drawsTotal++;
+        }
+        else if (winner == botA.name)
+        {
+            botA.winsTotal++;
+            botB.lossesTotal++;
+        }
+        else
+        {
+            botB.winsTotal++;
+            botA.lossesTotal++;
+        }
+
+        File.WriteAllText(
+            "bots.json",
+            JsonSerializer.Serialize(bots, new JsonSerializerOptions { WriteIndented = true })
+        );
+    }
 }
 
 public static class globalDefs
@@ -313,6 +375,39 @@ public enum PieceState : long
     Spitting = 1L << 33,
     Stacking = 1L << 34,
     Jailer = 1L << 35,
+}
+
+public class Season
+{
+    public int Season { get; set; }
+    public int Division { get; set; }
+    public int Wins { get; set; }
+    public int Losses { get; set; }
+    public int Draws { get; set; }
+    public int StartingElo { get; set; }
+    public int? EndingElo { get; set; }
+}
+
+public class Bot
+{
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public int Elo { get; set; }
+    public int Division { get; set; }
+    public string Profile { get; set; }
+    public int Position { get; set; }
+
+    public int WinsTotal { get; set; }
+    public int LossesTotal { get; set; }
+    public int DrawsTotal { get; set; }
+
+    public string Creator { get; set; }
+
+    public List<Season> Seasons { get; set; }
+
+    public int PeakElo { get; set; }
+
+    public List<string> Competing { get; set; }
 }
 
 /*

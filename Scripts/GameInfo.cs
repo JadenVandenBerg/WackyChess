@@ -308,6 +308,11 @@ public enum PieceState : long
     Double = 1L << 28,
     Protective = 1L << 29,
     Scaredy = 1L << 30,
+    Murderous = 1L << 31,
+    Crowding = 1L << 32,
+    Spitting = 1L << 33,
+    Stacking = 1L << 34,
+    Jailer = 1L << 35,
 }
 
 /*

@@ -279,8 +279,8 @@ public class botMaster : MonoBehaviour
         botWhite.king = gameData.whiteKing;
         botBlack.king = gameData.blackKing;
 
-        botWhite.currentBoardState.refresh(gameData.boardGrid);
-        List<float> points = BotHelperFunctions.getPointsOnBoardState(botWhite.currentBoardState, false);
+        botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+        List<float> points = getPointsOnBoardState(botWhite.currentBoardState, false);
         bgs.whitePoints = points[0];
         bgs.blackPoints = points[1];
 
@@ -313,8 +313,8 @@ public class botMaster : MonoBehaviour
 
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);
-        botWhite.currentBoardState.refresh(gameData.boardGrid);
-        botBlack.currentBoardState.refresh(gameData.boardGrid);
+        botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+        botBlack.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
 
         BotTemplate currentBot;
         bool valid;
@@ -663,7 +663,7 @@ public class botMaster : MonoBehaviour
     public bool botValidateAbility(PieceAbility pa, BotTemplate bot)
     {
         BoardState bs = new BoardState();
-        bs.refresh(gameData.boardGrid);
+        bs.refresh(convertBoardGrid(gameData.boardGrid));
 
         List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, bot.color);
 
@@ -785,7 +785,7 @@ public class botMaster : MonoBehaviour
         }
 
         BoardState bs = new BoardState();
-        bs.refresh(gameData.boardGrid);
+        bs.refresh(convertBoardGrid(gameData.boardGrid));
 
         List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
 

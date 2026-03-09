@@ -91,7 +91,8 @@ public class BoardState {
 	// Middle List: y-Axis
 	// Inner List: List of Pieces
 	// ie. List<Piece> a2 = boardGrid[0][1]
-	public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
+	//public List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
+	public List<Piece>[,] boardGrid = new List<Piece>[8, 8];
 	public List<Piece> allPieces = new List<Piece>();
 	public List<Piece> whitePieces = new List<Piece>();
 	public List<Piece> blackPieces = new List<Piece>();
@@ -111,7 +112,7 @@ public class BoardState {
 	}
 
 	// Resets the board state based on the real value of the board
-	public void refresh(List<List<List<Piece>>> passedBoardGrid) {
+	public void refresh(List<Piece>[,] passedBoardGrid) {
 
 		//boardGrid = gameData.boardGrid.Select(x => x.Select(y => new List<Piece>(y)).ToList()).ToList();
 		boardGrid = BotHelperFunctions.copyBoardGrid(passedBoardGrid);
@@ -123,7 +124,7 @@ public class BoardState {
 		{
 			for (int y = 0; y < 8; y++)
 			{
-				foreach (Piece piece in boardGrid[x][y])
+				foreach (Piece piece in boardGrid[x, y])
 				{
 					if (piece.color == 1) {
 						wp += piece.points;
@@ -147,22 +148,6 @@ public class BoardState {
 
 		delayedQueue = tempInfo.delayedQueue;
 
-		BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
-	}
-
-	public int[] getPiecePosition(Piece piece) {
-		if (boardGrid == null || boardGrid.Count == 0) return null;
-
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				foreach(Piece p in boardGrid[x][y]) {
-					if (piece.name == p.name) {
-						return new int[] { x + 1, y + 1 };
-					}
-				}
-			}
-		}
-
-		return null;
+		BotHelperFunctions.resetPiecePositions(null, convertBoardGrid(gameData.boardGrid));
 	}
 }

@@ -45,6 +45,7 @@ public class MurderousPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Murderous";
+    public PieceState states { get; set; } = PieceState.Murderous;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -152,6 +153,7 @@ public class GhostPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
+    public PieceState states { get; set; } = PieceState.Ghost;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -245,6 +247,7 @@ public class GhoulPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghoul;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -336,6 +339,7 @@ public class OneTimePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -447,6 +451,7 @@ public class ElectricPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
+    public PieceState states { get; set; } = PieceState.Electric;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -540,6 +545,7 @@ public class ShieldPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Shield";
+    public PieceState states { get; set; } = PieceState.Shield;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -633,6 +639,7 @@ public class InfinitePawn : Piece
     public int lives { get; set; } = -1;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "None";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -726,6 +733,7 @@ public class PortalPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
+    public PieceState states { get; set; } = PieceState.Portal;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -844,6 +852,7 @@ public class AtomicPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -937,6 +946,7 @@ public class LandminePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -1030,6 +1040,7 @@ public class SpontaneouslyCombustingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Combustable";
+    public PieceState states { get; set; } = PieceState.Combustable;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1122,6 +1133,7 @@ public class SuperGhostPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
+    public PieceState states { get; set; } = PieceState.Ghoul | PieceState.Ghost;
     public String secondaryState { get; set; } = "Ghoul";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1214,6 +1226,7 @@ public class FragilePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
+    public PieceState states { get; set; } = PieceState.Fragile;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1307,6 +1320,7 @@ public class CrowdingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
+    public PieceState states { get; set; } = PieceState.Crowding;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1400,6 +1414,7 @@ public class HungryPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
+    public PieceState states { get; set; } = PieceState.Hungry;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1493,6 +1508,7 @@ public class CaptureTheFlagPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "CaptureTheFlag";
+    public PieceState states { get; set; } = PieceState.CaptureTheFlag;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1586,6 +1602,7 @@ public class FreezingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1679,6 +1696,7 @@ public class CloningPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1772,6 +1790,7 @@ public class ZombiePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1865,6 +1884,7 @@ public class UndeadPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1958,6 +1978,7 @@ public class PromotionPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2051,6 +2072,7 @@ public class DefuserPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Defuser";
+    public PieceState states { get; set; } = PieceState.Defuser;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2144,6 +2166,7 @@ public class SpittingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
+    public PieceState states { get; set; } = PieceState.Spitting;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2237,6 +2260,7 @@ public class PhantomPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Dematerialize";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2330,6 +2354,7 @@ public class SplittingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Split";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2423,6 +2448,7 @@ public class PromotingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2516,6 +2542,7 @@ public class StackingPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
+    public PieceState states { get; set; } = PieceState.Stacking;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2609,6 +2636,7 @@ public class JailPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jailer";
+    public PieceState states { get; set; } = PieceState.Jailer;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2702,6 +2730,7 @@ public class PiggybackPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Piggyback";
+    public PieceState states { get; set; } = PieceState.Piggyback;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -2807,6 +2836,7 @@ public class JockeyPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jockey";
+    public PieceState states { get; set; } = PieceState.Jockey;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -2921,6 +2951,7 @@ public class ProtectivePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Protective";
+    public PieceState states { get; set; } = PieceState.Protective;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3026,6 +3057,7 @@ public class PAWN : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "PAWN";
+    public PieceState states { get; set; } = PieceState.Pawn;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3131,6 +3163,7 @@ public class DoublePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Double";
+    public PieceState states { get; set; } = PieceState.Double;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3236,6 +3269,7 @@ public class OppressivePawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Oppressive";
+    public PieceState states { get; set; } = PieceState.Oppressive;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -3329,6 +3363,7 @@ public class DelayedPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Delayed";
+    public PieceState states { get; set; } = PieceState.Delayed;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

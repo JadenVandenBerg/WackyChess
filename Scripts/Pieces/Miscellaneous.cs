@@ -114,6 +114,7 @@ public class SuperPawn : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

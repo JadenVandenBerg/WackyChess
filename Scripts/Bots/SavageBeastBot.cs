@@ -157,17 +157,16 @@ public class SavageBeastBot : BotTemplate
         List<int> boardControl = new List<int>();
 
         var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
-        List<Dictionary<Piece, List<int[]>>> listBotWhiteMoves = botMovesWhite.pieceMoveList;
+        List<PieceMoveList> listBotWhiteMoves = botMovesWhite.pieceMoveList;
 
         var botMovesBlack = BotHelperFunctions.getAllPossibleBotMoves(this, bs, -1);
-        List<Dictionary<Piece, List<int[]>>> listBotBlackMoves = botMovesBlack.pieceMoveList;
+        List<PieceMoveList> listBotBlackMoves = botMovesBlack.pieceMoveList;
 
         List<int[]> uniqueCoords = new List<int[]>();
-        foreach(Dictionary<Piece, List<int[]>> movePair in listBotWhiteMoves)
+        foreach (PieceMoveList pml in listBotWhiteMoves)
         {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            List<int[]> _mL = pieceMovesKeyVal.Value;
+            Piece piece = pml.piece;
+            List<int[]> _mL = pml.moves;
 
             foreach (int[] coords in _mL)
             {
@@ -180,11 +179,10 @@ public class SavageBeastBot : BotTemplate
         boardControl.Add(uniqueCoords.Count);
 
         uniqueCoords = new List<int[]>();
-        foreach (Dictionary<Piece, List<int[]>> movePair in listBotBlackMoves)
+        foreach (PieceMoveList pml in listBotBlackMoves)
         {
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = movePair.First();
-            Piece piece = pieceMovesKeyVal.Key;
-            List<int[]> _mL = pieceMovesKeyVal.Value;
+            Piece piece = pml.piece;
+            List<int[]> _mL = pml.moves;
 
             foreach (int[] coords in _mL)
             {

@@ -20,6 +20,7 @@ public class Rook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -117,6 +118,7 @@ public class MurderousRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Murderous";
+    public PieceState states { get; set; } = PieceState.Murderous;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -212,6 +214,7 @@ public class GhostRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
+    public PieceState states { get; set; } = PieceState.Ghost;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -307,6 +310,7 @@ public class GhoulRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghoul;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -402,6 +406,7 @@ public class OneTimeRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -497,6 +502,7 @@ public class ElectricRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
+    public PieceState states { get; set; } = PieceState.Electric;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -594,6 +600,7 @@ public class InfiniteRook : Piece
     public int lives { get; set; } = -1;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -691,6 +698,7 @@ public class PortalRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
+    public PieceState states { get; set; } = PieceState.Portal;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -788,6 +796,7 @@ public class AtomicRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -885,6 +894,7 @@ public class LandmineRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -982,6 +992,7 @@ public class LiteRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1074,6 +1085,7 @@ public class SuperGhostRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghost | PieceState.Ghoul;
     public String secondaryState { get; set; } = "Ghost";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1169,6 +1181,7 @@ public class Empress : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1269,6 +1282,7 @@ public class FragileRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
+    public PieceState states { get; set; } = PieceState.Fragile;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1366,6 +1380,7 @@ public class RoyalRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1464,6 +1479,7 @@ public class MonochromeRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1561,6 +1577,7 @@ public class CrowdingRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
+    public PieceState states { get; set; } = PieceState.Crowding;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1658,6 +1675,7 @@ public class HungryRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
+    public PieceState states { get; set; } = PieceState.Hungry;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1755,6 +1773,7 @@ public class CaptureTheFlagRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "CaptureTheFlag";
+    public PieceState states { get; set; } = PieceState.CaptureTheFlag;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1852,6 +1871,7 @@ public class FreezingRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1949,6 +1969,7 @@ public class CloningRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2046,6 +2067,7 @@ public class UndeadRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2143,6 +2165,7 @@ public class PromotionRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2240,6 +2263,7 @@ public class DefuserRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Defuser";
+    public PieceState states { get; set; } = PieceState.Defuser;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2337,6 +2361,7 @@ public class SpittingRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
+    public PieceState states { get; set; } = PieceState.Spitting;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2434,6 +2459,7 @@ public class PhantomRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Dematerialize";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2531,6 +2557,7 @@ public class StackingRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
+    public PieceState states { get; set; } = PieceState.Stacking;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2628,6 +2655,7 @@ public class JailRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jailer";
+    public PieceState states { get; set; } = PieceState.Jailer;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2725,6 +2753,7 @@ public class Crook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crook";
+    public PieceState states { get; set; } = PieceState.Crook;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2822,6 +2851,7 @@ public class PiggybackRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Piggyback";
+    public PieceState states { get; set; } = PieceState.Piggyback;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -2930,6 +2960,7 @@ public class JockeyRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jockey";
+    public PieceState states { get; set; } = PieceState.Jockey;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3038,6 +3069,7 @@ public class DelayedRook : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Delayed";
+    public PieceState states { get; set; } = PieceState.Delayed;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

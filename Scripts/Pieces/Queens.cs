@@ -20,6 +20,7 @@ public class Queen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -121,6 +122,7 @@ public class MurderousQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Murderous";
+    public PieceState states { get; set; } = PieceState.Murderous;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -221,6 +223,7 @@ public class GhostQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
+    public PieceState states { get; set; } = PieceState.Ghost;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -322,6 +325,7 @@ public class GhoulQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghoul;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -423,6 +427,7 @@ public class OneTimeQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -524,6 +529,7 @@ public class ElectricQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
+    public PieceState states { get; set; } = PieceState.Electric;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -625,6 +631,7 @@ public class InfiniteQueen : Piece
     public int lives { get; set; } = -1;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -726,6 +733,7 @@ public class PortalQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
+    public PieceState states { get; set; } = PieceState.Portal;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -827,6 +835,7 @@ public class AtomicQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -928,6 +937,7 @@ public class LandmineQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -1029,6 +1039,7 @@ public class LiteQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1121,6 +1132,7 @@ public class SuperGhostQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghost | PieceState.Ghoul;
     public String secondaryState { get; set; } = "Ghost";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1222,6 +1234,7 @@ public class Minister : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1316,6 +1329,7 @@ public class FragileQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
+    public PieceState states { get; set; } = PieceState.Fragile;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1417,6 +1431,7 @@ public class Amazon : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1521,6 +1536,7 @@ public class ReverseMinister : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1615,6 +1631,7 @@ public class SinisterMinisterQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1712,6 +1729,7 @@ public class MonochromeQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1813,6 +1831,7 @@ public class BouncingQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Bouncing";
+    public PieceState states { get; set; } = PieceState.Bouncing;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1914,6 +1933,7 @@ public class CrowdingQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
+    public PieceState states { get; set; } = PieceState.Crowding;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2015,6 +2035,7 @@ public class HungryQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
+    public PieceState states { get; set; } = PieceState.Hungry;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2116,6 +2137,7 @@ public class CaptureTheFlagQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "CaptureTheFlag";
+    public PieceState states { get; set; } = PieceState.CaptureTheFlag;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2217,6 +2239,7 @@ public class FreezingQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2318,6 +2341,7 @@ public class CloningQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2419,6 +2443,7 @@ public class UndeadQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2520,6 +2545,7 @@ public class DefuserQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Defuser";
+    public PieceState states { get; set; } = PieceState.Defuser;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2621,6 +2647,7 @@ public class SpittingQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
+    public PieceState states { get; set; } = PieceState.Spitting;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2722,6 +2749,7 @@ public class PhantomQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Dematerialize";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2823,6 +2851,7 @@ public class StackingQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
+    public PieceState states { get; set; } = PieceState.Stacking;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2924,6 +2953,7 @@ public class JailQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jailer";
+    public PieceState states { get; set; } = PieceState.Jailer;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -3025,6 +3055,7 @@ public class PiggybackQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Piggyback";
+    public PieceState states { get; set; } = PieceState.Piggyback;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3137,6 +3168,7 @@ public class JockeyQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jockey";
+    public PieceState states { get; set; } = PieceState.Jockey;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3249,6 +3281,7 @@ public class Feminist : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Feminist";
+    public PieceState states { get; set; } = PieceState.Feminist;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -3343,6 +3376,7 @@ public class Medusa : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Medusa";
+    public PieceState states { get; set; } = PieceState.Medusa;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -3444,6 +3478,7 @@ public class DelayedQueen : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Delayed";
+    public PieceState states { get; set; } = PieceState.Delayed;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

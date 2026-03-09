@@ -61,13 +61,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-
         */
+        
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new Bloodbot(1);
+        botWhite = new OneMoveBot(1);
         botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
@@ -77,8 +77,8 @@ public class botMaster : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        //List<Piece> botWhitePawns = BotHelperFunctions.filterPieces("Pawn", botWhite.pieces);
-        
+        List<Piece> botWhitePawns = BotHelperFunctions.filterPieces("Pawn", botWhite.pieces);
+        /*
         List<Piece> botWhitePawns = new List<Piece>
         {
             getPieceTypeInstance("Pawn", 1),
@@ -90,7 +90,7 @@ public class botMaster : MonoBehaviour
             getPieceTypeInstance("Pawn", 1),
             getPieceTypeInstance("Pawn", 1),
         };
-        
+        */
 
         HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
         HelperFunctions.initPiece(botWhitePawns[1], new int[] { 2, 2 });
@@ -100,45 +100,46 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botWhitePawns[5], new int[] { 6, 2 });
         HelperFunctions.initPiece(botWhitePawns[6], new int[] { 7, 2 });
         HelperFunctions.initPiece(botWhitePawns[7], new int[] { 8, 2 });
-
-        //List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
         
+
+        List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
+        /*
         List<Piece> botWhiteRooks = new List<Piece>
         {
             getPieceTypeInstance("Rook", 1),
             getPieceTypeInstance("Rook", 1),
         };
-        
-        //List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
-        
+        */
+        List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
+        /*
         List<Piece> botWhiteBishops = new List<Piece>
         {
             getPieceTypeInstance("Bishop", 1),
             getPieceTypeInstance("Bishop", 1),
         };
-        
-        //List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
-        
+        */
+        List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
+        /*
         List<Piece> botWhiteKnights = new List<Piece>
         {
             getPieceTypeInstance("Knight", 1),
             getPieceTypeInstance("Knight", 1),
         };
-        
-        //List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
-        
+        */
+        List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
+        /*
         List<Piece> botWhiteKing = new List<Piece>
         {
             getPieceTypeInstance("King", 1)
         };
-        
-        //List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
-        
+        */
+        List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
+        /*
         List<Piece> botWhiteQueen = new List<Piece>
         {
             getPieceTypeInstance("Queen", 1)
         };
-        
+        */
 
         HelperFunctions.initPiece(botWhiteRooks[0], new int[] { 1, 1 });
         HelperFunctions.initPiece(botWhiteRooks[1], new int[] { 8, 1 });
@@ -149,7 +150,8 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botWhiteQueen[0], new int[] { 4, 1 });
         HelperFunctions.initPiece(botWhiteKing[0], new int[] { 5, 1 });
 
-        //List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
+        List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
+        /*
         List<Piece> botBlackPawns = new List<Piece>
         {
             getPieceTypeInstance("Pawn", -1),
@@ -161,7 +163,7 @@ public class botMaster : MonoBehaviour
             getPieceTypeInstance("Pawn", -1),
             getPieceTypeInstance("Pawn", -1),
         };
-        
+        */
         HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
         HelperFunctions.initPiece(botBlackPawns[1], new int[] { 2, 7 });
         HelperFunctions.initPiece(botBlackPawns[2], new int[] { 3, 7 });
@@ -171,43 +173,44 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botBlackPawns[6], new int[] { 7, 7 });
         HelperFunctions.initPiece(botBlackPawns[7], new int[] { 8, 7 });
 
-        //List<Piece> botBlackRooks = BotHelperFunctions.filterPieces("Rook", botBlack.pieces);
-        
+        List<Piece> botBlackRooks = BotHelperFunctions.filterPieces("Rook", botBlack.pieces);
+        /*
         List<Piece> botBlackRooks = new List<Piece>
         {
             getPieceTypeInstance("MurderousRook", -1),
             getPieceTypeInstance("MurderousRook", -1),
         };
-        
-        //List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
-        
+        */
+        List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
+        /*
         List<Piece> botBlackBishops = new List<Piece>
         {
             getPieceTypeInstance("Bishop", -1),
             getPieceTypeInstance("Bishop", -1),
         };
-        
-        //List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
+        */
+        List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
+        /*
         List<Piece> botBlackKnights = new List<Piece>
         {
             getPieceTypeInstance("Knight", -1),
             getPieceTypeInstance("Knight", -1),
         };
-
-        //List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
-        
+        */
+        List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
+        /*
         List<Piece> botBlackKing = new List<Piece>
         {
             getPieceTypeInstance("King", -1),
         };
-        
-        //List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
-        
+        */
+        List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
+        /*
         List<Piece> botBlackQueen = new List<Piece>
         {
             getPieceTypeInstance("Queen", -1),
         };
-        
+        */
         HelperFunctions.initPiece(botBlackRooks[0], new int[] { 1, 8 });
         HelperFunctions.initPiece(botBlackRooks[1], new int[] { 8, 8 });
         HelperFunctions.initPiece(botBlackBishops[0], new int[] { 3, 8 });
@@ -434,6 +437,22 @@ public class botMaster : MonoBehaviour
 
             NextMove randomMove = performRandomBotMove_(currentBot);
 
+            if (randomMove == null)
+            {
+                Debug.Log("Game Over - Checkmate");
+                bgs.result = "Won by Checkmate";
+                if (turn == -1)
+                {
+                    bgs.winner = "White";
+                    bgs.winnerName = botWhite.name;
+                }
+                else
+                {
+                    bgs.winner = "Black";
+                    bgs.winnerName = botBlack.name;
+                }
+            }
+
             if (randomMove.moveType == "move")
             {
                 movePieceObj = randomMove.move.p;
@@ -574,7 +593,7 @@ public class botMaster : MonoBehaviour
         {
             printBGS(bgs);
 
-            nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
+            if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
             yield return new WaitForSeconds(5f);
 
@@ -643,6 +662,11 @@ public class botMaster : MonoBehaviour
         int dictIndex = rand.Next(totalCount);
 
         NextMove next;
+
+        if (allMoves.Count == 0)
+        {
+            return null;
+        }
 
         if (dictIndex >= allMoves.Count)
         {

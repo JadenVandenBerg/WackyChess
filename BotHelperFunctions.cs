@@ -350,8 +350,11 @@ public class BotHelperFunctions : MonoBehaviour
                         List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
                         foreach (Piece p_ in piecesOnDir)
                         {
-                            PieceAbility freeze = new PieceAbility(piece, "Freeze", new int[] { posX + 1, posY + 1 }, null, null, p_);
-                            pieceAbilities.Add(freeze);
+                            if (p_.color != piece.color)
+                            {
+                                PieceAbility freeze = new PieceAbility(piece, "Freeze", new int[] { posX + 1, posY + 1 }, null, null, p_);
+                                pieceAbilities.Add(freeze);
+                            }
                         }
                     }
                 }

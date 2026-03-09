@@ -113,8 +113,10 @@ public static class nonResettables
 
     public static void postBotMatch(string botAName, string botBName, string winner)
     {
+        string path = @"C:\Users\Jay\Projects\WC_React\wc_react\public\data.json";
+
         List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(
-            File.ReadAllText("Assets/bots.json")
+            File.ReadAllText(path)
         );
 
         botAName = fixBotName(botAName);
@@ -142,7 +144,7 @@ public static class nonResettables
         }
 
         File.WriteAllText(
-            "Assets/bots.json",
+            path,
             JsonConvert.SerializeObject(bots, Formatting.Indented)
         );
     }

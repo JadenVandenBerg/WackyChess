@@ -216,24 +216,15 @@ public class HelperFunctions : MonoBehaviour
             for (int j = 1; j <= 8; j++)
             {
                 Image s = findSquare(i, j).GetComponent<Image>();
-                bool frozen = checkStateOnSquare(getPiecesOnSquareBoardGrid(findSquare(i, j)), PieceState.Frozen);
 
-                if (frozen)
+                if ((i + j) % 2 == 0)
                 {
-                    s.color = (Color)(new Color32(189, 222, 236, 255));
+                    s.color = (Color)(new Color32(14, 115, 34, 255));
                 }
                 else
                 {
-                    if ((i + j) % 2 == 0)
-                    {
-                        s.color = (Color)(new Color32(14, 115, 34, 255));
-                    }
-                    else
-                    {
-                        s.color = (Color)(new Color32(131, 199, 145, 255));
-                    }
+                    s.color = (Color)(new Color32(131, 199, 145, 255));
                 }
-
             }
         }
     }
@@ -3312,9 +3303,17 @@ public class HelperFunctions : MonoBehaviour
             Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
 
             Piece storagePiece = piece.storage[0];
+            if (storagePiece.go == null)
+            {
+                storagePiece = secondPiece;
+            }
 
-            collateralDeath(getPiecesOnSquare(findSquare(coords[0], coords[1])));
-            death = true;
+            List<Piece> spitPieces = getPiecesOnSquare(findSquare(coords[0], coords[1]));
+            if (spitPieces != null && spitPieces.Count > 0)
+            {
+                collateralDeath(spitPieces);
+                death = true;
+            }
 
             restorePieceImageToBoard(storagePiece);
             initPiece(storagePiece, coords);

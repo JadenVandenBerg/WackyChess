@@ -567,6 +567,9 @@ public class botMaster : MonoBehaviour
         if (gameOver)
         {
             printBGS(bgs);
+
+            nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winner);
+
             yield return new WaitForSeconds(5f);
 
             HelperFunctions.resetGameVars();

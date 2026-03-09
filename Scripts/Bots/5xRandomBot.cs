@@ -21,7 +21,7 @@ public class FiveXRandomBot : BotTemplate
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = new List<NextMove>();
 
-        this.currentBoardState.refresh(gameData.boardGrid);
+        this.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
         for(int i = 0; i < 5; i++)

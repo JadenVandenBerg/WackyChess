@@ -170,6 +170,7 @@ public interface Piece
      * Scaredy: Moves 2 squares when in check //used for flag moves
      */
     public String state { get; set; }
+    public PieceState states { get; set; }
     public String secondaryState { get; set; }
 
     /*

@@ -20,6 +20,7 @@ public class Bishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -118,6 +119,7 @@ public class MurderousBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Murderous";
+    public PieceState states { get; set; } = PieceState.Murderous;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -217,6 +219,7 @@ public class GhostBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghost";
+    public PieceState states { get; set; } = PieceState.Ghost;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -312,6 +315,7 @@ public class GhoulBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghoul;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -408,6 +412,7 @@ public class OneTimeBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -504,6 +509,7 @@ public class ElectricBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Electric";
+    public PieceState states { get; set; } = PieceState.Electric;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -602,6 +608,7 @@ public class InfiniteBishop : Piece
     public int lives { get; set; } = -1;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -700,6 +707,7 @@ public class PortalBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Portal";
+    public PieceState states { get; set; } = PieceState.Portal;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -798,6 +806,7 @@ public class AtomicBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 0;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -896,6 +905,7 @@ public class LandmineBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = 1;
     public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
@@ -994,6 +1004,7 @@ public class ColorChangingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1092,6 +1103,7 @@ public class LiteBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1185,6 +1197,7 @@ public class SuperGhostBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Ghoul";
+    public PieceState states { get; set; } = PieceState.Ghost | PieceState.Ghoul;
     public String secondaryState { get; set; } = "Ghost";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1281,6 +1294,7 @@ public class Princess : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1382,6 +1396,7 @@ public class FragileBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Fragile";
+    public PieceState states { get; set; } = PieceState.Fragile;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1480,6 +1495,7 @@ public class RoyalBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1579,6 +1595,7 @@ public class BouncingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Bouncing";
+    public PieceState states { get; set; } = PieceState.Bouncing;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1677,6 +1694,7 @@ public class CrowdingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Crowding";
+    public PieceState states { get; set; } = PieceState.Crowding;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1775,6 +1793,7 @@ public class HungryBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Vomit";
     public String state { get; set; } = "Hungry";
+    public PieceState states { get; set; } = PieceState.Hungry;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1873,6 +1892,7 @@ public class CaptureTheFlagBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "CaptureTheFlag";
+    public PieceState states { get; set; } = PieceState.CaptureTheFlag;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -1971,6 +1991,7 @@ public class FreezingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Freeze";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2069,6 +2090,7 @@ public class CloningBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2167,6 +2189,7 @@ public class UndeadBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spawn";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2265,6 +2288,7 @@ public class PromotionBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2363,6 +2387,7 @@ public class DefuserBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Defuser";
+    public PieceState states { get; set; } = PieceState.Defuser;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2461,6 +2486,7 @@ public class SpittingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Spit";
     public String state { get; set; } = "Spitting";
+    public PieceState states { get; set; } = PieceState.Spitting;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2559,6 +2585,7 @@ public class PhantomBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "Dematerialize";
     public String state { get; set; } = "Normal";
+    public PieceState states { get; set; } = PieceState.None;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2657,6 +2684,7 @@ public class StackingBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Stacking";
+    public PieceState states { get; set; } = PieceState.Stacking;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2755,6 +2783,7 @@ public class JailBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jailer";
+    public PieceState states { get; set; } = PieceState.Jailer;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
@@ -2853,6 +2882,7 @@ public class PiggybackBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Piggyback";
+    public PieceState states { get; set; } = PieceState.Piggyback;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -2962,6 +2992,7 @@ public class JockeyBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Jockey";
+    public PieceState states { get; set; } = PieceState.Jockey;
     public String secondaryState { get; set; } = "Normal";
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
@@ -3071,6 +3102,7 @@ public class DelayedBishop : Piece
     public int lives { get; set; } = 0;
     public String ability { get; set; } = "None";
     public String state { get; set; } = "Delayed";
+    public PieceState states { get; set; } = PieceState.Delayed;
     public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;

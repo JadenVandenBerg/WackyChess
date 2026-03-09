@@ -36,7 +36,7 @@ public class TwoMoveBot : BotTemplate
     public NextMove nextMove()
     {
         List<MoveState> moveStates = new List<MoveState>();
-        BotHelperFunctions.resetPiecePositions(null, gameData.boardGrid);
+        BotHelperFunctions.resetPiecePositions(null, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 
         List<float> startPoints = BotHelperFunctions.getPointsOnBoardState(this.currentBoardState, true);
@@ -96,13 +96,12 @@ public class TwoMoveBot : BotTemplate
             //BoardState clone = BotHelperFunctions.copyBoardState(next.bs);
 
             var allBotMoves = BotHelperFunctions.getAllPossibleBotMoves(this, this.currentBoardState, this.color);
-            List<Dictionary<Piece, List<int[]>>> allBotMoves_ = allBotMoves.pieceMoveList;
+            List<BotHelperFunctions.PieceMoveList> allBotMoves_ = allBotMoves.pieceMoveList;
 
-            foreach (Dictionary<Piece, List<int[]>> movePair in allBotMoves_)
+            foreach (BotHelperFunctions.PieceMoveList pml in allBotMoves_)
             {
-                KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal_ = movePair.First();
-                Piece piece_ = pieceMovesKeyVal_.Key;
-                List<int[]> mL__ = pieceMovesKeyVal_.Value;
+                Piece piece_ = pml.piece;
+                List<int[]> mL__ = pml.moves;
 
                 foreach (int[] coords in mL__)
                 {
@@ -111,16 +110,15 @@ public class TwoMoveBot : BotTemplate
                     BoardState cloneState = BotHelperFunctions.simulatePieceMove(this, next.bs, piece_, coords);
 
                     var botMovesOpp_ = BotHelperFunctions.getAllPossibleBotMoves(this, cloneState, this.color * -1);
-                    List<Dictionary<Piece, List<int[]>>> allMovesOpp_ = botMovesOpp_.pieceMoveList;
+                    List<BotHelperFunctions.PieceMoveList> allMovesOpp_ = botMovesOpp_.pieceMoveList;
 
                     BoardState bestMoveOppBS = null;
                     float bestOppMoveDiff = +1000;
 
-                    foreach (Dictionary<Piece, List<int[]>> movePairOpp in allMovesOpp_)
+                    foreach (BotHelperFunctions.PieceMoveList pml_ in allMovesOpp_)
                     {
-                        KeyValuePair<Piece, List<int[]>> pieceMovesKeyValOpp = movePairOpp.First();
-                        Piece pieceOpp = pieceMovesKeyValOpp.Key;
-                        List<int[]> _mLOpp = pieceMovesKeyValOpp.Value;
+                        Piece pieceOpp = pml_.piece;
+                        List<int[]> _mLOpp = pml_.moves;
 
                         foreach (int[] coordsOpp in _mLOpp)
                         {

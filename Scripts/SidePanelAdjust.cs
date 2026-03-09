@@ -173,7 +173,7 @@ public class SidePanelAdjust : MonoBehaviour
             GameObject container = new GameObject($"PieceContainer_{i}", typeof(RectTransform));
             Image bgImage = container.AddComponent<Image>();
             bgImage.color = new Color32(0, 0, 0, 0);
-            if (HelperFunctions.checkState(panelPieces[i], "Frozen"))
+            if (HelperFunctions.checkState(panelPieces[i], PieceState.Frozen))
             {
                 bgImage.color = new Color32(189, 222, 236, 255);
             }
@@ -253,7 +253,7 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "Unfreeze")
                     {
-                        if (!HelperFunctions.checkState(panelPieces[i], "Frozen"))
+                        if (!HelperFunctions.checkState(panelPieces[i], PieceState.Frozen))
                         {
                             continue;
                         }
@@ -290,14 +290,14 @@ public class SidePanelAdjust : MonoBehaviour
                     }
                     else if (abilityName == "Dematerialize")
                     {
-                        if (HelperFunctions.checkState(panelPieces[i], "Dematerialized"))
+                        if (HelperFunctions.checkState(panelPieces[i], PieceState.Dematerialized))
                         {
                             continue;
                         }
                     }
                     else if (abilityName == "Materialize")
                     {
-                        if (!HelperFunctions.checkState(panelPieces[i], "Dematerialized"))
+                        if (!HelperFunctions.checkState(panelPieces[i], PieceState.Dematerialized))
                         {
                             continue;
                         }

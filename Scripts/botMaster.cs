@@ -279,8 +279,8 @@ public class botMaster : MonoBehaviour
         botWhite.king = gameData.whiteKing;
         botBlack.king = gameData.blackKing;
 
-        botWhite.currentBoardState.refresh(gameData.boardGrid);
-        List<float> points = BotHelperFunctions.getPointsOnBoardState(botWhite.currentBoardState, false);
+        botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+        List<float> points = getPointsOnBoardState(botWhite.currentBoardState, false);
         bgs.whitePoints = points[0];
         bgs.blackPoints = points[1];
 
@@ -313,8 +313,8 @@ public class botMaster : MonoBehaviour
 
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);
-        botWhite.currentBoardState.refresh(gameData.boardGrid);
-        botBlack.currentBoardState.refresh(gameData.boardGrid);
+        botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+        botBlack.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
 
         BotTemplate currentBot;
         bool valid;
@@ -473,6 +473,8 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Game Over - King Death");
                 bgs.result = "Won by opposing king death";
                 bgs.winner = "Black";
+
+                bgs.winnerName = botBlack.name;
             }
             else
             {
@@ -491,6 +493,8 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Game Over - King Death");
                 bgs.result = "Won by opposing king death";
                 bgs.winner = "White";
+
+                bgs.winnerName = botWhite.name;
             }
             else
             {
@@ -526,10 +530,12 @@ public class botMaster : MonoBehaviour
                 if (turn == -1)
                 {
                     bgs.winner = "White";
+                    bgs.winnerName = botWhite.name;
                 }
                 else
                 {
                     bgs.winner = "Black";
+                    bgs.winnerName = botBlack.name;
                 }
             }
             else
@@ -567,6 +573,9 @@ public class botMaster : MonoBehaviour
         if (gameOver)
         {
             printBGS(bgs);
+
+            nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
+
             yield return new WaitForSeconds(5f);
 
             HelperFunctions.resetGameVars();
@@ -663,7 +672,7 @@ public class botMaster : MonoBehaviour
     public bool botValidateAbility(PieceAbility pa, BotTemplate bot)
     {
         BoardState bs = new BoardState();
-        bs.refresh(gameData.boardGrid);
+        bs.refresh(convertBoardGrid(gameData.boardGrid));
 
         List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, bot.color);
 
@@ -785,7 +794,7 @@ public class botMaster : MonoBehaviour
         }
 
         BoardState bs = new BoardState();
-        bs.refresh(gameData.boardGrid);
+        bs.refresh(convertBoardGrid(gameData.boardGrid));
 
         List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
 

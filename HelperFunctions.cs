@@ -216,7 +216,7 @@ public class HelperFunctions : MonoBehaviour
             for (int j = 1; j <= 8; j++)
             {
                 Image s = findSquare(i, j).GetComponent<Image>();
-                bool frozen = checkStateOnSquare(getPiecesOnSquareBoardGrid(findSquare(i, j)), "Frozen");
+                bool frozen = checkStateOnSquare(getPiecesOnSquareBoardGrid(findSquare(i, j)), PieceState.Frozen);
 
                 if (frozen)
                 {
@@ -559,8 +559,8 @@ public class HelperFunctions : MonoBehaviour
             if (square != null && isPieceOnSquare(square))
             {
                 List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
-                if (checkState(piece, "Ghost") && isColorNotOnSquare(square, piece.color * -1)
-                    || checkStateAllOnSquare(onSquare, "Ghoul-Dematerialized") && isColorNotOnSquare(square, piece.color * -1))
+                if (checkState(piece, PieceState.Ghost) && isColorNotOnSquare(square, piece.color * -1)
+                    || checkStateAllOnSquare(onSquare, PieceState.Ghoul | PieceState.Dematerialized) && isColorNotOnSquare(square, piece.color * -1))
                 {
                     continue;
                 }
@@ -573,14 +573,14 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool moveComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
+        if (checkState(piece, PieceState.Crowding) || checkState(piece, PieceState.Jockey))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
                 return !jump;
             }
         }
-        else if (checkState(piece, "Dematerialized"))
+        else if (checkState(piece, PieceState.Dematerialized))
         {
             return true;
         }
@@ -589,18 +589,18 @@ public class HelperFunctions : MonoBehaviour
     }
     public static bool moveAndAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
+        if (checkState(piece, PieceState.Crowding) || checkState(piece, PieceState.Jockey))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
                 return !jump;
             }
         }
-        else if (checkState(piece, "Dematerialized"))
+        else if (checkState(piece, PieceState.Dematerialized))
         {
             return !jump;
         }
-        else if (checkState(piece, "Feminist") && checkPieceTypeFromList(piecesOnSquare, "q"))
+        else if (checkState(piece, PieceState.Feminist) && checkPieceTypeFromList(piecesOnSquare, "q"))
         {
             return false;
         }
@@ -629,14 +629,14 @@ public class HelperFunctions : MonoBehaviour
     }
     public static bool jumpAttacksComparator(Piece piece, bool jump, bool pieceIsNull, bool pieceIsDiffColour, List<Piece> piecesOnSquare)
     {
-        if (checkState(piece, "Crowding") || checkState(piece, "Jockey"))
+        if (checkState(piece, PieceState.Crowding) || checkState(piece, PieceState.Jockey))
         {
             if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
                 return true;
             }
         }
-        else if (checkState(piece, "Dematerialized"))
+        else if (checkState(piece, PieceState.Dematerialized))
         {
             return true;
         }
@@ -646,7 +646,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static int[] adjustCoordsForPortal(Piece piece, int x, int y)
     {
-        if (checkState(piece, "Portal"))
+        if (checkState(piece, PieceState.Portal))
         {
             if (x > 8)
             {
@@ -672,7 +672,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static int[] adjustCoordsForBouncing(Piece piece, int x, int y)
     {
-        if (checkState(piece, "Bouncing"))
+        if (checkState(piece, PieceState.Bouncing))
         {
             if (x > 8)
             {
@@ -755,7 +755,7 @@ public class HelperFunctions : MonoBehaviour
     /*todo rewrite this for isolated boardstate*/
     public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
     {
-        if (checkState(piece, "Frozen") || checkState(piece, "Jailed"))
+        if (checkState(piece, PieceState.Frozen) || checkState(piece, PieceState.Jailed))
         {
             return;
         }
@@ -780,12 +780,12 @@ public class HelperFunctions : MonoBehaviour
 
             int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
 
-            if (checkState(piece, "Portal"))
+            if (checkState(piece, PieceState.Portal))
             {
                 newPos[0] = coordsP[0];
                 newPos[1] = coordsP[1];
             }
-            else if (checkState(piece, "Bouncing"))
+            else if (checkState(piece, PieceState.Bouncing))
             {
                 newPos[0] = coordsB[0];
                 newPos[1] = coordsB[1];
@@ -815,12 +815,12 @@ public class HelperFunctions : MonoBehaviour
                     }
 
                     //Check for states
-                    if (checkStateOnSquare(piecesOnSquare, "Shield"))
+                    if (checkStateOnSquare(piecesOnSquare, PieceState.Shield))
                     {
                         continue;
                     }
 
-                    if (checkStateOnSquare(piecesOnSquare, "CaptureTheFlag"))
+                    if (checkStateOnSquare(piecesOnSquare, PieceState.CaptureTheFlag))
                     {
                         bool _continue = false;
                         foreach (Piece piece_ in piecesOnSquare)
@@ -847,7 +847,7 @@ public class HelperFunctions : MonoBehaviour
                 bool jump = false;
 
                 //Portal Jump && Bouncing Jump
-                if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, "Portal"))
+                if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, PieceState.Portal))
                 {
                     if (isKnightPortalBackRank(piece, oldCoords, newPos))
                     {
@@ -856,7 +856,7 @@ public class HelperFunctions : MonoBehaviour
 
                     jump = isJumpPortal(piece, piece.position, newPos);
                 }
-                else if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, "Bouncing"))
+                else if (isCoordsDifferent(oldCoords, newPos) && checkState(piece, PieceState.Bouncing))
                 {
                     jump = isJumpBouncing(piece, piece.position, newPos);
                 }
@@ -1515,7 +1515,7 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece deadPiece in new List<Piece>(deadPieces))
         {
-            if (checkState(deadPiece, "Shield") || checkCaptureTheFlag(deadPiece))
+            if (checkState(deadPiece, PieceState.Shield) || checkCaptureTheFlag(deadPiece))
             {
                 continue;
             }
@@ -1658,7 +1658,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Electric
-        if (checkState(deadPiece, "Electric"))
+        if (checkState(deadPiece, PieceState.Electric))
         {
             System.Random rand = new System.Random();
             int randomNumber = rand.Next(1, 3);
@@ -1670,7 +1670,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Hungry
-        if (checkState(attackerPiece, "Hungry")) //TODO deadPiece
+        if (checkState(attackerPiece, PieceState.Hungry)) //TODO deadPiece
         {
             if (attackerPiece.storage == null)
             {
@@ -1687,7 +1687,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Spitting
-        if (checkState(attackerPiece, "Spitting"))
+        if (checkState(attackerPiece, PieceState.Spitting))
         {
             if (attackerPiece.storage == null)
             {
@@ -1711,30 +1711,10 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
-        if (checkState(attackerPiece, "Stacking"))
+        if (checkState(attackerPiece, PieceState.Stacking))
         {
             // Abilities / States
-            string state = deadPiece.state;
-            string[] parts = state.Split('-');
-
-            foreach (string statePart in parts)
-            {
-                if (!attackerPiece.state.Contains(statePart))
-                {
-                    addState(attackerPiece, statePart);
-                }
-            }
-
-            string state2 = deadPiece.secondaryState;
-            string[] parts2 = state2.Split('-');
-
-            foreach (string statePart in parts2)
-            {
-                if (!attackerPiece.state.Contains(statePart))
-                {
-                    addState(attackerPiece, statePart);
-                }
-            }
+            attackerPiece.states |= deadPiece.states;
 
             string ability = deadPiece.ability;
             string[] abilityParts = ability.Split('-');
@@ -1785,21 +1765,21 @@ public class HelperFunctions : MonoBehaviour
             //maybe add promotion row and storage
         }
 
-        if (checkState(attackerPiece, "Jailer"))
+        if (checkState(attackerPiece, PieceState.Jailer))
         {
-            addState(deadPiece, "Jailed");
+            addState(deadPiece, PieceState.Jailed);
 
             return;
         }
 
-        if (checkState(deadPiece, "Crook") && deadPiece.color != attackerPiece.color)
+        if (checkState(deadPiece, PieceState.Crook) && deadPiece.color != attackerPiece.color)
         {
-            addState(deadPiece, "Jailed");
+            addState(deadPiece, PieceState.Jailed);
 
             return;
         }
 
-        if (checkState(attackerPiece, "Medusa"))
+        if (checkState(attackerPiece, PieceState.Medusa))
         {
             if (attackerPiece.numSpawns != 0)
             {
@@ -1818,7 +1798,7 @@ public class HelperFunctions : MonoBehaviour
             //Collateral (Attacker)
             if (attackerPiece.collateralType == 0) //Kill on Capture
             {
-                if (isPieceSurroundingState(deadPiece, "Defuser"))
+                if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
                 {
                     collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
@@ -1847,7 +1827,7 @@ public class HelperFunctions : MonoBehaviour
             //Collateral (Attackee)
             if (deadPiece.collateralType == 1) //Kill on death
             {
-                if (isPieceSurroundingState(deadPiece, "Defuser"))
+                if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
                 {
                     collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
@@ -1917,11 +1897,32 @@ public class HelperFunctions : MonoBehaviour
         return isPieceOnSquare(findSquare(piece.startSquare[0], piece.startSquare[1]));
     }
 
+    /*
     public static bool checkState(Piece piece, String state)
     {
         return piece.state.Contains(state) || piece.secondaryState.Contains(state);
     }
+    */
+    public static bool checkState(Piece piece, PieceState state)
+    {
+        return (piece.states & state) != 0;
+    }
 
+    public static bool checkStateOnSquare(List<Piece> piecesOnSquare, PieceState state)
+    {
+        if (piecesOnSquare == null || piecesOnSquare.Count == 0)
+            return false;
+
+        foreach (Piece piece in piecesOnSquare)
+        {
+            if ((piece.states & state) != 0)
+                return true;
+        }
+
+        return false;
+    }
+
+    /*
     public static bool checkStateOnSquare(List<Piece> piecesOnSquare, String state)
     {
         if (piecesOnSquare == null)
@@ -1939,7 +1940,22 @@ public class HelperFunctions : MonoBehaviour
 
         return false;
     }
+    */
 
+    public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, PieceState states)
+    {
+        if (piecesOnSquare == null || piecesOnSquare.Count == 0)
+            return false;
+
+        foreach (Piece piece in piecesOnSquare)
+        {
+            if ((piece.states & states) == 0)
+                return false;
+        }
+
+        return true;
+    }
+    /*
     public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, string state)
     {
         if (piecesOnSquare == null || piecesOnSquare.Count == 0)
@@ -1970,6 +1986,7 @@ public class HelperFunctions : MonoBehaviour
 
         return true;
     }
+    */
 
     public static List<Sprite> generateSidePanelImages(GameObject square)
     {
@@ -2071,6 +2088,21 @@ public class HelperFunctions : MonoBehaviour
         return grid;
     }
 
+    public static List<Piece>[,] initBoardGridNew()
+    {
+        List<Piece>[,] grid = new List<Piece>[8, 8];
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                grid[x, y] = new List<Piece>();
+            }
+        }
+
+        return grid;
+    }
+
     public static List<Piece> getPiecesOnSquareBoardGrid(GameObject square)
     {
         List<Piece> pieces = new List<Piece>();
@@ -2126,7 +2158,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (piece.disabled || piece.alive == 0 || (ignoreDematerialized && checkState(piece, "Dematerialized")) || checkState(piece, "Jailed"))
+            if (piece.disabled || piece.alive == 0 || (ignoreDematerialized && checkState(piece, PieceState.Dematerialized)) || checkState(piece, PieceState.Jailed))
             {
                 continue;
             }
@@ -2141,7 +2173,7 @@ public class HelperFunctions : MonoBehaviour
     {
         foreach (Piece piece in pieces)
         {
-            if (!piece.disabled && !checkState(piece, "Dematerialized"))
+            if (!piece.disabled && !checkState(piece, PieceState.Dematerialized))
             {
                 return false;
             }
@@ -2166,11 +2198,11 @@ public class HelperFunctions : MonoBehaviour
         }
 
         // Square contains more than one other piece (not crowding)
-        if (piecesOnSquare.Count > 1 && checkState(piece, "Crowding"))
+        if (piecesOnSquare.Count > 1 && checkState(piece, PieceState.Crowding))
         {
             foreach (Piece _piece in piecesOnSquare)
             {
-                if (!checkState(_piece, "Crowding"))
+                if (!checkState(_piece, PieceState.Crowding))
                 {
                     return false;
                 }
@@ -2181,25 +2213,25 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //There is one piece on the square, piece is crowding
-        if (checkState(piece, "Crowding") && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (checkState(piece, PieceState.Crowding) && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
             return true;
         }
 
         //There is one piece on square, piece on square is piggyback
-        if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], "Piggyback") && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
             return true;
         }
 
         //There is one piece on square, piece is jockey
-        if (piecesOnSquare.Count == 1 && checkState(piece, "Jockey") && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
             return true;
         }
 
 
-        if (!checkState(piece, "Crowding"))
+        if (!checkState(piece, PieceState.Crowding))
         {
             return false;
         }
@@ -2357,7 +2389,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool checkCaptureTheFlag(Piece piece)
     {
-        if (!checkState(piece, "CaptureTheFlag"))
+        if (!checkState(piece, PieceState.CaptureTheFlag))
         {
             return false;
         }
@@ -2417,7 +2449,7 @@ public class HelperFunctions : MonoBehaviour
             return false;
         }
 
-        if (checkState(king, "Uncastle"))
+        if (checkState(king, PieceState.Uncastle))
         {
             return false;
         }
@@ -2431,7 +2463,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        if (king.alive == 1 && rook.alive == 1 && checkState(king, "Rulebreaker"))
+        if (king.alive == 1 && rook.alive == 1 && checkState(king, PieceState.Rulebreaker))
         {
             goNext = true;
         }
@@ -2624,6 +2656,12 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
+    public static void addState(Piece piece, PieceState state)
+    {
+        piece.states |= state;
+    }
+
+    /*
     public static void addState(Piece piece, String state)
     {
         if (piece.state == "" || piece.state == null)
@@ -2642,6 +2680,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
     }
+    */
 
     public static void addAbility(Piece piece, String ability)
     {
@@ -2721,12 +2760,19 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    /*
     public static void removeState(Piece piece, string state)
     {
         piece.state = piece.state.Replace("-" + state, "");
         piece.state = piece.state.Replace(state, "");
         piece.secondaryState = piece.secondaryState.Replace("-" + state, "");
         piece.secondaryState = piece.secondaryState.Replace(state, "");
+    }
+    */
+
+    public static void removeState(Piece piece, PieceState state)
+    {
+        piece.states &= ~state;
     }
 
     public static void removeAbility(Piece piece, string ability)
@@ -2779,7 +2825,7 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (abilityName == "Unfreeze")
                 {
-                    if (!checkState(piece, "Frozen"))
+                    if (!checkState(piece, PieceState.Frozen))
                     {
                         continue;
                     }
@@ -2816,14 +2862,14 @@ public class HelperFunctions : MonoBehaviour
                 }
                 else if (abilityName == "Dematerialize")
                 {
-                    if (checkState(piece, "Dematerialized"))
+                    if (checkState(piece, PieceState.Dematerialized))
                     {
                         continue;
                     }
                 }
                 else if (abilityName == "Materialize")
                 {
-                    if (!checkState(piece, "Dematerialized"))
+                    if (!checkState(piece, PieceState.Dematerialized))
                     {
                         continue;
                     }
@@ -2853,7 +2899,7 @@ public class HelperFunctions : MonoBehaviour
         return true;
     }
 
-    public static bool isPieceSurroundingState(Piece piece, string state)
+    public static bool isPieceSurroundingState(Piece piece, PieceState state)
     {
         int[][] directions = new int[][]
         {
@@ -2913,7 +2959,7 @@ public class HelperFunctions : MonoBehaviour
     public static void updatePieceFlags(Piece piece, bool isInCheck)
     {
         //Debug.Log("Updating Flags for: " + piece.name);
-        if (checkState(piece, "Protective") || checkState(piece, "Scaredy") || checkState(piece, "Depressed"))
+        if (checkState(piece, PieceState.Protective) || checkState(piece, PieceState.Scaredy) || checkState(piece, PieceState.Depressed))
         {
             if (isInCheck)
             {
@@ -2996,7 +3042,7 @@ public class HelperFunctions : MonoBehaviour
         List<Piece> pieces = getPiecesOnBoard();
         foreach (Piece p in pieces)
         {
-            if (checkState(p, "Oppressive") && p.color != pieceColor)
+            if (checkState(p, PieceState.Oppressive) && p.color != pieceColor)
             {
                 return true;
             }
@@ -3045,7 +3091,7 @@ public class HelperFunctions : MonoBehaviour
         GameObject toAppend = findSquare(coords[0], coords[1]);
         piece.position = coords;
 
-        if (checkState(piece, "PAWN"))
+        if (checkState(piece, PieceState.Pawn))
         {
             if (piece.color == 1)
             {
@@ -3059,7 +3105,7 @@ public class HelperFunctions : MonoBehaviour
             toAppend = findSquare(piece.position[0], piece.position[1]);
         }
 
-        if (checkState(piece, "Double"))
+        if (checkState(piece, PieceState.Double))
         {
             Piece doublePawn = Spawnables.create("Pawn", piece.color);
             initPiece(doublePawn, piece.position);
@@ -3223,7 +3269,7 @@ public class HelperFunctions : MonoBehaviour
         else if (ability == "Unfreeze")
         {
             Debug.LogWarning("Ability: Unfreeze -> " + piece.name);
-            removeState(piece, "Frozen");
+            removeState(piece, PieceState.Frozen);
             removeAbility(piece, "Unfreeze");
 
             Image img = piece.go.GetComponent<Image>();
@@ -3240,7 +3286,7 @@ public class HelperFunctions : MonoBehaviour
         else if (ability == "Freeze")
         {
             Debug.LogWarning("Ability: Freeze -> " + piece.name);
-            addState(secondPiece, "Frozen");
+            addState(secondPiece, PieceState.Frozen);
 
             Image img = secondPiece.go.GetComponent<Image>();
             Color blueTint = Color.blue;
@@ -3281,7 +3327,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Dematerialize -> " + piece.name);
 
-            addState(piece, "Dematerialized");
+            addState(piece, PieceState.Dematerialized);
             removeAbility(piece, "Dematerialize");
             addAbility(piece, "Materialize");
 
@@ -3295,7 +3341,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Materialize -> " + piece.name);
 
-            removeState(piece, "Dematerialized");
+            removeState(piece, PieceState.Dematerialized);
             addAbility(piece, "Dematerialize");
             removeAbility(piece, "Materialize");
 
@@ -3396,7 +3442,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        if (checkState(piece, "Delayed"))
+        if (checkState(piece, PieceState.Delayed))
         {
             PieceMove delayedMove = new PieceMove(piece, coords, 2);
             tempInfo.delayedQueue.Enqueue(delayedMove);
@@ -3419,17 +3465,17 @@ public class HelperFunctions : MonoBehaviour
         List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1]));
         foreach (Piece pieceOnSquare in piecesOnSquare)
         {
-            if (checkState(pieceOnSquare, "Crook"))
+            if (checkState(pieceOnSquare, PieceState.Crook))
             {
                 if (piecesOnSquare.Count == 2)
                 {
-                    removeState(pieceOnSquare, "Jailed");
+                    removeState(pieceOnSquare, PieceState.Jailed);
                 }
             }
 
-            if (checkState(piece, "Jailer"))
+            if (checkState(piece, PieceState.Jailer))
             {
-                removeState(pieceOnSquare, "Jailed");
+                removeState(pieceOnSquare, PieceState.Jailed);
             }
         }
 
@@ -3444,7 +3490,7 @@ public class HelperFunctions : MonoBehaviour
         tempInfo.attackerDied = false;
         //Debug.Log("Piece " + piece.name + " moved to " + coords[0] + "," + coords[1]);
 
-        if (checkState(piece, "Piggyback"))
+        if (checkState(piece, PieceState.Piggyback))
         {
             piecesOnSquare = new List<Piece>(getPiecesOnSquareBoardGrid(pieceOriginalSquare));
             foreach (Piece pieceOnSquare in piecesOnSquare)
@@ -3463,7 +3509,7 @@ public class HelperFunctions : MonoBehaviour
         List<Piece> piecesOnSquare2 = new List<Piece>(getPiecesOnSquareBoardGrid(pieceOriginalSquare));
         foreach (Piece pieceOnSquare in piecesOnSquare2)
         {
-            if (checkState(pieceOnSquare, "Jockey"))
+            if (checkState(pieceOnSquare, PieceState.Jockey))
             {
                 movePieceBoardGrid(pieceOnSquare, pieceOnSquare.position, coords);
                 pieceOnSquare.hasMoved = true;
@@ -3482,7 +3528,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         // After move collateral
-        if (checkState(piece, "Combustable"))
+        if (checkState(piece, PieceState.Combustable))
         {
             System.Random rand = new System.Random();
             int random = rand.Next(1, 7);
@@ -3491,7 +3537,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 List<int[]> collateral = null;
 
-                if (isPieceSurroundingState(piece, "Defuser"))
+                if (isPieceSurroundingState(piece, PieceState.Defuser))
                 {
                     collateral = new List<int[]>
                     {
@@ -3534,7 +3580,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        if (checkState(piece, "Fragile"))
+        if (checkState(piece, PieceState.Fragile))
         {
             System.Random rand = new System.Random();
             int random = rand.Next(1, 7);
@@ -3588,7 +3634,7 @@ public class HelperFunctions : MonoBehaviour
 
         //Last minute things
         //Heartbroken King Check
-        if (checkState(gameData.whiteKing, "Heartbroken"))
+        if (checkState(gameData.whiteKing, PieceState.Heartbroken))
         {
             if (!isPieceTypeOnBoard("q", 1))
             {
@@ -3598,7 +3644,7 @@ public class HelperFunctions : MonoBehaviour
                 gameData.whiteKing = tempKing;
             }
         }
-        else if (checkState(gameData.blackKing, "Heartbroken"))
+        else if (checkState(gameData.blackKing, PieceState.Heartbroken))
         {
             if (!isPieceTypeOnBoard("q", -1))
             {
@@ -3740,7 +3786,7 @@ public class HelperFunctions : MonoBehaviour
             int kingMove = -2;
             int rookMove = 3;
 
-            if (checkState(king, "Switch"))
+            if (checkState(king, PieceState.Switch))
             {
                 kingMove -= 2;
                 rookMove++;
@@ -3778,7 +3824,7 @@ public class HelperFunctions : MonoBehaviour
             int kingMove = 2;
             int rookMove = -2;
 
-            if (checkState(king, "Switch"))
+            if (checkState(king, PieceState.Switch))
             {
                 kingMove++;
                 rookMove--;
@@ -3808,7 +3854,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else if (gameData.selectedPiece != null && tempInfo.tempPiece == gameData.selectedPiece)
             {
-                addState(tempInfo.tempPiece, "Frozen");
+                addState(tempInfo.tempPiece, PieceState.Frozen);
                 addAbility(tempInfo.tempPiece, "Unfreeze");
 
                 gameData.abilitySelected = "";
@@ -3821,7 +3867,7 @@ public class HelperFunctions : MonoBehaviour
         else if (gameData.abilitySelected == "Unfreeze")
         {
             Piece piece = gameData.selectedPiece;
-            removeState(piece, "Freeze");
+            removeState(piece, PieceState.Frozen);
             removeAbility(piece, "Unfreeze");
 
             gameData.abilitySelected = "";
@@ -3895,7 +3941,7 @@ public class HelperFunctions : MonoBehaviour
         else if (gameData.abilitySelected == "Dematerialize")
         {
             Piece piece = gameData.selectedPiece;
-            addState(piece, "Dematerialized");
+            addState(piece, PieceState.Dematerialized);
             removeAbility(piece, "Dematerialize");
             addAbility(piece, "Materialize");
 
@@ -3919,7 +3965,7 @@ public class HelperFunctions : MonoBehaviour
         else if (gameData.abilitySelected == "Materialize")
         {
             Piece piece = gameData.selectedPiece;
-            removeState(piece, "Dematerialized");
+            removeState(piece, PieceState.Dematerialized);
             removeAbility(piece, "Materialize");
             addAbility(piece, "Dematerialize");
 
@@ -4002,11 +4048,11 @@ public class HelperFunctions : MonoBehaviour
             death = true;
             //Debug.Log("Checking for Death");
 
-            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, "Murderous"))
+            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, PieceState.Murderous))
             {
                 death = false;
             }
-            else if (checkStateAllOnSquare(getPiecesOnSquare(square), "Dematerialized"))
+            else if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Dematerialized))
             {
                 death = false;
             }
@@ -4014,11 +4060,11 @@ public class HelperFunctions : MonoBehaviour
             {
                 death = false;
             }
-            else if (checkState(piece, "Dematerialized"))
+            else if (checkState(piece, PieceState.Dematerialized))
             {
                 death = false;
             }
-            else if (checkState(piece, "Delayed") && !fromDelayed)
+            else if (checkState(piece, PieceState.Delayed) && !fromDelayed)
             {
                 death = false;
             }

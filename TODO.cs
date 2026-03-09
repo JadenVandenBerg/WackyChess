@@ -21,6 +21,7 @@
 
 //Optimize
 //Migrate to enum piecestate flags instead of comparing strings
+//Use structs instead of int[]
 
 //Pieces IMG
 /*

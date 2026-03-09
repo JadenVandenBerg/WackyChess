@@ -214,6 +214,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         if (goNext)
         {
+            //Debug.LogWarning("Checking for Castle: King:" + king.position[0] + "," + king.position[1] + " Rook: " + rook.position[0] + "," + rook.position[1]);
             if (isolatedArePiecesInBetweenSquaresHorizontal(king.position[0], king.position[1], rook.position[0], rook.position[1], bs))
             {
                 return false;
@@ -676,29 +677,37 @@ public class BotHelperFunctions : MonoBehaviour
             }
 
             List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newPosX - 1, newPosY - 1, bs.boardGrid, false);
-            bool pieceIsNull = piecesOnCoords == null || piecesOnCoords.Count == 0;
+
+            var diagnostics = isolatedGetPiecesOnCoordsDiagnostics(piece, piecesOnCoords, bs);
+            //bool pieceIsNull = piecesOnCoords == null || piecesOnCoords.Count == 0;
+            bool pieceIsNull = diagnostics.pieceIsNull;
             bool pieceIsDiffColour = false;
 
             if (!pieceIsNull)
             {
                 //pieceIsDiffColour = !isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color);
-                pieceIsDiffColour = !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color);
+                //pieceIsDiffColour = !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color);
+                pieceIsDiffColour = !diagnostics.colorOnCoords;
 
-                if (HelperFunctions.checkPiecesDisabled(piecesOnCoords))
+                //if (HelperFunctions.checkPiecesDisabled(piecesOnCoords))
+                if (diagnostics.piecesDisabled)
                 {
                     pieceIsNull = true;
                 }
 
                 //checkSquareCrowdingEligible
-                if (isolatedCheckSquareCrowdingEligible(piece, piecesOnCoords)) {
+                //if (isolatedCheckSquareCrowdingEligible(piece, piecesOnCoords))
+                if (diagnostics.crowdingElegible) {
                     pieceIsNull = true;
                 }
 
                 //Check for states
-                if (HelperFunctions.checkStateOnSquare(piecesOnCoords, "Shield")) {
+                //if (HelperFunctions.checkStateOnSquare(piecesOnCoords, "Shield")) {
+                if (diagnostics.shieldOnSquare || diagnostics.shieldOnSquare) {
                     continue;
                 }
 
+                /*
                 if (HelperFunctions.checkStateOnSquare(piecesOnCoords, "CaptureTheFlag")) {
                     bool _continue = false;
                     foreach (Piece piece_ in piecesOnCoords) {
@@ -712,6 +721,7 @@ public class BotHelperFunctions : MonoBehaviour
                         continue;
                     }
                 }
+                */
             }
 
             bool jump;
@@ -753,6 +763,121 @@ public class BotHelperFunctions : MonoBehaviour
                 allMoves.Add(new int[] { newPosX, newPosY });
             }
         }
+    }
+
+    public static (bool colorOnCoords, bool oppColorOnCoords, bool colorOnlyOnCoords, bool oppColorOnlyOnCoords, bool pieceIsNull, bool crowdingElegible, bool piecesDisabled, bool shieldOnSquare, bool captureTheFlagOnSquare) isolatedGetPiecesOnCoordsDiagnostics(Piece piece, List<Piece> piecesOnCoords, BoardState bs)
+    {
+        int color = piece.color;
+
+        bool colorOnCoords = false;
+        bool oppColorOnCoords = false;
+        bool colorOnlyOnCoords = false;
+        bool oppColorOnlyOnCoords = false;
+        bool pieceIsNull = false;
+        bool crowdingElegible = false;
+        bool piecesDisabled = true;
+        bool shieldOnSquare = false;
+        bool captureTheFlagOnSquare = false;
+
+        int piecesOnCoordsCount = 0;
+        bool allCrowding = true;
+        bool allPiggyback = true;
+
+        if (piecesOnCoords == null || piecesOnCoords.Count == 0)
+        {
+            pieceIsNull = true;
+        }
+        else
+        {
+            foreach (Piece p in piecesOnCoords)
+            {
+                if (HelperFunctions.checkState(p, "Shield"))
+                {
+                    shieldOnSquare = true;
+                }
+
+                if (HelperFunctions.checkState(p, "CaptureTheFlag"))
+                {
+                    if (HelperFunctions.checkCaptureTheFlag(p))
+                    {
+                        captureTheFlagOnSquare = true;
+                    }
+                }
+
+                piecesOnCoordsCount++;
+
+                bool dematerialized = HelperFunctions.checkState(p, "Dematerialized");
+
+                if (dematerialized || HelperFunctions.checkState(piece, "Jailed"))
+                {
+                    continue;
+                }
+
+                if (!p.disabled && !dematerialized)
+                {
+                    piecesDisabled = false;
+                }
+
+                if (p.color == color)
+                {
+                    colorOnCoords = true;
+                }
+                else
+                {
+                    oppColorOnCoords = true;
+                }
+
+                if (!HelperFunctions.checkState(p, "Crowding"))
+                {
+                    allCrowding = false;
+                }
+
+                if (!HelperFunctions.checkState(p, "Piggyback"))
+                {
+                    allPiggyback = false;
+                }
+            }
+        }
+
+        if (colorOnCoords && !oppColorOnCoords)
+        {
+            colorOnlyOnCoords = true;
+        }
+        else if (oppColorOnCoords && !colorOnCoords)
+        {
+            oppColorOnlyOnCoords = true;
+        }
+
+
+        if (!pieceIsNull)
+        {
+            if (oppColorOnCoords)
+            {
+                crowdingElegible = false;
+            }
+            else if (piecesOnCoordsCount > 1 && HelperFunctions.checkState(piece, "Crowding"))
+            {
+                crowdingElegible = allCrowding;
+            }
+            else if (HelperFunctions.checkState(piece, "Crowding") && piecesOnCoordsCount == 1 && colorOnlyOnCoords)
+            {
+                crowdingElegible = true;
+            }
+            else if (piecesOnCoordsCount == 1 && allPiggyback && colorOnlyOnCoords)
+            {
+                crowdingElegible = true;
+            }
+            else if (piecesOnCoordsCount == 1 && HelperFunctions.checkState(piece, "Jockey") && colorOnlyOnCoords)
+            {
+                crowdingElegible = true;
+            }
+            else if (HelperFunctions.checkState(piece, "Crowding"))
+            {
+                crowdingElegible = true;
+            }
+        }
+
+        return (colorOnCoords, oppColorOnCoords, colorOnlyOnCoords, oppColorOnlyOnCoords, pieceIsNull, crowdingElegible, piecesDisabled, shieldOnSquare, captureTheFlagOnSquare);
     }
 
     public static bool isolatedIsJump(Piece piece, int[] from, int toX, int toY, BoardState bs) {
@@ -1014,7 +1139,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         //There is one piece on the square, piece is piggyback
-        if (piecesOnCoordsCount == 1 && HelperFunctions.checkState(piecesOnCoords[0], "Piggyback") && sameColorOnCoords) {
+        if (piecesOnCoordsCount == 1 && HelperFunctions.checkStateAllOnSquare(piecesOnCoords, "Piggyback") && sameColorOnCoords) {
             return true;
         }
 
@@ -1378,6 +1503,7 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numPieces);
+                    numPieces--;
 
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
@@ -1400,11 +1526,14 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numCoords);
+                    numCoords--;
 
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
                     c_ = new int[] { c_[0] - 1, c_[1] - 1 };
+
+                    Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardState(c_, p_, "a", bs);
 
@@ -1743,6 +1872,9 @@ public class BotHelperFunctions : MonoBehaviour
         int[] attackerCoords = attackerPiece.position;
         int[] deadPieceCoords = deadPiece.position;
 
+        int[] adjustedAttackerCoords = new int[] { attackerPiece.position[0] - 1, attackerPiece.position[1] - 1 };
+        int[] adjustedDeadPieceCoords = new int[] { deadPiece.position[0] - 1, deadPiece.position[1] - 1 };
+
         bool skipCollateral = false;
 
         //Infinite/Multi Lives
@@ -1898,7 +2030,7 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 attackerPiece.numSpawns--;
 
-                int[] pos = deadPiece.position;
+                int[] pos = new int[] { deadPiece.position[0] - 1, deadPiece.position[1] - 1 };
                 updateBoardState(pos, deadPiece, "r", bs);
 
 
@@ -1922,7 +2054,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
                 {
-                    int[] coords = new int[] { deadPieceCoords[0] + attackerPiece.collateral[i, 0], deadPieceCoords[1] + attackerPiece.collateral[i, 1] };
+                    int[] coords = new int[] { adjustedDeadPieceCoords[0] + attackerPiece.collateral[i, 0], adjustedDeadPieceCoords[1] + attackerPiece.collateral[i, 1] };
 
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
                     {
@@ -1947,7 +2079,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
                 {
-                    int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
+                    int[] coords = new int[] { adjustedDeadPieceCoords[0] + deadPiece.collateral[i, 0], adjustedDeadPieceCoords[1] + deadPiece.collateral[i, 1] };
 
                     if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
                     {
@@ -1964,7 +2096,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         deadPiece.alive = 0;
         //Debug.Log("DEAD DEAD DEAD");
-        updateBoardState(new int[] { deadPieceCoords[0] - 1, deadPieceCoords[1] - 1 }, deadPiece, "r", bs);
+        updateBoardState(new int[] { adjustedDeadPieceCoords[0], adjustedDeadPieceCoords[1] }, deadPiece, "r", bs);
     }
 
     public static bool isolatedIsPieceSurroundingState(Piece piece, string state, BoardState bs)

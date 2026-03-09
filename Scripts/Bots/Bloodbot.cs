@@ -128,9 +128,11 @@ public class Bloodbot : BotTemplate
                 }
             }
 
-            if (!positivePts && bestOppMoveDiff >= bestMoveDiff)
+            //Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+
+            if (!positivePts)
             {
-                float realDiff = startingDiff - bestOppMoveDiff;
+                float realDiff = bestOppMoveDiff - startingDiff;
                 bestMoveCoords = coords;
                 if (realDiff > 0)
                 {
@@ -145,10 +147,9 @@ public class Bloodbot : BotTemplate
                         if (bestOppBoardControlDiff > bestBoardControlDiff)
                         {
                             validMoves.Clear();
+                            bestBoardControlDiff = bestOppBoardControlDiff;
+                            bestMoveCoords = coords;
                         }
-
-                        bestBoardControlDiff = bestOppBoardControlDiff;
-                        bestMoveCoords = coords;
 
                         validMoves.Add(nextMove);
                     }

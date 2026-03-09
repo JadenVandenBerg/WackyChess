@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class gameData
 {
@@ -56,6 +57,13 @@ public static class tempInfo
     public static bool passed { get; set; } = false;
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
     public static bool attackerDied { get; set; } = false;
+}
+
+public static class nonResettables
+{
+    public static BotTournamentSmall botTournamentSmall { get; set; } = null;
+    public static BotTournament botTournament { get; set; } = null;
+    public static bool isBotTournament { get; set; } = false;
 }
 
 public static class globalDefs
@@ -126,11 +134,11 @@ public class BotTournament {
         string botTwo = competingBots[botTwo_ - 1];
 
         match++;
-        if (match > 8) {
+        if (match > 4) {
             match = 1;
             round++;
 
-            if (round > 8) {
+            if (round > 7) {
                 return ("", "");
             }
         }
@@ -198,6 +206,108 @@ public class BotTournament {
             (5, 7)
         },
     };
+}
+
+public class BotTournamentSmall {
+    public List<string> competingBots = new List<string>();
+    public int round = 1;
+    public int match = 1;
+
+    public BotTournamentSmall(string botOne, string botTwo, string botThree, string botFour)
+    {
+        competingBots.Add(botOne);
+        competingBots.Add(botTwo);
+        competingBots.Add(botThree);
+        competingBots.Add(botFour);
+    }
+
+    public (string botWhite, string botBlack) nextGame()
+    {
+        var (botOne_, botTwo_) = botTournamentMatches[round - 1][match - 1];
+        string botOne = competingBots[botOne_ - 1];
+        string botTwo = competingBots[botTwo_ - 1];
+
+        match++;
+        if (match > 2)
+        {
+            match = 1;
+            round++;
+
+            if (round > 3)
+            {
+                return ("", "");
+            }
+        }
+
+        System.Random rand = new System.Random();
+        int randNumber = rand.Next(1, 3);
+
+        if (randNumber == 1)
+        {
+            return (botOne, botTwo);
+        }
+        else
+        {
+            return (botTwo, botOne);
+        }
+    }
+
+    public static readonly List<(int botOne, int botTwo)[]> botTournamentMatches = new List<(int botOne, int botTwo)[]>
+    {
+        new (int botOne, int botTwo)[]
+        {
+            (1, 4),
+            (2, 3)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 3),
+            (2, 4)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 2),
+            (3, 4)
+        }
+    };
+}
+
+[Flags]
+public enum PieceState : long
+{
+    None = 0,
+
+    Shield = 1L << 0,
+    Dematerialized = 1L << 1,
+    Frozen = 1L << 2,
+    Ghost = 1L << 3,
+    Ghoul = 1L << 4,
+    Feminist = 1L << 5,
+    Oppressive = 1L << 6,
+    Combustable = 1L << 7,
+    Fragile = 1L << 8,
+    Jailed = 1L << 9,
+    Uncastle = 1L << 10,
+    Rulebreaker = 1L << 11,
+    Electric = 1L << 12,
+    Crook = 1L << 13,
+    Wall = 1L << 14,
+    Medusa = 1L << 15,
+    Hungry = 1L << 16,
+    Piggyback = 1L << 17,
+    Jockey = 1L << 18,
+    Delayed = 1L << 19,
+    Depressed = 1L << 20,
+    Heartbroken = 1L << 21,
+    Portal = 1L << 22,
+    Bouncing = 1L << 23,
+    CaptureTheFlag = 1L << 24,
+    Defuser = 1L << 25,
+    Switch = 1L << 26,
+    Pawn = 1L << 27,
+    Double = 1L << 28,
+    Protective = 1L << 29,
+    Scaredy = 1L << 30,
 }
 
 /*

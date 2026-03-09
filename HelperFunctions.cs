@@ -1550,7 +1550,7 @@ public class HelperFunctions : MonoBehaviour
                 }
 
                 updateBoardGrid(deadPiece.position, deadPiece, "r");
-                
+
                 DestroyWrapper(dead);
                 deadPiece.alive = 0;
             }
@@ -3110,6 +3110,8 @@ public class HelperFunctions : MonoBehaviour
         int check = 0;
 
         Piece piece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.piece);
+        Piece secondPiece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.secondPiece);
+
         string ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
 
@@ -3128,8 +3130,6 @@ public class HelperFunctions : MonoBehaviour
         {
             placeCoords = pieceAbility.placeCoords;
         }
-
-        Piece secondPiece = pieceAbility.secondPiece;
         
         if (ability == "Vomit")
         {
@@ -3154,6 +3154,7 @@ public class HelperFunctions : MonoBehaviour
                     placePieces.Remove(p_);
 
                     updateBoardGrid(coords_, p_, "a");
+                    
                     restorePieceImageToBoard(p_);
                     initPiece(p_, coords_);
 
@@ -3177,6 +3178,7 @@ public class HelperFunctions : MonoBehaviour
                     placeCoords.Remove(c_);
 
                     updateBoardGrid(c_, p_, "a");
+
                     restorePieceImageToBoard(p_);
                     initPiece(p_, c_);
 
@@ -3223,11 +3225,27 @@ public class HelperFunctions : MonoBehaviour
             Debug.LogWarning("Ability: Unfreeze -> " + piece.name);
             removeState(piece, "Frozen");
             removeAbility(piece, "Unfreeze");
+
+            Image img = piece.go.GetComponent<Image>();
+            Color c = img.color;
+
+            c.r = 1f;
+            c.g = 1f;
+            c.b = 1f;
+
+            img.color = c;
+
+            Debug.Break();
         }
         else if (ability == "Freeze")
         {
             Debug.LogWarning("Ability: Freeze -> " + piece.name);
             addState(secondPiece, "Frozen");
+
+            Image img = secondPiece.go.GetComponent<Image>();
+            Color blueTint = Color.blue;
+
+            img.color = Color.Lerp(img.color, blueTint, 0.4f);
         }
         else if (ability == "Spawn")
         {
@@ -3247,14 +3265,17 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
 
+            Piece storagePiece = piece.storage[0];
+
             collateralDeath(getPiecesOnSquare(findSquare(coords[0], coords[1])));
             death = true;
 
-            initPiece(secondPiece, coords);
-            updateBoardGrid(coords, secondPiece, "a");
-            restorePieceImageToBoard(secondPiece);
+            restorePieceImageToBoard(storagePiece);
+            initPiece(storagePiece, coords);
 
-            piece.storage.Remove(secondPiece);
+            updateBoardGrid(coords, storagePiece, "a");
+
+            piece.storage.Remove(storagePiece);
         }
         else if (ability == "Dematerialize")
         {
@@ -4057,7 +4078,18 @@ public class HelperFunctions : MonoBehaviour
         clone.promotingRow = original.promotingRow;
         clone.canMoveTwice = original.canMoveTwice;
         clone.storageLimit = original.storageLimit;
-        clone.storage = original.storage;
+        if (original.storage == null || original.storage.Count == 0)
+        {
+            clone.storage = original.storage;
+        }
+        else
+        {
+            clone.storage = new List<Piece>();
+            foreach(Piece p in original.storage)
+            {
+                clone.storage.Add(clonePiece(p));
+            }
+        }
         clone.moves = clone2dArray(original.moves);
         clone.oneTimeMoves = clone2dArray(original.oneTimeMoves);
         clone.moveAndAttacks = clone2dArray(original.moveAndAttacks);
@@ -4108,5 +4140,80 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return clone;
+    }
+
+    public static void resetGameVars()
+    {
+        gameData.selected = null;
+        gameData.selectedPiece = null;
+        gameData.selectedToMovePiece = null;
+
+        gameData.piecesDict = new Dictionary<GameObject, Piece>();
+        gameData.allPiecesDict = new Dictionary<GameObject, Piece>();
+
+        gameData.board = null;
+
+        gameData.isSelected = false;
+        gameData.selectedFromPanel = false;
+        gameData.abilityAdvanceNext = false;
+        gameData.refreshedSinceClick = false;
+
+        gameData.turn = 1;
+        gameData.readyToMove = false;
+        gameData.abilitySelected = "";
+
+        gameData.selectedToMove = null;
+
+        gameData.currentMoveableCoords = new List<int[]>();
+        gameData.currentMoveableCoordsAllPieces = new List<int[]>();
+
+        gameData.isInCheck = new int[] { 0, 0 };
+
+        gameData.whiteKing = null;
+        gameData.blackKing = null;
+
+        gameData.whiteRooks = new List<Piece>();
+        gameData.blackRooks = new List<Piece>();
+
+        gameData.pointsOnBoard = new float[] { 0, 0 };
+
+        gameData.winner = "";
+
+        gameData.isPaused = false;
+        gameData.check = false;
+        gameData.checkMate = false;
+        gameData.staleMate = false;
+
+        gameData.botMove = false;
+        gameData.botMoves = new Dictionary<Piece, List<int[]>>();
+
+        gameData.playMode = "";
+
+        gameData.bestMovePiece = null;
+        gameData.bestMoveCoords = new int[] { 0, 0 };
+
+        gameData.forceStayTurn = 0;
+
+        gameData.boardGrid = new List<List<List<Piece>>>();
+
+        gameData.panelCodes = new List<string>();
+
+        gameData.botWhite = null;
+        gameData.botBlack = null;
+
+        gameData.isBotMatch = false;
+
+        tempInfo.botMoveOpponentBestPoints = 0;
+
+        tempInfo.tempCoordSet = null;
+        tempInfo.tempSquare = null;
+        tempInfo.tempPiece = null;
+
+        tempInfo.selectedFromPanel = false;
+        tempInfo.passed = false;
+
+        tempInfo.delayedQueue = new DelayedQueue();
+
+        tempInfo.attackerDied = false;
     }
 }

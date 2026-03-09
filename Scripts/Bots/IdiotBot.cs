@@ -18,7 +18,7 @@ public class IdiotBot : BotTemplate
     override
     public NextMove nextMove()
     {
-        float worstMoveDiff = -1000;
+        float worstMoveDiff = +1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
@@ -60,8 +60,8 @@ public class IdiotBot : BotTemplate
 
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
-            NextMove worstOppNextMove;
-            float worstOppMoveDiff = +1000;
+            NextMove bestOppNextMove;
+            float bestOppMoveDiff = +1000;
 
             foreach (NextMove nextMoveOpp in allMovesOpp)
             {
@@ -102,21 +102,23 @@ public class IdiotBot : BotTemplate
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
                 float diff = botPoints - oppPoints;
-                if (diff < worstOppMoveDiff)
+                if (diff < bestOppMoveDiff)
                 {
-                    worstOppMoveDiff = diff;
-                    worstOppNextMove = nextMoveOpp;
+                    bestOppMoveDiff = diff;
+                    bestOppNextMove = nextMoveOpp;
                 }
             }
 
-            if (worstOppMoveDiff <= worstMoveDiff)
+            //Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff);
+
+            if (bestOppMoveDiff <= worstMoveDiff)
             {
-                if (worstOppMoveDiff > worstMoveDiff)
+                if (bestOppMoveDiff < worstMoveDiff)
                 {
                     validMoves.Clear();
                 }
 
-                worstMoveDiff = worstOppMoveDiff;
+                worstMoveDiff = bestOppMoveDiff;
 
                 validMoves.Add(nextMove);
             }

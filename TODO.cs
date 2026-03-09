@@ -20,7 +20,7 @@
 //Refactor
 
 //Optimize
-//Remove gameObject creation from cloned pieces constructors
+//Migrate to enum piecestate flags instead of comparing strings
 
 //Pieces IMG
 /*

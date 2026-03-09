@@ -473,6 +473,8 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Game Over - King Death");
                 bgs.result = "Won by opposing king death";
                 bgs.winner = "Black";
+
+                bgs.winnerName = botBlack.name;
             }
             else
             {
@@ -491,6 +493,8 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Game Over - King Death");
                 bgs.result = "Won by opposing king death";
                 bgs.winner = "White";
+
+                bgs.winnerName = botWhite.name;
             }
             else
             {
@@ -526,10 +530,12 @@ public class botMaster : MonoBehaviour
                 if (turn == -1)
                 {
                     bgs.winner = "White";
+                    bgs.winnerName = botWhite.name;
                 }
                 else
                 {
                     bgs.winner = "Black";
+                    bgs.winnerName = botBlack.name;
                 }
             }
             else
@@ -568,7 +574,7 @@ public class botMaster : MonoBehaviour
         {
             printBGS(bgs);
 
-            nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winner);
+            nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
             yield return new WaitForSeconds(5f);
 

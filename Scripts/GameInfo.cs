@@ -1,6 +1,9 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -68,7 +71,7 @@ public static class nonResettables
     public static void calculateElo(Bot botA, Bot botB, string winner)
     {
         double expectedScoreA =
-            1.0 / (1.0 + Math.Pow(10, (botB.elo - botA.elo) / 400.0));
+            1.0 / (1.0 + Math.Pow(10, (botB.Elo - botA.Elo) / 400.0));
 
         double scoreA;
 
@@ -76,7 +79,7 @@ public static class nonResettables
         {
             scoreA = 0.5;
         }
-        else if (winner == botA.name)
+        else if (winner == botA.Name)
         {
             scoreA = 1;
         }
@@ -87,43 +90,60 @@ public static class nonResettables
 
         int delta = (int)Math.Round(64 * (scoreA - expectedScoreA));
 
-        botA.elo += delta;
-        botB.elo -= delta;
+        botA.Elo += delta;
+        botB.Elo -= delta;
 
-        botA.peakElo = Math.Max(botA.peakElo, botA.elo);
-        botB.peakElo = Math.Max(botB.peakElo, botB.elo);
+        botA.PeakElo = Math.Max(botA.PeakElo, botA.Elo);
+        botB.PeakElo = Math.Max(botB.PeakElo, botB.Elo);
+    }
+
+    public static string fixBotName(string botName)
+    {
+        if (botName == "Idiot")
+        {
+            return "Idiot Bot";
+        }
+        else if (botName == "RandomBot")
+        {
+            return "Random Bot";
+        }
+
+        return botName;
     }
 
     public static void postBotMatch(string botAName, string botBName, string winner)
     {
-        List<Bot> bots = JsonSerializer.Deserialize<List<Bot>>(
-            File.ReadAllText("bots.json")
+        List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(
+            File.ReadAllText("Assets/bots.json")
         );
 
-        Bot botA = bots.First(b => b.name == botAName);
-        Bot botB = bots.First(b => b.name == botBName);
+        botAName = fixBotName(botAName);
+        botBName = fixBotName(botBName);
+
+        Bot botA = bots.First(b => b.Name == botAName);
+        Bot botB = bots.First(b => b.Name == botBName);
 
         calculateElo(botA, botB, winner);
 
         if (string.IsNullOrEmpty(winner))
         {
-            botA.drawsTotal++;
-            botB.drawsTotal++;
+            botA.DrawsTotal++;
+            botB.DrawsTotal++;
         }
-        else if (winner == botA.name)
+        else if (winner == botA.Name)
         {
-            botA.winsTotal++;
-            botB.lossesTotal++;
+            botA.WinsTotal++;
+            botB.LossesTotal++;
         }
         else
         {
-            botB.winsTotal++;
-            botA.lossesTotal++;
+            botB.WinsTotal++;
+            botA.LossesTotal++;
         }
 
         File.WriteAllText(
-            "bots.json",
-            JsonSerializer.Serialize(bots, new JsonSerializerOptions { WriteIndented = true })
+            "Assets/bots.json",
+            JsonConvert.SerializeObject(bots, Formatting.Indented)
         );
     }
 }
@@ -164,6 +184,7 @@ public class BotGameStatus
 
     public string result;
     public string winner;
+    public string winnerName;
 
     public float whitePoints;
     public float blackPoints;
@@ -377,7 +398,7 @@ public enum PieceState : long
     Jailer = 1L << 35,
 }
 
-public class Season
+public class BotSeason
 {
     public int Season { get; set; }
     public int Division { get; set; }
@@ -403,7 +424,7 @@ public class Bot
 
     public string Creator { get; set; }
 
-    public List<Season> Seasons { get; set; }
+    public List<BotSeason> Seasons { get; set; }
 
     public int PeakElo { get; set; }
 

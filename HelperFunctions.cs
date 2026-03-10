@@ -4262,4 +4262,14 @@ public class HelperFunctions : MonoBehaviour
 
         tempInfo.attackerDied = false;
     }
+
+    public static bool coordsInList(List<int[]> coordsList, int[] coords) {
+        foreach (int[] c in coordsList) {
+            if (c[0] == coords[0] && c[1] == coords[1]) {
+                return true;
+            } 
+        }
+
+        return false;
+    }
 }

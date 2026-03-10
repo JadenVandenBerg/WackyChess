@@ -171,7 +171,7 @@ public class SavageBeastBot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }
@@ -187,7 +187,7 @@ public class SavageBeastBot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }

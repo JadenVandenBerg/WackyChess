@@ -125,48 +125,54 @@ public class Bloodbot : BotTemplate
                 {
                     bestOppMoveDiff = diff;
                     bestOppMove = nextMoveOpp;
-                    bestOppBoardControlDiff = botBoardControl - oppBoardControl; //todo separate this
+                    bestOppBoardControlDiff = botBoardControl - oppBoardControl;
                 }
             }
 
             //Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
 
-            if (!positivePts)
+            float diff = bestOppMoveDiff;
+            int boardControlDiff = bestOppBoardControlDiff;
+
+            if (diff > startingDiff)
             {
-                float realDiff = bestOppMoveDiff - startingDiff;
-                bestMoveCoords = coords;
-                if (realDiff > 0)
+                if (!positivePts || diff > bestMoveDiff)
                 {
                     positivePts = true;
+                    bestMoveDiff = diff;
+
                     validMoves.Clear();
                     validMoves.Add(nextMove);
                 }
-                else
+                else if (diff == bestMoveDiff)
                 {
-                    if (bestOppBoardControlDiff >= bestBoardControlDiff && bestOppMoveDiff >= bestMoveDiff)
-                    {
-                        if (bestOppBoardControlDiff > bestBoardControlDiff)
-                        {
-                            validMoves.Clear();
-                            bestBoardControlDiff = bestOppBoardControlDiff;
-                            bestMoveCoords = coords;
-                        }
+                    validMoves.Add(nextMove);
+                }
+            }
+            else if (!positivePts)
+            {
+                if (diff > bestMoveDiff)
+                {
+                    bestMoveDiff = diff;
+                    bestBoardControlDiff = boardControlDiff;
 
+                    validMoves.Clear();
+                    validMoves.Add(nextMove);
+                }
+                else if (diff == bestMoveDiff)
+                {
+                    if (boardControlDiff > bestBoardControlDiff)
+                    {
+                        bestBoardControlDiff = boardControlDiff;
+
+                        validMoves.Clear();
+                        validMoves.Add(nextMove);
+                    }
+                    else if (boardControlDiff == bestBoardControlDiff)
+                    {
                         validMoves.Add(nextMove);
                     }
                 }
-            }
-            else if (bestOppMoveDiff >= bestMoveDiff)
-            {
-                if (bestOppMoveDiff > bestMoveDiff)
-                {
-                    validMoves.Clear();
-                }
-
-                bestMoveDiff = bestOppMoveDiff;
-                bestMoveCoords = coords;
-
-                validMoves.Add(nextMove);
             }
 
             this.currentBoardState = originalBoardState;
@@ -205,7 +211,7 @@ public class Bloodbot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }
@@ -221,7 +227,7 @@ public class Bloodbot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }

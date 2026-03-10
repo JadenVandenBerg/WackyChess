@@ -55,7 +55,6 @@ public class OneMoveBot : BotTemplate
         //Loop through all moves
         foreach (NextMove nextMove in allMoves)
         {
-            Debug.Log("In OneMoveBot NextMove_");
             //Find out what the moveType is and set vars accordingly
             Piece piece;
             int[] coords;

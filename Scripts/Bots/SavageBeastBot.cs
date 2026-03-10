@@ -18,7 +18,6 @@ public class SavageBeastBot : BotTemplate
     override
     public NextMove nextMove()
     {
-        Debug.Log("In SavageBeastBot NextMove_");
         int[] bestMoveCoords;
         int bestBoardControlDiff = -1000;
 
@@ -171,7 +170,7 @@ public class SavageBeastBot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }
@@ -187,7 +186,7 @@ public class SavageBeastBot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }

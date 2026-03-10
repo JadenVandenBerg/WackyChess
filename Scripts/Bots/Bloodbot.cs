@@ -18,8 +18,6 @@ public class Bloodbot : BotTemplate
     override
     public NextMove nextMove()
     {
-        Debug.Log("In BloodBot NextMove_");
-        int[] bestMoveCoords;
         int bestBoardControlDiff = -1000;
         float bestMoveDiff = -1000;
 
@@ -118,55 +116,62 @@ public class Bloodbot : BotTemplate
                 float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                //if (this.color == 1) Debug.LogWarning("Points on board after " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
+                //Debug.LogWarning("Points on board after " + pieceOpp.name + " moved to " + (coordsOpp[0]) + "," + (coordsOpp[1]) + " - White: " + (botPoints - 100) + ". Black: " + (oppPoints - 100));
 
-                float diff = botPoints - oppPoints;
-                if (diff < bestOppMoveDiff)
+                float diff_ = botPoints - oppPoints;
+                if (diff_ < bestOppMoveDiff)
                 {
-                    bestOppMoveDiff = diff;
+                    bestOppMoveDiff = diff_;
                     bestOppMove = nextMoveOpp;
-                    bestOppBoardControlDiff = botBoardControl - oppBoardControl; //todo separate this
+                    bestOppBoardControlDiff = botBoardControl - oppBoardControl;
                 }
             }
 
-            //Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
 
-            if (!positivePts)
+            float diff = bestOppMoveDiff;
+            int boardControlDiff = bestOppBoardControlDiff;
+
+            if (diff > startingDiff)
             {
-                float realDiff = bestOppMoveDiff - startingDiff;
-                bestMoveCoords = coords;
-                if (realDiff > 0)
+                if (!positivePts || diff > bestMoveDiff)
                 {
                     positivePts = true;
+                    bestMoveDiff = diff;
+
                     validMoves.Clear();
                     validMoves.Add(nextMove);
                 }
-                else
+                else if (diff == bestMoveDiff)
                 {
-                    if (bestOppBoardControlDiff >= bestBoardControlDiff && bestOppMoveDiff >= bestMoveDiff)
-                    {
-                        if (bestOppBoardControlDiff > bestBoardControlDiff)
-                        {
-                            validMoves.Clear();
-                            bestBoardControlDiff = bestOppBoardControlDiff;
-                            bestMoveCoords = coords;
-                        }
+                    validMoves.Add(nextMove);
+                }
+            }
+            else if (!positivePts)
+            {
+                if (diff > bestMoveDiff)
+                {
+                    bestMoveDiff = diff;
+                    bestBoardControlDiff = boardControlDiff;
 
+                    validMoves.Clear();
+                    validMoves.Add(nextMove);
+                }
+                else if (diff == bestMoveDiff)
+                {
+                    if (boardControlDiff > bestBoardControlDiff)
+                    {
+                        bestBoardControlDiff = boardControlDiff;
+
+                        validMoves.Clear();
+                        validMoves.Add(nextMove);
+                    }
+                    else if (boardControlDiff == bestBoardControlDiff)
+                    {
                         validMoves.Add(nextMove);
                     }
                 }
-            }
-            else if (bestOppMoveDiff >= bestMoveDiff)
-            {
-                if (bestOppMoveDiff > bestMoveDiff)
-                {
-                    validMoves.Clear();
-                }
-
-                bestMoveDiff = bestOppMoveDiff;
-                bestMoveCoords = coords;
-
-                validMoves.Add(nextMove);
             }
 
             this.currentBoardState = originalBoardState;
@@ -205,7 +210,7 @@ public class Bloodbot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }
@@ -221,7 +226,7 @@ public class Bloodbot : BotTemplate
 
             foreach (int[] coords in _mL)
             {
-                if (!uniqueCoords.Contains(coords))
+                if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
                 }

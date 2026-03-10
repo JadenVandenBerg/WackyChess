@@ -4116,6 +4116,7 @@ public class HelperFunctions : MonoBehaviour
         clone.lives = original.lives;
         clone.ability = original.ability.ToString();
         clone.state = original.state.ToString();
+        clone.states = original.states;
         clone.secondaryState = original.secondaryState.ToString();
         clone.collateralType = original.collateralType;
         clone.collateral = clone2dArray(original.collateral);
@@ -4261,5 +4262,15 @@ public class HelperFunctions : MonoBehaviour
         tempInfo.delayedQueue = new DelayedQueue();
 
         tempInfo.attackerDied = false;
+    }
+
+    public static bool coordsInList(List<int[]> coordsList, int[] coords) {
+        foreach (int[] c in coordsList) {
+            if (c[0] == coords[0] && c[1] == coords[1]) {
+                return true;
+            } 
+        }
+
+        return false;
     }
 }

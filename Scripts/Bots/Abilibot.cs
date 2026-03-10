@@ -17,6 +17,7 @@ public class Abilibot : BotTemplate
     override
     public NextMove nextMove()
     {
+        Debug.Log("In Abilibot NextMove_");
         float bestMoveDiff = -1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);

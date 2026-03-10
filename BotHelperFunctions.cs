@@ -770,7 +770,7 @@ public class BotHelperFunctions : MonoBehaviour
             if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords))
             {
                 //TODO maybe add check functionality
-                //Debug.Log("MOVE SIM " + newPosX + "," + newPosY);
+                //if (piece.name == "w_k1" || piece.name == "b_k1") Debug.Log("MOVE SIM " + newPosX + "," + newPosY);
                 allMoves.Add(new int[] { newPosX, newPosY });
             }
         }
@@ -1616,6 +1616,7 @@ public class BotHelperFunctions : MonoBehaviour
         else if (ability == "Freeze")
         {
             HelperFunctions.addState(secondPiece, PieceState.Frozen);
+            HelperFunctions.addAbility(secondPiece, "Unfreeze");
         }
         else if (ability == "Spawn")
         {

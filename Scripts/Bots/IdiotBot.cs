@@ -18,6 +18,7 @@ public class IdiotBot : BotTemplate
     override
     public NextMove nextMove()
     {
+        Debug.Log("In IdiotBot NextMove_");
         float worstMoveDiff = +1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);

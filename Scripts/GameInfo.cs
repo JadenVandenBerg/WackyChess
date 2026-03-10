@@ -107,6 +107,10 @@ public static class nonResettables
         {
             return "Random Bot";
         }
+        else if (botName == "SavageBeastBot" || botName == "Savage Beastbot")
+        {
+            return "Savage Beastbot";
+        }
 
         return botName;
     }
@@ -118,6 +122,8 @@ public static class nonResettables
         List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(
             File.ReadAllText(path)
         );
+
+        Debug.Log(botAName + " : " + botBName);
 
         botAName = fixBotName(botAName);
         botBName = fixBotName(botBName);

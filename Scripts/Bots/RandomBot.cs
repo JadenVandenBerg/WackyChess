@@ -15,6 +15,7 @@ public class RandomBot : BotTemplate
     override
     public NextMove nextMove()
     {
+        Debug.Log("In RandomBot NextMove_");
         this.currentBoardState.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
         this.currentBoardState = BotHelperFunctions.copyBoardState(this.currentBoardState);
 

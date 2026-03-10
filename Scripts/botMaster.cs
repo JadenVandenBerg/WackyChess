@@ -40,11 +40,10 @@ public class botMaster : MonoBehaviour
 
     IEnumerator Start()
     {
-        /*
         // Tournament
         if (nonResettables.botTournamentSmall == null)
         {
-            nonResettables.botTournamentSmall = new BotTournamentSmall("RandomBot", "IdiotBot", "Bloodbot", "FiveXRandomBot");
+            nonResettables.botTournamentSmall = new BotTournamentSmall("Bloodbot", "Abilibot", "SavageBeastBot", "FiveXRandomBot");
         }
 
         nonResettables.isBotTournament = true;
@@ -61,14 +60,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-        */
         
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
 
-        botWhite = new OneMoveBot(1);
-        botBlack = new IdiotBot(-1);
+        //botWhite = new OneMoveBot(1);
+        //botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -130,10 +128,10 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botWhiteKing = new List<Piece>
         {
-            getPieceTypeInstance("King", 1)
+            getPieceTypeInstance("HyperFastKing", 1)
         };
         */
-        List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
+        List <Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
         /*
         List<Piece> botWhiteQueen = new List<Piece>
         {
@@ -201,7 +199,7 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botBlackKing = new List<Piece>
         {
-            getPieceTypeInstance("King", -1),
+            getPieceTypeInstance("HyperFastKing", -1),
         };
         */
         List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);

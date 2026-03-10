@@ -3278,6 +3278,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Freeze -> " + piece.name);
             addState(secondPiece, PieceState.Frozen);
+            addAbility(secondPiece, "Unfreeze");
 
             Image img = secondPiece.go.GetComponent<Image>();
             Color blueTint = Color.blue;
@@ -3341,8 +3342,8 @@ public class HelperFunctions : MonoBehaviour
             Debug.LogWarning("Ability: Materialize -> " + piece.name);
 
             removeState(piece, PieceState.Dematerialized);
-            addAbility(piece, "Dematerialize");
             removeAbility(piece, "Materialize");
+            addAbility(piece, "Dematerialize");
 
             death = true;
 

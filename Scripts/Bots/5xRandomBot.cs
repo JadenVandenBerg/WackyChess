@@ -17,6 +17,7 @@ public class FiveXRandomBot : BotTemplate
     override
     public NextMove nextMove()
     {
+        Debug.Log("In 5xRandomMoveBot NextMove_");
         float bestMoveDiff = -1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = new List<NextMove>();

@@ -18,6 +18,7 @@ public class Bloodbot : BotTemplate
     override
     public NextMove nextMove()
     {
+        Debug.Log("In BloodBot NextMove_");
         int[] bestMoveCoords;
         int bestBoardControlDiff = -1000;
         float bestMoveDiff = -1000;
@@ -124,7 +125,7 @@ public class Bloodbot : BotTemplate
                 {
                     bestOppMoveDiff = diff;
                     bestOppMove = nextMoveOpp;
-                    bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+                    bestOppBoardControlDiff = botBoardControl - oppBoardControl; //todo separate this
                 }
             }
 
@@ -142,7 +143,7 @@ public class Bloodbot : BotTemplate
                 }
                 else
                 {
-                    if (bestOppBoardControlDiff >= bestBoardControlDiff)
+                    if (bestOppBoardControlDiff >= bestBoardControlDiff && bestOppMoveDiff >= bestMoveDiff)
                     {
                         if (bestOppBoardControlDiff > bestBoardControlDiff)
                         {

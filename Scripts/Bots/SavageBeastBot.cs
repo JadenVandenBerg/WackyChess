@@ -18,7 +18,6 @@ public class SavageBeastBot : BotTemplate
     override
     public NextMove nextMove()
     {
-        Debug.Log("In SavageBeastBot NextMove_");
         int[] bestMoveCoords;
         int bestBoardControlDiff = -1000;
 

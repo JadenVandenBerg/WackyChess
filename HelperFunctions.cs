@@ -4116,6 +4116,7 @@ public class HelperFunctions : MonoBehaviour
         clone.lives = original.lives;
         clone.ability = original.ability.ToString();
         clone.state = original.state.ToString();
+        clone.states = original.states;
         clone.secondaryState = original.secondaryState.ToString();
         clone.collateralType = original.collateralType;
         clone.collateral = clone2dArray(original.collateral);

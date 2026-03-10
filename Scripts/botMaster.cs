@@ -370,7 +370,7 @@ public class botMaster : MonoBehaviour
 
             selectedMove = nextMove;
 
-            if (watchMS > 5000)
+            if (watchMS > 10000)
             {
                 currentBot.penalty = true;
 

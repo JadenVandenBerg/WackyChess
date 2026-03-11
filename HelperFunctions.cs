@@ -4273,4 +4273,14 @@ public class HelperFunctions : MonoBehaviour
 
         return false;
     }
+
+    public static bool pieceInList(List<Piece> pieceList, Piece piece) {
+        foreach (Piece p in pieceList) {
+            if (piece.name = p.name) {
+                return true;
+            } 
+        }
+
+        return false;
+    }
 }

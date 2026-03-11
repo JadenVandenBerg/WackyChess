@@ -73,6 +73,7 @@ public class Bloodbot : BotTemplate
             NextMove bestOppMove;
             float bestOppMoveDiff = +1000;
             int bestOppBoardControlDiff = +1000;
+            BoardState bestMoveBS = null;
 
             foreach (NextMove nextMoveOpp in allMovesOpp)
             {
@@ -124,11 +125,14 @@ public class Bloodbot : BotTemplate
                     bestOppMoveDiff = diff_;
                     bestOppMove = nextMoveOpp;
                     bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+                    bestMoveBS = cloneState_;
                 }
             }
 
-            if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
-            if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            //if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            //if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+
+            //debug_printBoardState(bestMoveBS);
 
             float diff = bestOppMoveDiff;
             int boardControlDiff = bestOppBoardControlDiff;

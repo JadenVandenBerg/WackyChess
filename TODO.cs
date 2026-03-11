@@ -4,14 +4,13 @@
 //When selecting from side panel, cannot properly deselect without clicking a new square
 //Need to rotate black pieces
 //Take account for abilities when checking for check and checkmate
-//When spawning new pieces, add them to BotPieces
 //Portal and Bouncing does not account for Ghoul/Ghost/Dematerialized states
 //When a stacking piece captures a delayed piece, it becomes delayed too early
 // piggyback not working, king should not be able to ride
+// pieces are allowed to move off of jailed pieces, which puts the king in check (maybe use simulatedMoves instead of dummymove for chekc)
 
 //Feature
 //Side panel only show selectable pieces
-//Add abilities to RandomMove functions
 
 //Remove
 //Dependent Attacks
@@ -20,7 +19,6 @@
 //Refactor
 
 //Optimize
-//Migrate to enum piecestate flags instead of comparing strings
 //Use structs instead of int[]
 
 //Pieces IMG

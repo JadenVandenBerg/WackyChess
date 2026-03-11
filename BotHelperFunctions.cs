@@ -109,8 +109,8 @@ public class BotHelperFunctions : MonoBehaviour
 
             int[] coords = new int[]
             {
-                p.position[0] + xOffset,
-                p.position[1] + yOffset
+                p.position[0] + xOffset - 1,
+                p.position[1] + yOffset - 1
             };
 
             if (isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false).Count > 0)
@@ -266,7 +266,6 @@ public class BotHelperFunctions : MonoBehaviour
             foreach (string ability in abilityNames) {
                 if (ability == "Vomit")
                 {
-                    //TODO right now all storage is null
                     if (piece.storage != null && piece.storage.Count < 1)
                     {
                         continue;
@@ -1537,9 +1536,9 @@ public class BotHelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
+                    //int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
 
-                    updateBoardState(coords__, p_, "a", bs);
+                    updateBoardState(coords_, p_, "a", bs);
 
                     piece.storage.Remove(p_);
                 }
@@ -1560,7 +1559,7 @@ public class BotHelperFunctions : MonoBehaviour
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
-                    c_ = new int[] { c_[0] - 1, c_[1] - 1 };
+                    //c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
                     Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
@@ -2254,7 +2253,7 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach(Piece p in boardGrid[x, y])
                 {
-                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1));
+                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1) + " worth " + p.points);
                 }
             }
         }
@@ -2276,7 +2275,7 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach (Piece p in boardGrid[x][y])
                 {
-                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1));
+                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1) + " worth " + p.points);
                 }
             }
         }

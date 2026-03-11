@@ -40,10 +40,11 @@ public class botMaster : MonoBehaviour
 
     IEnumerator Start()
     {
+        /*
         // Tournament
         if (nonResettables.botTournamentSmall == null)
         {
-            nonResettables.botTournamentSmall = new BotTournamentSmall("Bloodbot", "Abilibot", "SavageBeastBot", "FiveXRandomBot");
+            nonResettables.botTournamentSmall = new BotTournamentSmall("Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot");
         }
 
         nonResettables.isBotTournament = true;
@@ -60,13 +61,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-        
+        */
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
-
-        //botWhite = new OneMoveBot(1);
-        //botBlack = new IdiotBot(-1);
+        
+        botWhite = new SavageBeastBot(1);
+        botBlack = new Bloodbot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -82,14 +83,13 @@ public class botMaster : MonoBehaviour
             getPieceTypeInstance("Pawn", 1),
             getPieceTypeInstance("Pawn", 1),
             getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
+            getPieceTypeInstance("JockeyPawn", 1),
+            getPieceTypeInstance("ZombiePawn", 1),
             getPieceTypeInstance("Pawn", 1),
             getPieceTypeInstance("Pawn", 1),
             getPieceTypeInstance("Pawn", 1),
         };
         */
-
         HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
         HelperFunctions.initPiece(botWhitePawns[1], new int[] { 2, 2 });
         HelperFunctions.initPiece(botWhitePawns[2], new int[] { 3, 2 });
@@ -98,13 +98,13 @@ public class botMaster : MonoBehaviour
         HelperFunctions.initPiece(botWhitePawns[5], new int[] { 6, 2 });
         HelperFunctions.initPiece(botWhitePawns[6], new int[] { 7, 2 });
         HelperFunctions.initPiece(botWhitePawns[7], new int[] { 8, 2 });
-        
+
 
         List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
         /*
         List<Piece> botWhiteRooks = new List<Piece>
         {
-            getPieceTypeInstance("Rook", 1),
+            getPieceTypeInstance("AtomicRook", 1),
             getPieceTypeInstance("Rook", 1),
         };
         */
@@ -112,30 +112,30 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botWhiteBishops = new List<Piece>
         {
-            getPieceTypeInstance("Bishop", 1),
-            getPieceTypeInstance("Bishop", 1),
+            getPieceTypeInstance("PhantomBishop", 1),
+            getPieceTypeInstance("StackingBishop", 1),
         };
         */
         List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
         /*
         List<Piece> botWhiteKnights = new List<Piece>
         {
-            getPieceTypeInstance("Knight", 1),
-            getPieceTypeInstance("Knight", 1),
+            getPieceTypeInstance("InfiniteKnight", 1),
+            getPieceTypeInstance("LongKnight", 1),
         };
         */
         List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
         /*
         List<Piece> botWhiteKing = new List<Piece>
         {
-            getPieceTypeInstance("HyperFastKing", 1)
+            getPieceTypeInstance("HeartbrokenKing", 1)
         };
         */
         List <Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
         /*
         List<Piece> botWhiteQueen = new List<Piece>
         {
-            getPieceTypeInstance("Queen", 1)
+            getPieceTypeInstance("LandmineQueen", 1)
         };
         */
 
@@ -175,23 +175,23 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botBlackRooks = new List<Piece>
         {
-            getPieceTypeInstance("MurderousRook", -1),
-            getPieceTypeInstance("MurderousRook", -1),
+            getPieceTypeInstance("SpittingRook", -1),
+            getPieceTypeInstance("SuperGhostRook", -1),
         };
         */
         List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
         /*
         List<Piece> botBlackBishops = new List<Piece>
         {
-            getPieceTypeInstance("Bishop", -1),
-            getPieceTypeInstance("Bishop", -1),
+            getPieceTypeInstance("HungryBishop", -1),
+            getPieceTypeInstance("PortalBishop", -1),
         };
         */
         List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
         /*
         List<Piece> botBlackKnights = new List<Piece>
         {
-            getPieceTypeInstance("Knight", -1),
+            getPieceTypeInstance("CrowdingKnight", -1),
             getPieceTypeInstance("Knight", -1),
         };
         */
@@ -199,14 +199,14 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botBlackKing = new List<Piece>
         {
-            getPieceTypeInstance("HyperFastKing", -1),
+            getPieceTypeInstance("HeartbrokenKing", -1),
         };
         */
         List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
         /*
         List<Piece> botBlackQueen = new List<Piece>
         {
-            getPieceTypeInstance("Queen", -1),
+            getPieceTypeInstance("PhantomQueen", -1),
         };
         */
         HelperFunctions.initPiece(botBlackRooks[0], new int[] { 1, 8 });
@@ -289,6 +289,12 @@ public class botMaster : MonoBehaviour
 
         yield return null;
         started = true;
+
+        movesWithoutCapture = 0;
+        subsequentChecks = 0;
+        turn = 1;
+        gameOver = false;
+        kingDead = false;
     }
 
     int turn = 1;
@@ -661,7 +667,7 @@ public class botMaster : MonoBehaviour
 
         NextMove next;
 
-        if (allMoves.Count == 0)
+        if (totalCount == 0)
         {
             return null;
         }
@@ -849,13 +855,8 @@ public class botMaster : MonoBehaviour
 
         string logText = sb.ToString();
 
-        // Console output
         Debug.LogWarning(logText);
-
-        // File path (SAFE location)
         string filePath = Path.Combine(Application.persistentDataPath, "MatchHistory.txt");
-
-        // Append instead of overwrite
         File.AppendAllText(filePath, logText + "\n------------------------\n");
 
         Debug.Log("Saved match log to: " + filePath);

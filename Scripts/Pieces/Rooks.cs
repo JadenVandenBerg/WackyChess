@@ -2743,7 +2743,7 @@ public class Crook : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 8;
+    public float points { get; set; } = 12;
     public int rarityLevel { get; set; } = 3;
     public int[] startSquare { get; set; } = null;
     public string baseType { get; set; } = "Rook";

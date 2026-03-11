@@ -42,14 +42,15 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        if (nonResettables.botTournamentSmall == null)
+        /*
+        if (nonResettables.botTournament == null)
         {
-            nonResettables.botTournamentSmall = new BotTournamentSmall("Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot");
+            nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot");
         }
 
         nonResettables.isBotTournament = true;
 
-        var bots = nonResettables.botTournamentSmall.nextGame();
+        var bots = nonResettables.botTournament.nextGame();
 
         if (bots.botWhite == "")
         {
@@ -61,13 +62,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-        
+        */
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
         
-        //botWhite = new SavageBeastBot(1);
-        //botBlack = new Bloodbot(-1);
+        botWhite = new SavageBeastBot(1);
+        botBlack = new Bloodbot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 

@@ -16,10 +16,11 @@ public class BottusMaximus : BotTemplate
 	override
 	public NextMove nextMove() {
 		float bestMoveWeight = -1000f;
-		NextMove bestMove;
+		int bestBoardControlDiff = -1000;
+		NextMove bestMove = null;
 
 		List<NextMove> validMoves = new List<NextMove>();
-		List<NextMove> allMoves = getAllPossibleMovesAndAbilities(this, this.currentBoardState, this.color);
+		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
 		List<float> startPoints = getPointsOnBoardState(this.currentBoardState, true);
 		float botPoints_ = this.color == 1 ? startPoints[0] : startPoints[1];
@@ -27,7 +28,7 @@ public class BottusMaximus : BotTemplate
 
 		float startingDiff = botPoints_ - oppPoints_;
 
-		List<CoordsInfo>[,] coordsInfo = getPieceAttackPatterns(this.currentBoardState, this.color);
+		CoordsInfo[,] coordsInfo = getPieceAttackPatterns(this.currentBoardState, this.color);
 
 		//Each piece
 		foreach (NextMove nextMove in allMoves) {
@@ -58,14 +59,15 @@ public class BottusMaximus : BotTemplate
 			else {
 				cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
 			}
-			this.currentBoardState;
+			this.currentBoardState = cloneState;
 
-			List<NextMove> allMovesOpp = getAllPossibleMovesAndAbilities(this, cloneState, this.color * -1);
+			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
 			//best simulated move opponent can make
 			float bestOppMoveDiff = +1000f;
+			int bestOppBoardControlDiff = +1000;
 
-			foreach(NextMove nextMoveOpp in allMovesOpp) {
+			foreach (NextMove nextMoveOpp in allMovesOpp) {
 				Piece pieceOpp;
                 int[] coordsOpp;
 
@@ -98,7 +100,11 @@ public class BottusMaximus : BotTemplate
                 }
                 this.currentBoardState = originalBoardState_;
 
-                List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
+				List<int> boardControlOnBS = getBoardControlOnBoardState(cloneState_);
+				int botBoardControl = this.color == 1 ? boardControlOnBS[0] : boardControlOnBS[1];
+				int oppBoardControl = this.color == -1 ? boardControlOnBS[0] : boardControlOnBS[1];
+
+				List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
                 float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
@@ -106,7 +112,8 @@ public class BottusMaximus : BotTemplate
                 if (diff_ < bestOppMoveDiff)
                 {
                     bestOppMoveDiff = diff_;
-                }
+					//bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+				}
 			}
 
 			CoordsInfo cInfo = coordsInfo[coords[0] - 1, coords[1] - 1];
@@ -128,9 +135,18 @@ public class BottusMaximus : BotTemplate
 
 			if (moveWeight > bestMoveWeight) {
 				// set move
+				bestMove = nextMove;
+				bestMoveWeight = moveWeight;
 			}
 			else if (moveWeight == bestMoveWeight) {
 				//check board control
+				int boardControlDiff = bestOppBoardControlDiff;
+
+				if (boardControlDiff > bestBoardControlDiff)
+                {
+					bestBoardControlDiff = boardControlDiff;
+					bestMove = nextMove;
+                }
 			}
 
 			this.currentBoardState = originalBoardState;
@@ -138,11 +154,11 @@ public class BottusMaximus : BotTemplate
 
 		if (bestMove.moveType == "move")
         {
-            bestMove.move.p = getOriginalPieceFromClone(move.move.p);
+            bestMove.move.p = getOriginalPieceFromClone(bestMove.move.p);
         }
         else
         {
-            bestMove.ability.piece = getOriginalPieceFromClone(move.ability.piece);
+            bestMove.ability.piece = getOriginalPieceFromClone(bestMove.ability.piece);
         }
         return bestMove;
 	}
@@ -183,9 +199,9 @@ public class BottusMaximus : BotTemplate
 		public List<Piece> oppAttacking { get; set; }
 	}
 
-	private List<CoordsInfo>[,] getPieceAttackPatterns(BoardState bs, int color) {
+	private CoordsInfo[,] getPieceAttackPatterns(BoardState bs, int color) {
 
-		List<CoordsInfo>[,] coordsInfo = new List<CoordsInfo>[8, 8];
+		CoordsInfo[,] coordsInfo = new CoordsInfo[8, 8];
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -195,7 +211,7 @@ public class BottusMaximus : BotTemplate
 				if (pieces != null) {
 					coordsInfo[i, j].piecesOnCoords.AddRange(pieces);
 
-					for (Piece p in pieces) {
+					foreach (Piece p in pieces) {
 						if (p.color == color) {
 							coordsInfo[i, j].points += p.points;
 						}
@@ -207,10 +223,10 @@ public class BottusMaximus : BotTemplate
 			}
 		}
 
-		var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
+		var botMovesWhite = getAllPossibleBotMoves(this, bs, 1);
         List<PieceMoveList> listBotWhiteMoves = botMovesWhite.pieceMoveList;
 
-        var botMovesBlack = BotHelperFunctions.getAllPossibleBotMoves(this, bs, -1);
+        var botMovesBlack = getAllPossibleBotMoves(this, bs, -1);
         List<PieceMoveList> listBotBlackMoves = botMovesBlack.pieceMoveList;
 
         foreach (PieceMoveList pml in listBotWhiteMoves)
@@ -225,16 +241,16 @@ public class BottusMaximus : BotTemplate
             		theList = coordsInfo[coords[0] - 1, coords[1] - 1].oppAttacking;
             	}
 
-                if (!HelperFunctions.pieceInList(theList), piece))
+                if (!HelperFunctions.pieceInList(theList, piece))
                 {
-                    coordsInfo[coords[0] - 1, coords[1] - 1].theList.Add(piece);
+                    theList.Add(piece);
                 }
 
                 if (color == 1) {
-                	attackingPoints += piece.points;
+					coordsInfo[coords[0] - 1, coords[1] - 1].attackingPoints += piece.points;
                 }
                 else {
-                	oppAttackingPoints += piece.points;
+					coordsInfo[coords[0] - 1, coords[1] - 1].oppAttackingPoints += piece.points;
                 }
             }
         }
@@ -251,20 +267,65 @@ public class BottusMaximus : BotTemplate
             		theList = coordsInfo[coords[0] - 1, coords[1] - 1].oppAttacking;
             	}
 
-                if (!HelperFunctions.pieceInList(theList), piece))
+                if (!HelperFunctions.pieceInList(theList, piece))
                 {
-                    coordsInfo[coords[0] - 1, coords[1] - 1].theList.Add(piece);
+                    theList.Add(piece);
                 }
 
                 if (color == -1) {
-                	attackingPoints += piece.points;
+					coordsInfo[coords[0] - 1, coords[1] - 1].attackingPoints += piece.points;
                 }
                 else {
-                	oppAttackingPoints += piece.points;
+					coordsInfo[coords[0] - 1, coords[1] - 1].oppAttackingPoints += piece.points;
                 }
             }
         }
 
         return coordsInfo;
+	}
+
+	private List<int> getBoardControlOnBoardState(BoardState bs)
+	{
+		List<int> boardControl = new List<int>();
+
+		var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
+		List<PieceMoveList> listBotWhiteMoves = botMovesWhite.pieceMoveList;
+
+		var botMovesBlack = BotHelperFunctions.getAllPossibleBotMoves(this, bs, -1);
+		List<PieceMoveList> listBotBlackMoves = botMovesBlack.pieceMoveList;
+
+		List<int[]> uniqueCoords = new List<int[]>();
+		foreach (PieceMoveList pml in listBotWhiteMoves)
+		{
+			Piece piece = pml.piece;
+			List<int[]> _mL = pml.moves;
+
+			foreach (int[] coords in _mL)
+			{
+				if (!HelperFunctions.coordsInList(uniqueCoords, coords))
+				{
+					uniqueCoords.Add(coords);
+				}
+			}
+		}
+		boardControl.Add(uniqueCoords.Count);
+
+		uniqueCoords = new List<int[]>();
+		foreach (PieceMoveList pml in listBotBlackMoves)
+		{
+			Piece piece = pml.piece;
+			List<int[]> _mL = pml.moves;
+
+			foreach (int[] coords in _mL)
+			{
+				if (!HelperFunctions.coordsInList(uniqueCoords, coords))
+				{
+					uniqueCoords.Add(coords);
+				}
+			}
+		}
+		boardControl.Add(uniqueCoords.Count);
+
+		return boardControl;
 	}
 }

@@ -1559,7 +1559,7 @@ public class BotHelperFunctions : MonoBehaviour
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
-                    //c_ = new int[] { c_[0] - 1, c_[1] - 1 };
+                    c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
                     Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 

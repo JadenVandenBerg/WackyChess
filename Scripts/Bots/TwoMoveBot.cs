@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 using System.Linq;
+using static BotHelperFunctions;
 
 class MoveState
 {
@@ -110,21 +111,21 @@ public class TwoMoveBot : BotTemplate
                 {
                     Move mv = nextMove.move;
 
-                    piece = mv.p;
+                    piece_ = mv.p;
                     coords = mv.coords;
                 }
                 else // moveType == "ability" guarenteed
                 {
                     PieceAbility pa = nextMove.ability;
 
-                    piece = pa.piece;
+                    piece_ = pa.piece;
                     coords = pa.coords;
                 }
 
                 BoardState cloneState;
                 if (moveType == "move")
                 {
-                    cloneState = simulatePieceMove(this, next.bs, piece, coords);
+                    cloneState = simulatePieceMove(this, next.bs, piece_, coords);
                 }
                 else
                 {
@@ -139,6 +140,8 @@ public class TwoMoveBot : BotTemplate
 
                 foreach (NextMove nextMoveOpp in allBotMovesOpp)
                 {
+                    Piece pieceOpp;
+                    int[] coordsOpp;
                     string moveTypeOpp = nextMoveOpp.moveType;
 
                     if (moveTypeOpp == "move")

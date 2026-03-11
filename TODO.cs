@@ -8,6 +8,7 @@
 //When a stacking piece captures a delayed piece, it becomes delayed too early
 // piggyback not working, king should not be able to ride
 // pieces are allowed to move off of jailed pieces, which puts the king in check (maybe use simulatedMoves instead of dummymove for chekc)
+//explosion radius of atomics
 
 //Feature
 //Side panel only show selectable pieces

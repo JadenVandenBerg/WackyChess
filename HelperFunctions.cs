@@ -215,7 +215,14 @@ public class HelperFunctions : MonoBehaviour
         {
             for (int j = 1; j <= 8; j++)
             {
-                Image s = findSquare(i, j).GetComponent<Image>();
+                GameObject sq = findSquare(i, j);
+
+                if (sq == null)
+                {
+                    return;
+                }
+
+                Image s = sq.GetComponent<Image>();
 
                 if ((i + j) % 2 == 0)
                 {
@@ -1414,33 +1421,14 @@ public class HelperFunctions : MonoBehaviour
 
     public static void updatePointsOnUI(SidePanelAdjust panel)
     {
+        if (panel == null || panel.whiteCountText == null || panel.blackCountText == null ||gameData.botWhite == null ||gameData.botBlack == null ||gameData.pointsOnBoard == null ||gameData.pointsOnBoard.Length < 2)
+        {
+            return;
+        }
+
         panel.whiteCountText.text = $"{gameData.botWhite.name}: {gameData.pointsOnBoard[0]}";
         panel.blackCountText.text = $"{gameData.botBlack.name}: {gameData.pointsOnBoard[1]}";
-
-        //String whoseTurn;
-        //if (gameData.turn == 1)
-        //{
-        //    whoseTurn = "Whites";
-        //}
-        //else
-        //{
-        //    whoseTurn = "Blacks";
-        //}
-
-        //if (gameData.checkMate)
-        //{
-        //    //Later
-        //}
-        //else if (gameData.staleMate)
-        //{
-        //    //Latewr
-        //}
-        //else if (gameData.check)
-        //{
-        //    //Later
-        //}
     }
-
     public static void updateBotMoves(int color)
     {
         gameData.botMoves.Clear();
@@ -4276,7 +4264,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool pieceInList(List<Piece> pieceList, Piece piece) {
         foreach (Piece p in pieceList) {
-            if (piece.name = p.name) {
+            if (piece.name == p.name) {
                 return true;
             } 
         }

@@ -40,7 +40,7 @@ public class botMaster : MonoBehaviour
 
     IEnumerator Start()
     {
-        /*
+        
         // Tournament
         if (nonResettables.botTournamentSmall == null)
         {
@@ -61,13 +61,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-        */
+        
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
         
-        botWhite = new SavageBeastBot(1);
-        botBlack = new Bloodbot(-1);
+        //botWhite = new SavageBeastBot(1);
+        //botBlack = new Bloodbot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -530,10 +530,7 @@ public class botMaster : MonoBehaviour
         }
 
         if (!death && check == 0) {
-            if (turn == -1)
-            {
-                movesWithoutCapture++;
-            }
+            movesWithoutCapture++;
             subsequentChecks = 0;
         }
         else if (death) {
@@ -573,7 +570,7 @@ public class botMaster : MonoBehaviour
             gameOver = true;
         }
 
-        if (subsequentChecks > 8 || movesWithoutCapture > 25)
+        if (subsequentChecks > 8 || movesWithoutCapture > 45)
         {
             //GAME OVER, go to next match
             Debug.Log("Game Over - Tie");

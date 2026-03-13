@@ -112,7 +112,7 @@ public class BottusMaximus : BotTemplate
                 if (diff_ < bestOppMoveDiff)
                 {
                     bestOppMoveDiff = diff_;
-					//bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+					bestOppBoardControlDiff = botBoardControl - oppBoardControl;
 				}
 			}
 
@@ -124,14 +124,35 @@ public class BottusMaximus : BotTemplate
 			}
 			else if (cInfo.oppPoints > 0) {
 				//worth looking for
-				if (cInfo.attacking.Count > cInfo.oppAttacking.Count) {
-					if (cInfo.attackingPoints < cInfo.oppAttackingPoints) {
-						//If this is true, disregard points lost
+				if (cInfo.attackingPoints < cInfo.oppAttackingPoints) {
+					//If this is true, disregard points lost
 
-						moveWeight = cInfo.oppPoints;
+					float lowestAttackingPoints = +1000;
+					foreach (Piece attackingPiece in cInfo.attacking)
+                    {
+						if (attackingPiece.points < lowestAttackingPoints)
+                        {
+							lowestAttackingPoints = attackingPiece.points;
+                        }
+                    }
+					moveWeight = cInfo.oppPoints - lowestAttackingPoints;
+				}
+				else
+                {
+					float lowestOppAttackingPoints = +1000;
+					foreach (Piece attackingPiece in cInfo.oppAttacking)
+					{
+						if (attackingPiece.points < lowestOppAttackingPoints)
+						{
+							lowestOppAttackingPoints = attackingPiece.points;
+						}
 					}
+					moveWeight = cInfo.oppPoints + lowestOppAttackingPoints - cInfo.attackingPoints - cInfo.points;
 				}
 			}
+
+			//if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
+			//if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
 
 			if (moveWeight > bestMoveWeight) {
 				// set move

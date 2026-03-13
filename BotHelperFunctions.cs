@@ -205,12 +205,13 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 goNext = true;
             }
-        }
 
-        if (HelperFunctions.checkState(king, PieceState.Rulebreaker))
-        {
-            goNext = true;
+            if (HelperFunctions.checkState(king, PieceState.Rulebreaker))
+            {
+                goNext = true;
+            }
         }
+        
 
         if (goNext)
         {
@@ -400,6 +401,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                         if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
 
+                        //Debug.Log("NEW SPIT FOUND: " + piece.name + " -> " + piece.storage[0].name + "");
 
                         PieceAbility spit = new PieceAbility(piece, "Spit", new int[] { posX + 1, posY + 1 }, null, null, piece.storage[0]);
                         pieceAbilities.Add(spit);
@@ -1536,7 +1538,9 @@ public class BotHelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    //int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
+                    int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
+
+                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                     updateBoardState(coords_, p_, "a", bs);
 
@@ -1561,7 +1565,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                     c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
-                    Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardState(c_, p_, "a", bs);
 
@@ -1630,7 +1634,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
         else if (ability == "Spit")
         {
-            isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false), bs);
+            isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(adjustedCoords[0], adjustedCoords[1], bs.boardGrid, false), bs);
 
             updateBoardState(adjustedCoords, secondPiece, "a", bs);
 
@@ -2314,6 +2318,29 @@ public class BotHelperFunctions : MonoBehaviour
                 foreach (Piece ogPiece in gameData.boardGrid[x][y]) {
                     if (ogPiece.name == p.name) {
                         return ogPiece;
+                    }
+                }
+            }
+
+        }
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece ogPiece in gameData.boardGrid[x][y])
+                {
+                    if (ogPiece.storage == null)
+                    {
+                        continue;
+                    }
+
+                    foreach(Piece storedPiece in ogPiece.storage)
+                    {
+                        if (storedPiece.name == p.name)
+                        {
+                            return storedPiece;
+                        }
                     }
                 }
             }

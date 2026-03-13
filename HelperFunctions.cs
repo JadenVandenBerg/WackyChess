@@ -2241,7 +2241,8 @@ public class HelperFunctions : MonoBehaviour
 
         if (action.ToLower() == "r" || action.ToLower() == "remove")
         {
-            square.RemoveAll(p => p.name == piece.name);
+            int ok = square.RemoveAll(p => p.name == piece.name);
+            Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + coords[0] + "," + coords[1]);
         }
     }
 
@@ -2440,11 +2441,11 @@ public class HelperFunctions : MonoBehaviour
             {
                 goNext = true;
             }
-        }
 
-        if (king.alive == 1 && rook.alive == 1 && checkState(king, PieceState.Rulebreaker))
-        {
-            goNext = true;
+            if (king.alive == 1 && rook.alive == 1 && checkState(king, PieceState.Rulebreaker))
+            {
+                goNext = true;
+            }
         }
 
         if (goNext)
@@ -3121,7 +3122,56 @@ public class HelperFunctions : MonoBehaviour
         }
 
         updateBoardGrid(piece.position, piece, "a");
+
+        string panelCode = findNextAvailablePanelCode(getPieceColor(piece) + getPieceType(piece) + "0");
+        piece.name = panelCode;
         gameData.panelCodes.Add(piece.name);
+        piece.go.name = panelCode;
+    }
+
+    public static string getPieceType(Piece p)
+    {
+        if (p.baseType == "Pawn")
+        {
+            return "p";
+        }
+
+        if (p.baseType == "Rook")
+        {
+            return "r";
+        }
+
+        if (p.baseType == "Bishop")
+        {
+            return "b";
+        }
+
+        if (p.baseType == "Knight")
+        {
+            return "n";
+        }
+
+        if (p.baseType == "Queen")
+        {
+            return "q";
+        }
+
+        if (p.baseType == "King")
+        {
+            return "k";
+        }
+
+        return "m";
+    }
+
+    public static string getPieceColor(Piece p)
+    {
+        if (p.color == 1)
+        {
+            return "w_";
+        }
+
+        return "b_";
     }
 
     public void toggleCheckmateUI()
@@ -3136,6 +3186,7 @@ public class HelperFunctions : MonoBehaviour
 
         Piece piece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.piece);
         Piece secondPiece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.secondPiece);
+        if (secondPiece != null) Debug.Log(secondPiece.go);
 
         string ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
@@ -3174,9 +3225,12 @@ public class HelperFunctions : MonoBehaviour
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numPieces);
+                    numPieces--;
 
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
+
+                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                     updateBoardGrid(coords_, p_, "a");
                     
@@ -3197,10 +3251,12 @@ public class HelperFunctions : MonoBehaviour
                 foreach (Piece p_ in placePieces)
                 {
                     System.Random rand = new System.Random();
-                    int idx = rand.Next(numCoords);
+                    int idx = rand.Next(numCoords); numCoords--;
 
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
+
+                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardGrid(c_, p_, "a");
 
@@ -3291,8 +3347,8 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
 
-            Piece storagePiece = piece.storage[0];
-            if (storagePiece.go == null)
+            Piece storagePiece = BotHelperFunctions.getOriginalPieceFromClone(piece.storage[0]);
+            if (storagePiece == null || storagePiece.go == null)
             {
                 storagePiece = secondPiece;
             }
@@ -4115,7 +4171,7 @@ public class HelperFunctions : MonoBehaviour
         clone.storageLimit = original.storageLimit;
         if (original.storage == null || original.storage.Count == 0)
         {
-            clone.storage = original.storage;
+            clone.storage = null;
         }
         else
         {

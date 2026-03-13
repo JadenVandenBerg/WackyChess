@@ -9,6 +9,10 @@
 // piggyback not working, king should not be able to ride
 // pieces are allowed to move off of jailed pieces, which puts the king in check (maybe use simulatedMoves instead of dummymove for chekc)
 //explosion radius of atomics
+//delayed pieces not in check properly
+// do not count infinite/crook as captures for captures
+//big problem with moving into check incorrectly
+//capture the flag pieces cannot stack on piggyback king
 
 //Feature
 //Side panel only show selectable pieces

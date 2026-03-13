@@ -208,15 +208,26 @@ public class BotTournament {
     public int round = 1;
     public int match = 1;
 
-    public BotTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight) {
-        competingBots.Add(botOne);
-        competingBots.Add(botTwo);
-        competingBots.Add(botThree);
-        competingBots.Add(botFour);
-        competingBots.Add(botFive);
-        competingBots.Add(botSix);
-        competingBots.Add(botSeven);
-        competingBots.Add(botEight);
+    public BotTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight, bool randomize)
+    {
+        List<string> bots = new List<string>()
+    {
+        botOne, botTwo, botThree, botFour,
+        botFive, botSix, botSeven, botEight
+    };
+
+        if (randomize)
+        {
+            System.Random rand = new System.Random();
+
+            for (int i = bots.Count - 1; i > 0; i--)
+            {
+                int j = rand.Next(i + 1);
+                (bots[i], bots[j]) = (bots[j], bots[i]);
+            }
+        }
+
+        competingBots.AddRange(bots);
     }
 
     public (string botWhite, string botBlack) nextGame() {

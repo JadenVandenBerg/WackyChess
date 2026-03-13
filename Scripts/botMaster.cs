@@ -42,10 +42,10 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        /*
+        
         if (nonResettables.botTournament == null)
         {
-            nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot");
+            nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot", true);
         }
 
         nonResettables.isBotTournament = true;
@@ -62,13 +62,13 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-        */
+        
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
         
-        botWhite = new SavageBeastBot(1);
-        botBlack = new Bloodbot(-1);
+        //botWhite = new Abilibot(1);
+        //botBlack = new IdiotBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 
@@ -81,14 +81,14 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botWhitePawns = new List<Piece>
         {
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("JockeyPawn", 1),
-            getPieceTypeInstance("ZombiePawn", 1),
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
-            getPieceTypeInstance("Pawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
+            getPieceTypeInstance("SpittingPawn", 1),
         };
         */
         HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
@@ -105,38 +105,38 @@ public class botMaster : MonoBehaviour
         /*
         List<Piece> botWhiteRooks = new List<Piece>
         {
-            getPieceTypeInstance("AtomicRook", 1),
-            getPieceTypeInstance("Rook", 1),
+            getPieceTypeInstance("SpittingRook", 1),
+            getPieceTypeInstance("SpittingRook", 1),
         };
         */
         List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
         /*
         List<Piece> botWhiteBishops = new List<Piece>
         {
-            getPieceTypeInstance("PhantomBishop", 1),
-            getPieceTypeInstance("StackingBishop", 1),
+            getPieceTypeInstance("SpittingBishop", 1),
+            getPieceTypeInstance("SpittingBishop", 1),
         };
         */
         List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
         /*
         List<Piece> botWhiteKnights = new List<Piece>
         {
-            getPieceTypeInstance("InfiniteKnight", 1),
-            getPieceTypeInstance("LongKnight", 1),
+            getPieceTypeInstance("SpittingKnight", 1),
+            getPieceTypeInstance("SpittingKnight", 1),
         };
         */
         List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
         /*
         List<Piece> botWhiteKing = new List<Piece>
         {
-            getPieceTypeInstance("HeartbrokenKing", 1)
+            getPieceTypeInstance("SpittingKing", 1)
         };
         */
         List <Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
         /*
         List<Piece> botWhiteQueen = new List<Piece>
         {
-            getPieceTypeInstance("LandmineQueen", 1)
+            getPieceTypeInstance("SpittingQueen", 1)
         };
         */
 
@@ -229,46 +229,6 @@ public class botMaster : MonoBehaviour
             bgs.blackPieces.Add(wp.name);
         }
 
-        //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
-        botWhitePawns[0].name = "w_p1";
-        botWhitePawns[1].name = "w_p2";
-        botWhitePawns[2].name = "w_p3";
-        botWhitePawns[3].name = "w_p4";
-        botWhitePawns[4].name = "w_p5";
-        botWhitePawns[5].name = "w_p6";
-        botWhitePawns[6].name = "w_p7";
-        botWhitePawns[7].name = "w_p8";
-        botWhiteRooks[0].name = "w_r1";
-        botWhiteRooks[1].name = "w_r2";
-        botWhiteBishops[0].name = "w_b1";
-        botWhiteBishops[1].name = "w_b2";
-        botWhiteKnights[0].name = "w_n1";
-        botWhiteKnights[1].name = "w_n2";
-        botWhiteKing[0].name = "w_k1";
-        botWhiteQueen[0].name = "w_q1";
-
-        botBlackPawns[0].name = "b_p1";
-        botBlackPawns[1].name = "b_p2";
-        botBlackPawns[2].name = "b_p3";
-        botBlackPawns[3].name = "b_p4";
-        botBlackPawns[4].name = "b_p5";
-        botBlackPawns[5].name = "b_p6";
-        botBlackPawns[6].name = "b_p7";
-        botBlackPawns[7].name = "b_p8";
-        botBlackRooks[0].name = "b_r1";
-        botBlackRooks[1].name = "b_r2";
-        botBlackBishops[0].name = "b_b1";
-        botBlackBishops[1].name = "b_b2";
-        botBlackKnights[0].name = "b_n1";
-        botBlackKnights[1].name = "b_n2";
-        botBlackKing[0].name = "b_k1";
-        botBlackQueen[0].name = "b_q1";
-
-        foreach (Piece piece in gameData.allPiecesDict.Values)
-        {
-            piece.go.name = piece.name;
-        }
-
         gameData.whiteRooks.Add(botWhiteRooks[0]);
         gameData.whiteRooks.Add(botWhiteRooks[1]);
 
@@ -301,7 +261,7 @@ public class botMaster : MonoBehaviour
     int turn = 1;
     bool isTurn = true;
     int movesWithoutCapture = 0;
-    int subsequentChecks = 0;
+    float subsequentChecks = 0;
 
     bool gameOver = false;
     bool kingDead = false;
@@ -406,8 +366,9 @@ public class botMaster : MonoBehaviour
 
         movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
-        bool death;
-        int check;
+        bool death = false;
+        int check = 0;
+        bool checkLastTurn = false;
         if (valid)
         {
             gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
@@ -418,7 +379,14 @@ public class botMaster : MonoBehaviour
             Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
             if (selectedMove.moveType == "move")
             {
-                death = helper.performPreMove();
+                if (HelperFunctions.checkState(movePieceObj, PieceState.Delayed))
+                {
+                    death = false; 
+                }
+                else
+                {
+                    death = helper.performPreMove();
+                }
                 check = helper.movePiece_(movePieceObj, moveCoords);
             }
             else
@@ -444,46 +412,46 @@ public class botMaster : MonoBehaviour
 
             if (randomMove == null)
             {
-                Debug.Log("Game Over - Checkmate");
-                bgs.result = "Won by Checkmate";
-                if (turn == -1)
-                {
-                    bgs.winner = "White";
-                    bgs.winnerName = botWhite.name;
-                }
-                else
-                {
-                    bgs.winner = "Black";
-                    bgs.winnerName = botBlack.name;
-                }
-            }
-
-            if (randomMove.moveType == "move")
-            {
-                movePieceObj = randomMove.move.p;
-                moveCoords = randomMove.move.coords;
-            }
-            else if (randomMove.moveType == "ability")
-            {
-                movePieceObj = randomMove.ability.piece;
-                moveCoords = randomMove.ability.coords;
-            }
-
-            gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
-            gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
-            gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
-            gameData.selectedToMovePiece = movePieceObj;
-
-            if (randomMove.moveType == "move")
-            {
-                death = helper.performPreMove();
-                check = helper.movePiece_(movePieceObj, moveCoords);
+                Debug.Log("Game Over - Stalemate");
+                bgs.result = "Draw by Stalemate";
             }
             else
             {
-                var deathVars = helper.executeAbility(randomMove.ability);
-                death = deathVars.death;
-                check = deathVars.check;
+                if (randomMove.moveType == "move")
+                {
+                    movePieceObj = randomMove.move.p;
+                    moveCoords = randomMove.move.coords;
+                }
+                else if (randomMove.moveType == "ability")
+                {
+                    movePieceObj = randomMove.ability.piece;
+                    moveCoords = randomMove.ability.coords;
+                }
+
+                gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
+                gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+                gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
+                gameData.selectedToMovePiece = movePieceObj;
+
+                if (randomMove.moveType == "move")
+                {
+                    if (HelperFunctions.checkState(movePieceObj, PieceState.Delayed))
+                    {
+                        death = false;
+                    }
+                    else
+                    {
+                        death = helper.performPreMove();
+                    }
+
+                    check = helper.movePiece_(movePieceObj, moveCoords);
+                }
+                else
+                {
+                    var deathVars = helper.executeAbility(randomMove.ability);
+                    death = deathVars.death;
+                    check = deathVars.check;
+                }
             }
         }
 
@@ -530,6 +498,11 @@ public class botMaster : MonoBehaviour
             gameOver = true;
         }
 
+        if (check == 1 || checkLastTurn == true)
+        {
+            subsequentChecks += 0.5f;
+        }
+
         if (!death && check == 0) {
             movesWithoutCapture++;
             subsequentChecks = 0;
@@ -539,7 +512,12 @@ public class botMaster : MonoBehaviour
             subsequentChecks = 0;
         }
         else if (check == 1) {
-            subsequentChecks++;
+            checkLastTurn = true;
+        }
+
+        if (check == 0)
+        {
+            checkLastTurn = false;
         }
 
         if (check == 2)
@@ -822,6 +800,7 @@ public class botMaster : MonoBehaviour
         BoardState bs = new BoardState();
         bs.refresh(convertBoardGrid(gameData.boardGrid));
 
+        //todo need to make sure not in check here
         List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
 
         return (totalMoves, pieceAbility);

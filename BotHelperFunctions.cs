@@ -109,11 +109,13 @@ public class BotHelperFunctions : MonoBehaviour
 
             int[] coords = new int[]
             {
-                p.position[0] + xOffset - 1,
-                p.position[1] + yOffset - 1
+                p.position[0] + xOffset,
+                p.position[1] + yOffset
             };
 
-            if (isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false).Count > 0)
+            if (!HelperFunctions.checkBounds(coords[0], coords[1])) continue;
+
+            if (isolatedGetPiecesOnCoordsBoardGrid(coords[0] - 1, coords[1] - 1, bs.boardGrid, false).Count > 0)
             {
                 continue;
             }
@@ -350,7 +352,7 @@ public class BotHelperFunctions : MonoBehaviour
                         List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
                         foreach (Piece p_ in piecesOnDir)
                         {
-                            if (p_.color != piece.color)
+                            if (p_.color != piece.color && !HelperFunctions.checkState(p_, PieceState.Frozen))
                             {
                                 PieceAbility freeze = new PieceAbility(piece, "Freeze", new int[] { posX + 1, posY + 1 }, null, null, p_);
                                 pieceAbilities.Add(freeze);
@@ -988,14 +990,49 @@ public class BotHelperFunctions : MonoBehaviour
                     return false;
                 }
 
-                List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX - 1, newY - 1, bs.boardGrid, false);
+                //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX - 1, newY - 1, bs.boardGrid, false);
 
-                if (piecesOnCoords.Count > 0) {
-                    break;
+                //if (piecesOnCoords.Count > 0) {
+                   //break;
+                //}
+
+                if (!isolatedPieceCanJumpOver(newX - 1, newY - 1, bs.boardGrid, piece))
+                {
+                    return true;
                 }
             }
         }
 
+        return true;
+    }
+
+    public static bool isolatedPieceCanJumpOver(int x, int y, List<Piece>[,] boardGrid, Piece piece)
+    {
+        bool isGhost = HelperFunctions.checkState(piece, PieceState.Ghost);
+
+        foreach (Piece p in boardGrid[x, y])
+        {
+            if (HelperFunctions.checkState(p, PieceState.Ghoul) && p.color == piece.color)
+            {
+                // Your Ghoul
+                continue;
+            }
+
+            if (HelperFunctions.checkState(p, PieceState.Dematerialized) && p.color == piece.color)
+            {
+                // Your Dematerialized
+                continue;
+            }
+
+            if (isGhost && p.color == piece.color)
+            {
+                // Your piece is a ghost, your piece
+                continue;
+            }
+
+            return false;
+        }
+ 
         return true;
     }
 
@@ -1092,15 +1129,20 @@ public class BotHelperFunctions : MonoBehaviour
                     //if (!(crossedBackRank || jumpedPiece))
                     //{
                         //anyPathFound = true;
-                        return true;
+                        return false;
                     //}
                 }
 
                 //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
-                if (bs.boardGrid[x - 1, y - 1].Count > 0)
-                {
+                //if (bs.boardGrid[x - 1, y - 1].Count > 0)
+                //{
                     //jumpedPiece = true;
-                    break;
+                    //break;
+                //}
+
+                if (!isolatedPieceCanJumpOver(x - 1, y - 1, bs.boardGrid, piece))
+                {
+                    return true;
                 }
             }
         }
@@ -1152,7 +1194,10 @@ public class BotHelperFunctions : MonoBehaviour
 
         //There is one piece on the square, piece is piggyback
         if (piecesOnCoordsCount == 1 && HelperFunctions.checkStateAllOnSquare(piecesOnCoords, PieceState.Piggyback) && sameColorOnCoords) {
-            return true;
+            if (!HelperFunctions.checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+            {
+                return true;
+            }
         }
 
         //There is one piece on square, piece is jockey
@@ -1542,7 +1587,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                     Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
-                    updateBoardState(coords_, p_, "a", bs);
+                    updateBoardState(coords__, p_, "a", bs);
 
                     piece.storage.Remove(p_);
                 }
@@ -1667,6 +1712,161 @@ public class BotHelperFunctions : MonoBehaviour
             Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color);
             Destroy(rightPawn.go);
             updateBoardState(adjustedPiecePosition, rightPawn, "a", bs);
+        }
+
+        return bs;
+    }
+
+    public static BoardState simulatePieceMove_(BoardState bs_, Piece piece, int[] coords, int botColor, Piece whiteKing, Piece blackKing)
+    {
+        // Reset positions and clone bs
+        resetPiecePositions(null, bs_.boardGrid);
+        BoardState bs = copyBoardState(bs_);
+
+        whiteKing = getCloneFromOriginalPiece(whiteKing, bs.boardGrid);
+        blackKing = getCloneFromOriginalPiece(whiteKing, bs.boardGrid);
+
+        if (whiteKing == null || blackKing == null)
+        {
+            return null;
+        }
+
+        coords = new int[] { coords[0] - 1, coords[1] - 1 };
+        //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
+        /*
+        if (coords[0] < 0 || coords[0] >= 8 || coords[1] < 0 || coords[1] >= 8)
+        {
+            return null;
+        }
+        */
+        //List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
+        List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
+        bool death = isolatedIsDeath(piecesOnCoordsPreDeath, piece);
+
+        if (death)
+        {
+            Piece destroyer = piece;
+            isolatedOnDeaths(destroyer, coords, bs);
+        }
+
+        tempInfo.attackerDied = false;
+        if (bs.delayedQueue == null)
+        {
+            bs.delayedQueue = new DelayedQueue();
+        }
+        bs.delayedQueue.deIncrement();
+
+        bool delayedMoves = true;
+        while (delayedMoves)
+        {
+            PieceMove moveToCheck = bs.delayedQueue.Peek();
+            if (moveToCheck != null && moveToCheck.turnsToRemove <= 0)
+            {
+                moveToCheck = bs.delayedQueue.Dequeue();
+
+                isolatedDelayedMove(moveToCheck, bs);
+            }
+            else
+            {
+                delayedMoves = false;
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.Delayed))
+        {
+            PieceMove delayedMove = new PieceMove(piece, coords, 2);
+            bs.delayedQueue.Enqueue(delayedMove);
+
+            return bs;
+        }
+
+        List<Piece> piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(piece.position[0], piece.position[1], bs.boardGrid, false);
+        foreach (Piece pieceOnSquare in piecesOnSquare)
+        {
+            if (HelperFunctions.checkState(pieceOnSquare, PieceState.Crook))
+            {
+                if (piecesOnSquare.Count == 2) //why 2
+                {
+                    HelperFunctions.removeState(pieceOnSquare, PieceState.Jailed);
+                }
+            }
+
+            if (HelperFunctions.checkState(piece, PieceState.Jailer))
+            {
+                HelperFunctions.removeState(pieceOnSquare, PieceState.Jailed);
+            }
+        }
+
+        int[] originalCoords = { piece.position[0], piece.position[1] };
+        if (!tempInfo.attackerDied)
+        {
+            movePieceBoardState(piece, coords, bs);
+        }
+        else
+        {
+            updateBoardState(coords, piece, "r", bs);
+        }
+
+        List<Piece> piecesOnSquare2 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0], originalCoords[1], bs.boardGrid, false);
+        if (HelperFunctions.checkState(piece, PieceState.Piggyback))
+        {
+            foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare2))
+            {
+                if (pieceOnSquare.color == piece.color)
+                {
+                    movePieceBoardState(pieceOnSquare, coords, bs);
+                    pieceOnSquare.hasMoved = true;
+                }
+            }
+        }
+
+        List<Piece> piecesOnSquare3 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0], originalCoords[1], bs.boardGrid, false);
+        foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare3))
+        {
+            if (HelperFunctions.checkState(pieceOnSquare, PieceState.Jockey))
+            {
+                movePieceBoardState(pieceOnSquare, coords, bs);
+                pieceOnSquare.hasMoved = true;
+            }
+        }
+
+        if (piece.promotesInto != "")
+        {
+            if (piece.position[1] == piece.promotingRow)
+            {
+                string pname = piece.promotesInto;
+                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Destroy(p.go);
+                isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(piece.position[0] - 1, piece.position[1] - 1, bs.boardGrid, false), bs);
+                updateBoardState(new int[] { piece.position[0] - 1, piece.position[1] - 1 }, piece, "r", bs);
+                updateBoardState(coords, p, "a", bs);
+            }
+        }
+
+        Piece botBlackKing = blackKing;
+        Piece botWhiteKing = whiteKing;
+
+        Piece botKing = botColor == 1 ? botWhiteKing : botBlackKing;
+        int[] botKingPos = new int[] { botKing.position[0] - 1, botKing.position[1] - 1 };
+
+        /*
+        if (botColor == -1)
+        {
+            botWhiteKing = filterPieces("King", bot.opponentPieces)[0];
+            botBlackKing = bot.king;
+        }
+        */
+
+        if (HelperFunctions.checkState(botKing, PieceState.Heartbroken))
+        {
+            if (!isolatedIsPieceTypeOnBoard("q", botColor, bs))
+            {
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Destroy(tempKing.go);
+
+                updateBoardState(botKingPos, tempKing, "a", bs);
+                updateBoardState(botKingPos, botKing, "r", bs);
+            }
         }
 
         return bs;
@@ -2336,6 +2536,54 @@ public class BotHelperFunctions : MonoBehaviour
                     }
 
                     foreach(Piece storedPiece in ogPiece.storage)
+                    {
+                        if (storedPiece.name == p.name)
+                        {
+                            return storedPiece;
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return null;
+    }
+
+    public static Piece getCloneFromOriginalPiece(Piece p, List<Piece>[,] boardGrid)
+    {
+        if (p == null)
+        {
+            return null;
+        }
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece ogPiece in boardGrid[x, y])
+                {
+                    if (ogPiece.name == p.name)
+                    {
+                        return ogPiece;
+                    }
+                }
+            }
+
+        }
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece ogPiece in boardGrid[x, y])
+                {
+                    if (ogPiece.storage == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (Piece storedPiece in ogPiece.storage)
                     {
                         if (storedPiece.name == p.name)
                         {

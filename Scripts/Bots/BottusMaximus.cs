@@ -66,6 +66,7 @@ public class BottusMaximus : BotTemplate
 			//best simulated move opponent can make
 			float bestOppMoveDiff = +1000f;
 			int bestOppBoardControlDiff = +1000;
+			BoardState bestOppBS = null;
 
 			foreach (NextMove nextMoveOpp in allMovesOpp) {
 				Piece pieceOpp;
@@ -113,6 +114,7 @@ public class BottusMaximus : BotTemplate
                 {
                     bestOppMoveDiff = diff_;
 					bestOppBoardControlDiff = botBoardControl - oppBoardControl;
+					bestOppBS = cloneState_;
 				}
 			}
 
@@ -122,33 +124,10 @@ public class BottusMaximus : BotTemplate
 			if (cInfo.points > 0) {
 				moveWeight -= cInfo.points;
 			}
-			else if (cInfo.oppPoints > 0) {
-				//worth looking for
-				if (cInfo.attackingPoints < cInfo.oppAttackingPoints) {
-					//If this is true, disregard points lost
-
-					float lowestAttackingPoints = +1000;
-					foreach (Piece attackingPiece in cInfo.attacking)
-                    {
-						if (attackingPiece.points < lowestAttackingPoints)
-                        {
-							lowestAttackingPoints = attackingPiece.points;
-                        }
-                    }
-					moveWeight = cInfo.oppPoints - lowestAttackingPoints;
-				}
-				else
-                {
-					float lowestOppAttackingPoints = +1000;
-					foreach (Piece attackingPiece in cInfo.oppAttacking)
-					{
-						if (attackingPiece.points < lowestOppAttackingPoints)
-						{
-							lowestOppAttackingPoints = attackingPiece.points;
-						}
-					}
-					moveWeight = cInfo.oppPoints + lowestOppAttackingPoints - cInfo.attackingPoints - cInfo.points;
-				}
+			else if (cInfo.oppPoints > 0)
+			{
+				float tradeScore = evaluateTrade(cInfo);
+				moveWeight += tradeScore;
 			}
 
 			//if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
@@ -348,5 +327,44 @@ public class BottusMaximus : BotTemplate
 		boardControl.Add(uniqueCoords.Count);
 
 		return boardControl;
+	}
+
+	private float evaluateTrade(CoordsInfo cInfo)
+	{
+		List<float> attackers = cInfo.attacking.Select(p => p.points).OrderBy(x => x).ToList();
+
+		List<float> oppAttackers = cInfo.oppAttacking.Select(p => p.points).OrderBy(x => x).ToList();
+
+		float squarePoints = cInfo.oppPoints > 0 ? cInfo.oppPoints : cInfo.points;
+
+		int index = 0;
+		int oppIndex = 0;
+
+		float points = squarePoints;
+		bool botTurn = true;
+
+		while (true)
+		{
+			if (botTurn)
+			{
+				if (index >= attackers.Count) break;
+
+				points += squarePoints;
+				squarePoints = attackers[index];
+				index++;
+			}
+			else
+			{
+				if (oppIndex >= oppAttackers.Count) break;
+
+				points -= squarePoints;
+				squarePoints = oppAttackers[oppIndex];
+				oppIndex++;
+			}
+
+			botTurn = !botTurn;
+		}
+
+		return points;
 	}
 }

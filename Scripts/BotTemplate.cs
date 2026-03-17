@@ -96,8 +96,8 @@ public class BoardState {
 	public List<Piece> allPieces = new List<Piece>();
 	public List<Piece> whitePieces = new List<Piece>();
 	public List<Piece> blackPieces = new List<Piece>();
-	public Piece whiteKing;
-	public Piece blackKing;
+	public Piece whiteKing = null;
+	public Piece blackKing = null;
 
 	public DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
 
@@ -138,8 +138,10 @@ public class BoardState {
 			}
 		}
 
-		whiteKing = BotHelperFunctions.filterPieces("King", whitePieces)[0];
-		blackKing = BotHelperFunctions.filterPieces("King", blackPieces)[0];
+		List<Piece> wKings = filterPieces("King", whitePieces);
+		List<Piece> bKings = filterPieces("King", blackPieces);
+		if (wKings.Count > 0) whiteKing = wKings[0];
+		if (bKings.Count > 0) blackKing = bKings[0];
 
 		whitePointsOnBoard = wp;
 		blackPointsOnBoard = bp;

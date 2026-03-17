@@ -57,10 +57,127 @@ public class SidePanelAdjust : MonoBehaviour
         
         
         blackCountText = CreateTextPanel(container.transform, "Black: 0");
-        CreateSquareInfoPanel(container.transform);
+
+        if (gameData.isBotMatch) {
+            CreateBotMatchInfoPanel(container.transform);
+        }
+        else
+        {
+            CreateSquareInfoPanel(container.transform);
+        }
+        
         whiteCountText = CreateTextPanel(container.transform, "White: 0");
 
         RefreshImageGrid();
+    }
+
+    void CreateBotMatchInfoPanel(Transform parent)
+    {
+        if (gameData.botBlack == null || gameData.botWhite == null)
+        {
+            return;
+        }
+
+        GameObject panelObj = new GameObject("BotMatchPanel", typeof(RectTransform), typeof(Image), typeof(VerticalLayoutGroup));
+        panelObj.transform.SetParent(parent, false);
+
+        Image bg = panelObj.GetComponent<Image>();
+        bg.color = new Color(0.2f, 0.2f, 0.2f, 0.85f);
+
+        VerticalLayoutGroup layout = panelObj.GetComponent<VerticalLayoutGroup>();
+        layout.padding = new RectOffset(10, 10, 10, 10);
+        layout.spacing = 10;
+        layout.childControlHeight = true;
+        layout.childControlWidth = true;
+
+        LayoutElement layoutElem = panelObj.AddComponent<LayoutElement>();
+        layoutElem.flexibleHeight = 1;
+
+        CreateBotImage(panelObj.transform, gameData.botBlack.name);
+
+        GameObject messagePanel = new GameObject("MessagePanel", typeof(RectTransform), typeof(VerticalLayoutGroup), typeof(Image));
+        messagePanel.transform.SetParent(panelObj.transform, false);
+
+        Image msgBg = messagePanel.GetComponent<Image>();
+        msgBg.color = new Color(0, 0, 0, 0.35f);
+
+        VerticalLayoutGroup msgLayout = messagePanel.GetComponent<VerticalLayoutGroup>();
+        msgLayout.spacing = 4;
+        msgLayout.childAlignment = TextAnchor.UpperLeft;
+
+        LayoutElement msgLayoutElem = messagePanel.AddComponent<LayoutElement>();
+        msgLayoutElem.flexibleHeight = 1;
+
+        botMessageLines = new TMP_Text[5];
+
+        for (int i = 0; i < 5; i++)
+        {
+            GameObject lineObj = new GameObject("Line" + i, typeof(RectTransform), typeof(TextMeshProUGUI));
+            lineObj.transform.SetParent(messagePanel.transform, false);
+
+            TMP_Text line = lineObj.GetComponent<TMP_Text>();
+            line.text = "";
+            line.font = titleFont;
+            line.fontSize = 18;
+            line.color = Color.white;
+            line.alignment = TextAlignmentOptions.Left;
+
+            botMessageLines[i] = line;
+        }
+
+        CreateBotImage(panelObj.transform, gameData.botWhite.name);
+    }
+
+    private Queue<string> botMessageQueue = new Queue<string>();
+    private TMP_Text[] botMessageLines;
+
+    public void AddBotMessage(string message)
+    {
+        if (botMessageLines == null || botMessageLines.Length == 0)
+            return;
+
+        botMessageQueue.Enqueue(message);
+
+        if (botMessageQueue.Count > 5)
+            botMessageQueue.Dequeue();
+
+        int i = 0;
+
+        foreach (string msg in botMessageQueue)
+        {
+            botMessageLines[i].text = msg;
+            i++;
+        }
+
+        for (; i < 5; i++)
+        {
+            botMessageLines[i].text = "";
+        }
+    }
+
+    void CreateBotImage(Transform parent, string botName)
+    {
+        GameObject imgObj = new GameObject(botName + "_Image", typeof(RectTransform), typeof(Image));
+        imgObj.transform.SetParent(parent, false);
+
+        Image img = imgObj.GetComponent<Image>();
+
+        botName = botName.Replace(" ", "");
+        Sprite sprite = Resources.Load<Sprite>("Images/BotProfilePictures/" + botName);
+
+        if (sprite != null)
+        {
+            img.sprite = sprite;
+        }
+        else
+        {
+            Debug.LogWarning("Bot image not found: " + botName);
+        }
+
+        img.preserveAspect = true;
+
+        LayoutElement layout = imgObj.AddComponent<LayoutElement>();
+        layout.preferredHeight = 120;
     }
 
     TMP_Text CreateTextPanel(Transform parent, string initialText)

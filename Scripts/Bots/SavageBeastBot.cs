@@ -118,23 +118,23 @@ public class SavageBeastBot : BotTemplate
                     bestOppMove = nextMoveOpp;
                     bestOppBoardControlDiff = botBoardControl - oppBoardControl;
                 }
+            }
 
-                // Take the best outcome assuming the opponent captures the highest value piece it can
-                if (bestOppBoardControlDiff >= bestBoardControlDiff)
+            // Take the best outcome assuming the opponent captures the highest value piece it can
+            if (bestOppBoardControlDiff >= bestBoardControlDiff)
+            {
+                if (bestOppBoardControlDiff > bestBoardControlDiff)
                 {
-                    if (bestOppBoardControlDiff > bestBoardControlDiff)
-                    {
-                        validMoves.Clear();
-                    }
-
-                    bestBoardControlDiff = bestOppBoardControlDiff;
-                    bestMoveCoords = coords;
-
-                    validMoves.Add(nextMove);
+                    validMoves.Clear();
                 }
 
-                this.currentBoardState = originalBoardState;
+                bestBoardControlDiff = bestOppBoardControlDiff;
+                bestMoveCoords = coords;
+
+                validMoves.Add(nextMove);
             }
+
+            this.currentBoardState = originalBoardState;
         }
 
         System.Random rand = new System.Random();

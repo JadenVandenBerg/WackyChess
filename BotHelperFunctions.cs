@@ -14,9 +14,9 @@ using System.Text;
 public class BotHelperFunctions : MonoBehaviour
 {
 	public static List<Piece> getPiecesTypeRandom(string type, int color) {
-		List<string> pieces = getAllTypePieces(type, color);
+        List<Type> pieces = getAllTypePieces(type, color);
 
-		List<Piece> selected = new List<Piece>();
+        List<Piece> selected = new List<Piece>();
 
 		int count = 2;
 
@@ -27,26 +27,20 @@ public class BotHelperFunctions : MonoBehaviour
 			count = 1;
 		}
 
-		for (int i = 0; i < count; i++)
-		{
-            System.Random rand = new System.Random();
-		    int index = rand.Next(pieces.Count);
+        System.Random rand = new System.Random();
 
-            Type type_ = Type.GetType(pieces[index] + ", Assembly-CSharp");
+        for (int i = 0; i < count; i++)
+        {
+            int index = rand.Next(pieces.Count);
 
-            if (type_ == null)
-            {
-                i -= 1;
-                continue;
-            }
-
+            Type type_ = pieces[index];
             Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
 
             selected.Add(piece);
-		    pieces.RemoveAt(index);
-		}
+            pieces.RemoveAt(index);
+        }
 
-		return selected;
+        return selected;
 	}
 
     public static Piece getPieceTypeInstance(string type, int color)
@@ -57,17 +51,21 @@ public class BotHelperFunctions : MonoBehaviour
         return piece;
     }
 
-    private static List<string> getAllTypePieces(string type, int color) {
+    private static List<Type> getAllTypePieces(string type, int color)
+    {
 
-    	List<Type> allPieces = Lootbox.GetAllPieces();
-    	List<string> eligiblePieces = new List<string>();
+        List<Type> allPieces = Lootbox.GetAllPieces();
+        List<Type> eligiblePieces = new List<Type>();
 
-    	foreach (var piece_ in allPieces) {
+        foreach (var piece_ in allPieces)
+        {
 
             Piece piece = (Piece)Activator.CreateInstance(piece_, color, false);
-            if (piece.baseType == type) {
-    			eligiblePieces.Add(piece.name);
-    		}
+
+            if (piece.baseType == type)
+            {
+                eligiblePieces.Add(piece_);
+            }
 
             if (piece.go != null)
             {
@@ -75,7 +73,7 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
-    	return eligiblePieces;
+        return eligiblePieces;
     }
 
     public static List<int[]> isolatedGetCollateralSquares(Piece p, BoardState bs) {
@@ -586,6 +584,45 @@ public class BotHelperFunctions : MonoBehaviour
         isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.moveAndAttacks, check, allMoves);
         isolatedIterateThroughPieceMoves(HelperFunctions.attacksComparator, piece, bs, piece.attacks, check, allMoves);
         isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMovesComparator, piece, bs, piece.oneTimeMoves, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMoveAndAttacksComparator, piece, bs, piece.oneTimeMoveAndAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.murderousAttacksComparator, piece, bs, piece.murderousAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.conditionalAttacksComparator, piece, bs, piece.conditionalAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.jumpAttacksComparator, piece, bs, piece.jumpAttacks, check, allMoves);
+
+        //TODO fix dependentMoves for isolated state
+        piece.dependentMovesSet();
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.dependentAttacks, check, allMoves);
+
+        piece.interactiveMovesSet();
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.interactiveAttacks, check, allMoves);
+
+        HelperFunctions.updatePieceFlags(piece, check);
+        if (piece.flag == 1)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove1, check, allMoves);
+        }
+        else if (piece.flag == 2)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove2, check, allMoves);
+        }
+
+        return allMoves;
+    }
+
+    public static List<int[]> getIsolatedStatePieceAttacks(Piece piece, BoardState bs)
+    {
+        List<int[]> allMoves = new List<int[]>();
+
+        List<Piece>[,] boardGrid = bs.boardGrid;
+        bool check = false;
+        //if is check TODO check = true
+
+        //todo maybe forcestayturn
+
+        //isolatedIterateThroughPieceMoves(HelperFunctions.moveComparator, piece, bs, piece.moves, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.moveAndAttacks, check, allMoves);
+        isolatedIterateThroughPieceMoves(HelperFunctions.attacksComparator, piece, bs, piece.attacks, check, allMoves);
+        //isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMovesComparator, piece, bs, piece.oneTimeMoves, check, allMoves);
         isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMoveAndAttacksComparator, piece, bs, piece.oneTimeMoveAndAttacks, check, allMoves);
         isolatedIterateThroughPieceMoves(HelperFunctions.murderousAttacksComparator, piece, bs, piece.murderousAttacks, check, allMoves);
         isolatedIterateThroughPieceMoves(HelperFunctions.conditionalAttacksComparator, piece, bs, piece.conditionalAttacks, check, allMoves);
@@ -1724,7 +1761,7 @@ public class BotHelperFunctions : MonoBehaviour
         BoardState bs = copyBoardState(bs_);
 
         whiteKing = getCloneFromOriginalPiece(whiteKing, bs.boardGrid);
-        blackKing = getCloneFromOriginalPiece(whiteKing, bs.boardGrid);
+        blackKing = getCloneFromOriginalPiece(blackKing, bs.boardGrid);
 
         if (whiteKing == null || blackKing == null)
         {

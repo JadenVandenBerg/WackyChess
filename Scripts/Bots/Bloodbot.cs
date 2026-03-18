@@ -198,6 +198,12 @@ public class Bloodbot : BotTemplate
 
     private List<int> getBoardControlOnBoardState(BoardState bs)
     {
+        int[] oppKingPos = BotHelperFunctions.filterPieces("King", this.opponentPieces)[0].position;
+        int[] kingPos = this.king.position;
+
+        int[] whiteKingPos = this.color == 1 ? kingPos : oppKingPos;
+        int[] blackKingPos = this.color == -1 ? kingPos : oppKingPos;
+
         List<int> boardControl = new List<int>();
 
         var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
@@ -207,6 +213,7 @@ public class Bloodbot : BotTemplate
         List<PieceMoveList> listBotBlackMoves = botMovesBlack.pieceMoveList;
 
         List<int[]> uniqueCoords = new List<int[]>();
+        float score = 0;
         foreach (PieceMoveList pml in listBotWhiteMoves)
         {
             Piece piece = pml.piece;
@@ -217,12 +224,15 @@ public class Bloodbot : BotTemplate
                 if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
+                    score += 8 - Mathf.Abs(coords[0] - blackKingPos[0]);
+                    score += 8 - Mathf.Abs(coords[1] - blackKingPos[1]);
                 }
             }
         }
-        boardControl.Add(uniqueCoords.Count);
+        boardControl.Add((int) score);
 
         uniqueCoords = new List<int[]>();
+        score = 0;
         foreach (PieceMoveList pml in listBotBlackMoves)
         {
             Piece piece = pml.piece;
@@ -233,10 +243,12 @@ public class Bloodbot : BotTemplate
                 if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
+                    score += 8 - Mathf.Abs(coords[0] - whiteKingPos[0]);
+                    score += 8 - Mathf.Abs(coords[1] - whiteKingPos[1]);
                 }
             }
         }
-        boardControl.Add(uniqueCoords.Count);
+        boardControl.Add((int)score);
 
         return boardControl;
     }

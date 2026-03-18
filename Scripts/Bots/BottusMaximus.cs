@@ -118,17 +118,34 @@ public class BottusMaximus : BotTemplate
 				}
 			}
 
-			CoordsInfo cInfo = coordsInfo[coords[0] - 1, coords[1] - 1];
+			if (coords[0] - 1 >= 8 || coords[1] - 1 >= 8)
+            {
+            }
+			
 
-			float moveWeight = bestOppMoveDiff;
-			if (cInfo.points > 0) {
-				moveWeight -= cInfo.points;
-			}
-			else if (cInfo.oppPoints > 0)
+			float moveWeight = 0;
+			if (coords[0] - 1 >= 8 || coords[1] - 1 >= 8 || coords[1] - 1 < 0 || coords[0] - 1 < 0)
 			{
-				float tradeScore = evaluateTrade(cInfo);
-				moveWeight += tradeScore;
+				if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
+				if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
+				Debug.LogWarning("BottusMaximus FAIL");
+				moveWeight = bestOppMoveDiff;
 			}
+			else
+            {
+				CoordsInfo cInfo = coordsInfo[coords[0] - 1, coords[1] - 1];
+				moveWeight = bestOppMoveDiff;
+				if (cInfo.points > 0)
+				{
+					moveWeight -= cInfo.points;
+				}
+				else if (cInfo.oppPoints > 0)
+				{
+					float tradeScore = evaluateTrade(cInfo);
+					moveWeight += tradeScore;
+				}
+			}
+			
 
 			//if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
 			//if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);

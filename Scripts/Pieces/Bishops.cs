@@ -157,7 +157,7 @@ public class MurderousBishop : Piece
 
     public String wImage { get; set; } = "Images/Bishops/wMurderousBishop";
     public String bImage { get; set; } = "Images/Bishops/bMurderousBishop";
-    public String name { get; set; } = "Murderous Bishop";
+    public String name { get; set; } = "MurderousBishop";
     public int[,] dependentMovesSet()
     {
         return new int[,] { }; ;

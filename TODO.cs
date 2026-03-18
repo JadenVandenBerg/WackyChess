@@ -3,8 +3,9 @@
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
 //When a stacking piece captures a delayed piece, it becomes delayed too early, jailer too
-//checkmate when bishop could kill super pawn, maybe game thought it was a pin incorrectly?
 //bottus maximus is counting moves as attacks when calculating trades
+//ability still not calculated correctly for checkmate
+//stalemate counted when a bishop was on the board
 //Feature
 //Side panel only show selectable pieces
 

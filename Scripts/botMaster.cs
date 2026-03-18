@@ -66,7 +66,7 @@ public class botMaster : MonoBehaviour
             gameOver = true;
             yield return null;
         }
-
+        
         if (!gameOver)
         {
             botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);

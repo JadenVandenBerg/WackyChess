@@ -1035,7 +1035,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceMoves(p, afterBS);
+            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS);
 
             if (isInList(moves, king.position, false)) {
                 return true;
@@ -1160,13 +1160,24 @@ public class HelperFunctions : MonoBehaviour
 
         if (afterBS == null)
         {
+            BotHelperFunctions.resetPiecePositions(null, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
             return true;
         }
 
         List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
 
-        Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
-        Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
+        Piece king;
+        if (piece.baseType == "King")
+        {
+            king = piece;
+        }
+        else
+        {
+            Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+            king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBS.boardGrid);
+        }
+        //Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        //Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
         if (king == null)
         {
             BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
@@ -1189,11 +1200,13 @@ public class HelperFunctions : MonoBehaviour
             bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
 
             bs = BotHelperFunctions.copyBoardState(bs);
+            BotHelperFunctions.PieceAbility pa_ = normalizePieceAbility(pa, bs.boardGrid);
 
-            BoardState afterBS = BotHelperFunctions.simulatePieceAbility(null, bs, pa);
+            BoardState afterBS = BotHelperFunctions.simulatePieceAbility(null, bs, pa_);
 
             Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
             List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
+
             Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
 
             if (king == null)
@@ -1213,6 +1226,37 @@ public class HelperFunctions : MonoBehaviour
 
         return acceptedAbilities;
     }
+
+    public static BotHelperFunctions.PieceAbility normalizePieceAbility(BotHelperFunctions.PieceAbility pa, List<Piece>[,] boardGrid)
+    {
+        Piece p = BotHelperFunctions.getCloneFromOriginalPiece(pa.piece, boardGrid);
+        Piece sp = BotHelperFunctions.getCloneFromOriginalPiece(pa.secondPiece, boardGrid);
+        //int[] coords = new int[] { pa.coords[0] + 1, pa.coords[1] + 1 };
+        int[] coords = new int[] { pa.coords[0], pa.coords[1] };
+        List<Piece> placePieces = new List<Piece>();
+        List<int[]> placeCoords = new List<int[]>();
+
+        if (pa.placePieces != null)
+        {
+            foreach (Piece p_ in pa.placePieces)
+            {
+                placePieces.Add(BotHelperFunctions.getCloneFromOriginalPiece(p_, boardGrid));
+            }
+        }
+
+        if (pa.placeCoords != null)
+        {
+            foreach (int[] c_ in pa.placeCoords)
+            {
+                //placeCoords.Add(new int[] { c_[0] + 1, c_[1] + 1 });
+                placeCoords.Add(new int[] { c_[0], c_[1] });
+            }
+        }
+
+        BotHelperFunctions.PieceAbility normalPA = new BotHelperFunctions.PieceAbility(p, pa.ability, coords, placePieces, pa.placeCoords, sp);
+
+        return normalPA;
+    } 
 
     public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
     {
@@ -4239,6 +4283,11 @@ public class HelperFunctions : MonoBehaviour
         bool countDeath = death;
         if (countDeath)
         {
+            if (checkState(piece, PieceState.Jailer))
+            {
+                countDeath = false;
+            }
+
             if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Crook))
             {
                 countDeath = false;

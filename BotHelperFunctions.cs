@@ -1760,9 +1760,6 @@ public class BotHelperFunctions : MonoBehaviour
         resetPiecePositions(null, bs_.boardGrid);
         BoardState bs = copyBoardState(bs_);
 
-        whiteKing = getCloneFromOriginalPiece(whiteKing, bs.boardGrid);
-        blackKing = getCloneFromOriginalPiece(blackKing, bs.boardGrid);
-
         if (whiteKing == null || blackKing == null)
         {
             return null;
@@ -2475,6 +2472,14 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     //Debug.LogWarning(piece.name + " reset to pos " + (x + 1) + "," + (y + 1));
                     piece.position = new int[] { x + 1, y + 1 };
+                }
+
+                if (bs != null)
+                {
+                    foreach(Piece piece_ in bs.boardGrid[x, y])
+                    {
+                        piece_.position = new int[] { x + 1, y + 1 };
+                    }
                 }
             }
         }

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 // Firebase SDKs
-using Firebase;
-using Firebase.Auth;
-using Firebase.Firestore;
-using Firebase.Extensions;
+//using Firebase;
+//using Firebase.Auth;
+//using Firebase.Firestore;
+//using Firebase.Extensions;
 
 public class UnityFirestoreAccount : MonoBehaviour
 {

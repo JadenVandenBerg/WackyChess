@@ -42,7 +42,7 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        
+        /*
         if (nonResettables.botTournament == null)
         {
             nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot", true);
@@ -66,18 +66,19 @@ public class botMaster : MonoBehaviour
             gameOver = true;
             yield return null;
         }
+        */
         
         if (!gameOver)
         {
-            botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
-            botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+            //botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+            //botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
 
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
 
-            //botWhite = new Bloodbot(1);
-            //botBlack = new BottusMaximus(-1);
+            botWhite = new Bloodbot(1);
+            botBlack = new BottusMaximus(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 
@@ -315,7 +316,7 @@ public class botMaster : MonoBehaviour
 
         NextMove selectedMove = null;
 
-        List<int[]> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, false, false, null, true, true);
+        List<int[]> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, true, false, null, true, true);
         Debug.LogWarning("AllMoves: " + allMoves.Count);
         debug_printBoardGrid(gameData.boardGrid);
 
@@ -439,7 +440,7 @@ public class botMaster : MonoBehaviour
 
             if (randomMove == null)
             {
-                Debug.Log("Game Over - Stalemate");
+                Debug.Log("Game Over - Stalemate (Condition 1)");
                 bgs.result = "Draw by Stalemate";
             }
             else
@@ -571,7 +572,7 @@ public class botMaster : MonoBehaviour
             {
                 if (!kingDead)
                 {
-                    Debug.Log("Game Over - Stalemate");
+                    Debug.Log("Game Over - Stalemate (Condition 2)");
                     bgs.result = "Draw by Stalemate";
                 }
             }

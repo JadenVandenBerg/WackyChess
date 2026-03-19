@@ -297,7 +297,6 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    /*TODO Rewrite this for bots*/
     public static List<int[]> addMovesToCurrentMoveableCoords(Piece piece)
     {
         clearCurrentMoveableCoords();
@@ -311,6 +310,8 @@ public class HelperFunctions : MonoBehaviour
         int color = piece.color;
 
         bool check = false;
+        gameData.isInCheck[0] = isCheck(gameData.whiteKing) == true ? 1 : 0;
+        gameData.isInCheck[1] = isCheck(gameData.blackKing) == true ? 1 : 0;
         if (color == 1 && gameData.isInCheck[0] == 1 || color == -1 && gameData.isInCheck[1] == 1)
         {
             check = true;
@@ -1156,7 +1157,10 @@ public class HelperFunctions : MonoBehaviour
             return true;
         }
 
-        BoardState afterBS = BotHelperFunctions.simulatePieceMove_(bs, piece, coords, piece.color, gameData.whiteKing, gameData.blackKing);
+        Piece whiteKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.whiteKing, bs.boardGrid);
+        Piece blackKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.blackKing, bs.boardGrid);
+
+        BoardState afterBS = BotHelperFunctions.simulatePieceMove_(bs, piece, coords, piece.color, whiteKingClone, blackKingClone);
 
         if (afterBS == null)
         {
@@ -1166,16 +1170,9 @@ public class HelperFunctions : MonoBehaviour
 
         List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
 
-        Piece king;
-        if (piece.baseType == "King")
-        {
-            king = piece;
-        }
-        else
-        {
-            Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
-            king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBS.boardGrid);
-        }
+        Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBS.boardGrid);
+
         //Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
         //Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
         if (king == null)

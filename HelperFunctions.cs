@@ -39,8 +39,8 @@ public class HelperFunctions : MonoBehaviour
         botMatch = isBotMatch;
         gameData.isBotMatch = botMatch == "True";
 
-        panel.Initialize();
-        updatePointsOnBoard();
+        //panel.Initialize();
+        //updatePointsOnBoard();
 
         moveSound = GetComponent<AudioSource>();
     }
@@ -297,7 +297,6 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    /*TODO Rewrite this for bots*/
     public static List<int[]> addMovesToCurrentMoveableCoords(Piece piece)
     {
         clearCurrentMoveableCoords();
@@ -311,6 +310,8 @@ public class HelperFunctions : MonoBehaviour
         int color = piece.color;
 
         bool check = false;
+        gameData.isInCheck[0] = isCheck(gameData.whiteKing) == true ? 1 : 0;
+        gameData.isInCheck[1] = isCheck(gameData.blackKing) == true ? 1 : 0;
         if (color == 1 && gameData.isInCheck[0] == 1 || color == -1 && gameData.isInCheck[1] == 1)
         {
             check = true;
@@ -672,22 +673,25 @@ public class HelperFunctions : MonoBehaviour
     {
         if (checkState(piece, PieceState.Bouncing))
         {
-            if (x > 8)
+            for (int i = 0; i < 4; i++)
             {
-                x = 8 - (x - 8);
-            }
-            else if (x < 1)
-            {
-                x = -x + 2;
-            }
+                if (x > 8)
+                {
+                    x = 8 - (x - 8);
+                }
+                else if (x < 1)
+                {
+                    x = -x + 2;
+                }
 
-            if (y > 8)
-            {
-                y = 8 - (y - 8);
-            }
-            else if (y < 1)
-            {
-                y = -y + 2;
+                if (y > 8)
+                {
+                    y = 8 - (y - 8);
+                }
+                else if (y < 1)
+                {
+                    y = -y + 2;
+                }
             }
         }
 
@@ -868,7 +872,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     if (execDummyMove)
                     {
-                        bool stillInCheck = dummyMove(piece, newPos);
+                        bool stillInCheck = dummyMove_(piece, newPos);
 
                         if (!stillInCheck)
                         {
@@ -1021,6 +1025,26 @@ public class HelperFunctions : MonoBehaviour
         return check;
     }
 
+    public static bool isCheck_(Piece king, BoardState afterBS) 
+    {
+        List<Piece> pieces = BotHelperFunctions.getPiecesOnBoardState(afterBS, king.color * -1);
+
+        foreach (Piece p in pieces)
+        {
+            if (checkState(p, PieceState.Delayed) || checkState(p, PieceState.Jailer))
+            {
+                continue;
+            }
+
+            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS);
+
+            if (isInList(moves, king.position, false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /* TODO
     * Simulate abilities
     */
@@ -1077,6 +1101,23 @@ public class HelperFunctions : MonoBehaviour
         return isInCheck;
     }
 
+    public static List<List<List<Piece>>> convertBoardGridArrToList(List<Piece>[,] boardGridArr) {
+        List<List<List<Piece>>> boardGrid = initBoardGrid();
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece piece in boardGridArr[x, y])
+                {
+                    boardGrid[x][y].Add(piece);
+                }
+            }
+        }
+
+        return boardGrid;
+    }
+
     public static List<GameObject> removePieceFromBoard(List<Piece> pieces)
     {
         List<GameObject> gos = new List<GameObject>();
@@ -1097,6 +1138,122 @@ public class HelperFunctions : MonoBehaviour
 
         return gos;
     }
+
+    public static bool dummyMove_(Piece piece, int[] coords)
+    {
+        BoardState bs = new BoardState();
+        bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+        if (gameData.whiteKing == null || gameData.blackKing == null)
+        {
+            return true;
+        }
+
+        bs = BotHelperFunctions.copyBoardState(bs);
+        piece = BotHelperFunctions.getCloneFromOriginalPiece(piece, bs.boardGrid);
+
+        if (piece == null)
+        {
+            return true;
+        }
+
+        Piece whiteKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.whiteKing, bs.boardGrid);
+        Piece blackKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.blackKing, bs.boardGrid);
+
+        BoardState afterBS = BotHelperFunctions.simulatePieceMove_(bs, piece, coords, piece.color, whiteKingClone, blackKingClone);
+
+        if (afterBS == null)
+        {
+            BotHelperFunctions.resetPiecePositions(null, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+            return true;
+        }
+
+        List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
+
+        Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBS.boardGrid);
+
+        //Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        //Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
+        if (king == null)
+        {
+            BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+            return true;
+        }
+
+        bool check = isCheck_(king, afterBS);
+        BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+        return check;
+
+    }
+
+    public static List<BotHelperFunctions.PieceAbility> isCheckPieceAbilities(List<BotHelperFunctions.PieceAbility> pieceAbilities)
+    {
+        List<BotHelperFunctions.PieceAbility> acceptedAbilities = new List<BotHelperFunctions.PieceAbility>();
+        foreach(BotHelperFunctions.PieceAbility pa in pieceAbilities)
+        {
+            Piece piece = pa.piece;
+            BoardState bs = new BoardState();
+            bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+            bs = BotHelperFunctions.copyBoardState(bs);
+            BotHelperFunctions.PieceAbility pa_ = normalizePieceAbility(pa, bs.boardGrid);
+
+            BoardState afterBS = BotHelperFunctions.simulatePieceAbility(null, bs, pa_);
+
+            Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+            List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
+
+            Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
+
+            if (king == null)
+            {
+                BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+                continue;
+            }
+
+            bool check = isCheck_(king, afterBS);
+            BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+            if (!check)
+            {
+                acceptedAbilities.Add(pa);
+            }
+        }
+
+        return acceptedAbilities;
+    }
+
+    public static BotHelperFunctions.PieceAbility normalizePieceAbility(BotHelperFunctions.PieceAbility pa, List<Piece>[,] boardGrid)
+    {
+        Piece p = BotHelperFunctions.getCloneFromOriginalPiece(pa.piece, boardGrid);
+        Piece sp = BotHelperFunctions.getCloneFromOriginalPiece(pa.secondPiece, boardGrid);
+        //int[] coords = new int[] { pa.coords[0] + 1, pa.coords[1] + 1 };
+        int[] coords = new int[] { pa.coords[0], pa.coords[1] };
+        List<Piece> placePieces = new List<Piece>();
+        List<int[]> placeCoords = new List<int[]>();
+
+        if (pa.placePieces != null)
+        {
+            foreach (Piece p_ in pa.placePieces)
+            {
+                placePieces.Add(BotHelperFunctions.getCloneFromOriginalPiece(p_, boardGrid));
+            }
+        }
+
+        if (pa.placeCoords != null)
+        {
+            foreach (int[] c_ in pa.placeCoords)
+            {
+                //placeCoords.Add(new int[] { c_[0] + 1, c_[1] + 1 });
+                placeCoords.Add(new int[] { c_[0], c_[1] });
+            }
+        }
+
+        BotHelperFunctions.PieceAbility normalPA = new BotHelperFunctions.PieceAbility(p, pa.ability, coords, placePieces, pa.placeCoords, sp);
+
+        return normalPA;
+    } 
 
     public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
     {
@@ -1539,7 +1696,6 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    //TODO maybe change this for bots
     public static void forceRemove(Piece deadPiece)
     {
         GameObject dead = deadPiece.go;
@@ -2200,7 +2356,10 @@ public class HelperFunctions : MonoBehaviour
         //There is one piece on square, piece on square is piggyback
         if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
-            return true;
+            if (!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+            {
+                return true;
+            }
         }
 
         //There is one piece on square, piece is jockey
@@ -2242,7 +2401,7 @@ public class HelperFunctions : MonoBehaviour
         if (action.ToLower() == "r" || action.ToLower() == "remove")
         {
             int ok = square.RemoveAll(p => p.name == piece.name);
-            Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + coords[0] + "," + coords[1]);
+            //Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + coords[0] + "," + coords[1]);
         }
     }
 
@@ -3209,11 +3368,11 @@ public class HelperFunctions : MonoBehaviour
         
         if (ability == "Vomit")
         {
-            int numPieces = placePieces.Count;
+            int numPieces = piece.storage.Count;
             int numCoords = placeCoords.Count;
 
             string debugMsg = "Ability: Vomit -> ";
-            foreach(Piece _p in placePieces)
+            foreach(Piece _p in piece.storage)
             {
                 debugMsg += _p.name + ", ";
             }
@@ -3230,7 +3389,7 @@ public class HelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                     updateBoardGrid(coords_, p_, "a");
                     
@@ -3240,7 +3399,7 @@ public class HelperFunctions : MonoBehaviour
                     piece.storage.Remove(p_);
                 }
 
-                foreach(Piece p_ in placePieces)
+                foreach(Piece p_ in new List<Piece>(piece.storage))
                 {
                     piece.storage.Remove(p_);
                     forceRemove(p_);
@@ -3248,7 +3407,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
-                foreach (Piece p_ in placePieces)
+                foreach (Piece p_ in new List<Piece>(piece.storage))
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numCoords); numCoords--;
@@ -3256,7 +3415,7 @@ public class HelperFunctions : MonoBehaviour
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardGrid(c_, p_, "a");
 
@@ -3406,6 +3565,7 @@ public class HelperFunctions : MonoBehaviour
             removeAbility(piece, "Split");
 
             forceRemove(piece);
+            updateBoardGrid(coords, piece, "r");
 
             Piece leftPawn = Spawnables.create("LeftPawn", piece.color);
             initPiece(leftPawn, coords);
@@ -3653,11 +3813,12 @@ public class HelperFunctions : MonoBehaviour
 
                 if (piece.storage != null)
                 {
-                    foreach (Piece p_ in p.storage)
+                    foreach (Piece p_ in piece.storage)
                     {
                         forceRemove(p_);
                     }
                 }
+                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1])));
                 forceRemove(piece);
                 initPiece(p, coords);
             }
@@ -4057,6 +4218,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (true/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
             bool death;
+            bool countDeath;
             GameObject selectedToMoveGo = null;
 
             if (piece.go == null)
@@ -4068,6 +4230,7 @@ public class HelperFunctions : MonoBehaviour
 
             death = deathVars.death;
             selectedToMoveGo = deathVars.selectedToMoveGo;
+            countDeath = deathVars.countDeath;
 
             if (death)
             {
@@ -4082,7 +4245,7 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static (bool death, GameObject selectedToMoveGo) isDeath(GameObject selectedToMoveGo, GameObject square, Piece piece, bool fromDelayed)
+    public static (bool death, GameObject selectedToMoveGo, bool countDeath) isDeath(GameObject selectedToMoveGo, GameObject square, Piece piece, bool fromDelayed)
     {
         bool death = false;
         if (square.transform.childCount != 0)
@@ -4114,16 +4277,42 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        return (death, selectedToMoveGo);
+        bool countDeath = death;
+        if (countDeath)
+        {
+            if (checkState(piece, PieceState.Jailer))
+            {
+                countDeath = false;
+            }
+
+            if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Crook))
+            {
+                countDeath = false;
+            }
+
+            List<Piece> piecesOnSquare = getPiecesOnSquare(square);
+            foreach(Piece p in piecesOnSquare)
+            {
+                if (p.lives == 0)
+                {
+                    continue;
+                }
+
+                countDeath = false;
+            }
+        }
+
+        return (death, selectedToMoveGo, countDeath);
     }
 
-    public bool performPreMove()
+    public (bool death, bool countDeath) performPreMove()
     {
-        moveSound.Play();
+        //moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 
         bool death = deathVars.death;
+        bool countDeath = deathVars.countDeath;
         GameObject selectedToMoveGo = deathVars.selectedToMoveGo;
 
         if (death && selectedToMoveGo != null)
@@ -4138,7 +4327,7 @@ public class HelperFunctions : MonoBehaviour
             //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
         }
 
-        return death;
+        return (death, countDeath);
     }
 
     public static Piece clonePiece(Piece original)
@@ -4326,5 +4515,10 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void addBotMessage(string message)
+    {
+        panel.AddBotMessage(message);
     }
 }

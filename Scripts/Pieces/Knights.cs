@@ -104,7 +104,7 @@ public class Knight : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class MurderousKnight : Piece
 {
     public bool disabled { get; set; } = false;
@@ -207,7 +207,7 @@ public class MurderousKnight : Piece
         s.preserveAspect = true;
     }
 }
-
+*/
 public class GhoulKnight : Piece
 {
     public bool disabled { get; set; } = false;
@@ -300,6 +300,7 @@ public class GhoulKnight : Piece
     }
 }
 
+/*
 public class OneTimeKnight : Piece
 {
     public bool disabled { get; set; } = false;
@@ -405,6 +406,7 @@ public class OneTimeKnight : Piece
         s.preserveAspect = true;
     }
 }
+*/
 
 public class ElectricKnight : Piece
 {

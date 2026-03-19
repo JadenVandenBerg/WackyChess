@@ -157,7 +157,7 @@ public class MurderousBishop : Piece
 
     public String wImage { get; set; } = "Images/Bishops/wMurderousBishop";
     public String bImage { get; set; } = "Images/Bishops/bMurderousBishop";
-    public String name { get; set; } = "Murderous Bishop";
+    public String name { get; set; } = "MurderousBishop";
     public int[,] dependentMovesSet()
     {
         return new int[,] { }; ;
@@ -194,14 +194,11 @@ public class MurderousBishop : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
 
-        Sprite sp;
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
-        {
-            sp = Resources.Load<Sprite>(wImage);
-        } else {
-            sp = Resources.Load<Sprite>(bImage);
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 

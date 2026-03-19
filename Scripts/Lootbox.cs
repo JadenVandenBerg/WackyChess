@@ -39,17 +39,17 @@ public class Lootbox {
 	}
 
 	public static List<Type> GetAllPieces()
-    {
-        return Assembly.GetExecutingAssembly()
-            .GetTypes()
-            .Where(t =>
-                typeof(Piece).IsAssignableFrom(t) &&
-                t.IsClass &&
-                !t.IsAbstract)
-            .ToList();
-    }
+	{
+		return AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(a => a.GetTypes())
+			.Where(t =>
+				typeof(Piece).IsAssignableFrom(t) &&
+				t.IsClass &&
+				!t.IsAbstract)
+			.ToList();
+	}
 
-    private List<string> getAllElegiblePieces(int rarityLevel) {
+	private List<string> getAllElegiblePieces(int rarityLevel) {
 
     	List<Type> allPieces = GetAllPieces();
     	List<string> eligiblePieces = new List<string>();

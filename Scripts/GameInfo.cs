@@ -211,10 +211,10 @@ public class BotTournament {
     public BotTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight, bool randomize)
     {
         List<string> bots = new List<string>()
-    {
-        botOne, botTwo, botThree, botFour,
-        botFive, botSix, botSeven, botEight
-    };
+        {
+            botOne, botTwo, botThree, botFour,
+            botFive, botSix, botSeven, botEight
+        };
 
         if (randomize)
         {
@@ -231,6 +231,10 @@ public class BotTournament {
     }
 
     public (string botWhite, string botBlack) nextGame() {
+        if (round > 7)
+        {
+            return ("", "");
+        }
         var (botOne_, botTwo_) = botTournamentMatches[round - 1][match - 1];
         string botOne = competingBots[botOne_ - 1];
         string botTwo = competingBots[botTwo_ - 1];
@@ -239,10 +243,6 @@ public class BotTournament {
         if (match > 4) {
             match = 1;
             round++;
-
-            if (round > 7) {
-                return ("", "");
-            }
         }
 
         System.Random rand = new System.Random();
@@ -325,6 +325,11 @@ public class BotTournamentSmall {
 
     public (string botWhite, string botBlack) nextGame()
     {
+        if (round > 3)
+        {
+            return ("", "");
+        }
+
         var (botOne_, botTwo_) = botTournamentMatches[round - 1][match - 1];
         string botOne = competingBots[botOne_ - 1];
         string botTwo = competingBots[botTwo_ - 1];
@@ -334,11 +339,6 @@ public class BotTournamentSmall {
         {
             match = 1;
             round++;
-
-            if (round > 3)
-            {
-                return ("", "");
-            }
         }
 
         System.Random rand = new System.Random();

@@ -2,17 +2,16 @@
 
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
-//Need to rotate black pieces
-//Take account for abilities when checking for check and checkmate
-//Portal and Bouncing does not account for Ghoul/Ghost/Dematerialized states
-//When a stacking piece captures a delayed piece, it becomes delayed too early
-// piggyback not working, king should not be able to ride
-// pieces are allowed to move off of jailed pieces, which puts the king in check (maybe use simulatedMoves instead of dummymove for chekc)
-//explosion radius of atomics
-//delayed pieces not in check properly
-// do not count infinite/crook as captures for captures
-//big problem with moving into check incorrectly
-//capture the flag pieces cannot stack on piggyback king
+//When a stacking piece captures a delayed piece, it becomes delayed too early, jailer too
+//bottus maximus is counting moves as attacks when calculating trades
+//ability still not calculated correctly for checkmate
+//stalemate counted when a bishop was on the board
+//ghoul king can stack on lite pawn
+//delayed king moves too early
+
+//Dependant Attacks Need Fixing
+// OneTimeKnight
+// MurderousKnight
 
 //Feature
 //Side panel only show selectable pieces

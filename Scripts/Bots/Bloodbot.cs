@@ -28,8 +28,7 @@ public class Bloodbot : BotTemplate
         float botPoints_ = this.color == 1 ? startPoints[0] : startPoints[1];
         float oppPoints_ = this.color == -1 ? startPoints[0] : startPoints[1];
 
-        float startingDiff = botPoints_ - oppPoints_;
-        bool positivePts = false;
+        //float startingDiff = botPoints_ - oppPoints_;
 
         //Each piece
         foreach (NextMove nextMove in allMoves)
@@ -113,7 +112,7 @@ public class Bloodbot : BotTemplate
                 int botBoardControl = this.color == 1 ? boardControlOnBS[0] : boardControlOnBS[1];
                 int oppBoardControl = this.color == -1 ? boardControlOnBS[0] : boardControlOnBS[1];
 
-                List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
+                List<float> pointsOnBoard = BloodBot_getPointsOnBoardState(cloneState_, true);
                 float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
@@ -129,52 +128,34 @@ public class Bloodbot : BotTemplate
                 }
             }
 
-            //if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
-            //if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
 
             //debug_printBoardState(bestMoveBS);
 
             float diff = bestOppMoveDiff;
             int boardControlDiff = bestOppBoardControlDiff;
 
-            if (diff > startingDiff)
+            if (diff > bestMoveDiff)
             {
-                if (!positivePts || diff > bestMoveDiff)
-                {
-                    positivePts = true;
-                    bestMoveDiff = diff;
+                bestMoveDiff = diff;
+                bestBoardControlDiff = boardControlDiff;
 
-                    validMoves.Clear();
-                    validMoves.Add(nextMove);
-                }
-                else if (diff == bestMoveDiff)
-                {
-                    validMoves.Add(nextMove);
-                }
+                validMoves.Clear();
+                validMoves.Add(nextMove);
             }
-            else if (!positivePts)
+            else if (diff == bestMoveDiff)
             {
-                if (diff > bestMoveDiff)
+                if (boardControlDiff > bestBoardControlDiff)
                 {
-                    bestMoveDiff = diff;
                     bestBoardControlDiff = boardControlDiff;
 
                     validMoves.Clear();
                     validMoves.Add(nextMove);
                 }
-                else if (diff == bestMoveDiff)
+                else if (boardControlDiff == bestBoardControlDiff)
                 {
-                    if (boardControlDiff > bestBoardControlDiff)
-                    {
-                        bestBoardControlDiff = boardControlDiff;
-
-                        validMoves.Clear();
-                        validMoves.Add(nextMove);
-                    }
-                    else if (boardControlDiff == bestBoardControlDiff)
-                    {
-                        validMoves.Add(nextMove);
-                    }
+                    validMoves.Add(nextMove);
                 }
             }
 
@@ -198,6 +179,12 @@ public class Bloodbot : BotTemplate
 
     private List<int> getBoardControlOnBoardState(BoardState bs)
     {
+        int[] oppKingPos = BotHelperFunctions.filterPieces("King", this.opponentPieces)[0].position;
+        int[] kingPos = this.king.position;
+
+        int[] whiteKingPos = this.color == 1 ? kingPos : oppKingPos;
+        int[] blackKingPos = this.color == -1 ? kingPos : oppKingPos;
+
         List<int> boardControl = new List<int>();
 
         var botMovesWhite = BotHelperFunctions.getAllPossibleBotMoves(this, bs, 1);
@@ -207,6 +194,7 @@ public class Bloodbot : BotTemplate
         List<PieceMoveList> listBotBlackMoves = botMovesBlack.pieceMoveList;
 
         List<int[]> uniqueCoords = new List<int[]>();
+        float score = 0;
         foreach (PieceMoveList pml in listBotWhiteMoves)
         {
             Piece piece = pml.piece;
@@ -217,12 +205,15 @@ public class Bloodbot : BotTemplate
                 if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
+                    score += 8 - Mathf.Abs(coords[0] - blackKingPos[0]);
+                    score += 8 - Mathf.Abs(coords[1] - blackKingPos[1]);
                 }
             }
         }
-        boardControl.Add(uniqueCoords.Count);
+        boardControl.Add((int) score);
 
         uniqueCoords = new List<int[]>();
+        score = 0;
         foreach (PieceMoveList pml in listBotBlackMoves)
         {
             Piece piece = pml.piece;
@@ -233,11 +224,52 @@ public class Bloodbot : BotTemplate
                 if (!HelperFunctions.coordsInList(uniqueCoords, coords))
                 {
                     uniqueCoords.Add(coords);
+                    score += 8 - Mathf.Abs(coords[0] - whiteKingPos[0]);
+                    score += 8 - Mathf.Abs(coords[1] - whiteKingPos[1]);
                 }
             }
         }
-        boardControl.Add(uniqueCoords.Count);
+        boardControl.Add((int)score);
 
         return boardControl;
+    }
+
+    private static List<float> BloodBot_getPointsOnBoardState(BoardState bs, bool isKingWorthMore)
+    {
+        List<Piece>[,] board = bs.boardGrid;
+        float wCount = 0;
+        float bCount = 0;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece piece in board[x, y])
+                {
+
+                    float pts = piece.points;
+                    if (isKingWorthMore && piece.baseType == "King")
+                    {
+                        pts += 100;
+                    }
+
+                    if (piece.color == 1)
+                    {
+                        wCount += pts + 10;
+                        //Debug.Log(piece.name + " found worth " + piece.points + ". Total is now " + wCount);
+                    }
+                    else
+                    {
+                        bCount += pts + 10;
+                    }
+                }
+            }
+        }
+
+        List<float> l = new List<float>();
+        l.Add(wCount);
+        l.Add(bCount);
+
+        return l;
     }
 }

@@ -1903,6 +1903,10 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
+        // Add stacking states
+        piece.states |= tempInfo.stackingStates;
+        tempInfo.stackingStates = PieceState.None;
+
         return bs;
     }
 
@@ -1910,6 +1914,8 @@ public class BotHelperFunctions : MonoBehaviour
         // Reset positions and clone bs
         resetPiecePositions(null, bs_.boardGrid);
         BoardState bs = copyBoardState(bs_);
+
+        piece = getCloneFromOriginalPiece(piece, bs.boardGrid);
 
         coords = new int[] { coords[0] - 1, coords[1] - 1 };
         //Debug.Log("Pre-Accessing: " + coords[0] + "," + coords[1]);
@@ -2057,6 +2063,11 @@ public class BotHelperFunctions : MonoBehaviour
                 if (bot.color == -1) bot.king = tempKing;
             }
         }
+
+        // Add stacking states
+        piece.states |= tempInfo.stackingStates;
+        tempInfo.stackingStates = PieceState.None;
+
         return bs;
     }
 
@@ -2206,7 +2217,8 @@ public class BotHelperFunctions : MonoBehaviour
 
         if (HelperFunctions.checkState(attackerPiece, PieceState.Stacking))
         {
-            attackerPiece.states |= deadPiece.states;
+            //attackerPiece.states |= deadPiece.states;
+            tempInfo.stackingStates |= deadPiece.states;
 
             string ability = deadPiece.ability;
             string[] abilityParts = ability.Split('-');

@@ -69,7 +69,7 @@ public class Bloodbot : BotTemplate
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
             //best simulated move opponent can make
-            NextMove bestOppMove;
+            NextMove bestOppMove = null;
             float bestOppMoveDiff = +1000;
             int bestOppBoardControlDiff = +1000;
             BoardState bestMoveBS = null;
@@ -128,8 +128,12 @@ public class Bloodbot : BotTemplate
                 }
             }
 
-            if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
-            if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            //if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+            //if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Points Diff: " + bestOppMoveDiff + " Board Control Diff: " + bestOppBoardControlDiff);
+
+            //if (bestOppMove.moveType == "move") Debug.Log("Best opp move: " + bestOppMove.move.p.name + " to " + bestOppMove.move.coords[0] + "," + bestOppMove.move.coords[1]);
+            //if (bestOppMove.moveType == "ability") Debug.Log("Best opp ability: " + bestOppMove.ability.piece.name + ": " + bestOppMove.ability.ability + " to " + bestOppMove.ability.coords[0] + "," + bestOppMove.ability.coords[1]);
+
 
             //debug_printBoardState(bestMoveBS);
 
@@ -207,6 +211,11 @@ public class Bloodbot : BotTemplate
                     uniqueCoords.Add(coords);
                     score += 8 - Mathf.Abs(coords[0] - blackKingPos[0]);
                     score += 8 - Mathf.Abs(coords[1] - blackKingPos[1]);
+
+                    if (coords[0] == blackKingPos[0] && coords[1] == blackKingPos[1])
+                    {
+                        score += 16;
+                    }
                 }
             }
         }
@@ -226,6 +235,11 @@ public class Bloodbot : BotTemplate
                     uniqueCoords.Add(coords);
                     score += 8 - Mathf.Abs(coords[0] - whiteKingPos[0]);
                     score += 8 - Mathf.Abs(coords[1] - whiteKingPos[1]);
+
+                    if (coords[0] == whiteKingPos[0] && coords[1] == whiteKingPos[1])
+                    {
+                        score += 16;
+                    }
                 }
             }
         }
@@ -255,12 +269,12 @@ public class Bloodbot : BotTemplate
 
                     if (piece.color == 1)
                     {
-                        wCount += pts + 10;
+                        wCount += pts + 2;
                         //Debug.Log(piece.name + " found worth " + piece.points + ". Total is now " + wCount);
                     }
                     else
                     {
-                        bCount += pts + 10;
+                        bCount += pts + 2;
                     }
                 }
             }

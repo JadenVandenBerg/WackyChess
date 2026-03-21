@@ -1323,7 +1323,7 @@ public class LitePawn : Piece
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
     public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
+    public int[,] attacks { get; set; } = { };
     public int[,] oneTimeMoves { get; set; } = { };
     public int[,] moveAndAttacks { get; set; } = { };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };

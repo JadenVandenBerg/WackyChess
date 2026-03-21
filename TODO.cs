@@ -2,12 +2,9 @@
 
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
-//When a stacking piece captures a delayed piece, it becomes delayed too early, jailer too
 //bottus maximus is counting moves as attacks when calculating trades
-//ability still not calculated correctly for checkmate
-//stalemate counted when a bishop was on the board
 //ghoul king can stack on lite pawn
-//delayed king moves too early
+//hungry pieces do not barf on death
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight

@@ -102,3 +102,13 @@ ExternalDependencyManager/
 StreamingAssets/
 Editor Default Resources/
 _TerrainAutoUpgrade/
+
+#Bots
+Bots/5xRandomBot.cs
+Bots/Abilibot.cs
+Bots/Bloodbot.cs
+Bots/BottusMaximus.cs
+Bots/IdiotBot.cs
+Bots/RandomBot.cs
+Bots/SavageBeastBot.cs
+Bots/TwoMoveBot.cs

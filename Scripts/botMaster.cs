@@ -42,7 +42,7 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        /*
+        
         if (nonResettables.botTournament == null)
         {
             nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot", true);
@@ -66,19 +66,19 @@ public class botMaster : MonoBehaviour
             gameOver = true;
             yield return null;
         }
-        */
+        
         
         if (!gameOver)
         {
-            //botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
-            //botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+            botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+            botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
 
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
 
-            botWhite = new Bloodbot(1);
-            botBlack = new BottusMaximus(-1);
+            //botWhite = new BottusMaximus(1);
+            //botBlack = new Bloodbot(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 
@@ -108,8 +108,8 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botWhiteRooks = new List<Piece>
             {
-                getPieceTypeInstance("SpittingRook", 1),
-                getPieceTypeInstance("SpittingRook", 1),
+                getPieceTypeInstance("GhostRook", 1),
+                getPieceTypeInstance("GhostRook", 1),
             };
             */
             List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
@@ -145,7 +145,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botWhite.pieces)
             {
-                bgs.whitePieces.Add(wp.name);
+                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty));
             }
 
             HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
@@ -184,8 +184,8 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botBlackRooks = new List<Piece>
             {
-                getPieceTypeInstance("SpittingRook", -1),
-                getPieceTypeInstance("SuperGhostRook", -1),
+                getPieceTypeInstance("Empress", -1),
+                getPieceTypeInstance("Empress", -1),
             };
             */
             List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
@@ -221,7 +221,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botBlack.pieces)
             {
-                bgs.blackPieces.Add(wp.name);
+                bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty));
             }
 
             HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
@@ -831,10 +831,7 @@ public class botMaster : MonoBehaviour
         BoardState bs = new BoardState();
         bs.refresh(convertBoardGrid(gameData.boardGrid));
 
-        //todo need to make sure not in check here
-        List<PieceAbility> pieceAbility = getAllPossibleBotAbilities(bot, bs, color);
-
-        List<PieceAbility> pieceAbilityCheck = HelperFunctions.isCheckPieceAbilities(pieceAbility);
+        List<PieceAbility> pieceAbilityCheck = HelperFunctions.isCheckPieceAbilities(bs, bot, color);
         return (totalMoves, pieceAbilityCheck);
 
     }

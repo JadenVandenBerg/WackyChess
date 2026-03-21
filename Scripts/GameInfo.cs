@@ -60,6 +60,7 @@ public static class tempInfo
     public static bool passed { get; set; } = false;
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
     public static bool attackerDied { get; set; } = false;
+    public static PieceState stackingStates { get; set; } = PieceState.None;
 }
 
 public static class nonResettables

@@ -118,12 +118,11 @@ public class BottusMaximus : BotTemplate
 				}
 			}
 
-			if (coords[0] - 1 >= 8 || coords[1] - 1 >= 8)
-            {
-            }
-			
-
 			float moveWeight = 0;
+			float tradeScore = 0;
+
+			Piece p = nextMove.moveType == "move" ? nextMove.move.p : nextMove.ability.piece;
+
 			if (coords[0] - 1 >= 8 || coords[1] - 1 >= 8 || coords[1] - 1 < 0 || coords[0] - 1 < 0)
 			{
 				if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
@@ -141,14 +140,14 @@ public class BottusMaximus : BotTemplate
 				}
 				else if (cInfo.oppPoints > 0)
 				{
-					float tradeScore = evaluateTrade(cInfo);
+					tradeScore = evaluateTrade(cInfo, piece);
 					moveWeight += tradeScore;
 				}
 			}
 			
 
-			//if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
-			//if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff);
+			//if (nextMove.moveType == "move") Debug.Log("Analyzed move: " + nextMove.move.p.name + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff + " Trade Score: " + tradeScore);
+			//if (nextMove.moveType == "ability") Debug.Log("Analyzed ability: " + nextMove.ability.piece.name + ": " + nextMove.ability.ability + " to " + coords[0] + "," + coords[1] + ". Move Weight: " + moveWeight + " Board Control: " + bestOppBoardControlDiff + " Trade Score: " + tradeScore);
 
 			if (moveWeight > bestMoveWeight) {
 				// set move
@@ -346,10 +345,10 @@ public class BottusMaximus : BotTemplate
 		return boardControl;
 	}
 
-	private float evaluateTrade(CoordsInfo cInfo)
+	private float evaluateTrade(CoordsInfo cInfo, Piece p)
 	{
+		cInfo.attacking.Remove(p);
 		List<float> attackers = cInfo.attacking.Select(p => p.points).OrderBy(x => x).ToList();
-
 		List<float> oppAttackers = cInfo.oppAttacking.Select(p => p.points).OrderBy(x => x).ToList();
 
 		float squarePoints = cInfo.oppPoints > 0 ? cInfo.oppPoints : cInfo.points;

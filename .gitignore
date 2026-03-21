@@ -104,11 +104,11 @@ Editor Default Resources/
 _TerrainAutoUpgrade/
 
 #Bots
-Bots/5xRandomBot.cs
-Bots/Abilibot.cs
-Bots/Bloodbot.cs
-Bots/BottusMaximus.cs
-Bots/IdiotBot.cs
-Bots/RandomBot.cs
-Bots/SavageBeastBot.cs
-Bots/TwoMoveBot.cs
+Scripts/Bots/5xRandomBot.cs
+Scripts/Bots/Abilibot.cs
+Scripts/Bots/Bloodbot.cs
+Scripts/Bots/BottusMaximus.cs
+Scripts/Bots/IdiotBot.cs
+Scripts/Bots/RandomBot.cs
+Scripts/Bots/SavageBeastBot.cs
+Scripts/Bots/TwoMoveBot.cs

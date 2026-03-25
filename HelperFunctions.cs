@@ -277,41 +277,29 @@ public class HelperFunctions : MonoBehaviour
             check = true;
         }
 
-        if (gameData.turn == gameData.forceStayTurn)
+        iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+
+        //Dependent Attacks
+        //piece.dependentMovesSet();
+        //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+
+        updatePieceFlags(piece, check);
+
+        //Flag Moves
+        if (piece.flag == 1)
         {
-            //Force Stay Turn Moves
-            iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
         }
-        else
+        else if (piece.flag == 2)
         {
-            iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            //Dependent Attacks
-            piece.dependentMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            //Interactive Moves
-            piece.interactiveMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            updatePieceFlags(piece, check);
-
-            //Flag Moves
-            if (piece.flag == 1)
-            {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            }
-            else if (piece.flag == 2)
-            {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            }
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
         }
 
         //todo use allMoves instead
@@ -885,57 +873,48 @@ public class HelperFunctions : MonoBehaviour
 
             //if (color == -1) Debug.Log("LOOKING AT " + piece.name + "! Color: " + piece.color);
 
-            //Force Stay Turn Moves
-            if (gameData.turn == gameData.forceStayTurn)
+            //Moves
+            iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Moves and Attacks
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Attacks
+            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //One Time Moves
+            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //One Time Move and Attacks
+            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Murderous Attacks
+            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Conditional Attacks
+            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Jump Attacks
+            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Dependent Attacks
+            //piece.dependentMovesSet();
+            //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Interactive Moves
+            //piece.interactiveMovesSet();
+            //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Flag Moves
+
+            updatePieceFlags(piece, check);
+            if (piece.flag == 1)
             {
-                //Force Stay Turn Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
             }
-            else
+            else if (piece.flag == 2)
             {
-                //Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Moves and Attacks
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Attacks
-                iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //One Time Moves
-                iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //One Time Move and Attacks
-                iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Murderous Attacks
-                iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Conditional Attacks
-                iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Jump Attacks
-                iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Dependent Attacks
-                piece.dependentMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Interactive Moves
-                piece.interactiveMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Flag Moves
-
-                updatePieceFlags(piece, check);
-                if (piece.flag == 1)
-                {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-                }
-                else if (piece.flag == 2)
-                {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-                }
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
             }
 
         }
@@ -991,7 +970,7 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece p in pieces)
         {
-            if (checkState(p, PieceState.Delayed) || checkState(p, PieceState.Jailer))
+            if (checkState(p, PieceState.Delayed) || checkState(p, PieceState.Jailer) || checkState(p, PieceState.Dematerialized))
             {
                 continue;
             }
@@ -1334,6 +1313,7 @@ public class HelperFunctions : MonoBehaviour
             p.oneTimeMoveAndAttacks[i, 0] = p.oneTimeMoveAndAttacks[i, 0] * p.color;
         }
 
+        /*
         for (int i = 0; i < p.dependentAttacks.GetLength(0); i++)
         {
             p.dependentAttacks[i, 1] = p.dependentAttacks[i, 1] * p.color;
@@ -1345,6 +1325,7 @@ public class HelperFunctions : MonoBehaviour
             p.interactiveAttacks[i, 1] = p.interactiveAttacks[i, 1] * p.color;
             p.interactiveAttacks[i, 0] = p.interactiveAttacks[i, 0] * p.color;
         }
+        */
 
         for (int i = 0; i < p.flagMove1.GetLength(0); i++)
         {
@@ -1695,10 +1676,8 @@ public class HelperFunctions : MonoBehaviour
             int[,] conditionalAttacks = combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
             int[,] attacks = combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
             int[,] jumpAttacks = combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
-            int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
-            int[,] interactiveAttacks = combineMoveSets(attackerPiece.interactiveAttacks, deadPiece.interactiveAttacks);
-            int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
-            int[,] forceStayTurnMoves = combineMoveSets(attackerPiece.forceStayTurnMoves, deadPiece.forceStayTurnMoves);
+            //int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
+            //int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
             int[,] flagMove1 = combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
             int[,] flagMove2 = combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
             int[,] pushMoves = combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
@@ -1712,10 +1691,8 @@ public class HelperFunctions : MonoBehaviour
             attackerPiece.conditionalAttacks = conditionalAttacks;
             attackerPiece.attacks = attacks;
             attackerPiece.jumpAttacks = jumpAttacks;
-            attackerPiece.dependentAttacks = dependentAttacks;
-            attackerPiece.interactiveAttacks = interactiveAttacks;
-            attackerPiece.positionIndependentMoves = positionIndependentMoves;
-            attackerPiece.forceStayTurnMoves = forceStayTurnMoves;
+            //attackerPiece.dependentAttacks = dependentAttacks;
+            //attackerPiece.positionIndependentMoves = positionIndependentMoves;
             attackerPiece.flagMove1 = flagMove1;
             attackerPiece.flagMove2 = flagMove2;
             attackerPiece.pushMoves = pushMoves;
@@ -3145,6 +3122,8 @@ public class HelperFunctions : MonoBehaviour
 
             onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords[0], coords[1]));
 
+            checkPromote(piece, piece.position);
+
             Image img = piece.go.GetComponent<Image>();
             Color c = img.color;
             c.a = 1f;
@@ -3324,16 +3303,6 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        if (piece.stayTurn())
-        {
-            gameData.turn = gameData.turn * -1;
-            gameData.forceStayTurn = piece.color;
-        }
-        else
-        {
-            gameData.forceStayTurn = 0;
-        }
-
         // After move collateral
         if (checkState(piece, PieceState.Combustable))
         {
@@ -3405,27 +3374,7 @@ public class HelperFunctions : MonoBehaviour
          */
 
         //Check for Pawn Promote
-        //TODO Generalize to function
-        //TODO make sure this works
-        if (piece.promotesInto != "")
-        {
-            if (piece.position[1] == piece.promotingRow)
-            {
-                string pname = piece.promotesInto;
-                Piece p = Spawnables.create(pname, piece.color);
-
-                if (piece.storage != null)
-                {
-                    foreach (Piece p_ in piece.storage)
-                    {
-                        forceRemove(p_);
-                    }
-                }
-                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1])));
-                forceRemove(piece);
-                initPiece(p, coords);
-            }
-        }
+        checkPromote(piece, coords);
 
         gameData.turn = gameData.turn * -1;
 
@@ -3816,6 +3765,30 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    public static void checkPromote(Piece piece, int[] coords)
+    {
+        if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
+        {
+            if (piece.position[1] == piece.promotingRow)
+            {
+                string pname = piece.promotesInto;
+                Piece p = Spawnables.create(pname, piece.color);
+
+                if (piece.storage != null)
+                {
+                    foreach (Piece p_ in piece.storage)
+                    {
+                        forceRemove(p_);
+                    }
+                }
+
+                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1])));
+                forceRemove(piece);
+                initPiece(p, coords);
+            }
+        }
+    }
+
     public static void delayedMove(PieceMove pMove)
     {
         Piece piece = pMove.piece;
@@ -3839,16 +3812,22 @@ public class HelperFunctions : MonoBehaviour
             selectedToMoveGo = deathVars.selectedToMoveGo;
             countDeath = deathVars.countDeath;
 
-            if (death)
+            if (selectedToMoveGo == null || gameData.piecesDict.ContainsKey(selectedToMoveGo))
             {
-                Piece destroyer = gameData.piecesDict[selectedToMoveGo];
+                Debug.Log("Delayed Move FAILED for: " + piece.name);
+                if (death)
+                {
+                    Piece destroyer = gameData.piecesDict[selectedToMoveGo];
 
-                onDeaths(destroyer, selectedToMoveGo, square);
+                    onDeaths(destroyer, selectedToMoveGo, square);
+                }
+
+                piece.hasMoved = true;
+                movePieceBoardGrid(piece, piece.position, coords);
+                movePiece(piece, square);
+
+                checkPromote(piece, coords);
             }
-
-            piece.hasMoved = true;
-            movePieceBoardGrid(piece, piece.position, coords);
-            movePiece(piece, square);
         }
     }
 
@@ -3862,7 +3841,11 @@ public class HelperFunctions : MonoBehaviour
             death = true;
             //Debug.Log("Checking for Death");
 
-            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, PieceState.Murderous))
+            if (
+                !getColorsOnSquare(square, true).Contains(piece.color * -1) && (
+                    !checkState(piece, PieceState.Murderous)
+                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
+                )
             {
                 death = false;
             }
@@ -3976,6 +3959,11 @@ public class HelperFunctions : MonoBehaviour
                 clone.storage.Add(clonePiece(p));
             }
         }
+
+        //clone.dependentAttacks = clone2dArray(original.dependentAttacks);
+        //clone.positionIndependentMoves = clone2dArray(original.positionIndependentMoves);
+
+        /*
         clone.moves = clone2dArray(original.moves);
         clone.oneTimeMoves = clone2dArray(original.oneTimeMoves);
         clone.moveAndAttacks = clone2dArray(original.moveAndAttacks);
@@ -3985,14 +3973,27 @@ public class HelperFunctions : MonoBehaviour
         clone.conditionalAttacks = clone2dArray(original.conditionalAttacks);
         clone.jumpAttacks = clone2dArray(original.jumpAttacks);
         clone.attacks = clone2dArray(original.attacks);
-        clone.dependentAttacks = clone2dArray(original.dependentAttacks);
-        clone.interactiveAttacks = clone2dArray(original.interactiveAttacks);
-        clone.positionIndependentMoves = clone2dArray(original.positionIndependentMoves);
         clone.forceStayTurnMoves = clone2dArray(original.forceStayTurnMoves);
         clone.flagMove1 = clone2dArray(original.flagMove1);
         clone.flagMove2 = clone2dArray(original.flagMove2);
         clone.pushMoves = clone2dArray(original.pushMoves);
         clone.enPassantMoves = clone2dArray(original.enPassantMoves);
+        */
+
+        clone.moves = original.moves;
+        clone.oneTimeMoves = original.oneTimeMoves;
+        clone.moveAndAttacks = original.moveAndAttacks;
+        clone.oneTimeMoveAndAttacks = original.oneTimeMoveAndAttacks;
+        clone.murderousAttacks = original.murderousAttacks;
+        clone.condition = original.condition;
+        clone.conditionalAttacks = original.conditionalAttacks;
+        clone.jumpAttacks = original.jumpAttacks;
+        clone.attacks = original.attacks;
+        clone.flagMove1 = original.flagMove1;
+        clone.flagMove2 = original.flagMove2;
+        clone.pushMoves = original.pushMoves;
+        clone.enPassantMoves = original.enPassantMoves;
+
         clone.position = original.position?.ToArray();
         clone.hasMoved = original.hasMoved;
         clone.wImage = original.wImage.ToString();
@@ -4077,8 +4078,6 @@ public class HelperFunctions : MonoBehaviour
 
         gameData.bestMovePiece = null;
         gameData.bestMoveCoords = new int[] { 0, 0 };
-
-        gameData.forceStayTurn = 0;
 
         gameData.boardGrid = new List<List<List<Piece>>>();
 

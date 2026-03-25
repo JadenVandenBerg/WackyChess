@@ -45,7 +45,8 @@ public class botMaster : MonoBehaviour
         
         if (nonResettables.botTournament == null)
         {
-            nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot", true);
+            List<string> randomBots = nonResettables.get8RandomBots();
+            nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
         }
 
         nonResettables.isBotTournament = true;
@@ -279,6 +280,8 @@ public class botMaster : MonoBehaviour
     bool gameOver = false;
     bool kingDead = false;
 
+    bool checkLastTurn = false;
+
     void Update()
     {
         if (!isTurn || !started || gameOver) return;
@@ -353,6 +356,13 @@ public class botMaster : MonoBehaviour
 
             movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
+            if (moveCoords != null && movePieceObj != null)
+            {
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
+            }
+            yield return new WaitForSeconds(0.5f);
+
             selectedMove = nextMove;
 
             if (watchMS > 5000)
@@ -388,7 +398,6 @@ public class botMaster : MonoBehaviour
         bool death = false;
         bool countDeath = false;
         int check = 0;
-        bool checkLastTurn = false;
         if (valid)
         {
             gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
@@ -597,6 +606,7 @@ public class botMaster : MonoBehaviour
         }
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
+        HelperFunctions.resetBoardColours();
         yield return new WaitForSeconds(0.1f);
         isTurn = true;
 
@@ -709,7 +719,7 @@ public class botMaster : MonoBehaviour
         BoardState bs = new BoardState();
         bs.refresh(convertBoardGrid(gameData.boardGrid));
 
-        List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, bot.color);
+        List<PieceAbility> pieceAbilities = HelperFunctions.isCheckPieceAbilities(bs, bot, bot.color);
 
         foreach (PieceAbility pa_ in pieceAbilities)
         {
@@ -803,6 +813,8 @@ public class botMaster : MonoBehaviour
             {
                 continue;
             }
+
+            //TODO IMPORTANT simulate ability, check if check, return false
 
             return true;
         }

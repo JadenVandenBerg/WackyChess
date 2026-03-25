@@ -42,7 +42,6 @@ public static class gameData
     public static String playMode { get; set; } = "";
     public static Piece bestMovePiece { get; set; } = null;
     public static int[] bestMoveCoords { get; set; } = new int[] { 0, 0 };
-    public static int forceStayTurn { get; set; } = 0;
     public static List<List<List<Piece>>> boardGrid { get; set; } = new List<List<List<Piece>>>();
     public static List<String> panelCodes { get; set; } = new List<String>();
     public static BotTemplate botWhite { get; set; } = null;
@@ -61,6 +60,39 @@ public static class tempInfo
     public static DelayedQueue delayedQueue { get; set; } = new DelayedQueue();
     public static bool attackerDied { get; set; } = false;
     public static PieceState stackingStates { get; set; } = PieceState.None;
+}
+
+public static class lastMoveCache
+{
+    public static Piece lastPiece = null;
+    public static int[] lastDirection = null;
+    public static int lastDistance = 0;
+    public static bool lastWasJump = false;
+
+    public static void reset()
+    {
+        lastPiece = null;
+        lastDirection = null;
+        lastDistance = 0;
+        lastWasJump = false;
+    }
+
+    public static int[] normalizeDirection(int dx, int dy)
+    {
+        if (dx != 0) dx /= Math.Abs(dx);
+        if (dy != 0) dy /= Math.Abs(dy);
+        return new int[] { dx, dy };
+    }
+
+    public static bool isDirectional(int dx, int dy)
+    {
+        return dx == 0 || dy == 0 || Math.Abs(dx) == Math.Abs(dy);
+    }
+
+    public static int distance(int[] position, int[] coords)
+    {
+        return Math.Max(Math.Abs(position[0] - coords[0]), Math.Abs(position[1] - coords[1]));
+    }
 }
 
 public static class nonResettables
@@ -112,8 +144,40 @@ public static class nonResettables
         {
             return "Savage Beastbot";
         }
+        else if (botName == "G2Ebot" || botName == "G2EBot")
+        {
+            return "G2 E-Bot";
+        }
 
         return botName;
+    }
+
+    public static List<string> get8RandomBots()
+    {
+        List<string> options = new List<string>
+        {
+            "BottusMaximus",
+            "Abilibot",
+            "Bloodbot",
+            "SavageBeastBot",
+            "FiveXRandomBot",
+            "RandomBot",
+            "OneMoveBot",
+            "IdiotBot",
+            "G2EBot"
+        };
+
+        List<string> result = new List<string>();
+        System.Random rng = new System.Random();
+
+        for (int i = 0; i < 8 && options.Count > 0; i++)
+        {
+            int index = rng.Next(options.Count);
+            result.Add(options[index]);
+            options.RemoveAt(index);
+        }
+
+        return result;
     }
 
     public static void postBotMatch(string botAName, string botBName, string winner)
@@ -128,6 +192,7 @@ public static class nonResettables
 
         botAName = fixBotName(botAName);
         botBName = fixBotName(botBName);
+        winner = fixBotName(winner);
 
         Bot botA = bots.First(b => b.Name == botAName);
         Bot botB = bots.First(b => b.Name == botBName);

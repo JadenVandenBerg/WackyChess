@@ -2,9 +2,11 @@
 
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
-//bottus maximus is counting moves as attacks when calculating trades
 //ghoul king can stack on lite pawn
 //hungry pieces do not barf on death
+//problems with kings being stacked on other peices with checkmate
+//if heartbroken king is in play, bots avoid capturing queen
+//opponent jockey somehow ended up on stacking king
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight
@@ -12,6 +14,7 @@
 
 //Feature
 //Side panel only show selectable pieces
+//opponent can unfreeze but it is still considered stalemate
 
 //Remove
 //Dependent Attacks
@@ -20,7 +23,7 @@
 //Refactor
 
 //Optimize
-//Use structs instead of int[]
+//Use structs instead of int[] and int[,]
 
 //Pieces IMG
 /*

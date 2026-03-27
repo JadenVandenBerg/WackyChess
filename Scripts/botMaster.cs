@@ -42,7 +42,7 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        
+        /*
         if (nonResettables.botTournament == null)
         {
             nonResettables.botTournament = new BotTournament("BottusMaximus", "Abilibot", "Bloodbot", "SavageBeastBot", "FiveXRandomBot", "RandomBot", "OneMoveBot", "IdiotBot", true);
@@ -62,13 +62,14 @@ public class botMaster : MonoBehaviour
 
         botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
         botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+        */
         
         gameData.playMode = "BotvBot";
         gameData.turn = 1;
         gameData.board = board2;
         
-        //botWhite = new Abilibot(1);
-        //botBlack = new IdiotBot(-1);
+        botWhite = new RestrictorBot(1);
+        botBlack = new AssassinBot(-1);
         gameData.botWhite = botWhite;
         gameData.botBlack = botBlack;
 

@@ -40,10 +40,6 @@ public class Template : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -55,21 +51,6 @@ public class Template : Piece
     public String wImage { get; set; } = "Images/";
     public String bImage { get; set; } = "Images/";
     public String name { get; set; } = "";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -145,10 +126,6 @@ public class SuperPawn : Piece
         { 1, -2 }, { -1, -2 }, { 2, -1 },{ -2, -1 }
     };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -160,21 +137,6 @@ public class SuperPawn : Piece
     public String wImage { get; set; } = "Images/Extras/wSuperPawn";
     public String bImage { get; set; } = "Images/Extras/bSuperPawn";
     public String name { get; set; } = "Super Pawn";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";

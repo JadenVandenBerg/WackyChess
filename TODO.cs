@@ -2,20 +2,19 @@
 
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
-//Need to rotate black pieces
-//Take account for abilities when checking for check and checkmate
-//Portal and Bouncing does not account for Ghoul/Ghost/Dematerialized states
-//When a stacking piece captures a delayed piece, it becomes delayed too early
-// piggyback not working, king should not be able to ride
-// pieces are allowed to move off of jailed pieces, which puts the king in check (maybe use simulatedMoves instead of dummymove for chekc)
-//explosion radius of atomics
-//delayed pieces not in check properly
-// do not count infinite/crook as captures for captures
-//big problem with moving into check incorrectly
-//capture the flag pieces cannot stack on piggyback king
+//ghoul king can stack on lite pawn
+//hungry pieces do not barf on death
+//problems with kings being stacked on other peices with checkmate
+//if heartbroken king is in play, bots avoid capturing queen
+//opponent jockey somehow ended up on stacking king
+
+//Dependant Attacks Need Fixing
+// OneTimeKnight
+// MurderousKnight
 
 //Feature
 //Side panel only show selectable pieces
+//opponent can unfreeze but it is still considered stalemate
 
 //Remove
 //Dependent Attacks
@@ -24,7 +23,7 @@
 //Refactor
 
 //Optimize
-//Use structs instead of int[]
+//Use structs instead of int[] and int[,]
 
 //Pieces IMG
 /*

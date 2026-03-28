@@ -286,15 +286,6 @@ public class game : MonoBehaviour
         piece.hasMoved = true;
 
         HelperFunctions.movePiece(piece, toAppend);
-        if (piece.stayTurn())
-        {
-            gameData.turn = gameData.turn * -1;
-            gameData.forceStayTurn = piece.color;
-        }
-        else
-        {
-            gameData.forceStayTurn = 0;
-        }
 
         //Updated Since Gamebot
         //Call Interactive Move Methods Here

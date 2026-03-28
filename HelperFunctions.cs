@@ -39,11 +39,12 @@ public class HelperFunctions : MonoBehaviour
         botMatch = isBotMatch;
         gameData.isBotMatch = botMatch == "True";
 
-        panel.Initialize();
-        updatePointsOnBoard();
+        //panel.Initialize();
+        //updatePointsOnBoard();
 
         moveSound = GetComponent<AudioSource>();
     }
+
     public static void movePiece(Piece p, GameObject toAppend)
     {
         GameObject go = p.go;
@@ -56,19 +57,7 @@ public class HelperFunctions : MonoBehaviour
             if (online) go.AddComponent<PhotonView>();
         }
     }
-    public static void movePieceNoImage(Piece p, GameObject toAppend)
-    {
-        GameObject go = p.go;
 
-        if (go == null || toAppend == null)
-        {
-            return;
-        }
-
-        go.GetComponent<RectTransform>().SetParent(toAppend.GetComponent<RectTransform>());
-        go.transform.position = Vector2.zero;
-        go.transform.localPosition = new Vector2((go.transform.position.x + toAppend.GetComponent<RectTransform>().sizeDelta.x / 2), (go.transform.position.y + toAppend.GetComponent<RectTransform>().sizeDelta.y / 2));
-    }
     public static GameObject clicked(BaseEventData e)
     {
         PointerEventData pointerEventData = (PointerEventData)e;
@@ -268,36 +257,6 @@ public class HelperFunctions : MonoBehaviour
         //return null;
     }
 
-    public static Piece getPieceOnSquareDebug(GameObject square)
-    {
-        if (square != null && square.transform != null)
-        {
-            if (square.transform.childCount == 0)
-            {
-                return null;
-            }
-
-            if (gameData.piecesDict.ContainsKey(square.transform.GetChild(0).gameObject))
-            {
-                return gameData.piecesDict[square.transform.GetChild(0).gameObject];
-            }
-            else
-            {
-                int[] coords = findCoords(square);
-                foreach (Piece piece in gameData.piecesDict.Values)
-                {
-                    if (piece.position[0] == coords[0] && piece.position[1] == coords[1])
-                    {
-                        return piece;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /*TODO Rewrite this for bots*/
     public static List<int[]> addMovesToCurrentMoveableCoords(Piece piece)
     {
         clearCurrentMoveableCoords();
@@ -311,46 +270,36 @@ public class HelperFunctions : MonoBehaviour
         int color = piece.color;
 
         bool check = false;
+        gameData.isInCheck[0] = isCheck(gameData.whiteKing) == true ? 1 : 0;
+        gameData.isInCheck[1] = isCheck(gameData.blackKing) == true ? 1 : 0;
         if (color == 1 && gameData.isInCheck[0] == 1 || color == -1 && gameData.isInCheck[1] == 1)
         {
             check = true;
         }
 
-        if (gameData.turn == gameData.forceStayTurn)
+        iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+        iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+
+        //Dependent Attacks
+        //piece.dependentMovesSet();
+        //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+
+        updatePieceFlags(piece, check);
+
+        //Flag Moves
+        if (piece.flag == 1)
         {
-            //Force Stay Turn Moves
-            iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
         }
-        else
+        else if (piece.flag == 2)
         {
-            iterateThroughPieceMoves(moveComparator, piece, piece.moves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            //Dependent Attacks
-            piece.dependentMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            //Interactive Moves
-            piece.interactiveMovesSet();
-            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-
-            updatePieceFlags(piece, check);
-
-            //Flag Moves
-            if (piece.flag == 1)
-            {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            }
-            else if (piece.flag == 2)
-            {
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
-            }
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, null, Color.red, check, false, false, gameData.currentMoveableCoords, color, true, false, false);
         }
 
         //todo use allMoves instead
@@ -672,22 +621,25 @@ public class HelperFunctions : MonoBehaviour
     {
         if (checkState(piece, PieceState.Bouncing))
         {
-            if (x > 8)
+            for (int i = 0; i < 4; i++)
             {
-                x = 8 - (x - 8);
-            }
-            else if (x < 1)
-            {
-                x = -x + 2;
-            }
+                if (x > 8)
+                {
+                    x = 8 - (x - 8);
+                }
+                else if (x < 1)
+                {
+                    x = -x + 2;
+                }
 
-            if (y > 8)
-            {
-                y = 8 - (y - 8);
-            }
-            else if (y < 1)
-            {
-                y = -y + 2;
+                if (y > 8)
+                {
+                    y = 8 - (y - 8);
+                }
+                else if (y < 1)
+                {
+                    y = -y + 2;
+                }
             }
         }
 
@@ -868,7 +820,7 @@ public class HelperFunctions : MonoBehaviour
                 {
                     if (execDummyMove)
                     {
-                        bool stillInCheck = dummyMove(piece, newPos);
+                        bool stillInCheck = dummyMove_(piece, newPos);
 
                         if (!stillInCheck)
                         {
@@ -921,57 +873,48 @@ public class HelperFunctions : MonoBehaviour
 
             //if (color == -1) Debug.Log("LOOKING AT " + piece.name + "! Color: " + piece.color);
 
-            //Force Stay Turn Moves
-            if (gameData.turn == gameData.forceStayTurn)
+            //Moves
+            iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Moves and Attacks
+            iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Attacks
+            iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //One Time Moves
+            iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //One Time Move and Attacks
+            iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Murderous Attacks
+            iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Conditional Attacks
+            iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Jump Attacks
+            iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Dependent Attacks
+            //piece.dependentMovesSet();
+            //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Interactive Moves
+            //piece.interactiveMovesSet();
+            //iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+
+            //Flag Moves
+
+            updatePieceFlags(piece, check);
+            if (piece.flag == 1)
             {
-                //Force Stay Turn Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.forceStayTurnMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
             }
-            else
+            else if (piece.flag == 2)
             {
-                //Moves
-                iterateThroughPieceMoves(moveComparator, piece, piece.moves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Moves and Attacks
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.moveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Attacks
-                iterateThroughPieceMoves(attacksComparator, piece, piece.attacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //One Time Moves
-                iterateThroughPieceMoves(oneTimeMovesComparator, piece, piece.oneTimeMoves, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //One Time Move and Attacks
-                iterateThroughPieceMoves(oneTimeMoveAndAttacksComparator, piece, piece.oneTimeMoveAndAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Murderous Attacks
-                iterateThroughPieceMoves(murderousAttacksComparator, piece, piece.murderousAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Conditional Attacks
-                iterateThroughPieceMoves(conditionalAttacksComparator, piece, piece.conditionalAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Jump Attacks
-                iterateThroughPieceMoves(jumpAttacksComparator, piece, piece.jumpAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Dependent Attacks
-                piece.dependentMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.dependentAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Interactive Moves
-                piece.interactiveMovesSet();
-                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.interactiveAttacks, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-
-                //Flag Moves
-
-                updatePieceFlags(piece, check);
-                if (piece.flag == 1)
-                {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove1, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-                }
-                else if (piece.flag == 2)
-                {
-                    iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
-                }
+                iterateThroughPieceMoves(moveAndAttacksComparator, piece, piece.flagMove2, highlightPiece, highlightColor, check, highlight, changeValue, allMoves, color, execDummyMove, ignoreDisabled, fromTotal);
             }
 
         }
@@ -1019,6 +962,26 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return check;
+    }
+
+    public static bool isCheck_(Piece king, BoardState afterBS) 
+    {
+        List<Piece> pieces = BotHelperFunctions.getPiecesOnBoardState(afterBS, king.color * -1);
+
+        foreach (Piece p in pieces)
+        {
+            if (checkState(p, PieceState.Delayed) || checkState(p, PieceState.Jailer) || checkState(p, PieceState.Dematerialized))
+            {
+                continue;
+            }
+
+            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS);
+
+            if (isInList(moves, king.position, false)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /* TODO
@@ -1098,6 +1061,93 @@ public class HelperFunctions : MonoBehaviour
         return gos;
     }
 
+    public static bool dummyMove_(Piece piece, int[] coords)
+    {
+        BoardState bs = new BoardState();
+        bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+        if (gameData.whiteKing == null || gameData.blackKing == null)
+        {
+            return true;
+        }
+
+        bs = BotHelperFunctions.copyBoardState(bs);
+        piece = BotHelperFunctions.getCloneFromOriginalPiece(piece, bs.boardGrid);
+
+        if (piece == null)
+        {
+            return true;
+        }
+
+        Piece whiteKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.whiteKing, bs.boardGrid);
+        Piece blackKingClone = BotHelperFunctions.getCloneFromOriginalPiece(gameData.blackKing, bs.boardGrid);
+
+        BoardState afterBS = BotHelperFunctions.simulatePieceMove_(bs, piece, coords, piece.color, whiteKingClone, blackKingClone);
+
+        if (afterBS == null)
+        {
+            BotHelperFunctions.resetPiecePositions(null, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+            return true;
+        }
+
+        List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
+
+        Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBS.boardGrid);
+
+        //Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+        //Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
+        if (king == null)
+        {
+            BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+            return true;
+        }
+
+        bool check = isCheck_(king, afterBS);
+        BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+        return check;
+
+    }
+
+    public static List<BotHelperFunctions.PieceAbility> isCheckPieceAbilities(BoardState bs, BotTemplate bot, int color)
+    {
+        bs = BotHelperFunctions.copyBoardState(bs);
+
+        List<BotHelperFunctions.PieceAbility> pieceAbilities = BotHelperFunctions.getAllPossibleBotAbilities(bot, bs, color);
+
+        List<BotHelperFunctions.PieceAbility> acceptedAbilities = new List<BotHelperFunctions.PieceAbility>();
+        foreach(BotHelperFunctions.PieceAbility pa in pieceAbilities)
+        {
+            Piece piece = pa.piece;
+            //BoardState bs = new BoardState();
+
+            //BotHelperFunctions.PieceAbility pa_ = normalizePieceAbility(pa, bs.boardGrid);
+
+            BoardState afterBS = BotHelperFunctions.simulatePieceAbility(null, bs, pa);
+
+            Piece ogKing = piece.color == 1 ? gameData.whiteKing : gameData.blackKing;
+            List<Piece>[,] afterBoardGrid_ = afterBS.boardGrid;
+
+            Piece king = BotHelperFunctions.getCloneFromOriginalPiece(ogKing, afterBoardGrid_);
+
+            if (king == null)
+            {
+                BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+                continue;
+            }
+
+            bool check = isCheck_(king, afterBS);
+            BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+            if (!check)
+            {
+                acceptedAbilities.Add(pa);
+            }
+        }
+
+        return acceptedAbilities;
+    }
+
     public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
     {
         foreach (Piece piece in new List<Piece>(pieces))
@@ -1167,7 +1217,6 @@ public class HelperFunctions : MonoBehaviour
             Destroy(go);
         }
     }
-
 
     public static bool dummyIsCheck(List<int[]> moves, Piece king)
     {
@@ -1264,6 +1313,7 @@ public class HelperFunctions : MonoBehaviour
             p.oneTimeMoveAndAttacks[i, 0] = p.oneTimeMoveAndAttacks[i, 0] * p.color;
         }
 
+        /*
         for (int i = 0; i < p.dependentAttacks.GetLength(0); i++)
         {
             p.dependentAttacks[i, 1] = p.dependentAttacks[i, 1] * p.color;
@@ -1275,6 +1325,7 @@ public class HelperFunctions : MonoBehaviour
             p.interactiveAttacks[i, 1] = p.interactiveAttacks[i, 1] * p.color;
             p.interactiveAttacks[i, 0] = p.interactiveAttacks[i, 0] * p.color;
         }
+        */
 
         for (int i = 0; i < p.flagMove1.GetLength(0); i++)
         {
@@ -1304,90 +1355,6 @@ public class HelperFunctions : MonoBehaviour
         {
             p.promotingRow = 9 - p.promotingRow;
         }
-    }
-
-    public static void updateCastleCondition()
-    {
-        List<List<int>> castleableMovesWhite = new List<List<int>>();
-        List<List<int>> castleableMovesBlack = new List<List<int>>();
-
-        gameData.whiteKing.condition = false;
-        gameData.blackKing.condition = false;
-
-        if (gameData.isInCheck[0] != 1)
-        {
-            if (gameData.whiteKing.hasMoved == false)
-            {
-                if (gameData.whiteRooks[0].hasMoved == false && !isJump(gameData.whiteKing, gameData.whiteKing.position, gameData.whiteRooks[0].position))
-                {
-                    if (gameData.piecesDict.ContainsValue(gameData.whiteRooks[0]) && gameData.piecesDict.ContainsValue(gameData.whiteKing))
-                    {
-                        gameData.whiteKing.condition = true;
-                        List<int> move = new List<int> { -2, 0 };
-                        castleableMovesWhite.Add(move);
-                    }
-                }
-                else if (gameData.whiteRooks[1].hasMoved == false && !isJump(gameData.whiteKing, gameData.whiteKing.position, gameData.whiteRooks[1].position))
-                {
-                    if (gameData.piecesDict.ContainsValue(gameData.whiteRooks[1]) && gameData.piecesDict.ContainsValue(gameData.whiteKing))
-                    {
-                        gameData.whiteKing.condition = true;
-                        List<int> move = new List<int> { 2, 0 };
-                        castleableMovesWhite.Add(move);
-                    }
-                }
-            }
-        }
-
-        if (gameData.isInCheck[1] != 1)
-        {
-            if (gameData.blackKing.hasMoved == false)
-            {
-                if (gameData.blackRooks[0].hasMoved == false && !isJump(gameData.blackKing, gameData.blackKing.position, gameData.blackRooks[0].position))
-                {
-                    if (gameData.piecesDict.ContainsValue(gameData.blackRooks[0]) && gameData.piecesDict.ContainsValue(gameData.blackKing))
-                    {
-                        gameData.blackKing.condition = true;
-                        List<int> move = new List<int> { -2, 0 };
-                        castleableMovesBlack.Add(move);
-                    }
-                }
-                else if (gameData.blackRooks[1].hasMoved == false && !isJump(gameData.blackKing, gameData.blackKing.position, gameData.blackRooks[1].position))
-                {
-                    if (gameData.piecesDict.ContainsValue(gameData.blackRooks[1]) && gameData.piecesDict.ContainsValue(gameData.blackKing))
-                    {
-                        gameData.blackKing.condition = true;
-                        List<int> move = new List<int> { 2, 0 };
-                        castleableMovesBlack.Add(move);
-                    }
-                }
-            }
-        }
-
-        gameData.whiteKing.conditionalAttacks = make2DArray(castleableMovesWhite);
-        gameData.blackKing.conditionalAttacks = make2DArray(castleableMovesBlack);
-    }
-
-    static int[,] make2DArray(List<List<int>> listOfLists)
-    {
-        int rows = listOfLists.Count;
-        if (rows == 0)
-        {
-            return new int[,] { };
-        }
-        int cols = listOfLists[0].Count;
-
-        int[,] twoDArray = new int[rows, cols];
-
-        for (int i = 0; i < rows; i++)
-        {
-            for (int j = 0; j < cols; j++)
-            {
-                twoDArray[i, j] = listOfLists[i][j];
-            }
-        }
-
-        return twoDArray;
     }
 
     public void updatePointsOnBoard()
@@ -1441,15 +1408,6 @@ public class HelperFunctions : MonoBehaviour
                 gameData.botMoves.Add(piece, moves);
             }
         }
-    }
-
-    public static GameObject generateRandomSquare()
-    {
-        System.Random random = new System.Random();
-        int x = random.Next(1, 9);
-        int y = random.Next(1, 9);
-
-        return findSquare(x, y);
     }
 
     public static int[,] addTo2DArray(int[,] arr, int[] toAdd)
@@ -1539,7 +1497,6 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    //TODO maybe change this for bots
     public static void forceRemove(Piece deadPiece)
     {
         GameObject dead = deadPiece.go;
@@ -1644,7 +1601,10 @@ public class HelperFunctions : MonoBehaviour
 
             if (randomNumber == 1)
             {
-                DestroyWrapper(attacker);
+                tempInfo.attackerDied = true;
+                collateralDeath(pieceToList(attackerPiece));
+                //updateBoardGrid(attackerCoords, attackerPiece, "r");
+                //DestroyWrapper(attacker);
             }
         }
 
@@ -1693,7 +1653,8 @@ public class HelperFunctions : MonoBehaviour
         if (checkState(attackerPiece, PieceState.Stacking))
         {
             // Abilities / States
-            attackerPiece.states |= deadPiece.states;
+            //attackerPiece.states |= deadPiece.states;
+            tempInfo.stackingStates |= deadPiece.states;
 
             string ability = deadPiece.ability;
             string[] abilityParts = ability.Split('-');
@@ -1715,10 +1676,8 @@ public class HelperFunctions : MonoBehaviour
             int[,] conditionalAttacks = combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
             int[,] attacks = combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
             int[,] jumpAttacks = combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
-            int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
-            int[,] interactiveAttacks = combineMoveSets(attackerPiece.interactiveAttacks, deadPiece.interactiveAttacks);
-            int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
-            int[,] forceStayTurnMoves = combineMoveSets(attackerPiece.forceStayTurnMoves, deadPiece.forceStayTurnMoves);
+            //int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
+            //int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
             int[,] flagMove1 = combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
             int[,] flagMove2 = combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
             int[,] pushMoves = combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
@@ -1732,10 +1691,8 @@ public class HelperFunctions : MonoBehaviour
             attackerPiece.conditionalAttacks = conditionalAttacks;
             attackerPiece.attacks = attacks;
             attackerPiece.jumpAttacks = jumpAttacks;
-            attackerPiece.dependentAttacks = dependentAttacks;
-            attackerPiece.interactiveAttacks = interactiveAttacks;
-            attackerPiece.positionIndependentMoves = positionIndependentMoves;
-            attackerPiece.forceStayTurnMoves = forceStayTurnMoves;
+            //attackerPiece.dependentAttacks = dependentAttacks;
+            //attackerPiece.positionIndependentMoves = positionIndependentMoves;
             attackerPiece.flagMove1 = flagMove1;
             attackerPiece.flagMove2 = flagMove2;
             attackerPiece.pushMoves = pushMoves;
@@ -1876,12 +1833,6 @@ public class HelperFunctions : MonoBehaviour
         return isPieceOnSquare(findSquare(piece.startSquare[0], piece.startSquare[1]));
     }
 
-    /*
-    public static bool checkState(Piece piece, String state)
-    {
-        return piece.state.Contains(state) || piece.secondaryState.Contains(state);
-    }
-    */
     public static bool checkState(Piece piece, PieceState state)
     {
         return (piece.states & state) != 0;
@@ -1901,26 +1852,6 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    /*
-    public static bool checkStateOnSquare(List<Piece> piecesOnSquare, String state)
-    {
-        if (piecesOnSquare == null)
-        {
-            return false;
-        }
-
-        foreach (Piece piece in piecesOnSquare)
-        {
-            if (piece.state == state || piece.secondaryState.Contains(state))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-    */
-
     public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, PieceState states)
     {
         if (piecesOnSquare == null || piecesOnSquare.Count == 0)
@@ -1934,38 +1865,6 @@ public class HelperFunctions : MonoBehaviour
 
         return true;
     }
-    /*
-    public static bool checkStateAllOnSquare(List<Piece> piecesOnSquare, string state)
-    {
-        if (piecesOnSquare == null || piecesOnSquare.Count == 0)
-        {
-            return false;
-        }
-
-        List<string> states = state.Split('-').ToList();
-
-        foreach (Piece piece in piecesOnSquare)
-        {
-            bool hasState = false;
-
-            foreach (string s in states)
-            {
-                if (checkState(piece, s))
-                {
-                    hasState = true;
-                    break;
-                }
-            }
-
-            if (!hasState)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
-    */
 
     public static List<Sprite> generateSidePanelImages(GameObject square)
     {
@@ -2161,7 +2060,6 @@ public class HelperFunctions : MonoBehaviour
         return true;
     }
 
-    //TODO test this
     public static bool checkSquareCrowdingEligible(Piece piece, List<Piece> piecesOnSquare)
     {
         // No Pieces
@@ -2200,7 +2098,10 @@ public class HelperFunctions : MonoBehaviour
         //There is one piece on square, piece on square is piggyback
         if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
         {
-            return true;
+            if (!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+            {
+                return true;
+            }
         }
 
         //There is one piece on square, piece is jockey
@@ -2242,7 +2143,7 @@ public class HelperFunctions : MonoBehaviour
         if (action.ToLower() == "r" || action.ToLower() == "remove")
         {
             int ok = square.RemoveAll(p => p.name == piece.name);
-            Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + coords[0] + "," + coords[1]);
+            //Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + coords[0] + "," + coords[1]);
         }
     }
 
@@ -2257,11 +2158,6 @@ public class HelperFunctions : MonoBehaviour
         gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece);
 
         piece.position = coords;
-    }
-
-    public static IEnumerator waitOneFrame()
-    {
-        yield return null;
     }
 
     public static bool isPieceOnSquare(GameObject square)
@@ -2528,34 +2424,6 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static bool isPieceSurrounding(Piece piece)
-    {
-        int[][] directions = new int[][]
-        {
-            new int[] { 1, 0 },  // right
-            new int[] {-1, 0 },  // left
-            new int[] { 0, 1 },  // up
-            new int[] { 0, -1 }, // down
-            new int[] { 1, 1 },  // up-right
-            new int[] {-1, 1 },  // up-left
-            new int[] { 1, -1 }, // down-right
-            new int[] {-1, -1 }  // down-left
-        };
-
-        foreach (var dir in directions)
-        {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
-
-            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static void highlightSurroundingSquaresWithPieces(Piece piece)
     {
         int[][] directions = new int[][]
@@ -2641,27 +2509,6 @@ public class HelperFunctions : MonoBehaviour
         piece.states |= state;
     }
 
-    /*
-    public static void addState(Piece piece, String state)
-    {
-        if (piece.state == "" || piece.state == null)
-        {
-            piece.state = state;
-        }
-        else
-        {
-            if (piece.secondaryState == "" || piece.secondaryState == null)
-            {
-                piece.secondaryState = state;
-            }
-            else
-            {
-                piece.secondaryState = piece.secondaryState + "-" + state;
-            }
-        }
-    }
-    */
-
     public static void addAbility(Piece piece, String ability)
     {
         if (piece.ability == "" || piece.ability == null)
@@ -2740,16 +2587,6 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    /*
-    public static void removeState(Piece piece, string state)
-    {
-        piece.state = piece.state.Replace("-" + state, "");
-        piece.state = piece.state.Replace(state, "");
-        piece.secondaryState = piece.secondaryState.Replace("-" + state, "");
-        piece.secondaryState = piece.secondaryState.Replace(state, "");
-    }
-    */
-
     public static void removeState(Piece piece, PieceState state)
     {
         piece.states &= ~state;
@@ -2760,113 +2597,6 @@ public class HelperFunctions : MonoBehaviour
 
         piece.ability = piece.ability.Replace("-" + ability, "");
         piece.ability = piece.ability.Replace(ability, "");
-    }
-
-    public static Dictionary<Piece, List<string>> getAllEligibleAbilities(int color)
-    {
-        Dictionary<Piece, List<string>> pieceAbilities = new Dictionary<Piece, List<string>>();
-
-        foreach (Piece piece in gameData.piecesDict.Values)
-        {
-            if (piece.color != color)
-            {
-                continue;
-            }
-
-            string[] abilityNames = piece.ability.Split("-");
-            List<string> abilities = new List<string>();
-
-            foreach (string abilityName in abilityNames)
-            {
-                if (abilityName == "Vomit")
-                {
-                    if (piece.storage != null && piece.storage.Count < 1)
-                    {
-                        continue;
-                    }
-                    else if (piece.storage == null)
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "CastleLeft")
-                {
-                    if (!checkCanCastle(color, -1))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "CastleRight")
-                {
-                    if (!checkCanCastle(color, 1))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Unfreeze")
-                {
-                    if (!checkState(piece, PieceState.Frozen))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Freeze")
-                {
-                    if (!isPieceSurroundingColor(piece, piece.color * -1))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Spawn")
-                {
-                    if (piece.numSpawns <= 0)
-                    {
-                        continue;
-                    }
-
-                    if (areSurroundingSquaresFull(piece))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Spit")
-                {
-                    if (piece.storage != null && piece.storage.Count <= 0)
-                    {
-                        continue;
-                    }
-                    else if (piece.storage == null)
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Dematerialize")
-                {
-                    if (checkState(piece, PieceState.Dematerialized))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Materialize")
-                {
-                    if (!checkState(piece, PieceState.Dematerialized))
-                    {
-                        continue;
-                    }
-                }
-                else if (abilityName == "Split")
-                {
-                    //You can always split
-                }
-
-                abilities.Add(abilityName);
-            }
-
-            pieceAbilities.Add(piece, abilities);
-            abilities.Clear();
-        }
-
-        return pieceAbilities;
     }
 
     public static bool checkBounds(int x, int y)
@@ -2935,7 +2665,6 @@ public class HelperFunctions : MonoBehaviour
         return merged;
     }
 
-    //TODO maybe use states
     public static void updatePieceFlags(Piece piece, bool isInCheck)
     {
         //Debug.Log("Updating Flags for: " + piece.name);
@@ -3209,11 +2938,11 @@ public class HelperFunctions : MonoBehaviour
         
         if (ability == "Vomit")
         {
-            int numPieces = placePieces.Count;
+            int numPieces = piece.storage.Count;
             int numCoords = placeCoords.Count;
 
             string debugMsg = "Ability: Vomit -> ";
-            foreach(Piece _p in placePieces)
+            foreach(Piece _p in piece.storage)
             {
                 debugMsg += _p.name + ", ";
             }
@@ -3230,7 +2959,7 @@ public class HelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                     updateBoardGrid(coords_, p_, "a");
                     
@@ -3240,7 +2969,7 @@ public class HelperFunctions : MonoBehaviour
                     piece.storage.Remove(p_);
                 }
 
-                foreach(Piece p_ in placePieces)
+                foreach(Piece p_ in new List<Piece>(piece.storage))
                 {
                     piece.storage.Remove(p_);
                     forceRemove(p_);
@@ -3248,7 +2977,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
-                foreach (Piece p_ in placePieces)
+                foreach (Piece p_ in new List<Piece>(piece.storage))
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numCoords); numCoords--;
@@ -3256,7 +2985,7 @@ public class HelperFunctions : MonoBehaviour
                     int[] c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardGrid(c_, p_, "a");
 
@@ -3393,6 +3122,8 @@ public class HelperFunctions : MonoBehaviour
 
             onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords[0], coords[1]));
 
+            checkPromote(piece, piece.position);
+
             Image img = piece.go.GetComponent<Image>();
             Color c = img.color;
             c.a = 1f;
@@ -3406,6 +3137,7 @@ public class HelperFunctions : MonoBehaviour
             removeAbility(piece, "Split");
 
             forceRemove(piece);
+            updateBoardGrid(coords, piece, "r");
 
             Piece leftPawn = Spawnables.create("LeftPawn", piece.color);
             initPiece(leftPawn, coords);
@@ -3526,6 +3258,16 @@ public class HelperFunctions : MonoBehaviour
         if (!tempInfo.attackerDied) {
             movePieceBoardGrid(piece, piece.position, coords);
             piece.hasMoved = true;
+            if (piece.go == null)
+            {
+                Debug.Log("Piece " + piece.name + " has a null gameobject. Attempting fix");
+
+                piece.go = GameObject.Find(piece.name);
+                if (piece.go)
+                {
+                    piece.go.SetActive(true);
+                }
+            }
             movePiece(piece, toAppend);
         }
         else {
@@ -3559,16 +3301,6 @@ public class HelperFunctions : MonoBehaviour
                 pieceOnSquare.hasMoved = true;
                 movePiece(pieceOnSquare, toAppend);
             }
-        }
-
-        if (piece.stayTurn())
-        {
-            gameData.turn = gameData.turn * -1;
-            gameData.forceStayTurn = piece.color;
-        }
-        else
-        {
-            gameData.forceStayTurn = 0;
         }
 
         // After move collateral
@@ -3642,26 +3374,7 @@ public class HelperFunctions : MonoBehaviour
          */
 
         //Check for Pawn Promote
-        //TODO Generalize to function
-        //TODO make sure this works
-        if (piece.promotesInto != "")
-        {
-            if (piece.position[1] == piece.promotingRow)
-            {
-                string pname = piece.promotesInto;
-                Piece p = Spawnables.create(pname, piece.color);
-
-                if (piece.storage != null)
-                {
-                    foreach (Piece p_ in p.storage)
-                    {
-                        forceRemove(p_);
-                    }
-                }
-                forceRemove(piece);
-                initPiece(p, coords);
-            }
-        }
+        checkPromote(piece, coords);
 
         gameData.turn = gameData.turn * -1;
 
@@ -3698,6 +3411,10 @@ public class HelperFunctions : MonoBehaviour
                 gameData.blackKing = tempKing;
             }
         }
+
+        // Add stacking states
+        piece.states |= tempInfo.stackingStates;
+        tempInfo.stackingStates = PieceState.None;
 
         bool isInCheck = isCheck(king);
         bool isInCheckMate = isCheckMate(king, true);
@@ -4048,6 +3765,30 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    public static void checkPromote(Piece piece, int[] coords)
+    {
+        if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
+        {
+            if (piece.position[1] == piece.promotingRow)
+            {
+                string pname = piece.promotesInto;
+                Piece p = Spawnables.create(pname, piece.color);
+
+                if (piece.storage != null)
+                {
+                    foreach (Piece p_ in piece.storage)
+                    {
+                        forceRemove(p_);
+                    }
+                }
+
+                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1])));
+                forceRemove(piece);
+                initPiece(p, coords);
+            }
+        }
+    }
+
     public static void delayedMove(PieceMove pMove)
     {
         Piece piece = pMove.piece;
@@ -4057,6 +3798,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (true/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
             bool death;
+            bool countDeath;
             GameObject selectedToMoveGo = null;
 
             if (piece.go == null)
@@ -4068,21 +3810,28 @@ public class HelperFunctions : MonoBehaviour
 
             death = deathVars.death;
             selectedToMoveGo = deathVars.selectedToMoveGo;
+            countDeath = deathVars.countDeath;
 
-            if (death)
+            if (selectedToMoveGo == null || gameData.piecesDict.ContainsKey(selectedToMoveGo))
             {
-                Piece destroyer = gameData.piecesDict[selectedToMoveGo];
+                Debug.Log("Delayed Move FAILED for: " + piece.name);
+                if (death)
+                {
+                    Piece destroyer = gameData.piecesDict[selectedToMoveGo];
 
-                onDeaths(destroyer, selectedToMoveGo, square);
+                    onDeaths(destroyer, selectedToMoveGo, square);
+                }
+
+                piece.hasMoved = true;
+                movePieceBoardGrid(piece, piece.position, coords);
+                movePiece(piece, square);
+
+                checkPromote(piece, coords);
             }
-
-            piece.hasMoved = true;
-            movePieceBoardGrid(piece, piece.position, coords);
-            movePiece(piece, square);
         }
     }
 
-    public static (bool death, GameObject selectedToMoveGo) isDeath(GameObject selectedToMoveGo, GameObject square, Piece piece, bool fromDelayed)
+    public static (bool death, GameObject selectedToMoveGo, bool countDeath) isDeath(GameObject selectedToMoveGo, GameObject square, Piece piece, bool fromDelayed)
     {
         bool death = false;
         if (square.transform.childCount != 0)
@@ -4092,7 +3841,11 @@ public class HelperFunctions : MonoBehaviour
             death = true;
             //Debug.Log("Checking for Death");
 
-            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && !checkState(piece, PieceState.Murderous))
+            if (
+                !getColorsOnSquare(square, true).Contains(piece.color * -1) && (
+                    !checkState(piece, PieceState.Murderous)
+                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
+                )
             {
                 death = false;
             }
@@ -4114,21 +3867,46 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        return (death, selectedToMoveGo);
+        bool countDeath = death;
+        if (countDeath)
+        {
+            if (checkState(piece, PieceState.Jailer))
+            {
+                countDeath = false;
+            }
+
+            if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Crook))
+            {
+                countDeath = false;
+            }
+
+            List<Piece> piecesOnSquare = getPiecesOnSquare(square);
+            foreach(Piece p in piecesOnSquare)
+            {
+                if (p.lives == 0)
+                {
+                    continue;
+                }
+
+                countDeath = false;
+            }
+        }
+
+        return (death, selectedToMoveGo, countDeath);
     }
 
-    public bool performPreMove()
+    public (bool death, bool countDeath) performPreMove()
     {
-        moveSound.Play();
+        //moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 
         bool death = deathVars.death;
+        bool countDeath = deathVars.countDeath;
         GameObject selectedToMoveGo = deathVars.selectedToMoveGo;
 
         if (death && selectedToMoveGo != null)
         {
-            //TODO bug null sometimes example when hungrypiece promotes
             //Piece destroyer = gameData.piecesDict[selectedToMoveGo];
             Piece destroyer = gameData.selectedToMovePiece;
 
@@ -4138,7 +3916,7 @@ public class HelperFunctions : MonoBehaviour
             //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
         }
 
-        return death;
+        return (death, countDeath);
     }
 
     public static Piece clonePiece(Piece original)
@@ -4181,6 +3959,11 @@ public class HelperFunctions : MonoBehaviour
                 clone.storage.Add(clonePiece(p));
             }
         }
+
+        //clone.dependentAttacks = clone2dArray(original.dependentAttacks);
+        //clone.positionIndependentMoves = clone2dArray(original.positionIndependentMoves);
+
+        /*
         clone.moves = clone2dArray(original.moves);
         clone.oneTimeMoves = clone2dArray(original.oneTimeMoves);
         clone.moveAndAttacks = clone2dArray(original.moveAndAttacks);
@@ -4190,14 +3973,27 @@ public class HelperFunctions : MonoBehaviour
         clone.conditionalAttacks = clone2dArray(original.conditionalAttacks);
         clone.jumpAttacks = clone2dArray(original.jumpAttacks);
         clone.attacks = clone2dArray(original.attacks);
-        clone.dependentAttacks = clone2dArray(original.dependentAttacks);
-        clone.interactiveAttacks = clone2dArray(original.interactiveAttacks);
-        clone.positionIndependentMoves = clone2dArray(original.positionIndependentMoves);
         clone.forceStayTurnMoves = clone2dArray(original.forceStayTurnMoves);
         clone.flagMove1 = clone2dArray(original.flagMove1);
         clone.flagMove2 = clone2dArray(original.flagMove2);
         clone.pushMoves = clone2dArray(original.pushMoves);
         clone.enPassantMoves = clone2dArray(original.enPassantMoves);
+        */
+
+        clone.moves = original.moves;
+        clone.oneTimeMoves = original.oneTimeMoves;
+        clone.moveAndAttacks = original.moveAndAttacks;
+        clone.oneTimeMoveAndAttacks = original.oneTimeMoveAndAttacks;
+        clone.murderousAttacks = original.murderousAttacks;
+        clone.condition = original.condition;
+        clone.conditionalAttacks = original.conditionalAttacks;
+        clone.jumpAttacks = original.jumpAttacks;
+        clone.attacks = original.attacks;
+        clone.flagMove1 = original.flagMove1;
+        clone.flagMove2 = original.flagMove2;
+        clone.pushMoves = original.pushMoves;
+        clone.enPassantMoves = original.enPassantMoves;
+
         clone.position = original.position?.ToArray();
         clone.hasMoved = original.hasMoved;
         clone.wImage = original.wImage.ToString();
@@ -4283,8 +4079,6 @@ public class HelperFunctions : MonoBehaviour
         gameData.bestMovePiece = null;
         gameData.bestMoveCoords = new int[] { 0, 0 };
 
-        gameData.forceStayTurn = 0;
-
         gameData.boardGrid = new List<List<List<Piece>>>();
 
         gameData.panelCodes = new List<string>();
@@ -4326,5 +4120,10 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void addBotMessage(string message)
+    {
+        panel.AddBotMessage(message);
     }
 }

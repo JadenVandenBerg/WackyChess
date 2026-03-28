@@ -40,10 +40,6 @@ public class Rook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -60,21 +56,6 @@ public class Rook : Piece
     public String wImage { get; set; } = "Images/Rooks/wRook";
     public String bImage { get; set; } = "Images/Rooks/bRook";
     public String name { get; set; } = "Rook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -142,10 +123,6 @@ public class MurderousRook : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -157,21 +134,6 @@ public class MurderousRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wMurderousRook";
     public String bImage { get; set; } = "Images/Rooks/bMurderousRook";
     public String name { get; set; } = "MurderousRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -238,10 +200,6 @@ public class GhostRook : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -253,21 +211,6 @@ public class GhostRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wGhostRook";
     public String bImage { get; set; } = "Images/Rooks/bGhostRook";
     public String name { get; set; } = "Ghost Rook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -334,10 +277,6 @@ public class GhoulRook : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -349,21 +288,6 @@ public class GhoulRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wGhoulRook";
     public String bImage { get; set; } = "Images/Rooks/bGhoulRook";
     public String name { get; set; } = "Ghoul Rook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -430,10 +354,6 @@ public class OneTimeRook : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -445,21 +365,6 @@ public class OneTimeRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wOneTimeRook";
     public String bImage { get; set; } = "Images/Rooks/bOneTimeRook";
     public String name { get; set; } = "One Time Rook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -522,10 +427,6 @@ public class ElectricRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -542,21 +443,6 @@ public class ElectricRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wElectricRook";
     public String bImage { get; set; } = "Images/Rooks/bElectricRook";
     public String name { get; set; } = "Electric Rook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -620,10 +506,6 @@ public class InfiniteRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -640,21 +522,6 @@ public class InfiniteRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wInfiniteRook";
     public String bImage { get; set; } = "Images/Rooks/bInfiniteRook";
     public String name { get; set; } = "InfiniteRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -718,10 +585,6 @@ public class PortalRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -738,21 +601,6 @@ public class PortalRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wPortalRook";
     public String bImage { get; set; } = "Images/Rooks/bPortalRook";
     public String name { get; set; } = "PortalRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -816,10 +664,6 @@ public class AtomicRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -836,21 +680,6 @@ public class AtomicRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wAtomicRook";
     public String bImage { get; set; } = "Images/Rooks/bAtomicRook";
     public String name { get; set; } = "AtomicRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -914,10 +743,6 @@ public class LandmineRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -934,21 +759,6 @@ public class LandmineRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wLandmineRook";
     public String bImage { get; set; } = "Images/Rooks/bLandmineRook";
     public String name { get; set; } = "LandmineRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1007,10 +817,6 @@ public class LiteRook : Piece
     public int[,] moveAndAttacks { get; set; } = { };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1027,21 +833,6 @@ public class LiteRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wLiteRook";
     public String bImage { get; set; } = "Images/Rooks/bLiteRook";
     public String name { get; set; } = "LiteRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1109,10 +900,6 @@ public class SuperGhostRook : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1124,21 +911,6 @@ public class SuperGhostRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wSuperGhostRook";
     public String bImage { get; set; } = "Images/Rooks/bSuperGhostRook";
     public String name { get; set; } = "SuperGhostRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1201,10 +973,6 @@ public class Empress : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1224,21 +992,6 @@ public class Empress : Piece
     public String wImage { get; set; } = "Images/Rooks/wEmpress";
     public String bImage { get; set; } = "Images/Rooks/bEmpress";
     public String name { get; set; } = "RookEmpress";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1302,10 +1055,6 @@ public class FragileRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1322,21 +1071,6 @@ public class FragileRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wFragileRook";
     public String bImage { get; set; } = "Images/Rooks/bFragileRook";
     public String name { get; set; } = "FragileRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1401,10 +1135,6 @@ public class RoyalRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1421,21 +1151,6 @@ public class RoyalRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wRoyalRook";
     public String bImage { get; set; } = "Images/Rooks/bRoyalRook";
     public String name { get; set; } = "RoyalRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1499,10 +1214,6 @@ public class MonochromeRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1519,21 +1230,6 @@ public class MonochromeRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wMonochromeRook";
     public String bImage { get; set; } = "Images/Rooks/bMonochromeRook";
     public String name { get; set; } = "MonochromeRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1597,10 +1293,6 @@ public class CrowdingRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1617,21 +1309,6 @@ public class CrowdingRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wCrowdingRook";
     public String bImage { get; set; } = "Images/Rooks/bCrowdingRook";
     public String name { get; set; } = "CrowdingRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1695,10 +1372,6 @@ public class HungryRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1715,21 +1388,6 @@ public class HungryRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wHungryRook";
     public String bImage { get; set; } = "Images/Rooks/bHungryRook";
     public String name { get; set; } = "HungryRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1793,10 +1451,6 @@ public class CaptureTheFlagRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1813,21 +1467,6 @@ public class CaptureTheFlagRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wCaptureTheFlagRook";
     public String bImage { get; set; } = "Images/Rooks/bCaptureTheFlagRook";
     public String name { get; set; } = "CaptureTheFlagRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1891,10 +1530,6 @@ public class FreezingRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1911,21 +1546,6 @@ public class FreezingRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wFreezingRook";
     public String bImage { get; set; } = "Images/Rooks/bFreezingRook";
     public String name { get; set; } = "FreezingRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1989,10 +1609,6 @@ public class CloningRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2009,21 +1625,6 @@ public class CloningRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wCloningRook";
     public String bImage { get; set; } = "Images/Rooks/bCloningRook";
     public String name { get; set; } = "CloningRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Rook";
@@ -2087,10 +1688,6 @@ public class UndeadRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2107,21 +1704,6 @@ public class UndeadRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wUndeadRook";
     public String bImage { get; set; } = "Images/Rooks/bUndeadRook";
     public String name { get; set; } = "UndeadRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "ZombiePawn";
@@ -2185,10 +1767,6 @@ public class PromotionRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2205,21 +1783,6 @@ public class PromotionRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wPromotionRook";
     public String bImage { get; set; } = "Images/Rooks/bPromotionRook";
     public String name { get; set; } = "PromotionRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2283,10 +1846,6 @@ public class DefuserRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2303,21 +1862,6 @@ public class DefuserRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wDefuserRook";
     public String bImage { get; set; } = "Images/Rooks/bDefuserRook";
     public String name { get; set; } = "DefuserRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2381,10 +1925,6 @@ public class SpittingRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2401,21 +1941,6 @@ public class SpittingRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wSpittingRook";
     public String bImage { get; set; } = "Images/Rooks/bSpittingRook";
     public String name { get; set; } = "SpittingRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2479,10 +2004,6 @@ public class PhantomRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2499,21 +2020,6 @@ public class PhantomRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wPhantomRook";
     public String bImage { get; set; } = "Images/Rooks/bPhantomRook";
     public String name { get; set; } = "PhantomRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2577,10 +2083,6 @@ public class StackingRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2597,21 +2099,6 @@ public class StackingRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wStackingRook";
     public String bImage { get; set; } = "Images/Rooks/bStackingRook";
     public String name { get; set; } = "StackingRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2675,10 +2162,6 @@ public class JailRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2695,21 +2178,6 @@ public class JailRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wJailRook";
     public String bImage { get; set; } = "Images/Rooks/bJailRook";
     public String name { get; set; } = "JailRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2773,10 +2241,6 @@ public class Crook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2793,21 +2257,6 @@ public class Crook : Piece
     public String wImage { get; set; } = "Images/Rooks/wCrook";
     public String bImage { get; set; } = "Images/Rooks/bCrook";
     public String name { get; set; } = "Crook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2873,10 +2322,6 @@ public class PiggybackRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2893,21 +2338,6 @@ public class PiggybackRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wPiggybackRook";
     public String bImage { get; set; } = "Images/Rooks/bPiggybackRook";
     public String name { get; set; } = "PiggybackRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2982,10 +2412,6 @@ public class JockeyRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3002,21 +2428,6 @@ public class JockeyRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wJockeyRook";
     public String bImage { get; set; } = "Images/Rooks/bJockeyRook";
     public String name { get; set; } = "JockeyRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3089,10 +2500,6 @@ public class DelayedRook : Piece
     };
     public int[,] oneTimeMoveAndAttacks { get; set; } = { };
     public int[,] murderousAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3109,21 +2516,6 @@ public class DelayedRook : Piece
     public String wImage { get; set; } = "Images/Rooks/wDelayedRook";
     public String bImage { get; set; } = "Images/Rooks/bDelayedRook";
     public String name { get; set; } = "DelayedRook";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";

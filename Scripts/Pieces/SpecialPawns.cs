@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections.Generic;
 using Photon.Pun;
 
+/*
 public class MurderousPawn : Piece
 {
     public int color { get; set; } = 1; //1 White, -1 Black
@@ -20,9 +21,6 @@ public class MurderousPawn : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
     public int[,] dependentAttacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -76,17 +74,6 @@ public class MurderousPawn : Piece
         return dependentAttacks;
     }
 
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
@@ -114,6 +101,7 @@ public class MurderousPawn : Piece
         s.preserveAspect = true;
     }
 }
+*/
 
 public class GhostPawn : Piece
 {
@@ -126,11 +114,7 @@ public class GhostPawn : Piece
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
+    public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -163,23 +147,6 @@ public class GhostPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        dependentAttacks = new int[,] { };
-
-        return dependentAttacks;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -221,10 +188,6 @@ public class GhoulPawn : Piece
     public int[,] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { { 0, 2 } };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -257,21 +220,6 @@ public class GhoulPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -301,6 +249,7 @@ public class GhoulPawn : Piece
     }
 }
 
+/*
 public class OneTimePawn : Piece
 {
     public int color { get; set; } = 1; //1 White, -1 Black
@@ -314,9 +263,6 @@ public class OneTimePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] dependentAttacks { get; set; } = { { 1, 1 }, { -1, 1 } };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -374,17 +320,6 @@ public class OneTimePawn : Piece
         return dependentAttacks;
     }
 
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
-
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
@@ -412,6 +347,7 @@ public class OneTimePawn : Piece
         s.preserveAspect = true;
     }
 }
+*/
 
 public class ElectricPawn : Piece
 {
@@ -425,10 +361,6 @@ public class ElectricPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -461,21 +393,6 @@ public class ElectricPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -518,10 +435,6 @@ public class ShieldPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -555,21 +468,6 @@ public class ShieldPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -612,10 +510,6 @@ public class InfinitePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -649,21 +543,6 @@ public class InfinitePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -706,10 +585,6 @@ public class PortalPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -743,46 +618,6 @@ public class PortalPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        /*int[,] portalMoves = new int[,] { };
-        if (position[0] == 1)
-        {
-            int posY_ = position[1] + 1 * color;
-            GameObject square = HelperFunctions.findSquare(8, posY_);
-            Piece piece = HelperFunctions.getPieceOnSquareDebug(square);
-            Debug.Log(HelperFunctions.findCoords(square)[0] + " " + HelperFunctions.findCoords(square)[1]);
-            if (piece != null && piece.color != color)
-            {
-                Debug.Log("HERE");
-                portalMoves = HelperFunctions.addTo2DArray(portalMoves, new int[] { 7, 1 });
-            }
-        }
-        else if (position[0] == 8)
-        {
-            int posY_ = position[1] + 1;
-            GameObject square = HelperFunctions.findSquare(1, posY_);
-            Piece piece = HelperFunctions.getPieceOnSquareDebug(square);
-            if (piece != null && piece.color != color)
-            {
-                portalMoves = HelperFunctions.addTo2DArray(portalMoves, new int[] { -7, 1 });
-            }
-        }
-
-        return portalMoves;*/
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -825,10 +660,6 @@ public class AtomicPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -862,21 +693,6 @@ public class AtomicPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -919,10 +735,6 @@ public class LandminePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -956,21 +768,6 @@ public class LandminePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1013,10 +810,6 @@ public class SpontaneouslyCombustingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1050,21 +843,6 @@ public class SpontaneouslyCombustingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1107,10 +885,6 @@ public class SuperGhostPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { 1, 1 }, { -1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1143,21 +917,6 @@ public class SuperGhostPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1199,10 +958,6 @@ public class FragilePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1236,21 +991,6 @@ public class FragilePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1293,10 +1033,6 @@ public class CrowdingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1330,21 +1066,6 @@ public class CrowdingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1387,10 +1108,6 @@ public class HungryPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1424,21 +1141,6 @@ public class HungryPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1481,10 +1183,6 @@ public class CaptureTheFlagPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1518,21 +1216,6 @@ public class CaptureTheFlagPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1575,10 +1258,6 @@ public class FreezingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1612,21 +1291,6 @@ public class FreezingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1669,10 +1333,6 @@ public class CloningPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1706,21 +1366,6 @@ public class CloningPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Pawn";
@@ -1763,10 +1408,6 @@ public class ZombiePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1800,21 +1441,6 @@ public class ZombiePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1857,10 +1483,6 @@ public class UndeadPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1894,21 +1516,6 @@ public class UndeadPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "ZombiePawn";
@@ -1951,10 +1558,6 @@ public class PromotionPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1988,21 +1591,6 @@ public class PromotionPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2045,10 +1633,6 @@ public class DefuserPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2082,21 +1666,6 @@ public class DefuserPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2139,10 +1708,6 @@ public class SpittingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2176,21 +1741,6 @@ public class SpittingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = 1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2233,10 +1783,6 @@ public class PhantomPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2270,21 +1816,6 @@ public class PhantomPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2327,10 +1858,6 @@ public class SplittingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2364,21 +1891,6 @@ public class SplittingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2421,10 +1933,6 @@ public class PromotingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2458,21 +1966,6 @@ public class PromotingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2515,10 +2008,6 @@ public class StackingPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2552,21 +2041,6 @@ public class StackingPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2609,10 +2083,6 @@ public class JailPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2646,21 +2116,6 @@ public class JailPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2703,10 +2158,6 @@ public class PiggybackPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2742,21 +2193,6 @@ public class PiggybackPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2809,10 +2245,6 @@ public class JockeyPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2848,21 +2280,6 @@ public class JockeyPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2915,10 +2332,6 @@ public class ProtectivePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { }; //Flag: Not in check
     public int[,] flagMove2 { get; set; } = {
         { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
@@ -2963,21 +2376,6 @@ public class ProtectivePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3030,10 +2428,6 @@ public class PAWN : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3069,21 +2463,6 @@ public class PAWN : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3136,10 +2515,6 @@ public class DoublePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3175,21 +2550,6 @@ public class DoublePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3242,10 +2602,6 @@ public class OppressivePawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3279,21 +2635,6 @@ public class OppressivePawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3338,10 +2679,6 @@ public class DelayedPawn : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { { -1, 1 }, { 1, 1 } };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3373,21 +2710,6 @@ public class DelayedPawn : Piece
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";

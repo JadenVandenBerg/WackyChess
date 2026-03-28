@@ -312,38 +312,6 @@ public interface Piece
 
 
     /*
-     * Dependent Attacks
-     * Attacks set by a method for each individual piece.
-     * Method is called before moves need to be calculated for each piece
-     * Condition is different for every piece
-     */
-    public int[,] dependentAttacks { get; set; }
-
-
-    /*
-     * Interactive Attacks
-     * Attacks that impact the pieces around them
-     * Method is called to determine what attacks can be done (within piece),
-     * secondary method is called to determine how the various pieces move (in game)
-     */
-    public int[,] interactiveAttacks { get; set; }
-
-
-    /*
-     * Position Indepent Moves (not implemented yet)
-     * Attacks that go to set squares (also attacks)
-     */
-    public int[,] positionIndependentMoves { get; set; }
-
-
-    /*
-     * Force Stay Turn Moves
-     * Moves (not attacks) that happen after its been your turn for more than 1 round
-     */
-    public int[,] forceStayTurnMoves { get; set; }
-
-
-    /*
      * Flag Moves
      * Can be one move set or another, depending on the flag "flagMove"
      */
@@ -384,27 +352,6 @@ public interface Piece
      * Conditions different for all pieces
      */
     public bool condition { get; set; }
-
-    /*
-     * SetDependentMoves (not implemented yet)
-     * Populates the dependent moves
-     * Moves determined by the method each piece has
-     */
-    public int[,] dependentMovesSet();
-
-    /*
-     * SetInteractiveMoves (not implemented yet)
-     * Populates the interactive moves
-     * Moves can interact with pieces without landing on that square
-     */
-    public int[,] interactiveMovesSet();
-
-
-    /*
-     * StayTurn
-     * Determines if it should stay your turn after a move is made
-     */
-    public bool stayTurn();
 
 
     /*

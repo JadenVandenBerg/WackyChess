@@ -44,10 +44,6 @@ public class Bishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -59,22 +55,6 @@ public class Bishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wBishop";
     public String bImage { get; set; } = "Images/Bishops/bBishop";
     public String name { get; set; } = "Bishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -143,10 +123,6 @@ public class MurderousBishop : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -157,22 +133,7 @@ public class MurderousBishop : Piece
 
     public String wImage { get; set; } = "Images/Bishops/wMurderousBishop";
     public String bImage { get; set; } = "Images/Bishops/bMurderousBishop";
-    public String name { get; set; } = "Murderous Bishop";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
+    public String name { get; set; } = "MurderousBishop";
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -194,14 +155,11 @@ public class MurderousBishop : Piece
 
         HelperFunctions.UpdateMovesForColor(this);
 
-        Sprite sp;
+        Image s = go.AddComponent<Image>();
+        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        if (color == 1)
-        {
-            sp = Resources.Load<Sprite>(wImage);
-        } else {
-            sp = Resources.Load<Sprite>(bImage);
-        }
+        s.sprite = sp;
+        s.preserveAspect = true;
     }
 }
 
@@ -243,10 +201,6 @@ public class GhostBishop : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -258,21 +212,6 @@ public class GhostBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wGhostBishop";
     public String bImage { get; set; } = "Images/Bishops/bGhostBishop";
     public String name { get; set; } = "Ghost Bishop";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -339,10 +278,6 @@ public class GhoulBishop : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -354,21 +289,6 @@ public class GhoulBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wGhoulBishop";
     public String bImage { get; set; } = "Images/Bishops/bGhoulBishop";
     public String name { get; set; } = "Ghoul Bishop";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -436,10 +356,6 @@ public class OneTimeBishop : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -451,21 +367,6 @@ public class OneTimeBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wOneTimeBishop";
     public String bImage { get; set; } = "Images/Bishops/bOneTimeBishop";
     public String name { get; set; } = "One Time Bishop";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -533,10 +434,6 @@ public class ElectricBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -548,22 +445,6 @@ public class ElectricBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wElectricBishop";
     public String bImage { get; set; } = "Images/Bishops/bElectricBishop";
     public String name { get; set; } = "Electric Bishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -632,10 +513,6 @@ public class InfiniteBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -647,22 +524,6 @@ public class InfiniteBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wInfiniteBishop";
     public String bImage { get; set; } = "Images/Bishops/bInfiniteBishop";
     public String name { get; set; } = "InfiniteBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -731,10 +592,6 @@ public class PortalBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -746,22 +603,6 @@ public class PortalBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wPortalBishop";
     public String bImage { get; set; } = "Images/Bishops/bPortalBishop";
     public String name { get; set; } = "PortalBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -830,10 +671,6 @@ public class AtomicBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -845,22 +682,6 @@ public class AtomicBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wAtomicBishop";
     public String bImage { get; set; } = "Images/Bishops/bAtomicBishop";
     public String name { get; set; } = "AtomicBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -929,10 +750,6 @@ public class LandmineBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -944,22 +761,6 @@ public class LandmineBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wLandmineBishop";
     public String bImage { get; set; } = "Images/Bishops/bLandmineBishop";
     public String name { get; set; } = "LandmineBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1028,10 +829,6 @@ public class ColorChangingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1043,22 +840,6 @@ public class ColorChangingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wColorChangingBishop";
     public String bImage { get; set; } = "Images/Bishops/bColorChangingBishop";
     public String name { get; set; } = "ColorChangingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1122,10 +903,6 @@ public class LiteBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1137,22 +914,6 @@ public class LiteBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wLiteBishop";
     public String bImage { get; set; } = "Images/Bishops/bLiteBishop";
     public String name { get; set; } = "LiteBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1221,10 +982,6 @@ public class SuperGhostBishop : Piece
     public bool condition { get; set; } = false;
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1236,21 +993,6 @@ public class SuperGhostBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wSuperGhostBishop";
     public String bImage { get; set; } = "Images/Bishops/bSuperGhostBishop";
     public String name { get; set; } = "SuperGhostBishop";
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { }; ;
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1321,10 +1063,6 @@ public class Princess : Piece
         { 1, -2 }, { -1, -2 }, { 2, -1 },{ -2, -1 }
     };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1336,22 +1074,6 @@ public class Princess : Piece
     public String wImage { get; set; } = "Images/Bishops/wPrincess";
     public String bImage { get; set; } = "Images/Bishops/bPrincess";
     public String name { get; set; } = "BishopPrincess";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1420,10 +1142,6 @@ public class FragileBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1435,22 +1153,6 @@ public class FragileBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wFragileBishop";
     public String bImage { get; set; } = "Images/Bishops/bFragileBishop";
     public String name { get; set; } = "FragileBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1520,10 +1222,6 @@ public class RoyalBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1535,22 +1233,6 @@ public class RoyalBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wRoyalBishop";
     public String bImage { get; set; } = "Images/Bishops/bRoyalBishop";
     public String name { get; set; } = "RoyalBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1619,10 +1301,6 @@ public class BouncingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1634,22 +1312,6 @@ public class BouncingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wBouncingBishop";
     public String bImage { get; set; } = "Images/Bishops/bBouncingBishop";
     public String name { get; set; } = "BouncingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1718,10 +1380,6 @@ public class CrowdingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1733,22 +1391,6 @@ public class CrowdingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wCrowdingBishop";
     public String bImage { get; set; } = "Images/Bishops/bCrowdingBishop";
     public String name { get; set; } = "CrowdingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1817,10 +1459,6 @@ public class HungryBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1832,22 +1470,6 @@ public class HungryBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wHungryBishop";
     public String bImage { get; set; } = "Images/Bishops/bHungryBishop";
     public String name { get; set; } = "HungryBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -1916,10 +1538,6 @@ public class CaptureTheFlagBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -1931,22 +1549,6 @@ public class CaptureTheFlagBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wCaptureTheFlagBishop";
     public String bImage { get; set; } = "Images/Bishops/bCaptureTheFlagBishop";
     public String name { get; set; } = "CaptureTheFlagBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2015,10 +1617,6 @@ public class FreezingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2030,22 +1628,6 @@ public class FreezingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wFreezingBishop";
     public String bImage { get; set; } = "Images/Bishops/bFreezingBishop";
     public String name { get; set; } = "FreezingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2114,10 +1696,6 @@ public class CloningBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2129,22 +1707,6 @@ public class CloningBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wCloningBishop";
     public String bImage { get; set; } = "Images/Bishops/bCloningBishop";
     public String name { get; set; } = "CloningBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "Bishop";
@@ -2213,10 +1775,6 @@ public class UndeadBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2228,22 +1786,6 @@ public class UndeadBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wUndeadBishop";
     public String bImage { get; set; } = "Images/Bishops/bUndeadBishop";
     public String name { get; set; } = "UndeadBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "ZombiePawn";
@@ -2312,10 +1854,6 @@ public class PromotionBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2327,22 +1865,6 @@ public class PromotionBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wPromotionBishop";
     public String bImage { get; set; } = "Images/Bishops/bPromotionBishop";
     public String name { get; set; } = "PromotionBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2411,10 +1933,6 @@ public class DefuserBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2426,22 +1944,6 @@ public class DefuserBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wDefuserBishop";
     public String bImage { get; set; } = "Images/Bishops/bDefuserBishop";
     public String name { get; set; } = "DefuserBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2510,10 +2012,6 @@ public class SpittingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2525,22 +2023,6 @@ public class SpittingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wSpittingBishop";
     public String bImage { get; set; } = "Images/Bishops/bSpittingBishop";
     public String name { get; set; } = "SpittingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2609,10 +2091,6 @@ public class PhantomBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2624,22 +2102,6 @@ public class PhantomBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wPhantomBishop";
     public String bImage { get; set; } = "Images/Bishops/bPhantomBishop";
     public String name { get; set; } = "PhantomBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2708,10 +2170,6 @@ public class StackingBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2723,22 +2181,6 @@ public class StackingBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wStackingBishop";
     public String bImage { get; set; } = "Images/Bishops/bStackingBishop";
     public String name { get; set; } = "StackingBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2807,10 +2249,6 @@ public class JailBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2822,22 +2260,6 @@ public class JailBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wJailBishop";
     public String bImage { get; set; } = "Images/Bishops/bJailBishop";
     public String name { get; set; } = "JailBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -2908,10 +2330,6 @@ public class PiggybackBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -2923,22 +2341,6 @@ public class PiggybackBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wPiggybackBishop";
     public String bImage { get; set; } = "Images/Bishops/bPiggybackBishop";
     public String name { get; set; } = "PiggybackBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3018,10 +2420,6 @@ public class JockeyBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3033,22 +2431,6 @@ public class JockeyBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wJockeyBishop";
     public String bImage { get; set; } = "Images/Bishops/bJockeyBishop";
     public String name { get; set; } = "JockeyBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";
@@ -3126,10 +2508,6 @@ public class DelayedBishop : Piece
     public int[,] conditionalAttacks { get; set; } = { };
     public int[,] jumpAttacks { get; set; } = { };
     public int[,] attacks { get; set; } = { };
-    public int[,] dependentAttacks { get; set; } = { };
-    public int[,] interactiveAttacks { get; set; } = { };
-    public int[,] positionIndependentMoves { get; set; } = { };
-    public int[,] forceStayTurnMoves { get; set; } = { };
     public int[,] flagMove1 { get; set; } = { };
     public int[,] flagMove2 { get; set; } = { };
     public int[,] pushMoves { get; set; } = { };
@@ -3141,22 +2519,6 @@ public class DelayedBishop : Piece
     public String wImage { get; set; } = "Images/Bishops/wDelayedBishop";
     public String bImage { get; set; } = "Images/Bishops/bDelayedBishop";
     public String name { get; set; } = "DelayedBishop";
-
-    public int[,] dependentMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public int[,] interactiveMovesSet()
-    {
-        return new int[,] { };
-    }
-
-    public bool stayTurn()
-    {
-        canMoveTwice = 0;
-        return false;
-    }
 
     public int flag { get; set; } = 0;
     public string spawnable { get; set; } = "";

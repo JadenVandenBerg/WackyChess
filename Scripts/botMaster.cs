@@ -22,16 +22,6 @@ public class botMaster : MonoBehaviour
     public GameObject checkmateUI;
     public HelperFunctions helper;
 
-    // public Piece pawn, pawn2, pawn3, pawn4, pawn5, pawn6, pawn7, pawn8;
-    // public Piece bpawn, bpawn2, bpawn3, bpawn4, bpawn5, bpawn6, bpawn7, bpawn8;
-    // public Piece wRook, wRook2, bRook, bRook2;
-    // public Piece wBishop, wBishop2, bBishop, bBishop2;
-    // public Piece wKnight, wKnight2, bKnight, bKnight2;
-    // public Piece wQueen, bQueen;
-    // public Piece wKing, bKing;
-
-    //public GameObject wp, bp, t, a;
-
     BotTemplate botWhite;
     BotTemplate botBlack;
     bool started = false;
@@ -42,6 +32,7 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
+        /*
         if (nonResettables.botTournament == null)
         {
             List<string> randomBots = nonResettables.get8RandomBots();
@@ -74,19 +65,20 @@ public class botMaster : MonoBehaviour
             gameOver = true;
             yield return null;
         }
+        */
         
         
         if (!gameOver)
         {
-            botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
-            botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+            //botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+            //botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
 
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
 
-            //botWhite = new KamikazeBot(1);
-            //botBlack = new Bloodbot(-1);
+            botWhite = new KamikazeBot(1);
+            botBlack = new Bloodbot(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 

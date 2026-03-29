@@ -3256,7 +3256,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         if (!tempInfo.attackerDied) {
-            movePieceBoardGrid(piece, piece.position, coords);
+            
             piece.hasMoved = true;
             if (piece.go == null)
             {
@@ -3268,7 +3268,19 @@ public class HelperFunctions : MonoBehaviour
                     piece.go.SetActive(true);
                 }
             }
-            movePiece(piece, toAppend);
+
+            if (piece.go == null)
+            {
+                //Piece died during delayed move
+                updateBoardGrid(piece.position, piece, "r");
+            }
+            else
+            {
+                movePieceBoardGrid(piece, piece.position, coords);
+                movePiece(piece, toAppend);
+            }
+
+            
         }
         else {
             updateBoardGrid(piece.position, piece, "r");

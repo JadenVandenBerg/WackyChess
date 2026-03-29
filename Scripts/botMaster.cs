@@ -42,10 +42,17 @@ public class botMaster : MonoBehaviour
     {
         
         // Tournament
-        
         if (nonResettables.botTournament == null)
         {
             List<string> randomBots = nonResettables.get8RandomBots();
+
+            StringBuilder sb = new StringBuilder();
+            foreach(string bot in randomBots)
+            {
+                sb.Append(bot + " ");
+            }
+            Debug.Log("Starting Tournament With: " + sb);
+
             nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
         }
 
@@ -78,7 +85,7 @@ public class botMaster : MonoBehaviour
             gameData.turn = 1;
             gameData.board = board2;
 
-            //botWhite = new BottusMaximus(1);
+            //botWhite = new KamikazeBot(1);
             //botBlack = new Bloodbot(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
@@ -896,6 +903,11 @@ public class botMaster : MonoBehaviour
                     if (p.color == bot.color)
                     {
                         bot.pieces.Add(p);
+
+                        if (p.baseType == "King")
+                        {
+                            bot.king = p;
+                        }
                     }
                     else
                     {

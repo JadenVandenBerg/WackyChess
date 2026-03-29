@@ -508,7 +508,6 @@ public class BotHelperFunctions : MonoBehaviour
         }
     }
 
-    //List so its easier to randomize. Each Dict has only one entry
     public static (List<PieceMoveList> pieceMoveList, List<PieceAbility> piecesAbilities) getAllPossibleBotMoves(BotTemplate bot, BoardState bs, int color)
     {
         List<PieceMoveList> totalMoves = new List<PieceMoveList>();
@@ -530,6 +529,35 @@ public class BotHelperFunctions : MonoBehaviour
         List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, color);
 
         return (totalMoves, pieceAbilities);
+    }
+
+    public static List<NextMove> getAllPossibleBotPieceMoves(BoardState bs, Piece piece)
+    {
+        List<PieceMoveList> totalMoves = new List<PieceMoveList>();
+
+        List<NextMove> allMoves = new List<NextMove>();
+        List<int[]> moves = getIsolatedStatePieceMoves(piece, bs);
+
+        if (moves != null && moves.Count > 0)
+        {
+            totalMoves.Add(new PieceMoveList(piece, moves));
+        }
+
+        foreach(PieceMoveList pml in totalMoves)
+        {
+            Piece piece_ = pml.piece;
+            List<int[]> _mL = pml.moves;
+
+            foreach (int[] coords in _mL)
+            {
+                Move mv = new Move(piece_, coords);
+                NextMove pieceMove = new NextMove(mv);
+
+                allMoves.Add(pieceMove);
+            }
+        }
+
+        return allMoves;
     }
 
     public static List<NextMove> getAllPossibleBotMovesAndAbilities(BotTemplate bot, BoardState bs, int color)

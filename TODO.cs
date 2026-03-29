@@ -7,6 +7,7 @@
 //problems with kings being stacked on other peices with checkmate
 //if heartbroken king is in play, bots avoid capturing queen
 //opponent jockey somehow ended up on stacking king
+// update piece flags scaredy king in simulated move
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight

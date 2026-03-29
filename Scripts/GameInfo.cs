@@ -164,7 +164,8 @@ public static class nonResettables
             "RandomBot",
             "OneMoveBot",
             "IdiotBot",
-            "G2EBot"
+            "G2EBot",
+            "KamikazeBot",
         };
 
         List<string> result = new List<string>();

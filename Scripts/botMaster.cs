@@ -30,55 +30,68 @@ public class botMaster : MonoBehaviour
 
     IEnumerator Start()
     {
-        
+
         // Tournament
-        /*
-        if (nonResettables.botTournament == null)
-        {
-            List<string> randomBots = nonResettables.get8RandomBots();
+        //Change this to true to run a tournament with random bots
+        //This will only work for my bots, if you want to change that you can comment out
+        //List<string> randomBots = nonResettables.get8RandomBots();
+        //and replace it with
+        //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
+        nonResettables.isBotTournament = false;
 
-            StringBuilder sb = new StringBuilder();
-            foreach(string bot in randomBots)
+        if (nonResettables.isBotTournament)
+        {
+            if (nonResettables.botTournament == null)
             {
-                sb.Append(bot + " ");
+                List<string> randomBots = nonResettables.get8RandomBots();
+
+                StringBuilder sb = new StringBuilder();
+                foreach (string bot in randomBots)
+                {
+                    sb.Append(bot + " ");
+                }
+                Debug.Log("Starting Tournament With: " + sb);
+
+                nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
             }
-            Debug.Log("Starting Tournament With: " + sb);
 
-            nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
+            var bots = nonResettables.botTournament.nextGame();
+
+            if (bots.botWhite == "")
+            {
+                gameOver = true;
+                yield return null;
+            }
+
+            Type botWhiteType = Type.GetType(bots.botWhite + ", Assembly-CSharp");
+            Type botBlackType = Type.GetType(bots.botBlack + ", Assembly-CSharp");
+
+            if (botWhiteType == null || botBlackType == null)
+            {
+                gameOver = true;
+                yield return null;
+            }
+
+            if (!gameOver)
+            {
+                botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+                botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+            }
         }
-
-        nonResettables.isBotTournament = true;
-
-        var bots = nonResettables.botTournament.nextGame();
-
-        if (bots.botWhite == "")
-        {
-            gameOver = true;
-            yield return null;
-        }
-
-        Type botWhiteType = Type.GetType(bots.botWhite + ", Assembly-CSharp");
-        Type botBlackType = Type.GetType(bots.botBlack + ", Assembly-CSharp");
-
-        if (botWhiteType == null || botBlackType == null)
-        {
-            gameOver = true;
-            yield return null;
-        }
-        */
-        
         
         if (!gameOver)
-        {
-            //botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
-            //botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-
+        { 
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
 
-            botWhite = new KamikazeBot(1);
-            botBlack = new Bloodbot(-1);
+            if (!nonResettables.isBotTournament)
+            {
+                //Replace these with your bots if it is a tournament
+                botWhite = new OneMoveBot(1);
+                botBlack = new OneMoveBot(-1);
+            }
+
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 

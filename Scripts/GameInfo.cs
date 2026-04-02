@@ -47,6 +47,7 @@ public static class gameData
     public static BotTemplate botWhite { get; set; } = null;
     public static BotTemplate botBlack { get; set; } = null;
     public static bool isBotMatch { get; set; } = false;
+    public static HelperFunctions helper { get; set; } = null;
 }
 
 public static class tempInfo
@@ -128,6 +129,9 @@ public static class nonResettables
 
         botA.PeakElo = Math.Max(botA.PeakElo, botA.Elo);
         botB.PeakElo = Math.Max(botB.PeakElo, botB.Elo);
+
+        botA.MinElo = Math.Min(botA.MinElo, botA.Elo);
+        botB.MinElo = Math.Min(botB.MinElo, botB.Elo);
     }
 
     public static string fixBotName(string botName)
@@ -513,6 +517,7 @@ public class Bot
     public List<BotSeason> Seasons { get; set; }
 
     public int PeakElo { get; set; }
+    public int MinElo { get; set; }
 
     public List<string> Competing { get; set; }
 }

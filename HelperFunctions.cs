@@ -975,7 +975,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS);
+            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false);
 
             if (isInList(moves, king.position, false)) {
                 return true;
@@ -1561,8 +1561,11 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
-            onDeath(piece, piece.go, attackerPiece, attacker);
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                onDeath(piece, piece.go, attackerPiece, attacker);
+            }
         }
     }
 
@@ -1573,8 +1576,11 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
-            onDeath(piece, piece.go, attackerPiece, attacker);
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                onDeath(piece, piece.go, attackerPiece, attacker);
+            }
         }
     }
 
@@ -1623,6 +1629,18 @@ public class HelperFunctions : MonoBehaviour
             removePieceImageFromBoard(deadPiece);
 
             return;
+        }
+
+        if (checkState(deadPiece, PieceState.Hungry))
+        {
+            if (deadPiece.storage != null && deadPiece.storage.Count > 0)
+            {
+                List<int[]> placeCoords = getEmptySurroundingSquares(deadPiece.position);
+                List<Piece> placePieces = deadPiece.storage;
+
+                BotHelperFunctions.PieceAbility pa = new BotHelperFunctions.PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces, placeCoords, null);
+                gameData.helper.executeAbility(pa);
+            }
         }
 
         //Spitting
@@ -2231,6 +2249,26 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return findSquare(coord[0], coord[1]);
+    }
+
+    public static List<int[]> getEmptySurroundingSquares(int[] coords)
+    {
+        List<int[]> emptySurroundingSquares = new List<int[]>();
+
+        foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
+        {
+            int posX = coords[0] + dirX;
+            int posY = coords[1] + dirY;
+
+            if (!checkBounds(posX, posY)) continue;
+
+            if (!isPieceOnSquare(findSquare(posX, posY)))
+            {
+                emptySurroundingSquares.Add(new int[] { posX, posY });
+            }
+        }
+
+        return emptySurroundingSquares;
     }
 
     public static List<Piece> pieceToList(Piece piece)
@@ -4112,6 +4150,7 @@ public class HelperFunctions : MonoBehaviour
         tempInfo.delayedQueue = new DelayedQueue();
 
         tempInfo.attackerDied = false;
+        gameData.helper = null;
     }
 
     public static bool coordsInList(List<int[]> coordsList, int[] coords) {

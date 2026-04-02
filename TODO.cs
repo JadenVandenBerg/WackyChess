@@ -8,6 +8,7 @@
 //if heartbroken king is in play, bots avoid capturing queen
 //opponent jockey somehow ended up on stacking king
 // update piece flags scaredy king in simulated move
+//update piece state for defend pawn thing
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight

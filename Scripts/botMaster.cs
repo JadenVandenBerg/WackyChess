@@ -37,7 +37,7 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        nonResettables.isBotTournament = false;
+        nonResettables.isBotTournament = true;
 
         if (nonResettables.isBotTournament)
         {
@@ -96,6 +96,7 @@ public class botMaster : MonoBehaviour
             gameData.botBlack = botBlack;
 
             helper.panel.Initialize();
+            gameData.helper = helper;
 
             bgs.white = botWhite.name;
             bgs.black = botBlack.name;

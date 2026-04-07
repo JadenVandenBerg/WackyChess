@@ -24,7 +24,7 @@ public class botMaster : MonoBehaviour
 
     BotTemplate botWhite;
     BotTemplate botBlack;
-    bool started = false;
+    bool started = true;
 
     BotGameStatus bgs = new BotGameStatus();
 
@@ -37,13 +37,32 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = false;
 
         if (nonResettables.isBotTournament)
         {
             if (nonResettables.botTournament == null)
             {
-                List<string> randomBots = nonResettables.get8RandomBots();
+                List<string> forceNames = new List<string>
+                {
+                    "G2EBot",
+                    "KamikazeBot"
+                };
+                List<string> randomBots = nonResettables.get8RandomBots(forceNames);
+                
+                /*
+                List<string> randomBots = new List<string>
+                {
+                    "PawnBot",
+                    "BottusMaximus",
+                    "FiveXRandomBot",
+                    "IdiotBot",
+                    "BOTential",
+                    "AssassinBot",
+                    "Bloodbot",
+                    "ShieldBot"
+                };
+                */
 
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
@@ -53,6 +72,7 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Starting Tournament With: " + sb);
 
                 nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
+                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -159,7 +179,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botWhite.pieces)
             {
-                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty));
+                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
             HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
@@ -235,7 +255,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botBlack.pieces)
             {
-                bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty));
+                bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
             HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
@@ -374,7 +394,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             selectedMove = nextMove;
 
@@ -437,6 +457,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
+                //helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -501,6 +522,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
+                    //helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;
@@ -516,7 +538,7 @@ public class botMaster : MonoBehaviour
             if (HelperFunctions.isPieceBaseTypeOnBoard("King", -1))
             {
                 Debug.Log("Game Over - King Death");
-                bgs.result = "Won by opposing king death";
+                bgs.result = "Won by Opposing King Death";
                 bgs.winner = "Black";
 
                 bgs.winnerName = botBlack.name;
@@ -536,7 +558,7 @@ public class botMaster : MonoBehaviour
             if (HelperFunctions.isPieceBaseTypeOnBoard("King", 1))
             {
                 Debug.Log("Game Over - King Death");
-                bgs.result = "Won by opposing king death";
+                bgs.result = "Won by Opposing King Death";
                 bgs.winner = "White";
 
                 bgs.winnerName = botWhite.name;
@@ -826,8 +848,6 @@ public class botMaster : MonoBehaviour
             {
                 continue;
             }
-
-            //TODO IMPORTANT simulate ability, check if check, return false
 
             return true;
         }

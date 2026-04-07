@@ -531,6 +531,29 @@ public class BotHelperFunctions : MonoBehaviour
         return (totalMoves, pieceAbilities);
     }
 
+    public static (List<PieceMoveList> pieceMoveList, List<PieceAbility> piecesAbilities) getAllPossibleBotAttacks(BotTemplate bot, BoardState bs, int color)
+    {
+        List<PieceMoveList> totalMoves = new List<PieceMoveList>();
+
+        List<Piece> pieces = getPiecesOnBoardState(bs, color);
+
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            Piece piece = pieces[i];
+
+            List<int[]> moves = getIsolatedStatePieceAttacks(piece, bs, false);
+
+            if (moves != null && moves.Count > 0)
+            {
+                totalMoves.Add(new PieceMoveList(piece, moves));
+            }
+        }
+
+        List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, color);
+
+        return (totalMoves, pieceAbilities);
+    }
+
     public static (List<PieceMoveList> pieceMoveList, List<PieceAbility> piecesAbilities) getAllTheoreticalBotAttacks(BotTemplate bot, BoardState bs, int color)
     {
         List<PieceMoveList> totalMoves = new List<PieceMoveList>();
@@ -583,6 +606,35 @@ public class BotHelperFunctions : MonoBehaviour
         return allMoves;
     }
 
+    public static List<NextMove> getAllPossibleBotPieceAttacks(BoardState bs, Piece piece)
+    {
+        List<PieceMoveList> totalMoves = new List<PieceMoveList>();
+
+        List<NextMove> allMoves = new List<NextMove>();
+        List<int[]> moves = getIsolatedStatePieceAttacks(piece, bs, false);
+
+        if (moves != null && moves.Count > 0)
+        {
+            totalMoves.Add(new PieceMoveList(piece, moves));
+        }
+
+        foreach (PieceMoveList pml in totalMoves)
+        {
+            Piece piece_ = pml.piece;
+            List<int[]> _mL = pml.moves;
+
+            foreach (int[] coords in _mL)
+            {
+                Move mv = new Move(piece_, coords);
+                NextMove pieceMove = new NextMove(mv);
+
+                allMoves.Add(pieceMove);
+            }
+        }
+
+        return allMoves;
+    }
+
     public static List<NextMove> getAllPossibleBotMovesAndAbilities(BotTemplate bot, BoardState bs, int color)
     {
         //resetPiecePositions(null, bs.boardGrid);
@@ -610,6 +662,41 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         foreach(PieceAbility pa in allAbilitiesBot)
+        {
+            NextMove pieceAbility = new NextMove(pa);
+            allMoves.Add(pieceAbility);
+        }
+
+        return allMoves;
+    }
+
+    public static List<NextMove> getAllPossibleBotAttacksAndAbilities(BotTemplate bot, BoardState bs, int color)
+    {
+        //resetPiecePositions(null, bs.boardGrid);
+        //bs = copyBoardState(bs);
+
+        var botMoves = getAllPossibleBotAttacks(bot, bs, color);
+
+        List<PieceMoveList> allMovesBot = botMoves.pieceMoveList;
+        List<PieceAbility> allAbilitiesBot = botMoves.piecesAbilities;
+
+        List<NextMove> allMoves = new List<NextMove>();
+
+        foreach (PieceMoveList pml in allMovesBot)
+        {
+            Piece piece = pml.piece;
+            List<int[]> _mL = pml.moves;
+
+            foreach (int[] coords in _mL)
+            {
+                Move mv = new Move(piece, coords);
+                NextMove pieceMove = new NextMove(mv);
+
+                allMoves.Add(pieceMove);
+            }
+        }
+
+        foreach (PieceAbility pa in allAbilitiesBot)
         {
             NextMove pieceAbility = new NextMove(pa);
             allMoves.Add(pieceAbility);
@@ -876,7 +963,7 @@ public class BotHelperFunctions : MonoBehaviour
                 //jump = HelperFunctions.isJump(piece, piece.position, newPos);
             }
 
-            if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords) || theoretical)
+            if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords) || (theoretical && !jump))
             {
                 //TODO maybe add check functionality
                 //if (piece.name == "w_k1" || piece.name == "b_k1") Debug.Log("MOVE SIM " + newPosX + "," + newPosY);
@@ -2293,10 +2380,9 @@ public class BotHelperFunctions : MonoBehaviour
         //Electric
         if (HelperFunctions.checkState(deadPiece, PieceState.Electric))
         {
-            System.Random rand = new System.Random();
-            int randNumber = rand.Next(1, 3);
+            int randomNumber = globalDefs.globalRand.Next(1, 3);
 
-            if (randNumber == 1)
+            if (randomNumber == 1)
             {
                 isolatedRemovePiece(attackerPiece, bs);
             }

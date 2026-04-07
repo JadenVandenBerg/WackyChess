@@ -17,6 +17,7 @@
 //Feature
 //Side panel only show selectable pieces
 //opponent can unfreeze but it is still considered stalemate
+//add draw by repetition
 
 //Remove
 //Dependent Attacks

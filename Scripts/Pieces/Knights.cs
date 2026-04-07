@@ -2291,7 +2291,7 @@ public class SpittingKnight : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class PhantomKnight : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2369,7 +2369,7 @@ public class PhantomKnight : Piece
         s.preserveAspect = true;
     }
 }
-
+*/
 public class StackingKnight : Piece
 {
     public bool disabled { get; set; } = false;

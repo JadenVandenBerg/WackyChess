@@ -156,7 +156,7 @@ public static class nonResettables
         return botName;
     }
 
-    public static List<string> get8RandomBots()
+    public static List<string> get8RandomBots(List<string> forceNames)
     {
         List<string> options = new List<string>
         {
@@ -173,9 +173,16 @@ public static class nonResettables
         };
 
         List<string> result = new List<string>();
+        result.AddRange(forceNames);
+
+        foreach(string name in forceNames)
+        {
+            options.Remove(name);
+        }
+
         System.Random rng = new System.Random();
 
-        for (int i = 0; i < 8 && options.Count > 0; i++)
+        for (int i = 0; i < 8 - forceNames.Count && options.Count > 0; i++)
         {
             int index = rng.Next(options.Count);
             result.Add(options[index]);
@@ -251,6 +258,8 @@ public static class globalDefs
         (1, -1), (-1, -1),
         (0, 0)
     };
+
+    public static readonly System.Random globalRand = new System.Random();
 }
 
 public class BotGameStatus

@@ -1587,6 +1587,8 @@ public class HelperFunctions : MonoBehaviour
     //TODO test for potential bug in killing dematerialized pieces that are stacked on other pieces
     public static void onDeath(Piece deadPiece, GameObject dead, Piece attackerPiece, GameObject attacker)
     {
+        
+
         int[] attackerCoords = attackerPiece.position;
         int[] deadPieceCoords = deadPiece.position;
 
@@ -1602,8 +1604,7 @@ public class HelperFunctions : MonoBehaviour
         //Electric
         if (checkState(deadPiece, PieceState.Electric))
         {
-            System.Random rand = new System.Random();
-            int randomNumber = rand.Next(1, 3);
+            int randomNumber = globalDefs.globalRand.Next(1, 3);
 
             if (randomNumber == 1)
             {

@@ -37,7 +37,7 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        nonResettables.isBotTournament = false;
+        nonResettables.isBotTournament = true;
 
         if (nonResettables.isBotTournament)
         {
@@ -46,7 +46,9 @@ public class botMaster : MonoBehaviour
                 List<string> forceNames = new List<string>
                 {
                     "G2EBot",
-                    "KamikazeBot"
+                    "KamikazeBot",
+                    "BotRoss",
+                    "TwoMoveBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
                 
@@ -394,7 +396,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 

@@ -9,6 +9,8 @@
 //opponent jockey somehow ended up on stacking king
 // update piece flags scaredy king in simulated move
 //update piece state for defend pawn thing
+//opp should be able to capture its own jailer pieces (THAT HAVE JAILED PIECE)
+//if jailer jails infinite piece, it goes back to its start (should be jailed)
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight

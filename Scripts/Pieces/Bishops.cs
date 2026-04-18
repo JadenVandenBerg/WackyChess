@@ -2052,7 +2052,7 @@ public class SpittingBishop : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class PhantomBishop : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2131,7 +2131,7 @@ public class PhantomBishop : Piece
         s.preserveAspect = true;
     }
 }
-
+*/
 public class StackingBishop : Piece
 {
     public bool disabled { get; set; } = false;

@@ -24,65 +24,96 @@ public class botMaster : MonoBehaviour
 
     BotTemplate botWhite;
     BotTemplate botBlack;
-    bool started = false;
+    bool started = true;
 
     BotGameStatus bgs = new BotGameStatus();
 
     IEnumerator Start()
     {
-        
+
         // Tournament
-        /*
-        if (nonResettables.botTournament == null)
-        {
-            List<string> randomBots = nonResettables.get8RandomBots();
-
-            StringBuilder sb = new StringBuilder();
-            foreach(string bot in randomBots)
-            {
-                sb.Append(bot + " ");
-            }
-            Debug.Log("Starting Tournament With: " + sb);
-
-            nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
-        }
-
+        //Change this to true to run a tournament with random bots
+        //This will only work for my bots, if you want to change that you can comment out
+        //List<string> randomBots = nonResettables.get8RandomBots();
+        //and replace it with
+        //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         nonResettables.isBotTournament = true;
 
-        var bots = nonResettables.botTournament.nextGame();
-
-        if (bots.botWhite == "")
+        if (nonResettables.isBotTournament)
         {
-            gameOver = true;
-            yield return null;
-        }
+            if (nonResettables.botTournament == null)
+            {
+                List<string> forceNames = new List<string>
+                {
+                    "G2EBot",
+                    "KamikazeBot",
+                    "BotRoss",
+                    "TwoMoveBot"
+                };
+                List<string> randomBots = nonResettables.get8RandomBots(forceNames);
+                
+                /*
+                List<string> randomBots = new List<string>
+                {
+                    "PawnBot",
+                    "BottusMaximus",
+                    "FiveXRandomBot",
+                    "IdiotBot",
+                    "BOTential",
+                    "AssassinBot",
+                    "Bloodbot",
+                    "ShieldBot"
+                };
+                */
 
-        Type botWhiteType = Type.GetType(bots.botWhite + ", Assembly-CSharp");
-        Type botBlackType = Type.GetType(bots.botBlack + ", Assembly-CSharp");
+                StringBuilder sb = new StringBuilder();
+                foreach (string bot in randomBots)
+                {
+                    sb.Append(bot + " ");
+                }
+                Debug.Log("Starting Tournament With: " + sb);
 
-        if (botWhiteType == null || botBlackType == null)
-        {
-            gameOver = true;
-            yield return null;
+                nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
+                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], false);
+            }
+
+            var bots = nonResettables.botTournament.nextGame();
+
+            if (bots.botWhite == "")
+            {
+                gameOver = true;
+                yield return null;
+            }
+
+            Type botWhiteType = Type.GetType(bots.botWhite + ", Assembly-CSharp");
+            Type botBlackType = Type.GetType(bots.botBlack + ", Assembly-CSharp");
+
+            if (botWhiteType == null || botBlackType == null)
+            {
+                gameOver = true;
+                yield return null;
+            }
+
+            if (!gameOver)
+            {
+                botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+                botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
+            }
         }
-        */
-        
         
         if (!gameOver)
-        {
-            //botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
-            //botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
-
+        { 
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
 
-            botWhite = new BOTential(1);
-            botBlack = new AssassinBot(-1);
+            botWhite = new KamikazeBot(1);
+            botBlack = new Bloodbot(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 
             helper.panel.Initialize();
+            gameData.helper = helper;
 
             bgs.white = botWhite.name;
             bgs.black = botBlack.name;
@@ -145,7 +176,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botWhite.pieces)
             {
-                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty));
+                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
             HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
@@ -221,7 +252,7 @@ public class botMaster : MonoBehaviour
 
             foreach (Piece wp in botBlack.pieces)
             {
-                bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty));
+                bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
             HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
@@ -360,7 +391,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 
@@ -423,6 +454,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
+                //helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -487,6 +519,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
+                    //helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;
@@ -502,7 +535,7 @@ public class botMaster : MonoBehaviour
             if (HelperFunctions.isPieceBaseTypeOnBoard("King", -1))
             {
                 Debug.Log("Game Over - King Death");
-                bgs.result = "Won by opposing king death";
+                bgs.result = "Won by Opposing King Death";
                 bgs.winner = "Black";
 
                 bgs.winnerName = botBlack.name;
@@ -522,7 +555,7 @@ public class botMaster : MonoBehaviour
             if (HelperFunctions.isPieceBaseTypeOnBoard("King", 1))
             {
                 Debug.Log("Game Over - King Death");
-                bgs.result = "Won by opposing king death";
+                bgs.result = "Won by Opposing King Death";
                 bgs.winner = "White";
 
                 bgs.winnerName = botWhite.name;
@@ -812,8 +845,6 @@ public class botMaster : MonoBehaviour
             {
                 continue;
             }
-
-            //TODO IMPORTANT simulate ability, check if check, return false
 
             return true;
         }

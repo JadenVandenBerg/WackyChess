@@ -1770,7 +1770,7 @@ public class SpittingPawn : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class PhantomPawn : Piece
 {
     public int color { get; set; } = 1; //1 White, -1 Black
@@ -1845,7 +1845,7 @@ public class PhantomPawn : Piece
         s.preserveAspect = true;
     }
 }
-
+*/
 public class SplittingPawn : Piece
 {
     public int color { get; set; } = 1; //1 White, -1 Black

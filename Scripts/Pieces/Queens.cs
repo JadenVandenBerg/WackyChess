@@ -108,7 +108,7 @@ public class MurderousQueen : Piece
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
-    public String promotesInto { get; set; } = "SuperPawn";
+    public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
@@ -2221,7 +2221,7 @@ public class SpittingQueen : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class PhantomQueen : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2304,7 +2304,7 @@ public class PhantomQueen : Piece
         s.preserveAspect = true;
     }
 }
-
+*/
 public class StackingQueen : Piece
 {
     public bool disabled { get; set; } = false;

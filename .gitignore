@@ -114,3 +114,5 @@ Scripts/Bots/SavageBeastBot.cs
 Scripts/Bots/TwoMoveBot.cs
 Scripts/Bots/G2EBot.cs
 Scripts/Bots/KamikazeBot.cs
+
+Scripts/Bots/Locked/

@@ -1969,7 +1969,7 @@ public class SpittingRook : Piece
         s.preserveAspect = true;
     }
 }
-
+/*
 public class PhantomRook : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2048,6 +2048,7 @@ public class PhantomRook : Piece
         s.preserveAspect = true;
     }
 }
+*/
 
 public class StackingRook : Piece
 {

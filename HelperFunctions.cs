@@ -975,7 +975,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS);
+            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false);
 
             if (isInList(moves, king.position, false)) {
                 return true;
@@ -1561,8 +1561,11 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
-            onDeath(piece, piece.go, attackerPiece, attacker);
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                onDeath(piece, piece.go, attackerPiece, attacker);
+            }
         }
     }
 
@@ -1573,14 +1576,19 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
-            onDeath(piece, piece.go, attackerPiece, attacker);
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                onDeath(piece, piece.go, attackerPiece, attacker);
+            }
         }
     }
 
     //TODO test for potential bug in killing dematerialized pieces that are stacked on other pieces
     public static void onDeath(Piece deadPiece, GameObject dead, Piece attackerPiece, GameObject attacker)
     {
+        
+
         int[] attackerCoords = attackerPiece.position;
         int[] deadPieceCoords = deadPiece.position;
 
@@ -1596,8 +1604,7 @@ public class HelperFunctions : MonoBehaviour
         //Electric
         if (checkState(deadPiece, PieceState.Electric))
         {
-            System.Random rand = new System.Random();
-            int randomNumber = rand.Next(1, 3);
+            int randomNumber = globalDefs.globalRand.Next(1, 3);
 
             if (randomNumber == 1)
             {
@@ -1623,6 +1630,18 @@ public class HelperFunctions : MonoBehaviour
             removePieceImageFromBoard(deadPiece);
 
             return;
+        }
+
+        if (checkState(deadPiece, PieceState.Hungry))
+        {
+            if (deadPiece.storage != null && deadPiece.storage.Count > 0)
+            {
+                List<int[]> placeCoords = getEmptySurroundingSquares(deadPiece.position);
+                List<Piece> placePieces = deadPiece.storage;
+
+                BotHelperFunctions.PieceAbility pa = new BotHelperFunctions.PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces, placeCoords, null);
+                gameData.helper.executeAbility(pa);
+            }
         }
 
         //Spitting
@@ -2231,6 +2250,26 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return findSquare(coord[0], coord[1]);
+    }
+
+    public static List<int[]> getEmptySurroundingSquares(int[] coords)
+    {
+        List<int[]> emptySurroundingSquares = new List<int[]>();
+
+        foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
+        {
+            int posX = coords[0] + dirX;
+            int posY = coords[1] + dirY;
+
+            if (!checkBounds(posX, posY)) continue;
+
+            if (!isPieceOnSquare(findSquare(posX, posY)))
+            {
+                emptySurroundingSquares.Add(new int[] { posX, posY });
+            }
+        }
+
+        return emptySurroundingSquares;
     }
 
     public static List<Piece> pieceToList(Piece piece)
@@ -3942,19 +3981,22 @@ public class HelperFunctions : MonoBehaviour
         clone.color = original.color;
         clone.points = original.points;
         clone.rarityLevel = original.rarityLevel;
-        clone.startSquare = original.startSquare?.ToArray();
+        //clone.startSquare = original.startSquare?.ToArray();
+        clone.startSquare = original.startSquare;
         clone.baseType = original.baseType;
         clone.description = original.description;
         clone.longDescription = original.longDescription;
         clone.alive = original.alive;
         clone.lives = original.lives;
         clone.ability = original.ability.ToString();
-        clone.state = original.state.ToString();
+        //clone.state = original.state.ToString();
         clone.states = original.states;
-        clone.secondaryState = original.secondaryState.ToString();
+        //clone.secondaryState = original.secondaryState.ToString();
         clone.collateralType = original.collateralType;
-        clone.collateral = clone2dArray(original.collateral);
-        clone.size = original.size?.ToArray();
+        //clone.collateral = clone2dArray(original.collateral);
+        clone.collateral = original.collateral;
+        //clone.size = original.size?.ToArray();
+        clone.size = original.size;
         clone.promotesInto = original.promotesInto.ToString();
         clone.promotingRow = original.promotingRow;
         clone.canMoveTwice = original.canMoveTwice;
@@ -4008,8 +4050,8 @@ public class HelperFunctions : MonoBehaviour
 
         clone.position = original.position?.ToArray();
         clone.hasMoved = original.hasMoved;
-        clone.wImage = original.wImage.ToString();
-        clone.bImage = original.bImage.ToString();
+        //clone.wImage = original.wImage.ToString();
+        //clone.bImage = original.bImage.ToString();
         clone.name = original.name.ToString();
         clone.flag = original.flag;
         clone.spawnable = original.spawnable.ToString();
@@ -4112,6 +4154,7 @@ public class HelperFunctions : MonoBehaviour
         tempInfo.delayedQueue = new DelayedQueue();
 
         tempInfo.attackerDied = false;
+        gameData.helper = null;
     }
 
     public static bool coordsInList(List<int[]> coordsList, int[] coords) {

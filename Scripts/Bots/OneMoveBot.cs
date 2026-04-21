@@ -182,6 +182,7 @@ public class OneMoveBot : BotTemplate
         int rndIdx = rand.Next(validMoves.Count);
 
         NextMove move = validMoves[rndIdx];
+
         //Get the original piece, you can just copy paste this part (ill probably add this to botMaster.cs later
         if (move.moveType == "move")
         {

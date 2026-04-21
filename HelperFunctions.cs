@@ -754,6 +754,12 @@ public class HelperFunctions : MonoBehaviour
                     //pieceIsDiffColour = pieceOnSquare.color != color;
                     pieceIsDiffColour = !getColorsOnSquare(goHighlight, true).Contains(piece.color);
 
+                    //if there is a jailer with a jailed piece, count it
+                    if (checkStateOnSquare(piecesOnSquare, PieceState.Jailer) && checkStateOnSquare(piecesOnSquare, PieceState.Jailed))
+                    {
+                        pieceIsDiffColour = true;
+                    }
+
                     if (checkPiecesDisabled(piecesOnSquare))
                     {
                         pieceIsNull = true;
@@ -1593,14 +1599,8 @@ public class HelperFunctions : MonoBehaviour
         int[] deadPieceCoords = deadPiece.position;
 
         bool skipCollateral = false;
-        //Infinite / Multi-Lives
-        if (deadPiece.lives != 0)
-        {
-            handleMultipleLivesDeath(deadPiece);
-
-            return;
-        }
-
+        bool skipInfinite = false;
+        
         //Electric
         if (checkState(deadPiece, PieceState.Electric))
         {
@@ -1616,7 +1616,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Hungry
-        if (checkState(attackerPiece, PieceState.Hungry)) //TODO deadPiece
+        if (checkState(attackerPiece, PieceState.Hungry))
         {
             if (attackerPiece.storage == null)
             {
@@ -1625,6 +1625,7 @@ public class HelperFunctions : MonoBehaviour
 
             attackerPiece.storage.Add(deadPiece);
             skipCollateral = true;
+            skipInfinite = true;
             gameData.piecesDict.Remove(dead);
             updateBoardGrid(deadPieceCoords, deadPiece, "r");
             removePieceImageFromBoard(deadPiece);
@@ -1647,6 +1648,7 @@ public class HelperFunctions : MonoBehaviour
         //Spitting
         if (checkState(attackerPiece, PieceState.Spitting))
         {
+            skipInfinite = true;
             if (attackerPiece.storage == null)
             {
                 attackerPiece.storage = new List<Piece>();
@@ -1669,7 +1671,8 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
-        if (checkState(attackerPiece, PieceState.Stacking))
+        //Stacking
+        if (checkState(attackerPiece, PieceState.Stacking) && deadPiece.lives == 0)
         {
             // Abilities / States
             //attackerPiece.states |= deadPiece.states;
@@ -1720,13 +1723,16 @@ public class HelperFunctions : MonoBehaviour
             //maybe add promotion row and storage
         }
 
+        //Jailer
         if (checkState(attackerPiece, PieceState.Jailer))
         {
+            skipInfinite = true;
             addState(deadPiece, PieceState.Jailed);
 
             return;
         }
 
+        //Crook
         if (checkState(deadPiece, PieceState.Crook) && deadPiece.color != attackerPiece.color)
         {
             addState(deadPiece, PieceState.Jailed);
@@ -1734,8 +1740,10 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
+        //Medusa
         if (checkState(attackerPiece, PieceState.Medusa))
         {
+            skipInfinite = true;
             if (attackerPiece.numSpawns != 0)
             {
                 attackerPiece.numSpawns--;
@@ -1748,8 +1756,20 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
+        if (!skipInfinite)
+        {
+            //Infinite / Multi-Lives
+            if (deadPiece.lives != 0)
+            {
+                handleMultipleLivesDeath(deadPiece);
+
+                return;
+            }
+        }
+
         if (!skipCollateral)
         {
+
             //Collateral (Attacker)
             if (attackerPiece.collateralType == 0) //Kill on Capture
             {

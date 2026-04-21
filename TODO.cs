@@ -3,14 +3,13 @@
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
 //ghoul king can stack on lite pawn
-//hungry pieces do not barf on death
-//problems with kings being stacked on other peices with checkmate
-//if heartbroken king is in play, bots avoid capturing queen
-//opponent jockey somehow ended up on stacking king
-// update piece flags scaredy king in simulated move
-//update piece state for defend pawn thing
-//opp should be able to capture its own jailer pieces (THAT HAVE JAILED PIECE)
+// update piece check flags in simulated piece moves (costly)
+//for reverse atomic, if defused to not kill attacker
+//if you jump on jailed piece with captured piece (either color) kill both
+
+//Untested Bugfixes
 //if jailer jails infinite piece, it goes back to its start (should be jailed)
+//opp should be able to capture its own jailer pieces (THAT HAVE JAILED PIECE)
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight
@@ -20,6 +19,7 @@
 //Side panel only show selectable pieces
 //opponent can unfreeze but it is still considered stalemate
 //add draw by repetition
+// Game Saves && Replayer
 
 //Remove
 //Dependent Attacks

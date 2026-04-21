@@ -101,6 +101,7 @@ public static class nonResettables
     public static BotTournamentSmall botTournamentSmall { get; set; } = null;
     public static BotTournament botTournament { get; set; } = null;
     public static bool isBotTournament { get; set; } = false;
+    public static bool logMatch { get; set; } = false;
 
     public static void calculateElo(Bot botA, Bot botB, string winner)
     {
@@ -170,6 +171,7 @@ public static class nonResettables
             "IdiotBot",
             "G2EBot",
             "KamikazeBot",
+            "BotRoss"
         };
 
         List<string> result = new List<string>();

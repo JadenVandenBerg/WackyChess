@@ -3004,4 +3004,28 @@ public class BotHelperFunctions : MonoBehaviour
 
         return newGrid;
     }
+
+    public static (Piece piece, int[] coords, string moveType) getNextMoveVars(NextMove nextMove)
+    {
+        Piece piece;
+        int[] coords;
+
+        string moveType = nextMove.moveType;
+        if (moveType == "move")
+        {
+            Move mv = nextMove.move;
+
+            piece = mv.p;
+            coords = mv.coords;
+        }
+        else // moveType == "ability" guarenteed
+        {
+            PieceAbility pa = nextMove.ability;
+
+            piece = pa.piece;
+            coords = pa.coords;
+        }
+
+        return (piece, coords, moveType);
+    }
 }

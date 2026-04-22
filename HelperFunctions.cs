@@ -4201,4 +4201,70 @@ public class HelperFunctions : MonoBehaviour
     {
         panel.AddBotMessage(message);
     }
+
+    public NextMove thread_nextMove(NextMove nm, BoardState cloneState)
+    {
+        if (nm == null) return null;
+
+        if (nm.moveType == "move" && nm.move != null)
+        {
+            Piece newPiece = getCloneFromOriginalPiece(nm.move.p, cloneState.boardGrid);
+
+            int[] newCoords = null;
+            if (nm.move.coords != null)
+            {
+                newCoords = new int[] { nm.move.coords[0], nm.move.coords[1] };
+            }
+
+            Move newMove = new Move(newPiece, newCoords);
+            return new NextMove(newMove);
+        }
+
+        if (nm.moveType == "ability" && nm.ability != null)
+        {
+            PieceAbility old = nm.ability;
+
+            Piece newMainPiece = getCloneFromOriginalPiece(old.piece, cloneState.boardGrid);
+            Piece newSecondPiece = getCloneFromOriginalPiece(old.secondPiece, cloneState.boardGrid);
+
+            int[] newCoords = null;
+            if (old.coords != null)
+            {
+                newCoords = new int[] { old.coords[0], old.coords[1] };
+            }
+
+            List<Piece> newPlacePieces = null;
+            if (old.placePieces != null)
+            {
+                newPlacePieces = new List<Piece>();
+                foreach (Piece p in old.placePieces)
+                {
+                    newPlacePieces.Add(getCloneFromOriginalPiece(p, cloneState.boardGrid));
+                }
+            }
+
+            List<int[]> newPlaceCoords = null;
+            if (old.placeCoords != null)
+            {
+                newPlaceCoords = new List<int[]>();
+                foreach (int[] c in old.placeCoords)
+                {
+                    newPlaceCoords.Add(new int[] { c[0], c[1] });
+                }
+            }
+
+            PieceAbility newAbility = new PieceAbility(
+                newMainPiece,
+                old.ability,
+                newCoords,
+                newPlacePieces,
+                newPlaceCoords,
+                newSecondPiece
+            );
+
+            return new NextMove(newAbility);
+        }
+
+        return null;
+    }
 }

@@ -1571,17 +1571,12 @@ public class BotHelperFunctions : MonoBehaviour
         return allNextMoves[index];
     }
 
-    //TODO run movePiece on boardstate without actual move
     public static void movePieceBoardState(Piece piece, int[] coords, BoardState boardState)
     {
-        //Debug.LogWarning("Attempted move of " + piece.name + " from " + piece.position[0] + "," + piece.position[1] + " to " + (coords[0] + 1) + "," + (coords[1] + 1));
         if (coords[0] < 0 || coords[1] < 0)
         {
             return;
         }
-
-        // int[] position = boardState.getPiecePosition(piece);
-        // if (position == null) return;
 
         int[] position = new int[] { piece.position[0] - 1, piece.position[1] - 1 };
 

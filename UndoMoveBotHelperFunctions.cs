@@ -83,13 +83,11 @@ public struct UndoState
 {
     public Piece piece;
     public PieceState state;
-    public bool add; //True if you should add WHILE undoing the move;
 
-    public UndoState(Piece piece_, PieceState pieceState_, bool add_)
+    public UndoState(Piece piece_, PieceState pieceState_)
     {
         piece = piece_;
         state = pieceState_;
-        add = add_;
     }
 }
 
@@ -97,13 +95,11 @@ public struct UndoAbility
 {
     public Piece piece;
     public string ability;
-    public bool add; //True if you should add WHILE undoing the move;
 
-    public UndoAbility(Piece piece_, string pieceAbility_, bool add_)
+    public UndoAbility(Piece piece_, string pieceAbility_)
     {
         piece = piece_;
         ability = pieceAbility_;
-        add = add_;
     }
 }
 
@@ -121,10 +117,10 @@ public struct UndoPieceAction
 
 public struct UndoBotAction
 {
-    public Bot bot;
+    public BotTemplate bot;
     public PieceAction action;
 
-    public UndoPieceAction(Bot bot_, PieceAction action_)
+    public UndoBotAction(BotTemplate bot_, PieceAction action_)
     {
         bot = bot_;
         action = action_;
@@ -171,69 +167,88 @@ public class UndoMovedPiece
     }
 }
 
+public struct UndoEntry
+{
+    public string undoMoveType;
+
+    public UndoMovedPiece movedPiece;
+    public UndoStorage storage;
+    public UndoAbility ability;
+    public UndoState state;
+    public UndoPieceAction action;
+    public UndoBotAction botAction;
+    public UndoDelayedQueueAction delayedQueueAction;
+
+    public UndoEntry(string type)
+    {
+        undoMoveType = type;
+
+        movedPiece = default;
+        storage = default;
+        ability = default;
+        state = default;
+        action = default;
+        botAction = default;
+        delayedQueueAction = default;
+    }
+}
+
 public class UndoMove
 {
-    public List<UndoMovedPiece> changed;
-    public List<UndoStorage> changedStorage;
-    public List<UndoAbility> changedAbilities;
-    public List<UndoState> changedStates;
-    public List<UndoPieceAction> actions;
-    public List<UndoDelayedQueueAction> undoDelayedQueueAction;
-
-    public UndoMove(List<UndoMovedPiece> undoMoves)
-    {
-        changed = undoMoves;
-    }
-
-    public UndoMove(List<UndoStorage> undoStorage)
-    {
-        changedStorage = undoStorage;
-    }
+    public List<UndoEntry> entries;
 
     public UndoMove()
     {
-        changed = new List<UndoMovedPiece>();
-        changedStorage = new List<UndoStorage>();
-        changedAbilities = new List<UndoAbility>();
-        changedStates = new List<UndoState>();
-        actions = new List<UndoPieceAction>();
-        botActions = new List<UndoBotAction>();
-        delayedQueueActions = new List<UndoDelayedQueueAction>();
+        entries = new List<UndoEntry>();
     }
 
     public void addMove(UndoMovedPiece undoMovedPiece)
     {
-        changed.Add(undoMovedPiece);
+        UndoEntry entry = new UndoEntry("move");
+        entry.movedPiece = undoMovedPiece;
+        entries.Add(entry);
     }
 
     public void addStorage(UndoStorage undoStorage)
     {
-        changedStorage.Add(undoStorage);
+        UndoEntry entry = new UndoEntry("storage");
+        entry.storage = undoStorage;
+        entries.Add(entry);
     }
 
     public void addState(UndoState undoState)
     {
-        changedStates.Add(undoState);
+        UndoEntry entry = new UndoEntry("state");
+        entry.state = undoState;
+        entries.Add(entry);
     }
 
     public void addAbility(UndoAbility undoAbility)
     {
-        changedAbilities.Add(undoAbility);
+        UndoEntry entry = new UndoEntry("ability");
+        entry.ability = undoAbility;
+        entries.Add(entry);
     }
 
     public void addAction(UndoPieceAction undoAction)
     {
-        actions.Add(undoAction);
+        UndoEntry entry = new UndoEntry("action");
+        entry.action = undoAction;
+        entries.Add(entry);
     }
 
     public void addBotAction(UndoBotAction undoAction)
     {
-        botActions.Add(undoAction);
+        UndoEntry entry = new UndoEntry("botAction");
+        entry.botAction = undoAction;
+        entries.Add(entry);
     }
 
     public void addDelayedQueueAction(UndoDelayedQueueAction undoDelayedQueueAction_)
     {
-        delayedQueueActions.Add(undoDelayedQueueAction_);
+        UndoEntry entry = new UndoEntry("delayedQueue");
+        entry.delayedQueueAction = undoDelayedQueueAction_;
+        entries.Add(entry);
     }
 }
 
@@ -241,158 +256,147 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 {
     public static void undoMove(UndoMove undo, BoardState bs)
     {
-        //UndoMovedPiece
-        List<UndoMovedPiece> undoMovedPieces = undo.changed;
-        foreach (UndoMovedPiece ump in undoMovedPieces)
+        for (int i = undo.entries.Count - 1; i >= 0; i--)
         {
-            Piece p = ump.p;
-            coords initialPosition = ump.initialPosition;
-            coords newPosition = ump.newPosition;
-            bool dead = ump.dead;
-            bool spawned = ump.spawned;
-            bool revertHasMoved = ump.revertHasMoved;
+            UndoEntry entry = undo.entries[i];
 
-            if (dead)
+            if (entry.undoMoveType == "move")
             {
-                updateBoardState(new int[] { initialPosition.x - 1, initialPosition.y - 1 }, p, "a", bs);
-            }
-            else
-            {
-                updateBoardState(new int[] { newPosition.x - 1, newPosition.y - 1 }, p, "r", bs);
-                updateBoardState(new int[] { initialPosition.x - 1, initialPosition.y - 1 }, p, "a", bs);
-            }
+                UndoMovedPiece ump = entry.movedPiece;
 
-            if (spawned)
-            {
-                updateBoardState(new int[] { newPosition.x - 1, newPosition.y - 1 }, p, "r", bs);
+                Piece p = ump.p;
+                coords initialPosition = ump.initialPosition;
+                coords newPosition = ump.newPosition;
+                bool dead = ump.dead;
+                bool spawned = ump.spawned;
+                bool revertHasMoved = ump.revertHasMoved;
 
-                if (p.go != null)
+                if (dead)
                 {
-                    Destroy(p.go);
+                    updateBoardState(new int[] { initialPosition.x - 1, initialPosition.y - 1 }, p, "a", bs);
+                }
+                else
+                {
+                    updateBoardState(new int[] { newPosition.x - 1, newPosition.y - 1 }, p, "r", bs);
+                    updateBoardState(new int[] { initialPosition.x - 1, initialPosition.y - 1 }, p, "a", bs);
+                }
+
+                if (spawned)
+                {
+                    updateBoardState(new int[] { newPosition.x - 1, newPosition.y - 1 }, p, "r", bs);
+
+                    if (p.go != null)
+                    {
+                        Destroy(p.go);
+                    }
+                }
+
+                if (revertHasMoved)
+                {
+                    p.hasMoved = false;
                 }
             }
 
-            if (revertHasMoved)
+            if (entry.undoMoveType == "storage")
             {
-                p.hasMoved = false;
-            }
-        }
+                UndoStorage us = entry.storage;
 
-        //UndoStorage
-        List<UndoStorage> undoStorages = undo.changedStorage;
-        foreach (UndoStorage us in undoStorages)
-        {
-            Piece piece = us.piece;
-            Piece storedPiece = us.storedPiece;
-            bool undo_ = us.undo; //true = undo, false = redo (ie. for simulated Vomit)
-            coords coords = us.coords;
+                Piece piece = us.piece;
+                Piece storedPiece = us.storedPiece;
+                bool undo_ = us.undo;
+                coords coords = us.coords;
 
-            if (undo_)
-            {
-                piece.storage.Remove(storedPiece);
+                if (undo_)
+                {
+                    piece.storage.Remove(storedPiece);
 
-                updateBoardState(new int[] { coords.x - 1, coords.y - 1 }, storedPiece, "a", bs);
-            }
-            else
-            {
-                piece.storage.Add(storedPiece);
+                    updateBoardState(new int[] { coords.x - 1, coords.y - 1 }, storedPiece, "a", bs);
+                }
+                else
+                {
+                    piece.storage.Add(storedPiece);
 
-                updateBoardState(new int[] { coords.x - 1, coords.y - 1 }, storedPiece, "r", bs);
-            }
-        }
-
-        //UndoPieceAction
-        List<UndoPieceAction> pieceActions = undo.actions;
-        foreach (UndoPieceAction a in pieceActions)
-        {
-            Piece piece = a.piece;
-            PieceAction action = a.action;
-
-            if ((action & PieceAction.IncrementSpawn) != 0)
-            {
-                piece.numSpawns++;
+                    updateBoardState(new int[] { coords.x - 1, coords.y - 1 }, storedPiece, "r", bs);
+                }
             }
 
-            if ((action & PieceAction.SetAlive) != 0)
+            if (entry.undoMoveType == "action")
             {
-                piece.alive = 1;
+                UndoPieceAction a = entry.action;
+
+                Piece piece = a.piece;
+                PieceAction action = a.action;
+
+                if ((action & PieceAction.IncrementSpawn) != 0)
+                {
+                    piece.numSpawns++;
+                }
+
+                if ((action & PieceAction.SetAlive) != 0)
+                {
+                    piece.alive = 1;
+                }
+
+                if ((action & PieceAction.IncrementLives) != 0)
+                {
+                    piece.lives++;
+                }
             }
 
-            if ((action & PieceAction.IncrementLives) != 0)
+            if (entry.undoMoveType == "state")
             {
-                piece.lives++;
-            }
-        }
+                UndoState s = entry.state;
 
-        //UndoState
-        List<UndoState> pieceStates = undo.changedStates;
-        foreach (UndoState s in pieceStates)
-        {
-            Piece piece = s.piece;
-            PieceState state = s.state;
-            bool add = s.add; //True if you should add WHILE undoing the move;
+                Piece piece = s.piece;
+                PieceState state = s.state;
 
-            if (add)
-            {
-                addState(piece, state);
-            }
-            else
-            {
-                removeState(piece, state);
-            }
-        }
-
-        //UndoAbility
-        List<UndoAbility> pieceAbilities = undo.changedAbilities;
-        foreach (UndoAbility a in pieceAbilities)
-        {
-            Piece piece = a.piece;
-            string ability = a.ability;
-            bool add = a.add; //True if you should add WHILE undoing the move;
-
-            if (add)
-            {
-                addAbility(piece, ability);
-            }
-            else
-            {
-                removeAbility(piece, ability);
-            }
-        }
-
-        //UndoDelayedQueueAction
-        List<UndoDelayedQueueAction> delayedQueueActions = undo.delayedQueueActions;
-        foreach (UndoDelayedQueueAction a in delayedQueueActions)
-        {
-            PieceMove pieceMove = a.pieceMove;
-            PieceAction delayedAction = a.delayedAction;
-
-            if ((action & PieceAction.AddToQueueFront) != 0)
-            {
-                bs.delayedQueue._items = bs.delayedQueue._items.Prepend(pieceMove).ToList();
+                piece.states = state;
             }
 
-            if ((action & PieceAction.RemoveFromQueue) != 0)
+            if (entry.undoMoveType == "ability")
             {
-                bs.delayedQueue.RemoveAll(pieceMove);
+                UndoAbility a = entry.ability;
+
+                Piece piece = a.piece;
+                string ability = a.ability;
+
+                piece.ability = ability;
             }
 
-            if ((action & PieceAction.IncrementTurnsTillDelay) != 0)
+            if (entry.undoMoveType == "delayedQueue")
             {
-                pieceMove.turnsToRemove++;
+                UndoDelayedQueueAction a = entry.delayedQueueAction;
+
+                PieceMove pieceMove = a.pieceMove;
+                PieceAction delayedAction = a.delayedAction;
+
+                if ((delayedAction & PieceAction.AddToQueueFront) != 0)
+                {
+                    bs.delayedQueue._items = bs.delayedQueue._items.Prepend(pieceMove).ToList();
+                }
+
+                if ((delayedAction & PieceAction.RemoveFromQueue) != 0)
+                {
+                    bs.delayedQueue._items.Remove(pieceMove);
+                }
+
+                if ((delayedAction & PieceAction.IncrementTurnsTillDelay) != 0)
+                {
+                    pieceMove.turnsToRemove++;
+                }
             }
-        }
 
-        //UndoBotAction (DO LAST)
-        List<UndoBotAction> botActions = undo.botActions;
-        foreach (UndoBotAction a in botActions)
-        {
-            Bot bot = a.bot;
-            PieceAction action = a.action;
-
-            if ((action & PieceAction.ResetKing) != 0)
+            if (entry.undoMoveType == "botAction")
             {
-                bot.king = isolatedGetKing(bot.currentBoardState, bot.color);
+                UndoBotAction a = entry.botAction;
+
+                BotTemplate bot = a.bot;
+                PieceAction action = a.action;
+
+                if ((action & PieceAction.ResetKing) != 0)
+                {
+                    bot.king = isolatedGetKing(bot.currentBoardState, bot.color);
+                }
             }
         }
     }
@@ -439,7 +443,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         List<int[]> placeCoords = pieceAbility.placeCoords;
         Piece secondPiece = pieceAbility.secondPiece;
 
-        System.Random rand = new System.Random();
+        System.Random rand = globalDefs.globalRand;
 
         if (ability == "Vomit")
         {
@@ -506,16 +510,16 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
             if (piece.ability.Contains("CastleLeft"))
             {
-                UndoAbility castleLeft = new UndoAbility(piece, "CastleLeft", true);
+                UndoAbility castleLeft = new UndoAbility(piece, piece.ability);
                 undo.addAbility(castleLeft);
-                HelperFunctions.removeAbility(piece, "CastleLeft");
+                removeAbility(piece, "CastleLeft");
             }
 
             if (piece.ability.Contains("CastleRight"))
             {
-                UndoAbility castleRight = new UndoAbility(piece, "CastleRight", true);
+                UndoAbility castleRight = new UndoAbility(piece, piece.ability);
                 undo.addAbility(castleRight);
-                HelperFunctions.removeAbility(piece, "CastleRight");
+                removeAbility(piece, "CastleRight");
             }
         }
         else if (ability == "CastleRight")
@@ -535,53 +539,54 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
             if (piece.ability.Contains("CastleLeft"))
             {
-                UndoAbility castleLeft = new UndoAbility(piece, "CastleLeft", true);
+                UndoAbility castleLeft = new UndoAbility(piece, piece.ability);
                 undo.addAbility(castleLeft);
-                HelperFunctions.removeAbility(piece, "CastleLeft");
+                removeAbility(piece, "CastleLeft");
             }
 
             if (piece.ability.Contains("CastleRight"))
             {
-                UndoAbility castleRight = new UndoAbility(piece, "CastleRight", true);
+                UndoAbility castleRight = new UndoAbility(piece, piece.ability);
                 undo.addAbility(castleRight);
-                HelperFunctions.removeAbility(piece, "CastleRight");
+                removeAbility(piece, "CastleRight");
             }
         }
         else if (ability == "Freeze")
         {
-            HelperFunctions.addState(secondPiece, PieceState.Frozen);
-            UndoState pieceFreeze = new UndoState(secondPiece, PieceState.Frozen, false);
+            UndoState pieceFreeze = new UndoState(secondPiece, secondPiece.states);
             undo.addState(pieceFreeze);
+            addState(secondPiece, PieceState.Frozen);
 
-            HelperFunctions.addAbility(secondPiece, "Unfreeze");
-            UndoAbility pieceUnfreeze = new UndoAbility(secondPiece, "Unfreeze", false);
+            UndoAbility pieceUnfreeze = new UndoAbility(secondPiece, secondPiece.ability);
+            addAbility(secondPiece, "Unfreeze");
             undo.addAbility(pieceUnfreeze);
         }
         else if (ability == "Unfreeze")
         {
-            HelperFunctions.removeAbility(piece, "Unfreeze");
-            UndoAbility pieceUnfreeze = new UndoAbility(piece, "Unfreeze", true);
+            UndoAbility pieceUnfreeze = new UndoAbility(piece, piece.ability);
+            removeAbility(piece, "Unfreeze");
             undo.addAbility(pieceUnfreeze);
 
-            HelperFunctions.removeState(piece, PieceState.Frozen);
-            UndoState pieceFreeze = new UndoState(piece, PieceState.Frozen, true);
+            UndoState pieceFreeze = new UndoState(piece, piece.states);
+            removeState(piece, PieceState.Frozen);
             undo.addState(pieceFreeze);
         }
         else if (ability == "Spawn")
         {
-            Piece spawned = HelperFunctions.Spawnables.create(piece.spawnable, piece.color);
+            Piece spawned = Spawnables.create(piece.spawnable, piece.color, true);
             piece.numSpawns--;
             UndoPieceAction incSpawn = new UndoPieceAction(piece, PieceAction.IncrementSpawn);
             undo.addAction(incSpawn);
             if (piece.numSpawns <= 0)
             {
-                UndoAbility pieceSpawn = new UndoAbility(piece, "Spawn", true);
+                UndoAbility pieceSpawn = new UndoAbility(piece, piece.ability);
                 undo.addAbility(pieceSpawn);
-                HelperFunctions.removeAbility(piece, "Spawn");
+                removeAbility(piece, "Spawn");
             }
             Destroy(spawned.go);
 
             UndoMovedPiece mp = new UndoMovedPiece(spawned, new coords(-1, -1), new coords(coords[0], coords[1]), false, true, false);
+            undo.addMove(mp);
             updateBoardState(adjustedCoords, spawned, "a", bs_);
         }
         else if (ability == "Spit")
@@ -596,31 +601,31 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
         else if (ability == "Dematerialize")
         {
-            UndoState pieceState = new UndoState(piece, PieceState.Dematerialized, false);
+            UndoState pieceState = new UndoState(piece, piece.states);
             undo.addState(pieceState);
-            HelperFunctions.addState(piece, PieceState.Dematerialized);
+            addState(piece, PieceState.Dematerialized);
 
-            UndoAbility pieceDematerialize = new UndoAbility(piece, "Dematerialize", true);
+            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.ability);
             undo.addAbility(pieceDematerialize);
-            HelperFunctions.removeAbility(piece, "Dematerialize");
+            removeAbility(piece, "Dematerialize");
 
-            UndoAbility pieceMaterialize = new UndoAbility(piece, "Materialize", false);
+            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.ability);
             undo.addAbility(pieceMaterialize);
-            HelperFunctions.addAbility(piece, "Materialize");
+            addAbility(piece, "Materialize");
         }
         else if (ability == "Materialize")
         {
-            UndoState pieceState = new UndoState(piece, PieceState.Dematerialized, true);
+            UndoState pieceState = new UndoState(piece, piece.states);
             undo.addState(pieceState);
-            HelperFunctions.removeState(piece, PieceState.Dematerialized);
+            removeState(piece, PieceState.Dematerialized);
 
-            UndoAbility pieceDematerialize = new UndoAbility(piece, "Dematerialize", false);
+            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.ability);
             undo.addAbility(pieceDematerialize);
-            HelperFunctions.addAbility(piece, "Dematerialize");
+            addAbility(piece, "Dematerialize");
 
-            UndoAbility pieceMaterialize = new UndoAbility(piece, "Materialize", true);
+            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.ability);
             undo.addAbility(pieceMaterialize);
-            HelperFunctions.removeAbility(piece, "Materialize");
+            removeAbility(piece, "Materialize");
 
             undo_isolatedOnDeathsDontIncludeAttacker(piece, coords, bs_, undo);
 
@@ -628,16 +633,16 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
         else if (ability == "Split")
         {
-            HelperFunctions.removeAbility(piece, "Split");
+            removeAbility(piece, "Split");
 
             undo_isolatedRemovePiece(piece, bs_, undo);
 
-            Piece leftPawn = HelperFunctions.Spawnables.create("LeftPawn", piece.color);
+            Piece leftPawn = Spawnables.create("LeftPawn", piece.color, true);
             Destroy(leftPawn.go);
             leftPawn.position = new int[] { piece.position[0], piece.position[1] };
             undo_isolatedAddPiece(leftPawn, bs_, undo);
 
-            Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color);
+            Piece rightPawn = Spawnables.create("RightPawn", piece.color, true);
             Destroy(rightPawn.go);
             rightPawn.position = new int[] { piece.position[0], piece.position[1] };
             undo_isolatedAddPiece(rightPawn, bs_, undo);
@@ -648,12 +653,12 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
     public static void undo_isolatedCheckPromote(Piece piece, BoardState bs, UndoMove undo)
     {
-        if (piece.promotesInto != "" && !HelperFunctions.checkState(piece, PieceState.Dematerialized))
+        if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
         {
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Piece p = Spawnables.create(pname, piece.color, true);
                 Destroy(p.go);
                 undo_isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(piece.position[0] - 1, piece.position[1] - 1, bs.boardGrid, false), bs, undo);
 
@@ -668,7 +673,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
     {
         foreach (Piece deadPiece in new List<Piece>(deadPieces))
         {
-            if (HelperFunctions.checkState(deadPiece, PieceState.Shield) || HelperFunctions.checkCaptureTheFlag(deadPiece))
+            if (checkState(deadPiece, PieceState.Shield) || checkCaptureTheFlag(deadPiece))
             {
                 continue;
             }
@@ -698,7 +703,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         undo.addAction(incLives);
         deadPiece.lives--;
 
-        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs))
+        if (!isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs))
         {
             UndoMovedPiece undoMove = undo_movePieceBoardState(deadPiece, new coords( deadPiece.startSquare[0] - 1, deadPiece.startSquare[1] - 1 ), bs);
             undo.addMove(undoMove);
@@ -720,7 +725,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
-            if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
+            if (!checkState(piece, PieceState.Dematerialized))
             {
                 var onDeathVars = undo_isolatedOnDeath(piece, attacker, bs, undo);
                 ps |= onDeathVars.stackingStates;
@@ -754,7 +759,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         //Electric (Skip as it depends on random values)
 
         //Hungry
-        if (HelperFunctions.checkState(attackerPiece, PieceState.Hungry))
+        if (checkState(attackerPiece, PieceState.Hungry))
         {
             if (attackerPiece.storage == null)
             {
@@ -771,7 +776,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             return (PieceState.None, false);
         }
 
-        if (HelperFunctions.checkState(deadPiece, PieceState.Hungry))
+        if (checkState(deadPiece, PieceState.Hungry))
         {
             if (deadPiece.storage != null && deadPiece.storage.Count > 0)
             {
@@ -781,7 +786,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 PieceAbility pa = new PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces_, placeCoords_, null);
                 //Simulate Ability
 
-                List<Piece> placePieces = pa.placePieces;
+                List<Piece> placePieces = new List<Piece>(pa.placePieces);
                 List<int[]> placeCoords = pa.placeCoords;
 
                 int numPieces = placePieces.Count;
@@ -810,7 +815,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 }
                 else
                 {
-                    foreach (Piece p_ in placePieces)
+                    foreach (Piece p_ in new List<Piece> (placePieces))
                     {
                         int idx = rand.Next(numCoords);
                         numCoords--;
@@ -833,7 +838,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
 
         //Spitting
-        if (HelperFunctions.checkState(attackerPiece, PieceState.Spitting))
+        if (checkState(attackerPiece, PieceState.Spitting))
         {
             if (attackerPiece.storage == null)
             {
@@ -852,7 +857,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
             else
             {
-                List<Piece> piece = HelperFunctions.pieceToList(deadPiece);
+                List<Piece> piece = pieceToList(deadPiece);
                 undo_isolatedCollateralDeath(piece, bs, undo);
             }
 
@@ -861,10 +866,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         PieceState stackingStates = PieceState.None;
         //Stacking
-        if (HelperFunctions.checkState(attackerPiece, PieceState.Stacking) && deadPiece.lives == 0)
+        if (checkState(attackerPiece, PieceState.Stacking) && deadPiece.lives == 0)
         {
             Piece original = attackerPiece;
-            Piece clone = HelperFunctions.clonePiece(original);
+            Piece clone = clonePiece(original);
 
             stackingStates |= deadPiece.states;
 
@@ -875,23 +880,23 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 if (!original.ability.Contains(abilityPart))
                 {
-                    HelperFunctions.addAbility(clone, abilityPart);
+                    addAbility(clone, abilityPart);
                 }
             }
 
             //Moves
-            int[,] moves = HelperFunctions.combineMoveSets(original.moves, deadPiece.moves);
-            int[,] oneTimeMoves = HelperFunctions.combineMoveSets(original.oneTimeMoves, deadPiece.oneTimeMoves);
-            int[,] moveAndAttacks = HelperFunctions.combineMoveSets(original.moveAndAttacks, deadPiece.moveAndAttacks);
-            int[,] oneTimeMoveAndAttacks = HelperFunctions.combineMoveSets(original.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
-            int[,] murderousAttacks = HelperFunctions.combineMoveSets(original.murderousAttacks, deadPiece.murderousAttacks);
-            int[,] conditionalAttacks = HelperFunctions.combineMoveSets(original.conditionalAttacks, deadPiece.conditionalAttacks);
-            int[,] attacks = HelperFunctions.combineMoveSets(original.attacks, deadPiece.attacks);
-            int[,] jumpAttacks = HelperFunctions.combineMoveSets(original.jumpAttacks, deadPiece.jumpAttacks);
-            int[,] flagMove1 = HelperFunctions.combineMoveSets(original.flagMove1, deadPiece.flagMove1);
-            int[,] flagMove2 = HelperFunctions.combineMoveSets(original.flagMove2, deadPiece.flagMove2);
-            int[,] pushMoves = HelperFunctions.combineMoveSets(original.pushMoves, deadPiece.pushMoves);
-            int[,] enPassantMoves = HelperFunctions.combineMoveSets(original.enPassantMoves, deadPiece.enPassantMoves);
+            int[,] moves = combineMoveSets(original.moves, deadPiece.moves);
+            int[,] oneTimeMoves = combineMoveSets(original.oneTimeMoves, deadPiece.oneTimeMoves);
+            int[,] moveAndAttacks = combineMoveSets(original.moveAndAttacks, deadPiece.moveAndAttacks);
+            int[,] oneTimeMoveAndAttacks = combineMoveSets(original.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
+            int[,] murderousAttacks = combineMoveSets(original.murderousAttacks, deadPiece.murderousAttacks);
+            int[,] conditionalAttacks = combineMoveSets(original.conditionalAttacks, deadPiece.conditionalAttacks);
+            int[,] attacks = combineMoveSets(original.attacks, deadPiece.attacks);
+            int[,] jumpAttacks = combineMoveSets(original.jumpAttacks, deadPiece.jumpAttacks);
+            int[,] flagMove1 = combineMoveSets(original.flagMove1, deadPiece.flagMove1);
+            int[,] flagMove2 = combineMoveSets(original.flagMove2, deadPiece.flagMove2);
+            int[,] pushMoves = combineMoveSets(original.pushMoves, deadPiece.pushMoves);
+            int[,] enPassantMoves = combineMoveSets(original.enPassantMoves, deadPiece.enPassantMoves);
 
             clone.moves = moves;
             clone.oneTimeMoves = oneTimeMoves;
@@ -911,29 +916,29 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
 
         //Jailer
-        if (HelperFunctions.checkState(attackerPiece, PieceState.Jailer))
+        if (checkState(attackerPiece, PieceState.Jailer))
         {
-            UndoState us = new UndoState(deadPiece, PieceState.Jailed, false);
+            UndoState us = new UndoState(deadPiece, deadPiece.states);
             undo.addState(us);
 
-            HelperFunctions.addState(deadPiece, PieceState.Jailed);
+            addState(deadPiece, PieceState.Jailed);
 
             return (PieceState.None, false);
         }
 
         //Crook
-        if (HelperFunctions.checkState(deadPiece, PieceState.Crook) && deadPiece.color != attackerPiece.color)
+        if (checkState(deadPiece, PieceState.Crook) && deadPiece.color != attackerPiece.color)
         {
-            UndoState us = new UndoState(deadPiece, PieceState.Jailed, false);
+            UndoState us = new UndoState(deadPiece, deadPiece.states);
             undo.addState(us);
 
-            HelperFunctions.addState(deadPiece, PieceState.Jailed);
+            addState(deadPiece, PieceState.Jailed);
 
             return (PieceState.None, false);
         }
 
         //Medusa
-        if (HelperFunctions.checkState(attackerPiece, PieceState.Medusa))
+        if (checkState(attackerPiece, PieceState.Medusa))
         {
             if (attackerPiece.numSpawns != 0)
             {
@@ -943,7 +948,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                 undo_isolatedRemovePiece(deadPiece, bs, undo);
 
-                Piece shieldPawn = HelperFunctions.Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, true);
                 Destroy(shieldPawn.go);
 
                 undo_isolatedAddPiece(shieldPawn, bs, undo);
@@ -956,8 +961,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
-                    undo_isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs, undo);
-                    undo_isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs, undo);
+                    undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
+                    undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
                     attackerDied = true;
                     return (stackingStates, attackerDied);
                 }
@@ -968,7 +973,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                     if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
                     {
-                        undo_isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs, undo);
+                        undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
                         attackerDied = true;
                     }
 
@@ -981,7 +986,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
-                    undo_isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs, undo);
+                    undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
                     attackerDied = true;
                     return (stackingStates, attackerDied);
                 }
@@ -992,8 +997,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                     if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
                     {
-                        undo_isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs, undo);
-                        undo_isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs, undo);
+                        undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
+                        undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
                         attackerDied = true;
                     }
 
@@ -1084,7 +1089,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
         }
 
-        if (HelperFunctions.checkState(piece, PieceState.Delayed))
+        if (checkState(piece, PieceState.Delayed))
         {
             PieceMove delayedMove = new PieceMove(piece, new int[] { coords.x, coords.y }, 2);
             bs.delayedQueue.Enqueue(delayedMove);
@@ -1098,21 +1103,21 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         List<Piece> piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(piece.position[0] - 1, piece.position[1] - 1, bs.boardGrid, false);
         foreach (Piece pieceOnSquare in piecesOnSquare)
         {
-            if (HelperFunctions.checkState(pieceOnSquare, PieceState.Crook))
+            if (checkState(pieceOnSquare, PieceState.Crook))
             {
                 if (piecesOnSquare.Count == 2)
                 {
-                    HelperFunctions.removeState(pieceOnSquare, PieceState.Jailed);
-                    UndoState us = new UndoState(pieceOnSquare, PieceState.Jailed, true);
-                    undo.addState(us);
+                    UndoState us_ = new UndoState(pieceOnSquare, pieceOnSquare.states);
+                    undo.addState(us_);
+                    removeState(pieceOnSquare, PieceState.Jailed);
                 }
             }
 
-            if (HelperFunctions.checkState(piece, PieceState.Jailer))
+            if (checkState(piece, PieceState.Jailer))
             {
-                HelperFunctions.removeState(pieceOnSquare, PieceState.Jailed);
-                UndoState us = new UndoState(pieceOnSquare, PieceState.Jailed, true);
-                undo.addState(us);
+                UndoState us_ = new UndoState(pieceOnSquare, pieceOnSquare.states);
+                undo.addState(us_);
+                removeState(pieceOnSquare, PieceState.Jailed);
             }
         }
 
@@ -1127,7 +1132,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             undo_isolatedRemovePiece(piece, bs, undo);
         }
 
-        if (HelperFunctions.checkState(piece, PieceState.Piggyback))
+        if (checkState(piece, PieceState.Piggyback))
         {
             List<Piece> piecesOnSquare2 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0] - 1, originalCoords[1] - 1, bs.boardGrid, false);
             foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare2))
@@ -1141,10 +1146,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
         }
 
-        if (HelperFunctions.checkState(pieceOnSquare, PieceState.Jockey))
+        List<Piece> piecesOnSquare3 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0] - 1, originalCoords[1] - 1, bs.boardGrid, false);
+        foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare3))
         {
-            List<Piece> piecesOnSquare3 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords[0] - 1, originalCoords[1] - 1, bs.boardGrid, false);
-            foreach (Piece pieceOnSquare in new List<Piece> (piecesOnSquare3))
+            if (checkState(pieceOnSquare, PieceState.Jockey))
             {
                 UndoMovedPiece pm = undo_movePieceBoardState(pieceOnSquare, coords, bs);
                 undo.addMove(pm);
@@ -1157,18 +1162,18 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Piece p = Spawnables.create(pname, piece.color, true);
                 Destroy(p.go);
                 updateBoardState(new int[] { piece.position[0] - 1, piece.position[1] - 1 }, piece, "r", bs);
-                updateBoardState(coords, p, "a", bs);
+                updateBoardState(new int[] { coords.x, coords.y }, p, "a", bs);
 
                 undo_isolatedRemovePiece(piece, bs, undo);
                 undo_isolatedAddPiece(p, bs, undo);
             }
         }
 
+        UndoState us = new UndoState(piece, piece.states);
         piece.states |= stackingStates;
-        UndoState us = new UndoState(piece, stackingStates, false);
         undo.addState(us);
 
         Piece botWhiteKing = bot.color == 1 ? botKing : oppKing;
@@ -1183,11 +1188,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         int[] botWhiteKingPos = new int[] { botWhiteKing.position[0] - 1, botWhiteKing.position[1] - 1 };
         int[] botBlackKingPos = new int[] { botBlackKing.position[0] - 1, botBlackKing.position[1] - 1 };
 
-        if (HelperFunctions.checkState(botWhiteKing, PieceState.Heartbroken))
+        if (checkState(botWhiteKing, PieceState.Heartbroken))
         {
             if (!isolatedIsPieceTypeOnBoard("q", 1, bs))
             {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Piece tempKing = Spawnables.create("DepressedKing", 1, true);
                 Destroy(tempKing.go);
 
                 updateBoardState(botWhiteKingPos, tempKing, "a", bs);
@@ -1202,11 +1207,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
         }
 
-        if (HelperFunctions.checkState(botBlackKing, PieceState.Heartbroken))
+        if (checkState(botBlackKing, PieceState.Heartbroken))
         {
             if (!isolatedIsPieceTypeOnBoard("q", -1, bs))
             {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
+                Piece tempKing = Spawnables.create("DepressedKing", -1, true);
                 Destroy(tempKing.go);
 
                 updateBoardState(botBlackKingPos, tempKing, "a", bs);
@@ -1241,11 +1246,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                 //Debug.LogWarning("Checking for death");
 
-                if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1)*/!isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) && !HelperFunctions.checkState(piece, PieceState.Murderous))
+                if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color * -1)*/!isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) && !checkState(piece, PieceState.Murderous))
                 {
                     death = false;
                 }
-                else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, PieceState.Dematerialized))
+                else if (checkStateAllOnSquare(piecesOnCoords, PieceState.Dematerialized))
                 {
                     death = false;
                 }
@@ -1253,7 +1258,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 {
                     death = false;
                 }
-                else if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
+                else if (checkState(piece, PieceState.Dematerialized))
                 {
                     death = false;
                 }
@@ -1279,7 +1284,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         foreach (Piece piece in pieces)
         {
             //Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ") during a simulated move");
-            if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
+            if (!checkState(piece, PieceState.Dematerialized))
             {
                 var onDeathVars = undo_isolatedOnDeath(piece, attacker, bs, undo);
                 stacks = onDeathVars.stackingStates;

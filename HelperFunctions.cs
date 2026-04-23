@@ -948,7 +948,7 @@ public class HelperFunctions : MonoBehaviour
         //Debug.Log("Searching for Check. Color: " + king.color);
         List<int[]> moves = addToCurrentMoveableCoordsTotal(king.color * -1, false, false, null, false, true);
         //Debug.Log("CHECK SEARCH END");
-        bool check = isInList(moves, king.getPosition(), false);
+        bool check = isInList(moves, king.position, false);
 
         if (check && king.color == 1)
         {
@@ -988,62 +988,6 @@ public class HelperFunctions : MonoBehaviour
             }
         }
         return false;
-    }
-
-    /* TODO
-    * Simulate abilities
-    */
-    public static bool dummyMove(Piece piece, int[] coords) //Returns dummyIsCheck
-    {
-        int x = piece.position[0];
-        int y = piece.position[1];
-
-        Piece king;
-        if (piece.color == 1)
-        {
-            king = gameData.whiteKing;
-        }
-        else
-        {
-            king = gameData.blackKing;
-        }
-
-        bool isInCheck;
-
-        GameObject square = findSquare(coords[0], coords[1]);
-
-        //Save State
-        List<Piece> oldPieces = new List<Piece>();
-        bool restore = false;
-
-
-        List<GameObject> gos = new List<GameObject>();
-
-        if (isPieceOnSquare(square))
-        {
-            oldPieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-            gos = new List<GameObject>(removePieceFromBoard(oldPieces));
-            restore = true;
-        }
-
-        piece.setPosition(coords);
-        movePieceBoardGrid(piece, new int[] { x, y }, coords);
-
-        //movePieceNoImage(piece, square);
-
-        List<int[]> moves = addToCurrentMoveableCoordsTotal(piece.color * -1, false, false, null, false, true);
-        isInCheck = dummyIsCheck(moves, king);
-
-        if (restore)
-        {
-            restorePieceToBoard(oldPieces, coords, gos);
-        }
-
-        movePieceBoardGrid(piece, coords, new int[] { x, y });
-        piece.setPosition(new int[] { x, y });
-        //movePieceNoImage(piece, findSquare(x, y));
-
-        return isInCheck;
     }
 
     public static List<GameObject> removePieceFromBoard(List<Piece> pieces)
@@ -1226,7 +1170,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool dummyIsCheck(List<int[]> moves, Piece king)
     {
-        return isInList(moves, king.getPosition(), false);
+        return isInList(moves, king.position, false);
     }
 
     public static bool isCheckMate(Piece king, bool execDummyMove)
@@ -1751,7 +1695,7 @@ public class HelperFunctions : MonoBehaviour
                 int[] pos = deadPiece.position;
                 removePieceFromBoard(pieceToList(deadPiece));
 
-                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, false);
                 initPiece(shieldPawn, pos);
             }
         }
@@ -2625,22 +2569,22 @@ public class HelperFunctions : MonoBehaviour
 
     public static class Spawnables
     {
-        public static Piece create(string pieceName, int color)
+        public static Piece create(string pieceName, int color, bool simulated)
         {
             switch (pieceName)
             {
-                case "King": return new King(color, online);
-                case "Queen": return new Queen(color, online);
-                case "Rook": return new Rook(color, online);
-                case "Knight": return new Knight(color, online);
-                case "Bishop": return new Bishop(color, online);
-                case "Pawn": return new Pawn(color, online);
-                case "ZombiePawn": return new ZombiePawn(color, online);
-                case "SuperPawn": return new SuperPawn(color, online);
-                case "LeftPawn": return new LeftPawn(color, online);
-                case "RightPawn": return new RightPawn(color, online);
-                case "DepressedKing": return new DepressedKing(color, online);
-                case "ShieldPawn": return new ShieldPawn(color, online);
+                case "King": return new King(color, online, simulated);
+                case "Queen": return new Queen(color, online, simulated);
+                case "Rook": return new Rook(color, online, simulated);
+                case "Knight": return new Knight(color, online, simulated);
+                case "Bishop": return new Bishop(color, online, simulated);
+                case "Pawn": return new Pawn(color, online, simulated);
+                case "ZombiePawn": return new ZombiePawn(color, online, simulated);
+                case "SuperPawn": return new SuperPawn(color, online, simulated);
+                case "LeftPawn": return new LeftPawn(color, online, simulated);
+                case "RightPawn": return new RightPawn(color, online, simulated);
+                case "DepressedKing": return new DepressedKing(color, online, simulated);
+                case "ShieldPawn": return new ShieldPawn(color, online, simulated);
                 default: throw new ArgumentException("Bad Piece");
             }
         }
@@ -2875,7 +2819,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (checkState(piece, PieceState.Double))
         {
-            Piece doublePawn = Spawnables.create("Pawn", piece.color);
+            Piece doublePawn = Spawnables.create("Pawn", piece.color, false);
             initPiece(doublePawn, piece.position);
         }
 
@@ -3121,7 +3065,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords[0] + "," + coords[1]);
 
-            Piece spawned = Spawnables.create(piece.spawnable, piece.color);
+            Piece spawned = Spawnables.create(piece.spawnable, piece.color, false);
             piece.numSpawns--;
 
             if (piece.numSpawns <= 0)
@@ -3198,10 +3142,10 @@ public class HelperFunctions : MonoBehaviour
             forceRemove(piece);
             updateBoardGrid(coords, piece, "r");
 
-            Piece leftPawn = Spawnables.create("LeftPawn", piece.color);
+            Piece leftPawn = Spawnables.create("LeftPawn", piece.color, false);
             initPiece(leftPawn, coords);
 
-            Piece rightPawn = Spawnables.create("RightPawn", piece.color);
+            Piece rightPawn = Spawnables.create("RightPawn", piece.color, false);
             initPiece(rightPawn, coords);
         }
 
@@ -3466,7 +3410,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!isPieceTypeOnBoard("q", 1))
             {
-                Piece tempKing = Spawnables.create("DepressedKing", 1);
+                Piece tempKing = Spawnables.create("DepressedKing", 1, false);
                 initPiece(tempKing, gameData.whiteKing.position);
                 collateralDeath(pieceToList(gameData.whiteKing));
                 gameData.whiteKing = tempKing;
@@ -3476,7 +3420,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!isPieceTypeOnBoard("q", -1))
             {
-                Piece tempKing = Spawnables.create("DepressedKing", -1);
+                Piece tempKing = Spawnables.create("DepressedKing", -1, false);
                 initPiece(tempKing, gameData.blackKing.position);
                 collateralDeath(pieceToList(gameData.blackKing));
                 gameData.blackKing = tempKing;
@@ -3722,7 +3666,7 @@ public class HelperFunctions : MonoBehaviour
                 GameObject square = tempInfo.tempSquare;
                 string pieceName = tempInfo.tempPiece.spawnable;
 
-                Piece piece = Spawnables.create(pieceName, tempInfo.tempPiece.color);
+                Piece piece = Spawnables.create(pieceName, tempInfo.tempPiece.color, false);
                 gameData.selectedPiece.numSpawns--;
                 initPiece(piece, findCoords(square));
 
@@ -3823,10 +3767,10 @@ public class HelperFunctions : MonoBehaviour
         {
             forceRemove(gameData.selectedPiece);
 
-            Piece piece = Spawnables.create("LeftPawn", tempInfo.tempPiece.color);
+            Piece piece = Spawnables.create("LeftPawn", tempInfo.tempPiece.color, false);
             initPiece(piece, findCoords(gameData.selected));
 
-            Piece piece2 = Spawnables.create("RightPawn", tempInfo.tempPiece.color);
+            Piece piece2 = Spawnables.create("RightPawn", tempInfo.tempPiece.color, false);
             initPiece(piece2, findCoords(gameData.selected));
 
             gameData.abilitySelected = "";
@@ -3843,7 +3787,7 @@ public class HelperFunctions : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = Spawnables.create(pname, piece.color);
+                Piece p = Spawnables.create(pname, piece.color, false);
 
                 if (piece.storage != null)
                 {
@@ -3994,7 +3938,7 @@ public class HelperFunctions : MonoBehaviour
     {
         Type type = original.GetType();
 
-        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false);
+        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false, true);
         Destroy(clone.go);
 
         clone.disabled = original.disabled;
@@ -4208,7 +4152,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (nm.moveType == "move" && nm.move != null)
         {
-            Piece newPiece = getCloneFromOriginalPiece(nm.move.p, cloneState.boardGrid);
+            Piece newPiece = BotHelperFunctions.getCloneFromOriginalPiece(nm.move.p, cloneState.boardGrid);
 
             int[] newCoords = null;
             if (nm.move.coords != null)
@@ -4222,10 +4166,10 @@ public class HelperFunctions : MonoBehaviour
 
         if (nm.moveType == "ability" && nm.ability != null)
         {
-            PieceAbility old = nm.ability;
+            BotHelperFunctions.PieceAbility old = nm.ability;
 
-            Piece newMainPiece = getCloneFromOriginalPiece(old.piece, cloneState.boardGrid);
-            Piece newSecondPiece = getCloneFromOriginalPiece(old.secondPiece, cloneState.boardGrid);
+            Piece newMainPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.piece, cloneState.boardGrid);
+            Piece newSecondPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.secondPiece, cloneState.boardGrid);
 
             int[] newCoords = null;
             if (old.coords != null)
@@ -4239,7 +4183,7 @@ public class HelperFunctions : MonoBehaviour
                 newPlacePieces = new List<Piece>();
                 foreach (Piece p in old.placePieces)
                 {
-                    newPlacePieces.Add(getCloneFromOriginalPiece(p, cloneState.boardGrid));
+                    newPlacePieces.Add(BotHelperFunctions.getCloneFromOriginalPiece(p, cloneState.boardGrid));
                 }
             }
 
@@ -4253,7 +4197,7 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
-            PieceAbility newAbility = new PieceAbility(
+            BotHelperFunctions.PieceAbility newAbility = new BotHelperFunctions.PieceAbility(
                 newMainPiece,
                 old.ability,
                 newCoords,

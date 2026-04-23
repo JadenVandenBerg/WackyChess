@@ -56,27 +56,36 @@ public class Template : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public Template(int color, bool online)
+    public Template(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -142,26 +151,35 @@ public class SuperPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SuperPawn(int color, bool online)
+    public SuperPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = "SuperPawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }

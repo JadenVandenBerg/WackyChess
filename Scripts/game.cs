@@ -35,14 +35,14 @@ public class game : MonoBehaviour
 
         moveSound = GetComponent<AudioSource>();
 
-        pawn = new Pawn(1, false);
-        pawn2 = new Pawn(1, false);
-        pawn3 = new Pawn(1, false);
-        pawn4 = new Pawn(1, false);
-        pawn5 = new Pawn(1, false);
-        pawn6 = new Pawn(1, false);
-        pawn7 = new Pawn(1, false);
-        pawn8 = new Pawn(1, false);
+        pawn = new Pawn(1, false, false);
+        pawn2 = new Pawn(1, false, false);
+        pawn3 = new Pawn(1, false, false);
+        pawn4 = new Pawn(1, false, false);
+        pawn5 = new Pawn(1, false, false);
+        pawn6 = new Pawn(1, false, false);
+        pawn7 = new Pawn(1, false, false);
+        pawn8 = new Pawn(1, false, false);
 
         gameData.piecesDict.Add(pawn.go, pawn);
         gameData.piecesDict.Add(pawn2.go, pawn2);
@@ -53,14 +53,14 @@ public class game : MonoBehaviour
         gameData.piecesDict.Add(pawn7.go, pawn7);
         gameData.piecesDict.Add(pawn8.go, pawn8);
 
-        wRook = new Rook(1, false);
-        wRook2 = new Rook(1, false);
-        wBishop = new Bishop(1, false);
-        wBishop2 = new Bishop(1, false);
-        wKnight = new Knight(1, false);
-        wKnight2 = new Knight(1, false);
-        wQueen = new Queen(1, false);
-        wKing = new King(1, false);
+        wRook = new Rook(1, false, false);
+        wRook2 = new Rook(1, false, false);
+        wBishop = new Bishop(1, false, false);
+        wBishop2 = new Bishop(1, false, false);
+        wKnight = new Knight(1, false, false);
+        wKnight2 = new Knight(1, false, false);
+        wQueen = new Queen(1, false, false);
+        wKing = new King(1, false, false);
 
         gameData.piecesDict.Add(wRook.go, wRook);
         gameData.piecesDict.Add(wRook2.go, wRook2);
@@ -71,14 +71,14 @@ public class game : MonoBehaviour
         gameData.piecesDict.Add(wKing.go, wKing);
         gameData.piecesDict.Add(wKnight2.go, wKnight2);
 
-        bpawn = new Pawn(-1, false);
-        bpawn2 = new Pawn(-1, false);
-        bpawn3 = new Pawn(-1, false);
-        bpawn4 = new Pawn(-1, false);
-        bpawn5 = new Pawn(-1, false);
-        bpawn6 = new Pawn(-1, false);
-        bpawn7 = new Pawn(-1, false);
-        bpawn8 = new Pawn(-1, false);
+        bpawn = new Pawn(-1, false, false);
+        bpawn2 = new Pawn(-1, false, false);
+        bpawn3 = new Pawn(-1, false, false);
+        bpawn4 = new Pawn(-1, false, false);
+        bpawn5 = new Pawn(-1, false, false);
+        bpawn6 = new Pawn(-1, false, false);
+        bpawn7 = new Pawn(-1, false, false);
+        bpawn8 = new Pawn(-1, false, false);
 
         gameData.piecesDict.Add(bpawn.go, bpawn);
         gameData.piecesDict.Add(bpawn2.go, bpawn2);
@@ -89,14 +89,14 @@ public class game : MonoBehaviour
         gameData.piecesDict.Add(bpawn7.go, bpawn7);
         gameData.piecesDict.Add(bpawn8.go, bpawn8);
 
-        bRook = new Rook(-1, false);
-        bRook2 = new Rook(-1, false);
-        bBishop = new Bishop(-1, false);
-        bBishop2 = new Bishop(-1, false);
-        bKnight = new Knight(-1, false);
-        bKnight2 = new Knight(-1, false);
-        bQueen = new Queen(-1, false);
-        bKing = new King(-1, false);
+        bRook = new Rook(-1, false, false);
+        bRook2 = new Rook(-1, false, false);
+        bBishop = new Bishop(-1, false, false);
+        bBishop2 = new Bishop(-1, false, false);
+        bKnight = new Knight(-1, false, false);
+        bKnight2 = new Knight(-1, false, false);
+        bQueen = new Queen(-1, false, false);
+        bKing = new King(-1, false, false);
 
         gameData.piecesDict.Add(bRook.go, bRook);
         gameData.piecesDict.Add(bRook2.go, bRook2);
@@ -300,7 +300,7 @@ public class game : MonoBehaviour
             {
                 Destroy(piece.go);
                 piece.alive = 0;
-                Piece superPawn = new SuperPawn(1, false);
+                Piece superPawn = new SuperPawn(1, false, false);
                 initPiece(superPawn, coords);
                 superPawn.go.tag = "SuperPawn";
 
@@ -310,7 +310,7 @@ public class game : MonoBehaviour
             {
                 Destroy(piece.go);
                 piece.alive = 0;
-                Piece superPawn = new SuperPawn(-1, false);
+                Piece superPawn = new SuperPawn(-1, false, false);
                 initPiece(superPawn, coords);
                 superPawn.go.tag = "SuperPawn";
 

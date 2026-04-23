@@ -39,41 +39,41 @@ public class onlineGame : MonoBehaviour
 
         gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-        pawn = new DelayedPawn(1, true);
-        pawn2 = new Crook(1, true);
-        pawn3 = new ProtectivePawn(1, true);
-        pawn4 = new RoyalKnight(1, true);
-        pawn5 = new PAWN(1, true);
-        pawn6 = new JockeyKnight(1, true);
-        pawn7 = new PromotingPawn(1, true);
-        pawn8 = new LandminePawn(1, true);
+        pawn = new DelayedPawn(1, true, false);
+        pawn2 = new Crook(1, true, false);
+        pawn3 = new ProtectivePawn(1, true, false);
+        pawn4 = new RoyalKnight(1, true, false);
+        pawn5 = new PAWN(1, true, false);
+        pawn6 = new JockeyKnight(1, true, false);
+        pawn7 = new PromotingPawn(1, true, false);
+        pawn8 = new LandminePawn(1, true, false);
 
-        wRook = new MurderousRook(1, true);
-        wRook2 = new Empress(1, true);
-        wBishop = new FragileBishop(1, true);
-        wBishop2 = new ColorChangingBishop(1, true);
-        wKnight = new FragileKnight(1, true);
-        wKnight2 = new Knight(1, true);
-        wQueen = new Medusa(1, true);
-        wKing = new RulebreakerKing(1, true);
+        wRook = new MurderousRook(1, true, false);
+        wRook2 = new Empress(1, true, false);
+        wBishop = new FragileBishop(1, true, false);
+        wBishop2 = new ColorChangingBishop(1, true, false);
+        wKnight = new FragileKnight(1, true, false);
+        wKnight2 = new Knight(1, true, false);
+        wQueen = new Medusa(1, true, false);
+        wKing = new RulebreakerKing(1, true, false);
 
-        bpawn = new AtomicPawn(-1, true);
-        bpawn2 = new PiggybackKnight(-1, true);
-        bpawn3 = new LandminePawn(-1, true);
-        bpawn4 = new Crook(-1, true);
-        bpawn5 = new LandminePawn(-1, true);
-        bpawn6 = new LandminePawn(-1, true);
-        bpawn7 = new LandminePawn(-1, true);
-        bpawn8 = new LandminePawn(-1, true);
+        bpawn = new AtomicPawn(-1, true, false);
+        bpawn2 = new PiggybackKnight(-1, true, false);
+        bpawn3 = new LandminePawn(-1, true, false);
+        bpawn4 = new Crook(-1, true, false);
+        bpawn5 = new LandminePawn(-1, true, false);
+        bpawn6 = new LandminePawn(-1, true, false);
+        bpawn7 = new LandminePawn(-1, true, false);
+        bpawn8 = new LandminePawn(-1, true, false);
 
-        bRook = new Rook(-1, true);
-        bRook2 = new Rook(-1, true);
-        bBishop = new Bishop(-1, true);
-        bBishop2 = new Bishop(-1, true);
-        bKnight = new Knight(-1, true);
-        bKnight2 = new Knight(-1, true);
-        bQueen = new Queen(-1, true);
-        bKing = new HyperFastKing(-1, true);
+        bRook = new Rook(-1, true, false);
+        bRook2 = new Rook(-1, true, false);
+        bBishop = new Bishop(-1, true, false);
+        bBishop2 = new Bishop(-1, true, false);
+        bKnight = new Knight(-1, true, false);
+        bKnight2 = new Knight(-1, true, false);
+        bQueen = new Queen(-1, true, false);
+        bKing = new HyperFastKing(-1, true, false);
 
         HelperFunctions.initPiece(pawn, new int[] { 1, 2 });
         HelperFunctions.initPiece(pawn2, new int[] { 2, 2 });

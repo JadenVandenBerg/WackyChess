@@ -36,7 +36,6 @@ public class OneUndoMoveBot : BotTemplate
             //BoardState originalBoardState = this.currentBoardState;
             UndoMove undo;
 
-            BoardState cloneState;
             if (moveType == "move")
             {
                 //cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
@@ -47,6 +46,9 @@ public class OneUndoMoveBot : BotTemplate
                 //cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
                 undo = undo_simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
             }
+
+            Debug.Log("Simulating Piece " + moveType + ": " + piece.name + " to " + coords[0] + ", " + coords[1]);
+            debug_printBoardState(currentBoardState);
 
             //this.currentBoardState = cloneState;
 
@@ -68,13 +70,16 @@ public class OneUndoMoveBot : BotTemplate
                 if (moveTypeOpp == "move")
                 {
                     //cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-                    undo = undo_simulatePieceMove(this, this.currentBoardState, pieceOpp, new coords(coordsOpp[0], coordsOpp[1]));
+                    undo_ = undo_simulatePieceMove(this, this.currentBoardState, pieceOpp, new coords(coordsOpp[0], coordsOpp[1]));
                 }
                 else
                 {
                     //cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-                    undo = undo_simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
+                    undo_ = undo_simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
                 }
+
+                //Debug.Log("Simulating Opponent Piece " + moveTypeOpp + ": " + pieceOpp.name + " to " + coordsOpp[0] + ", " + coordsOpp[1]);
+                //debug_printBoardState(currentBoardState);
 
                 //this.currentBoardState = originalBoardState_;
 
@@ -106,6 +111,9 @@ public class OneUndoMoveBot : BotTemplate
 
             //this.currentBoardState = originalBoardState;
             undoMove(undo, this.currentBoardState);
+
+            Debug.Log("Undoing Move");
+            debug_printBoardState(currentBoardState);
         }
 
 

@@ -34,7 +34,7 @@ public class BotHelperFunctions : MonoBehaviour
             int index = rand.Next(pieces.Count);
 
             Type type_ = pieces[index];
-            Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
+            Piece piece = (Piece)Activator.CreateInstance(type_, color, false, false);
 
             selected.Add(piece);
             pieces.RemoveAt(index);
@@ -60,7 +60,7 @@ public class BotHelperFunctions : MonoBehaviour
         foreach (var piece_ in allPieces)
         {
 
-            Piece piece = (Piece)Activator.CreateInstance(piece_, color, false);
+            Piece piece = (Piece)Activator.CreateInstance(piece_, color, false, false);
 
             if (piece.baseType == type)
             {
@@ -1571,17 +1571,12 @@ public class BotHelperFunctions : MonoBehaviour
         return allNextMoves[index];
     }
 
-    //TODO run movePiece on boardstate without actual move
     public static void movePieceBoardState(Piece piece, int[] coords, BoardState boardState)
     {
-        //Debug.LogWarning("Attempted move of " + piece.name + " from " + piece.position[0] + "," + piece.position[1] + " to " + (coords[0] + 1) + "," + (coords[1] + 1));
         if (coords[0] < 0 || coords[1] < 0)
         {
             return;
         }
-
-        // int[] position = boardState.getPiecePosition(piece);
-        // if (position == null) return;
 
         int[] position = new int[] { piece.position[0] - 1, piece.position[1] - 1 };
 
@@ -1609,6 +1604,8 @@ public class BotHelperFunctions : MonoBehaviour
                 square.Add(piece);
                 //Debug.LogWarning("Added " + piece.name + " to " + (coords[0] - 1) + "," + (coords[1] - 1));
             }
+
+            piece.position = new int[] { coords[0] + 1, coords[1] + 1 };
         }
 
         if (action.ToLower() == "r" || action.ToLower() == "remove")
@@ -1893,7 +1890,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
         else if (ability == "Spawn")
         {
-            Piece spawned = HelperFunctions.Spawnables.create(piece.spawnable, piece.color);
+            Piece spawned = HelperFunctions.Spawnables.create(piece.spawnable, piece.color, false);
             piece.numSpawns--;
             if (piece.numSpawns <= 0)
             {
@@ -1932,11 +1929,11 @@ public class BotHelperFunctions : MonoBehaviour
 
             updateBoardState(adjustedPiecePosition, piece, "r", bs);
 
-            Piece leftPawn = HelperFunctions.Spawnables.create("LeftPawn", piece.color);
+            Piece leftPawn = HelperFunctions.Spawnables.create("LeftPawn", piece.color, false);
             Destroy(leftPawn.go);
             updateBoardState(adjustedPiecePosition, leftPawn, "a", bs);
 
-            Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color);
+            Piece rightPawn = HelperFunctions.Spawnables.create("RightPawn", piece.color, false);
             Destroy(rightPawn.go);
             updateBoardState(adjustedPiecePosition, rightPawn, "a", bs);
         }
@@ -2074,7 +2071,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             if (!isolatedIsPieceTypeOnBoard("q", botColor, bs))
             {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1, false);
                 Destroy(tempKing.go);
 
                 updateBoardState(botKingPos, tempKing, "a", bs);
@@ -2096,7 +2093,7 @@ public class BotHelperFunctions : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Piece p = HelperFunctions.Spawnables.create(pname, piece.color, false);
                 Destroy(p.go);
                 isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(piece.position[0] - 1, piece.position[1] - 1, bs.boardGrid, false), bs);
                 updateBoardState(new int[] { piece.position[0] - 1, piece.position[1] - 1 }, piece, "r", bs);
@@ -2241,7 +2238,7 @@ public class BotHelperFunctions : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = HelperFunctions.Spawnables.create(pname, piece.color);
+                Piece p = HelperFunctions.Spawnables.create(pname, piece.color, false);
                 Destroy(p.go);
                 updateBoardState(new int[] { piece.position[0] - 1, piece.position[1] - 1 }, piece, "r", bs);
                 updateBoardState(coords, p, "a", bs);
@@ -2268,7 +2265,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             if (!isolatedIsPieceTypeOnBoard("q", 1, bs))
             {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1);
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", 1, false);
                 Destroy(tempKing.go);
 
                 updateBoardState(botWhiteKingPos, tempKing, "a", bs);
@@ -2281,7 +2278,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             if (!isolatedIsPieceTypeOnBoard("q", -1, bs))
             {
-                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1);
+                Piece tempKing = HelperFunctions.Spawnables.create("DepressedKing", -1, false);
                 Destroy(tempKing.go);
 
                 updateBoardState(botBlackKingPos, tempKing, "a", bs);
@@ -2575,7 +2572,7 @@ public class BotHelperFunctions : MonoBehaviour
                 updateBoardState(pos, deadPiece, "r", bs);
 
 
-                Piece shieldPawn = HelperFunctions.Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                Piece shieldPawn = HelperFunctions.Spawnables.create("ShieldPawn", attackerPiece.color * -1, false);
                 Destroy(shieldPawn.go);
                 updateBoardState(pos, shieldPawn, "a", bs);
             }
@@ -2807,7 +2804,7 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach(Piece p in boardGrid[x, y])
                 {
-                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1) + " worth " + p.points);
+                    sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1) + " worth " + p.points + ". Position: (" + p.position[0] + "," + p.position[1] + ")");
                     if (p.color == 1)
                     {
                         w += p.points;

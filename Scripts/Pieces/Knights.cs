@@ -60,28 +60,37 @@ public class Knight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public Knight(int color, bool online)
+    public Knight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 /*
@@ -150,27 +159,36 @@ public class MurderousKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public MurderousKnight(int color, bool online)
+    public MurderousKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -223,27 +241,36 @@ public class GhoulKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public GhoulKnight(int color, bool online)
+    public GhoulKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -316,27 +343,36 @@ public class OneTimeKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public OneTimeKnight(int color, bool online)
+    public OneTimeKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -394,28 +430,37 @@ public class ElectricKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ElectricKnight(int color, bool online)
+    public ElectricKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "Electric Knight";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -472,28 +517,37 @@ public class InfiniteKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public InfiniteKnight(int color, bool online)
+    public InfiniteKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "InfiniteKnight";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -550,28 +604,37 @@ public class PortalKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PortalKnight(int color, bool online)
+    public PortalKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "PortalKnight";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -628,28 +691,37 @@ public class AtomicKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public AtomicKnight(int color, bool online)
+    public AtomicKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "AtomicKnight";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -706,28 +778,37 @@ public class LandmineKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LandmineKnight(int color, bool online)
+    public LandmineKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "LandmineKnight";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -781,28 +862,37 @@ public class LiteKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LiteKnight(int color, bool online)
+    public LiteKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -861,28 +951,37 @@ public class SpiderKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SpiderKnight(int color, bool online)
+    public SpiderKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -938,28 +1037,37 @@ public class DisabledKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DisabledKnight(int color, bool online)
+    public DisabledKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1015,28 +1123,37 @@ public class Elephant : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public Elephant(int color, bool online)
+    public Elephant(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1092,28 +1209,37 @@ public class SniperElephant : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SniperElephant(int color, bool online)
+    public SniperElephant(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1170,28 +1296,37 @@ public class Camel : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public Camel(int color, bool online)
+    public Camel(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1248,28 +1383,37 @@ public class FragileKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FragileKnight(int color, bool online)
+    public FragileKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1327,28 +1471,37 @@ public class SinisterMinisterKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SinisterMinisterKnight(int color, bool online)
+    public SinisterMinisterKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1407,28 +1560,37 @@ public class RoyalKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public RoyalKnight(int color, bool online)
+    public RoyalKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1485,28 +1647,37 @@ public class CrowdingKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public CrowdingKnight(int color, bool online)
+    public CrowdingKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1563,28 +1734,37 @@ public class HungryKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public HungryKnight(int color, bool online)
+    public HungryKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1641,28 +1821,37 @@ public class CaptureTheFlagKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public CaptureTheFlagKnight(int color, bool online)
+    public CaptureTheFlagKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1719,28 +1908,37 @@ public class FreezingKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FreezingKnight(int color, bool online)
+    public FreezingKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1797,28 +1995,37 @@ public class CloningKnight : Piece
     public string spawnable { get; set; } = "Knight";
     public int numSpawns { get; set; } = 2;
 
-    public CloningKnight(int color, bool online)
+    public CloningKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1875,28 +2082,37 @@ public class UndeadKnight : Piece
     public string spawnable { get; set; } = "ZombiePawn";
     public int numSpawns { get; set; } = 3;
 
-    public UndeadKnight(int color, bool online)
+    public UndeadKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1953,28 +2169,37 @@ public class PromotionKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PromotionKnight(int color, bool online)
+    public PromotionKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2031,28 +2256,37 @@ public class LongKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LongKnight(int color, bool online)
+    public LongKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2109,28 +2343,37 @@ public class DefuserKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DefuserKnight(int color, bool online)
+    public DefuserKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2189,28 +2432,37 @@ public class Hippocamelus : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public Hippocamelus(int color, bool online)
+    public Hippocamelus(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2267,28 +2519,37 @@ public class SpittingKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SpittingKnight(int color, bool online)
+    public SpittingKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 /*
@@ -2345,28 +2606,37 @@ public class PhantomKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PhantomKnight(int color, bool online)
+    public PhantomKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -2423,28 +2693,37 @@ public class StackingKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public StackingKnight(int color, bool online)
+    public StackingKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2501,28 +2780,37 @@ public class JailKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public JailKnight(int color, bool online)
+    public JailKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2581,37 +2869,37 @@ public class PiggybackKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PiggybackKnight(int color, bool online)
+    public PiggybackKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2670,37 +2958,37 @@ public class JockeyKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public JockeyKnight(int color, bool online)
+    public JockeyKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2757,28 +3045,37 @@ public class DelayedKnight : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DelayedKnight(int color, bool online)
+    public DelayedKnight(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 

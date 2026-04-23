@@ -110,8 +110,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new KamikazeBot(1);
-                botBlack = new G2EBot(-1);
+                botWhite = new OneUndoMoveBot(1);
+                botBlack = new OneMoveBot(-1);
             }
 
             gameData.botWhite = botWhite;

@@ -78,27 +78,36 @@ public class MurderousPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public MurderousPawn(int color, bool online)
+    public MurderousPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = "MurderousPawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -152,27 +161,36 @@ public class GhostPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public GhostPawn(int color, bool online)
+    public GhostPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = this.name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -225,27 +243,36 @@ public class GhoulPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public GhoulPawn(int color, bool online)
+    public GhoulPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = this.name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -324,27 +351,36 @@ public class OneTimePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public OneTimePawn(int color, bool online)
+    public OneTimePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = this.name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -398,28 +434,37 @@ public class ElectricPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ElectricPawn(int color, bool online)
+    public ElectricPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "Electric Pawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -473,28 +518,37 @@ public class ShieldPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ShieldPawn(int color, bool online)
+    public ShieldPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "Shield Pawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -548,28 +602,37 @@ public class InfinitePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public InfinitePawn(int color, bool online)
+    public InfinitePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "InfinitePawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -623,28 +686,37 @@ public class PortalPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PortalPawn(int color, bool online)
+    public PortalPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "PortalPawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -698,28 +770,37 @@ public class AtomicPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public AtomicPawn(int color, bool online)
+    public AtomicPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "AtomicPawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -773,28 +854,37 @@ public class LandminePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public LandminePawn(int color, bool online)
+    public LandminePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = "LandminePawn";
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -848,28 +938,37 @@ public class SpontaneouslyCombustingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SpontaneouslyCombustingPawn(int color, bool online)
+    public SpontaneouslyCombustingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -922,27 +1021,36 @@ public class SuperGhostPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SuperGhostPawn(int color, bool online)
+    public SuperGhostPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
         this.color = color;
 
-        go.name = this.name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -996,28 +1104,37 @@ public class FragilePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FragilePawn(int color, bool online)
+    public FragilePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1071,28 +1188,37 @@ public class CrowdingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public CrowdingPawn(int color, bool online)
+    public CrowdingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1146,28 +1272,37 @@ public class HungryPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public HungryPawn(int color, bool online)
+    public HungryPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1221,28 +1356,37 @@ public class CaptureTheFlagPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public CaptureTheFlagPawn(int color, bool online)
+    public CaptureTheFlagPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1296,28 +1440,37 @@ public class FreezingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public FreezingPawn(int color, bool online)
+    public FreezingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1371,28 +1524,37 @@ public class CloningPawn : Piece
     public string spawnable { get; set; } = "Pawn";
     public int numSpawns { get; set; } = 2;
 
-    public CloningPawn(int color, bool online)
+    public CloningPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1446,28 +1608,37 @@ public class ZombiePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ZombiePawn(int color, bool online)
+    public ZombiePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1521,28 +1692,37 @@ public class UndeadPawn : Piece
     public string spawnable { get; set; } = "ZombiePawn";
     public int numSpawns { get; set; } = 3;
 
-    public UndeadPawn(int color, bool online)
+    public UndeadPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1596,28 +1776,37 @@ public class PromotionPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PromotionPawn(int color, bool online)
+    public PromotionPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1671,28 +1860,37 @@ public class DefuserPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DefuserPawn(int color, bool online)
+    public DefuserPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1746,28 +1944,37 @@ public class SpittingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SpittingPawn(int color, bool online)
+    public SpittingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 /*
@@ -1821,28 +2028,37 @@ public class PhantomPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PhantomPawn(int color, bool online)
+    public PhantomPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 */
@@ -1896,28 +2112,37 @@ public class SplittingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public SplittingPawn(int color, bool online)
+    public SplittingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -1971,28 +2196,37 @@ public class PromotingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PromotingPawn(int color, bool online)
+    public PromotingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2046,28 +2280,37 @@ public class StackingPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public StackingPawn(int color, bool online)
+    public StackingPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2121,28 +2364,37 @@ public class JailPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public JailPawn(int color, bool online)
+    public JailPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2198,38 +2450,37 @@ public class PiggybackPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PiggybackPawn(int color, bool online)
+    public PiggybackPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2285,38 +2536,37 @@ public class JockeyPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public JockeyPawn(int color, bool online)
+    public JockeyPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2381,38 +2631,37 @@ public class ProtectivePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public ProtectivePawn(int color, bool online)
+    public ProtectivePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2468,38 +2717,37 @@ public class PAWN : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public PAWN(int color, bool online)
+    public PAWN(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2555,38 +2803,37 @@ public class DoublePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DoublePawn(int color, bool online)
+    public DoublePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
-    }
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2640,28 +2887,37 @@ public class OppressivePawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public OppressivePawn(int color, bool online)
+    public OppressivePawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }
 
@@ -2715,27 +2971,36 @@ public class DelayedPawn : Piece
     public string spawnable { get; set; } = "";
     public int numSpawns { get; set; } = 0;
 
-    public DelayedPawn(int color, bool online)
+    public DelayedPawn(int color, bool online, bool simulated)
     {
         if (online)
         {
             if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
         }
         else
         {
             if (go == null) go = new GameObject();
+            go.name = name;
         }
 
         this.color = color;
 
-        go.name = name;
+        if (!simulated)
+        {
+            go.name = name;
 
-        HelperFunctions.UpdateMovesForColor(this);
+            HelperFunctions.UpdateMovesForColor(this);
 
-        Image s = go.AddComponent<Image>();
-        Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
 
-        s.sprite = sp;
-        s.preserveAspect = true;
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
     }
 }

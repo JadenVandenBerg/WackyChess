@@ -3974,7 +3974,10 @@ public class HelperFunctions : MonoBehaviour
             clone.storage = new List<Piece>();
             foreach(Piece p in original.storage)
             {
-                clone.storage.Add(clonePiece(p));
+                if (p.name != original.name)
+                {
+                    clone.storage.Add(clonePiece(p));
+                }
             }
         }
 

@@ -184,6 +184,11 @@ public class BotHelperFunctions : MonoBehaviour
         Piece king = bot.king;
         Piece rook;
 
+        if (bot.king == null)
+        {
+            bot.king = isolatedGetKing(bs, bot.color);
+        }
+
         if (HelperFunctions.checkState(king, PieceState.Uncastle))
         {
             return false;
@@ -1792,7 +1797,7 @@ public class BotHelperFunctions : MonoBehaviour
             int numPieces = placePieces.Count;
             int numCoords = placeCoords.Count;
 
-            Debug.Log("Simulating Vomit: " + numPieces + " : " + numCoords);
+            //Debug.Log("Simulating Vomit: " + numPieces + " : " + numCoords);
 
             if (numPieces >= numCoords)
             {
@@ -1807,7 +1812,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                     int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
+                    //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                     updateBoardState(coords__, p_, "a", bs);
 
@@ -1832,7 +1837,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                     c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
-                    Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                    //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                     updateBoardState(c_, p_, "a", bs);
 
@@ -2254,7 +2259,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         if (botWhiteKing == null || botBlackKing == null)
         {
-            Debug.Log("King is null during simulated move.");
+            //Debug.Log("King is null during simulated move.");
             return bs;
         }
 

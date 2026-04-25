@@ -1181,7 +1181,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         if (botWhiteKing == null || botBlackKing == null)
         {
-            Debug.Log("King is null during simulated move.");
+            //Debug.Log("King is null during simulated move.");
             return undo;
         }
 

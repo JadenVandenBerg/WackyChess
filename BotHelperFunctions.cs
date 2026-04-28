@@ -46,7 +46,7 @@ public class BotHelperFunctions : MonoBehaviour
     public static Piece getPieceTypeInstance(string type, int color)
     {
         Type type_ = Type.GetType(type + ", Assembly-CSharp");
-        Piece piece = (Piece)Activator.CreateInstance(type_, color, false);
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false, false);
 
         return piece;
     }
@@ -1591,6 +1591,29 @@ public class BotHelperFunctions : MonoBehaviour
         piece.hasMoved = true;
     }
 
+    public static int[] getPiecePositionFromBoardGrid(BoardState bs, Piece targetPiece)
+    {
+        if (bs == null || bs.boardGrid == null || targetPiece == null)
+            return null;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece piece in bs.boardGrid[x, y])
+                {
+                    if (piece.name == targetPiece.name)
+                    {
+                        // Return as 1-based coords
+                        return new int[] { x + 1, y + 1 };
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
     public static void updateBoardState(int[] coords, Piece piece, String action, BoardState boardState)
     {
         if (coords[0] < 0 || coords[1] < 0)
@@ -1615,7 +1638,25 @@ public class BotHelperFunctions : MonoBehaviour
 
         if (action.ToLower() == "r" || action.ToLower() == "remove")
         {
-            int ok = square.RemoveAll(p => p.name == piece.name);
+            //int ok = square.RemoveAll(p => p.name == piece.name);
+            int removed = square.RemoveAll(p => p.name == piece.name);
+            if (removed == 0)
+            {
+                int[] realPos = getPiecePositionFromBoardGrid(boardState, piece);
+
+                if (!(coords[0] + 1 == piece.position[0] && coords[1] + 1 == piece.position[1]))
+                {
+                    if (realPos == null)
+                    {
+                        Debug.LogError($"Failed remove {piece.name} from {coords[0] + 1},{coords[1] + 1}. Actual pos {piece.position[0]},{piece.position[1]}. BoardState pos null");
+                    }
+                    else
+                    {
+                        Debug.LogError($"Failed remove {piece.name} from {coords[0] + 1},{coords[1] + 1}. Actual pos {piece.position[0]},{piece.position[1]}. BoardState pos {realPos[0]},{realPos[1]}");
+                    }
+                }
+                
+            }
             //Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + (coords[0] + 1) + "," + (coords[1] + 1));
         }
     }
@@ -1740,6 +1781,7 @@ public class BotHelperFunctions : MonoBehaviour
                 !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) 
                 && (!HelperFunctions.checkState(piece, PieceState.Murderous) 
                 || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed)))
+                || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && piecesOnCoords.Count >= 2)
             )
             {
                 death = false;
@@ -2796,6 +2838,9 @@ public class BotHelperFunctions : MonoBehaviour
     {
         StringBuilder sb = new StringBuilder();
 
+        List<string> names = new List<string>();
+        bool duplicateName = false;
+
         sb.AppendLine("Pieces on Board State (" + (getPiecesOnBoardState(bs, 1).Count + getPiecesOnBoardState(bs, -1).Count) + ")");
 
         float w = 0;
@@ -2809,6 +2854,15 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 foreach(Piece p in boardGrid[x, y])
                 {
+                    if (names.Contains(p.name))
+                    {
+                        duplicateName = true;
+                    }
+                    else
+                    {
+                        names.Add(p.name);
+                    }
+                    
                     sb.AppendLine(p.name + " found on " + (x + 1) + "," + (y + 1) + " worth " + p.points + ". Position: (" + p.position[0] + "," + p.position[1] + ")");
                     if (p.color == 1)
                     {
@@ -2822,9 +2876,17 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
+
+
         sb.AppendLine("White Total: " + w + "Black Total: " + b);
 
         Debug.LogWarning(sb.ToString());
+
+        if (duplicateName)
+        {
+            Debug.LogError("Duplicate Name Found");
+            Debug.Break();
+        }
     }
 
     public static StringBuilder debug_printBoardGrid(List<List<List<Piece>>> bg, bool print, bool useType)
@@ -3009,6 +3071,11 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static (Piece piece, int[] coords, string moveType) getNextMoveVars(NextMove nextMove)
     {
+        if (nextMove == null)
+        {
+            return (null, null, "");
+        }
+
         Piece piece;
         int[] coords;
 

@@ -37,7 +37,7 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        nonResettables.isBotTournament = false;
+        nonResettables.isBotTournament = true;
         nonResettables.logMatch = false;
 
         if (nonResettables.isBotTournament)
@@ -145,8 +145,8 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botWhiteRooks = new List<Piece>
             {
-                getPieceTypeInstance("GhostRook", 1),
-                getPieceTypeInstance("GhostRook", 1),
+                getPieceTypeInstance("StackingRook", 1),
+                getPieceTypeInstance("StackingRook", 1),
             };
             */
             List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
@@ -409,7 +409,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(2.5f);
+            yield return new WaitForSeconds(0.5f);
 
             selectedMove = nextMove;
 
@@ -644,6 +644,7 @@ public class botMaster : MonoBehaviour
             {
                 if (!kingDead)
                 {
+                    //Debug.Break();
                     Debug.Log("Game Over - Stalemate (Condition 2)");
                     bgs.result = "Draw by Stalemate";
                 }

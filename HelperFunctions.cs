@@ -2571,22 +2571,65 @@ public class HelperFunctions : MonoBehaviour
     {
         public static Piece create(string pieceName, int color, bool simulated)
         {
+            Piece piece;
+
             switch (pieceName)
             {
-                case "King": return new King(color, online, simulated);
-                case "Queen": return new Queen(color, online, simulated);
-                case "Rook": return new Rook(color, online, simulated);
-                case "Knight": return new Knight(color, online, simulated);
-                case "Bishop": return new Bishop(color, online, simulated);
-                case "Pawn": return new Pawn(color, online, simulated);
-                case "ZombiePawn": return new ZombiePawn(color, online, simulated);
-                case "SuperPawn": return new SuperPawn(color, online, simulated);
-                case "LeftPawn": return new LeftPawn(color, online, simulated);
-                case "RightPawn": return new RightPawn(color, online, simulated);
-                case "DepressedKing": return new DepressedKing(color, online, simulated);
-                case "ShieldPawn": return new ShieldPawn(color, online, simulated);
-                default: throw new ArgumentException("Bad Piece");
+                case "King":
+                    piece = new King(color, online, simulated);
+                    break;
+
+                case "Queen":
+                    piece = new Queen(color, online, simulated);
+                    break;
+
+                case "Rook":
+                    piece = new Rook(color, online, simulated);
+                    break;
+
+                case "Knight":
+                    piece = new Knight(color, online, simulated);
+                    break;
+
+                case "Bishop":
+                    piece = new Bishop(color, online, simulated);
+                    break;
+
+                case "Pawn":
+                    piece = new Pawn(color, online, simulated);
+                    break;
+
+                case "ZombiePawn":
+                    piece = new ZombiePawn(color, online, simulated);
+                    break;
+
+                case "SuperPawn":
+                    piece = new SuperPawn(color, online, simulated);
+                    break;
+
+                case "LeftPawn":
+                    piece = new LeftPawn(color, online, simulated);
+                    break;
+
+                case "RightPawn":
+                    piece = new RightPawn(color, online, simulated);
+                    break;
+
+                case "DepressedKing":
+                    piece = new DepressedKing(color, online, simulated);
+                    break;
+
+                case "ShieldPawn":
+                    piece = new ShieldPawn(color, online, simulated);
+                    break;
+
+                default:
+                    throw new ArgumentException("Bad Piece");
             }
+
+            if (simulated) piece.name = "simulated_" + piece.name + "_" + UnityEngine.Random.Range(1, 10001);
+
+            return piece;
         }
     }
 
@@ -3859,7 +3902,8 @@ public class HelperFunctions : MonoBehaviour
             if (
                 !getColorsOnSquare(square, true).Contains(piece.color * -1) && (
                     !checkState(piece, PieceState.Murderous)
-                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
+                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed)
+                    || getPiecesOnSquare(square).Count >= 2 && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
                 )
             {
                 death = false;

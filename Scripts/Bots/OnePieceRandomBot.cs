@@ -3,36 +3,18 @@ using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
 
-public class PressureBot : BotTemplate
+public class OnePieceRandomBot : BotTemplate
 {
-	public PressureBot(int botColor)
+	public OnePieceRandomBot(int botColor)
 	{
 		color = botColor;
 		pieces = new List<Piece>();
-		name = "Pressure Bot";
+		name = "One Piece Random Bot";
+
 		choosePieces();
 	}
 
-	private int numGuards(BotTemplate bot, BoardState bs, int color, int[] coords)
-	{
-		int numGuards = 0;
-		var attacks = getAllPossibleBotAttacks(bot, bs, color);
-		
-		foreach (var piece in attacks.pieceMoveList)
-		{
-			foreach (var attack in piece.moves)
-			{
-				if (attack == coords)
-				{
-					numGuards++;
-				}
-			}
-		}
-		return numGuards;
-	}
-
 	override
-
 	public NextMove nextMove()
 	{
 		float bestMoveDiff = -1000;
@@ -44,7 +26,6 @@ public class PressureBot : BotTemplate
 			Piece piece;
 			int[] coords;
 			string moveType = nextMove.moveType;
-
 			if (moveType == "move")
 			{
 				Move mv = nextMove.move;
@@ -116,7 +97,7 @@ public class PressureBot : BotTemplate
 				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-                float diff = botPoints - oppPoints;
+				float diff = botPoints - oppPoints;
 				if (diff < bestOppMoveDiff)
 				{
 					bestOppMoveDiff = diff;
@@ -132,17 +113,18 @@ public class PressureBot : BotTemplate
 				}
 
 				bestMoveDiff = bestOppMoveDiff;
+
 				validMoves.Add(nextMove);
 			}
 
 			this.currentBoardState = originalBoardState;
+
 		}
 
 		System.Random rand = new System.Random();
 		int rndIdx = rand.Next(validMoves.Count);
 
 		NextMove move = validMoves[rndIdx];
-
 		if (move.moveType == "move")
 		{
 			move.move.p = getOriginalPieceFromClone(move.move.p);
@@ -154,5 +136,3 @@ public class PressureBot : BotTemplate
 		return move;
 	}
 }
-
-	

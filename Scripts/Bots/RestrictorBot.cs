@@ -13,7 +13,25 @@ public class RestrictorBot : BotTemplate
 		choosePieces();
 	}
 
-	override
+    private int numGuards(BotTemplate bot, BoardState bs, int color, int[] coords)
+    {
+        int numGuards = 0;
+        var attacks = getAllPossibleBotAttacks(bot, bs, color);
+
+        foreach (var piece in attacks.pieceMoveList)
+        {
+            foreach (var attack in piece.moves)
+            {
+                if (attack == coords)
+                {
+                    numGuards++;
+                }
+            }
+        }
+        return numGuards;
+    }
+
+    override
 
 	public NextMove nextMove()
 	{
@@ -57,14 +75,51 @@ public class RestrictorBot : BotTemplate
 
 			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
-			if (bestOppNumMoves >= allMovesOpp.Count)
+            List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
+
+            int[] kingCoords = null;
+            foreach (Piece item in piecesOnBoard)
+            {
+                if (item.baseType == "King")
+                {
+                    kingCoords = item.position;
+                }
+            }
+
+            List<Piece> piecesOnBoardOpp = getPiecesOnBoardState(cloneState, this.color * -1);
+
+            int[] kingCoordsOpp = null;
+            foreach (Piece item in piecesOnBoardOpp)
+            {
+                if (item.baseType == "King")
+                {
+                    kingCoordsOpp = item.position;
+                }
+            }
+
+            int checks = numGuards(this, cloneState, this.color, kingCoordsOpp);
+            int checksOpp = numGuards(this, cloneState, this.color * -1, kingCoords);
+
+			int moveScore = allMovesOpp.Count;
+
+			if (checks >= 1)
 			{
-				if (bestOppNumMoves > allMovesOpp.Count)
+				moveScore -= 1000;
+			}
+
+			if (checksOpp >= 1)
+			{
+				moveScore += 10000;
+			}
+
+            if (bestOppNumMoves >= moveScore)
+			{
+				if (bestOppNumMoves > moveScore)
 				{
 					validMoves.Clear();
 				}
 
-				bestOppNumMoves = allMovesOpp.Count;
+				bestOppNumMoves = moveScore;
 				validMoves.Add(nextMove);
 			}
 

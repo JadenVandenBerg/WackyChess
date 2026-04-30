@@ -107,8 +107,8 @@ public class botMaster : MonoBehaviour
             gameData.turn = 1;
             gameData.board = board2;
 
-            botWhite = new KamikazeBot(1);
-            botBlack = new Bloodbot(-1);
+            botWhite = new RestrictorBot(1);
+            botBlack = new OneMoveBot(-1);
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 

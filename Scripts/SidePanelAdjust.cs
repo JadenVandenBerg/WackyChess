@@ -494,7 +494,7 @@ public class PieceMove
 
 public class DelayedQueue
 {
-    private List<PieceMove> _items = new List<PieceMove>();
+    public List<PieceMove> _items = new List<PieceMove>();
 
     public int Count => _items.Count;
 

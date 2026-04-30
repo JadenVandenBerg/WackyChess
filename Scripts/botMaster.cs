@@ -21,6 +21,7 @@ public class botMaster : MonoBehaviour
     public GameObject boardWrapper;
     public GameObject checkmateUI;
     public HelperFunctions helper;
+    GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
     BotTemplate botBlack;
@@ -30,7 +31,6 @@ public class botMaster : MonoBehaviour
 
     IEnumerator Start()
     {
-
         // Tournament
         //Change this to true to run a tournament with random bots
         //This will only work for my bots, if you want to change that you can comment out
@@ -38,6 +38,7 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         nonResettables.isBotTournament = true;
+        nonResettables.logMatch = false;
 
         if (nonResettables.isBotTournament)
         {
@@ -107,8 +108,13 @@ public class botMaster : MonoBehaviour
             gameData.turn = 1;
             gameData.board = board2;
 
-            botWhite = new RestrictorBot(1);
-            botBlack = new OneMoveBot(-1);
+            if (!nonResettables.isBotTournament)
+            {
+                //Replace these with your bots if it is a tournament
+                botWhite = new TwoMoveBot(1);
+                botBlack = new SavageBeastBot(-1);
+            }
+
             gameData.botWhite = botWhite;
             gameData.botBlack = botBlack;
 
@@ -139,8 +145,8 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botWhiteRooks = new List<Piece>
             {
-                getPieceTypeInstance("GhostRook", 1),
-                getPieceTypeInstance("GhostRook", 1),
+                getPieceTypeInstance("StackingRook", 1),
+                getPieceTypeInstance("StackingRook", 1),
             };
             */
             List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
@@ -289,6 +295,15 @@ public class botMaster : MonoBehaviour
             bgs.whitePoints = points[0];
             bgs.blackPoints = points[1];
 
+            if (nonResettables.logMatch)
+            {
+                logger.logGameStart(bgs);
+
+                BoardState board = new BoardState();
+                board.refresh(convertBoardGrid(gameData.boardGrid));
+                logger.logBoardState(turn, "Initial Board", board);
+            }
+
             helper.updatePointsOnBoard();
 
             yield return null;
@@ -311,6 +326,9 @@ public class botMaster : MonoBehaviour
     bool kingDead = false;
 
     bool checkLastTurn = false;
+
+    RepetitionTracker repetitionTracker = new RepetitionTracker();
+
 
     void Update()
     {
@@ -351,7 +369,7 @@ public class botMaster : MonoBehaviour
 
         List<int[]> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, true, false, null, true, true);
         Debug.LogWarning("AllMoves: " + allMoves.Count);
-        debug_printBoardGrid(gameData.boardGrid);
+        debug_printBoardGrid(gameData.boardGrid, true, false);
 
         if (currentBot.penalty)
         {
@@ -391,7 +409,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
 
             selectedMove = nextMove;
 
@@ -437,6 +455,9 @@ public class botMaster : MonoBehaviour
 
             Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
             helper.addBotMessage(" " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
+
+            repetitionTracker.addMove(selectedMove);
+
             if (selectedMove.moveType == "move")
             {
                 if (HelperFunctions.checkState(movePieceObj, PieceState.Delayed))
@@ -450,6 +471,7 @@ public class botMaster : MonoBehaviour
                     death = premoveVars.death;
                     countDeath = premoveVars.countDeath;
                 }
+
                 check = helper.movePiece_(movePieceObj, moveCoords);
             }
             else
@@ -485,6 +507,8 @@ public class botMaster : MonoBehaviour
             }
             else
             {
+                repetitionTracker.addMove(randomMove);
+
                 if (randomMove.moveType == "move")
                 {
                     movePieceObj = randomMove.move.p;
@@ -525,6 +549,13 @@ public class botMaster : MonoBehaviour
                     check = deathVars.check;
                 }
             }
+        }
+
+        if (nonResettables.logMatch)
+        {
+            BoardState board = new BoardState();
+            board.refresh(convertBoardGrid(gameData.boardGrid));
+            logger.logBoardState(turn, currentBot.name, board);
         }
 
         turn *= -1;
@@ -613,6 +644,7 @@ public class botMaster : MonoBehaviour
             {
                 if (!kingDead)
                 {
+                    //Debug.Break();
                     Debug.Log("Game Over - Stalemate (Condition 2)");
                     bgs.result = "Draw by Stalemate";
                 }
@@ -637,6 +669,14 @@ public class botMaster : MonoBehaviour
             }
         }
 
+        if (repetitionTracker.isRepetition())
+        {
+            Debug.Log("Game Over - Tie");
+            gameOver = true;
+
+            bgs.result = "Draw by Repetition";
+        }
+
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         HelperFunctions.resetBoardColours();
         yield return new WaitForSeconds(0.1f);
@@ -645,6 +685,11 @@ public class botMaster : MonoBehaviour
         if (gameOver)
         {
             printBGS(bgs);
+
+            if (nonResettables.logMatch)
+            {
+                logger.publishLog("TEST");
+            }
 
             if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
@@ -909,6 +954,11 @@ public class botMaster : MonoBehaviour
 
         Debug.Log("Saved match log to: " + filePath);
 
+        if (nonResettables.logMatch)
+        {
+            logger.logGameEnd(bgs);
+        }
+
         helper.addBotMessage(" " + bgs.white + " (White) vs (Black) " + bgs.black);
         helper.addBotMessage(" " + bgs.winner + " " + bgs.result);
     }
@@ -938,6 +988,127 @@ public class botMaster : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    public static bool areMovesEqual(NextMove a, NextMove b)
+    {
+        if (a.moveType != b.moveType)
+            return false;
+
+        if (a.moveType == "move")
+        {
+            return a.move.p.name == b.move.p.name &&
+                   a.move.coords[0] == b.move.coords[0] &&
+                   a.move.coords[1] == b.move.coords[1];
+        }
+        else
+        {
+            return a.ability.piece.name == b.ability.piece.name;
+        }
+    }
+
+    public class RepetitionTracker
+    {
+        private Queue<NextMove> moveQueue = new Queue<NextMove>();
+        private const int MAX_MOVES = 12;
+
+        public void addMove(NextMove move)
+        {
+            moveQueue.Enqueue(move);
+
+            if (moveQueue.Count > MAX_MOVES)
+                moveQueue.Dequeue();
+        }
+
+        public bool isRepetition()
+        {
+            if (moveQueue.Count < MAX_MOVES)
+            {
+                return false;
+            }
+
+            NextMove[] moves = moveQueue.ToArray();
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (!areMovesEqual(moves[i], moves[i + 4]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    public class GameLogger
+    {
+        private StringBuilder sb = new StringBuilder();
+
+        public void logGameStart(BotGameStatus bgs)
+        {
+            sb.AppendLine("Game Start");
+            sb.AppendLine(bgs.white + " (White) vs (Black) " + bgs.black);
+
+            sb.AppendLine(bgs.white + " started with " + bgs.whitePoints + "pts");
+            sb.AppendLine(bgs.black + " started with " + bgs.blackPoints + "pts");
+
+            sb.AppendLine(bgs.white + " pieces:");
+            foreach (string p in bgs.whitePieces)
+                sb.Append(p + " ");
+            sb.AppendLine();
+
+            sb.AppendLine(bgs.black + " pieces:");
+            foreach (string p in bgs.blackPieces)
+                sb.Append(p + " ");
+            sb.AppendLine();
+
+            sb.AppendLine("---- Moves ----");
+        }
+
+        public void logBoardState(int turn, string bot, BoardState bs)
+        {
+            sb.AppendLine("Turn " + turn + " - " + bot);
+            sb.AppendLine(debug_printBoardGrid(revertBoardGrid(bs.boardGrid), true, true).ToString());
+        }
+
+        public void logGameEnd(BotGameStatus bgs)
+        {
+            sb.AppendLine("---- Game End ----");
+            sb.AppendLine(bgs.white + " (White) vs (Black) " + bgs.black);
+            sb.AppendLine(bgs.winner + " " + bgs.result);
+            sb.AppendLine("The match took " + bgs.numTurns + " turns");
+
+            sb.AppendLine("Penalties: " + bgs.white + ": " + bgs.whitePenalties + ", " + bgs.black + ": " + bgs.blackPenalties);
+        }
+
+        public string getLog()
+        {
+            return sb.ToString();
+        }
+
+        public void publishLog(string fileName = null)
+        {
+            string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            string folderPath = Path.Combine(documentsPath, "WC_Tournaments");
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
+                fileName = "match_" + timestamp + ".txt";
+            }
+
+            string fullPath = Path.Combine(folderPath, fileName);
+
+            File.WriteAllText(fullPath, sb.ToString());
+            System.Diagnostics.Process.Start(fullPath);
         }
     }
 }

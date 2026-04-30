@@ -754,6 +754,12 @@ public class HelperFunctions : MonoBehaviour
                     //pieceIsDiffColour = pieceOnSquare.color != color;
                     pieceIsDiffColour = !getColorsOnSquare(goHighlight, true).Contains(piece.color);
 
+                    //if there is a jailer with a jailed piece, count it
+                    if (checkStateOnSquare(piecesOnSquare, PieceState.Jailer) && checkStateOnSquare(piecesOnSquare, PieceState.Jailed))
+                    {
+                        pieceIsDiffColour = true;
+                    }
+
                     if (checkPiecesDisabled(piecesOnSquare))
                     {
                         pieceIsNull = true;
@@ -942,7 +948,7 @@ public class HelperFunctions : MonoBehaviour
         //Debug.Log("Searching for Check. Color: " + king.color);
         List<int[]> moves = addToCurrentMoveableCoordsTotal(king.color * -1, false, false, null, false, true);
         //Debug.Log("CHECK SEARCH END");
-        bool check = isInList(moves, king.getPosition(), false);
+        bool check = isInList(moves, king.position, false);
 
         if (check && king.color == 1)
         {
@@ -982,62 +988,6 @@ public class HelperFunctions : MonoBehaviour
             }
         }
         return false;
-    }
-
-    /* TODO
-    * Simulate abilities
-    */
-    public static bool dummyMove(Piece piece, int[] coords) //Returns dummyIsCheck
-    {
-        int x = piece.position[0];
-        int y = piece.position[1];
-
-        Piece king;
-        if (piece.color == 1)
-        {
-            king = gameData.whiteKing;
-        }
-        else
-        {
-            king = gameData.blackKing;
-        }
-
-        bool isInCheck;
-
-        GameObject square = findSquare(coords[0], coords[1]);
-
-        //Save State
-        List<Piece> oldPieces = new List<Piece>();
-        bool restore = false;
-
-
-        List<GameObject> gos = new List<GameObject>();
-
-        if (isPieceOnSquare(square))
-        {
-            oldPieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-            gos = new List<GameObject>(removePieceFromBoard(oldPieces));
-            restore = true;
-        }
-
-        piece.setPosition(coords);
-        movePieceBoardGrid(piece, new int[] { x, y }, coords);
-
-        //movePieceNoImage(piece, square);
-
-        List<int[]> moves = addToCurrentMoveableCoordsTotal(piece.color * -1, false, false, null, false, true);
-        isInCheck = dummyIsCheck(moves, king);
-
-        if (restore)
-        {
-            restorePieceToBoard(oldPieces, coords, gos);
-        }
-
-        movePieceBoardGrid(piece, coords, new int[] { x, y });
-        piece.setPosition(new int[] { x, y });
-        //movePieceNoImage(piece, findSquare(x, y));
-
-        return isInCheck;
     }
 
     public static List<GameObject> removePieceFromBoard(List<Piece> pieces)
@@ -1220,7 +1170,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool dummyIsCheck(List<int[]> moves, Piece king)
     {
-        return isInList(moves, king.getPosition(), false);
+        return isInList(moves, king.position, false);
     }
 
     public static bool isCheckMate(Piece king, bool execDummyMove)
@@ -1593,14 +1543,8 @@ public class HelperFunctions : MonoBehaviour
         int[] deadPieceCoords = deadPiece.position;
 
         bool skipCollateral = false;
-        //Infinite / Multi-Lives
-        if (deadPiece.lives != 0)
-        {
-            handleMultipleLivesDeath(deadPiece);
-
-            return;
-        }
-
+        bool skipInfinite = false;
+        
         //Electric
         if (checkState(deadPiece, PieceState.Electric))
         {
@@ -1616,7 +1560,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //Hungry
-        if (checkState(attackerPiece, PieceState.Hungry)) //TODO deadPiece
+        if (checkState(attackerPiece, PieceState.Hungry))
         {
             if (attackerPiece.storage == null)
             {
@@ -1625,6 +1569,7 @@ public class HelperFunctions : MonoBehaviour
 
             attackerPiece.storage.Add(deadPiece);
             skipCollateral = true;
+            skipInfinite = true;
             gameData.piecesDict.Remove(dead);
             updateBoardGrid(deadPieceCoords, deadPiece, "r");
             removePieceImageFromBoard(deadPiece);
@@ -1647,6 +1592,7 @@ public class HelperFunctions : MonoBehaviour
         //Spitting
         if (checkState(attackerPiece, PieceState.Spitting))
         {
+            skipInfinite = true;
             if (attackerPiece.storage == null)
             {
                 attackerPiece.storage = new List<Piece>();
@@ -1669,7 +1615,8 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
-        if (checkState(attackerPiece, PieceState.Stacking))
+        //Stacking
+        if (checkState(attackerPiece, PieceState.Stacking) && deadPiece.lives == 0)
         {
             // Abilities / States
             //attackerPiece.states |= deadPiece.states;
@@ -1720,13 +1667,16 @@ public class HelperFunctions : MonoBehaviour
             //maybe add promotion row and storage
         }
 
+        //Jailer
         if (checkState(attackerPiece, PieceState.Jailer))
         {
+            skipInfinite = true;
             addState(deadPiece, PieceState.Jailed);
 
             return;
         }
 
+        //Crook
         if (checkState(deadPiece, PieceState.Crook) && deadPiece.color != attackerPiece.color)
         {
             addState(deadPiece, PieceState.Jailed);
@@ -1734,8 +1684,10 @@ public class HelperFunctions : MonoBehaviour
             return;
         }
 
+        //Medusa
         if (checkState(attackerPiece, PieceState.Medusa))
         {
+            skipInfinite = true;
             if (attackerPiece.numSpawns != 0)
             {
                 attackerPiece.numSpawns--;
@@ -1743,13 +1695,25 @@ public class HelperFunctions : MonoBehaviour
                 int[] pos = deadPiece.position;
                 removePieceFromBoard(pieceToList(deadPiece));
 
-                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1);
+                Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, false);
                 initPiece(shieldPawn, pos);
+            }
+        }
+
+        if (!skipInfinite)
+        {
+            //Infinite / Multi-Lives
+            if (deadPiece.lives != 0)
+            {
+                handleMultipleLivesDeath(deadPiece);
+
+                return;
             }
         }
 
         if (!skipCollateral)
         {
+
             //Collateral (Attacker)
             if (attackerPiece.collateralType == 0) //Kill on Capture
             {
@@ -2605,24 +2569,67 @@ public class HelperFunctions : MonoBehaviour
 
     public static class Spawnables
     {
-        public static Piece create(string pieceName, int color)
+        public static Piece create(string pieceName, int color, bool simulated)
         {
+            Piece piece;
+
             switch (pieceName)
             {
-                case "King": return new King(color, online);
-                case "Queen": return new Queen(color, online);
-                case "Rook": return new Rook(color, online);
-                case "Knight": return new Knight(color, online);
-                case "Bishop": return new Bishop(color, online);
-                case "Pawn": return new Pawn(color, online);
-                case "ZombiePawn": return new ZombiePawn(color, online);
-                case "SuperPawn": return new SuperPawn(color, online);
-                case "LeftPawn": return new LeftPawn(color, online);
-                case "RightPawn": return new RightPawn(color, online);
-                case "DepressedKing": return new DepressedKing(color, online);
-                case "ShieldPawn": return new ShieldPawn(color, online);
-                default: throw new ArgumentException("Bad Piece");
+                case "King":
+                    piece = new King(color, online, simulated);
+                    break;
+
+                case "Queen":
+                    piece = new Queen(color, online, simulated);
+                    break;
+
+                case "Rook":
+                    piece = new Rook(color, online, simulated);
+                    break;
+
+                case "Knight":
+                    piece = new Knight(color, online, simulated);
+                    break;
+
+                case "Bishop":
+                    piece = new Bishop(color, online, simulated);
+                    break;
+
+                case "Pawn":
+                    piece = new Pawn(color, online, simulated);
+                    break;
+
+                case "ZombiePawn":
+                    piece = new ZombiePawn(color, online, simulated);
+                    break;
+
+                case "SuperPawn":
+                    piece = new SuperPawn(color, online, simulated);
+                    break;
+
+                case "LeftPawn":
+                    piece = new LeftPawn(color, online, simulated);
+                    break;
+
+                case "RightPawn":
+                    piece = new RightPawn(color, online, simulated);
+                    break;
+
+                case "DepressedKing":
+                    piece = new DepressedKing(color, online, simulated);
+                    break;
+
+                case "ShieldPawn":
+                    piece = new ShieldPawn(color, online, simulated);
+                    break;
+
+                default:
+                    throw new ArgumentException("Bad Piece");
             }
+
+            if (simulated) piece.name = "simulated_" + piece.name + "_" + UnityEngine.Random.Range(1, 10001);
+
+            return piece;
         }
     }
 
@@ -2855,7 +2862,7 @@ public class HelperFunctions : MonoBehaviour
 
         if (checkState(piece, PieceState.Double))
         {
-            Piece doublePawn = Spawnables.create("Pawn", piece.color);
+            Piece doublePawn = Spawnables.create("Pawn", piece.color, false);
             initPiece(doublePawn, piece.position);
         }
 
@@ -3101,7 +3108,7 @@ public class HelperFunctions : MonoBehaviour
         {
             Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords[0] + "," + coords[1]);
 
-            Piece spawned = Spawnables.create(piece.spawnable, piece.color);
+            Piece spawned = Spawnables.create(piece.spawnable, piece.color, false);
             piece.numSpawns--;
 
             if (piece.numSpawns <= 0)
@@ -3178,10 +3185,10 @@ public class HelperFunctions : MonoBehaviour
             forceRemove(piece);
             updateBoardGrid(coords, piece, "r");
 
-            Piece leftPawn = Spawnables.create("LeftPawn", piece.color);
+            Piece leftPawn = Spawnables.create("LeftPawn", piece.color, false);
             initPiece(leftPawn, coords);
 
-            Piece rightPawn = Spawnables.create("RightPawn", piece.color);
+            Piece rightPawn = Spawnables.create("RightPawn", piece.color, false);
             initPiece(rightPawn, coords);
         }
 
@@ -3446,7 +3453,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!isPieceTypeOnBoard("q", 1))
             {
-                Piece tempKing = Spawnables.create("DepressedKing", 1);
+                Piece tempKing = Spawnables.create("DepressedKing", 1, false);
                 initPiece(tempKing, gameData.whiteKing.position);
                 collateralDeath(pieceToList(gameData.whiteKing));
                 gameData.whiteKing = tempKing;
@@ -3456,7 +3463,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!isPieceTypeOnBoard("q", -1))
             {
-                Piece tempKing = Spawnables.create("DepressedKing", -1);
+                Piece tempKing = Spawnables.create("DepressedKing", -1, false);
                 initPiece(tempKing, gameData.blackKing.position);
                 collateralDeath(pieceToList(gameData.blackKing));
                 gameData.blackKing = tempKing;
@@ -3702,7 +3709,7 @@ public class HelperFunctions : MonoBehaviour
                 GameObject square = tempInfo.tempSquare;
                 string pieceName = tempInfo.tempPiece.spawnable;
 
-                Piece piece = Spawnables.create(pieceName, tempInfo.tempPiece.color);
+                Piece piece = Spawnables.create(pieceName, tempInfo.tempPiece.color, false);
                 gameData.selectedPiece.numSpawns--;
                 initPiece(piece, findCoords(square));
 
@@ -3803,10 +3810,10 @@ public class HelperFunctions : MonoBehaviour
         {
             forceRemove(gameData.selectedPiece);
 
-            Piece piece = Spawnables.create("LeftPawn", tempInfo.tempPiece.color);
+            Piece piece = Spawnables.create("LeftPawn", tempInfo.tempPiece.color, false);
             initPiece(piece, findCoords(gameData.selected));
 
-            Piece piece2 = Spawnables.create("RightPawn", tempInfo.tempPiece.color);
+            Piece piece2 = Spawnables.create("RightPawn", tempInfo.tempPiece.color, false);
             initPiece(piece2, findCoords(gameData.selected));
 
             gameData.abilitySelected = "";
@@ -3823,7 +3830,7 @@ public class HelperFunctions : MonoBehaviour
             if (piece.position[1] == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
-                Piece p = Spawnables.create(pname, piece.color);
+                Piece p = Spawnables.create(pname, piece.color, false);
 
                 if (piece.storage != null)
                 {
@@ -3895,7 +3902,8 @@ public class HelperFunctions : MonoBehaviour
             if (
                 !getColorsOnSquare(square, true).Contains(piece.color * -1) && (
                     !checkState(piece, PieceState.Murderous)
-                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
+                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed)
+                    || getPiecesOnSquare(square).Count >= 2 && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
                 )
             {
                 death = false;
@@ -3974,7 +3982,7 @@ public class HelperFunctions : MonoBehaviour
     {
         Type type = original.GetType();
 
-        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false);
+        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false, true);
         Destroy(clone.go);
 
         clone.disabled = original.disabled;
@@ -4010,7 +4018,10 @@ public class HelperFunctions : MonoBehaviour
             clone.storage = new List<Piece>();
             foreach(Piece p in original.storage)
             {
-                clone.storage.Add(clonePiece(p));
+                if (p.name != original.name)
+                {
+                    clone.storage.Add(clonePiece(p));
+                }
             }
         }
 
@@ -4180,5 +4191,71 @@ public class HelperFunctions : MonoBehaviour
     public void addBotMessage(string message)
     {
         panel.AddBotMessage(message);
+    }
+
+    public NextMove thread_nextMove(NextMove nm, BoardState cloneState)
+    {
+        if (nm == null) return null;
+
+        if (nm.moveType == "move" && nm.move != null)
+        {
+            Piece newPiece = BotHelperFunctions.getCloneFromOriginalPiece(nm.move.p, cloneState.boardGrid);
+
+            int[] newCoords = null;
+            if (nm.move.coords != null)
+            {
+                newCoords = new int[] { nm.move.coords[0], nm.move.coords[1] };
+            }
+
+            Move newMove = new Move(newPiece, newCoords);
+            return new NextMove(newMove);
+        }
+
+        if (nm.moveType == "ability" && nm.ability != null)
+        {
+            BotHelperFunctions.PieceAbility old = nm.ability;
+
+            Piece newMainPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.piece, cloneState.boardGrid);
+            Piece newSecondPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.secondPiece, cloneState.boardGrid);
+
+            int[] newCoords = null;
+            if (old.coords != null)
+            {
+                newCoords = new int[] { old.coords[0], old.coords[1] };
+            }
+
+            List<Piece> newPlacePieces = null;
+            if (old.placePieces != null)
+            {
+                newPlacePieces = new List<Piece>();
+                foreach (Piece p in old.placePieces)
+                {
+                    newPlacePieces.Add(BotHelperFunctions.getCloneFromOriginalPiece(p, cloneState.boardGrid));
+                }
+            }
+
+            List<int[]> newPlaceCoords = null;
+            if (old.placeCoords != null)
+            {
+                newPlaceCoords = new List<int[]>();
+                foreach (int[] c in old.placeCoords)
+                {
+                    newPlaceCoords.Add(new int[] { c[0], c[1] });
+                }
+            }
+
+            BotHelperFunctions.PieceAbility newAbility = new BotHelperFunctions.PieceAbility(
+                newMainPiece,
+                old.ability,
+                newCoords,
+                newPlacePieces,
+                newPlaceCoords,
+                newSecondPiece
+            );
+
+            return new NextMove(newAbility);
+        }
+
+        return null;
     }
 }

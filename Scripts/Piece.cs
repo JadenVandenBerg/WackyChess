@@ -371,22 +371,4 @@ public interface Piece
      */
     public string spawnable { get; set; }
     public int numSpawns { get; set; }
-
-
-
-    /* --------------------- METHODS --------------------- */
-
-    /*
-     * Getters/Setters not unique to pieces
-     */
-
-    public int[] getPosition()
-    {
-        return position;
-    }
-
-    public void setPosition(int[] pos)
-    {
-        this.position = pos;
-    }
 }

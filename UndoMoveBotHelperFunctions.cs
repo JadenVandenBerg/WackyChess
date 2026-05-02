@@ -422,7 +422,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         return undo;
     }
 
-    public static UndoMove undo_simulatePieceAbility(BotTemplate bot, BoardState bs_, PieceAbility pieceAbility)
+    public static UndoMove undo_simulatePieceAbility(BoardState bs_, PieceAbility pieceAbility)
     {
         // Init undo move
         UndoMove undo = new UndoMove();
@@ -1022,13 +1022,13 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         updateBoardState(new int[] { p.position[0] - 1, p.position[1] - 1 }, p, "a", bs);
     }
 
-    public static UndoMove undo_simulatePieceMove(BotTemplate bot, BoardState bs, Piece piece, coords coords)
+    public static UndoMove undo_simulatePieceMove(BoardState bs, Piece piece, coords coords)
     {
         // Init undo move
         UndoMove undo = new UndoMove();
 
-        Piece botKing = isolatedGetKing(bs, bot.color);
-        Piece oppKing = isolatedGetKing(bs, bot.color * -1);
+        Piece botKing = isolatedGetKing(bs, piece.color);
+        Piece oppKing = isolatedGetKing(bs, piece.color * -1);
 
         coords unadjusted = coords;
         coords = new coords(coords.x - 1, coords.y - 1);
@@ -1039,7 +1039,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         bool attackerDied = false;
         PieceState stackingStates = PieceState.None;
 
-        if (death)
+        if (death && !checkState(piece, PieceState.Delayed))
         {
             Piece destroyer = piece;
             var deathVars = undo_isolatedOnDeaths(destroyer, coords, bs, undo);
@@ -1166,8 +1166,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         piece.states |= stackingStates;
         undo.addState(us);
 
-        Piece botWhiteKing = bot.color == 1 ? botKing : oppKing;
-        Piece botBlackKing = bot.color == -1 ? botKing : oppKing;
+        Piece botWhiteKing = piece.color == 1 ? botKing : oppKing;
+        Piece botBlackKing = piece.color == -1 ? botKing : oppKing;
 
         if (botWhiteKing == null || botBlackKing == null)
         {
@@ -1186,13 +1186,9 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                 updateBoardState(botWhiteKingPos, tempKing, "a", bs);
                 updateBoardState(botWhiteKingPos, botWhiteKing, "r", bs);
-                if (bot.color == 1) bot.king = tempKing;
 
                 undo_isolatedRemovePiece(botWhiteKing, bs, undo);
                 undo_isolatedAddPiece(tempKing, bs, undo);
-
-                UndoBotAction upa = new UndoBotAction(bot, PieceAction.ResetKing);
-                undo.addBotAction(upa);
             }
         }
 
@@ -1207,10 +1203,6 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                 undo_isolatedRemovePiece(botBlackKing, bs, undo);
                 undo_isolatedAddPiece(tempKing, bs, undo);
-                if (bot.color == -1) bot.king = tempKing;
-
-                UndoBotAction upa = new UndoBotAction(bot, PieceAction.ResetKing);
-                undo.addBotAction(upa);
             }
         }
 

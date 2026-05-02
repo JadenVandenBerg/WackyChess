@@ -2052,7 +2052,8 @@ public class HelperFunctions : MonoBehaviour
         }
 
         // Pieces Different Color
-        if (getColorsOnSquare(findSquare(piecesOnSquare[0].position[0], piecesOnSquare[0].position[1]), true).Contains(piece.color * -1))
+        //if (getColorsOnSquare(findSquare(piecesOnSquare[0].position[0], piecesOnSquare[0].position[1]), true).Contains(piece.color * -1))
+        if (BotHelperFunctions.isolatedGetColorsOnCoords(piecesOnSquare, true).Contains(piece.color * -1))
         {
             return false;
         }
@@ -2073,13 +2074,13 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //There is one piece on the square, piece is crowding
-        if (checkState(piece, PieceState.Crowding) && piecesOnSquare.Count == 1 && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (checkState(piece, PieceState.Crowding) && piecesOnSquare.Count == 1 && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
         {
             return true;
         }
 
         //There is one piece on square, piece on square is piggyback
-        if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
         {
             if (!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
             {
@@ -2088,7 +2089,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //There is one piece on square, piece is jockey
-        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && isColorOnSquare(findSquare(piece.position[0], piece.position[1]), piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
         {
             return true;
         }
@@ -2164,11 +2165,9 @@ public class HelperFunctions : MonoBehaviour
         return !colors.Contains(color);
     }
 
-    public static bool isColorOnSquare(GameObject square, int color, bool ignoreDematerialized)
+    public static bool isColorOnSquare(List<Piece> piecesOnSquare, int color, bool ignoreDematerialized)
     {
-        var colors = getColorsOnSquare(square, ignoreDematerialized);
-
-        return colors.Contains(color);
+        return BotHelperFunctions.isolatedGetColorsOnCoords(piecesOnSquare, ignoreDematerialized).Contains(color);
     }
 
     public static GameObject hungryPieceNextBarf(Piece hungryPiece, ref List<int[]> collateral)
@@ -2498,7 +2497,9 @@ public class HelperFunctions : MonoBehaviour
             int x = piece.position[0] + dir[0];
             int y = piece.position[1] + dir[1];
 
-            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0 && isColorOnSquare(findSquare(x, y), color, true))
+            List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(findSquare(x, y));
+
+            if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0 && isColorOnSquare(piecesOnSquare, color, true))
             {
                 return true;
             }
@@ -2627,7 +2628,9 @@ public class HelperFunctions : MonoBehaviour
                     throw new ArgumentException("Bad Piece");
             }
 
-            if (simulated) piece.name = "simulated_" + piece.name + "_" + UnityEngine.Random.Range(1, 10001);
+            int rand = globalDefs.globalRand.Next(1, 10001);
+
+            if (simulated || !simulated) piece.name = "simulated_" + piece.name + "_" + rand;
 
             return piece;
         }
@@ -3090,8 +3093,6 @@ public class HelperFunctions : MonoBehaviour
             c.b = 1f;
 
             img.color = c;
-
-            Debug.Break();
         }
         else if (ability == "Freeze")
         {
@@ -3969,7 +3970,7 @@ public class HelperFunctions : MonoBehaviour
             //Piece destroyer = gameData.piecesDict[selectedToMoveGo];
             Piece destroyer = gameData.selectedToMovePiece;
 
-            Debug.Log("DESTROYING: " + gameData.selectedPiece.name + ". Square: " + findCoords(gameData.selected)[0] + "," + findCoords(gameData.selected)[1]);
+            Debug.Log("DESTROYING: Square: " + findCoords(gameData.selected)[0] + "," + findCoords(gameData.selected)[1]);
             onDeaths(destroyer, selectedToMoveGo, gameData.selected);
             //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
@@ -3983,7 +3984,6 @@ public class HelperFunctions : MonoBehaviour
         Type type = original.GetType();
 
         Piece clone = (Piece)Activator.CreateInstance(type, original.color, false, true);
-        Destroy(clone.go);
 
         clone.disabled = original.disabled;
         clone.color = original.color;
@@ -4193,7 +4193,7 @@ public class HelperFunctions : MonoBehaviour
         panel.AddBotMessage(message);
     }
 
-    public NextMove thread_nextMove(NextMove nm, BoardState cloneState)
+    public static NextMove thread_nextMove(NextMove nm, BoardState cloneState)
     {
         if (nm == null) return null;
 

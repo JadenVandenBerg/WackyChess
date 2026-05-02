@@ -49,7 +49,7 @@ public class botMaster : MonoBehaviour
                     "G2EBot",
                     "KamikazeBot",
                     "BotRoss",
-                    "TwoMoveBot"
+                    //"TwoMoveBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
                 
@@ -111,7 +111,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new TwoMoveBot(1);
+                botWhite = new G2EBot(1);
                 botBlack = new SavageBeastBot(-1);
             }
 
@@ -442,6 +442,27 @@ public class botMaster : MonoBehaviour
         }
 
         movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
+        if (movePieceObj.go == null)
+        {
+            GameObject newGO = new GameObject();
+            RectTransform rect = newGO.AddComponent<RectTransform>();
+            Image s = newGO.AddComponent<Image>();
+            string imgPath = movePieceObj.color == 1 ? movePieceObj.wImage : movePieceObj.bImage;
+            Sprite sp = Resources.Load<Sprite>(imgPath);
+            s.sprite = sp;
+            s.preserveAspect = true;
+            newGO.name = movePieceObj.name;
+            movePieceObj.go = newGO;
+            GameObject square = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+            HelperFunctions.movePiece(movePieceObj, square);
+
+            Debug.Log("Reassembling Broken GO");
+            Debug.Break();
+        }
+
+        // Safe
+        gameData.selectedToMovePiece = movePieceObj;
 
         bool death = false;
         bool countDeath = false;

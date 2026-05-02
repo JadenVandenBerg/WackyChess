@@ -2011,6 +2011,11 @@ public class BotHelperFunctions : MonoBehaviour
         List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
         bool death = isolatedIsDeath(piecesOnCoordsPreDeath, piece);
 
+        if (HelperFunctions.checkState(piece, PieceState.Delayed))
+        {
+            death = false;
+        }
+
         if (death)
         {
             Piece destroyer = piece;
@@ -2194,6 +2199,11 @@ public class BotHelperFunctions : MonoBehaviour
         //List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, true);
         List<Piece> piecesOnCoordsPreDeath = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
         bool death = isolatedIsDeath(piecesOnCoordsPreDeath, piece);
+
+        if (HelperFunctions.checkState(piece, PieceState.Delayed))
+        {
+            death = false;
+        }
 
         if (death)
         {
@@ -2472,7 +2482,7 @@ public class BotHelperFunctions : MonoBehaviour
                     int numPieces = placePieces.Count;
                     int numCoords = placeCoords.Count;
 
-                    Debug.Log("Simulating Vomit: " + numPieces + " : " + numCoords);
+                    //Debug.Log("Simulating Vomit: " + numPieces + " : " + numCoords);
 
                     if (numPieces >= numCoords)
                     {
@@ -2487,7 +2497,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                             int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
 
-                            Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
+                            //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
 
                             updateBoardState(coords__, p_, "a", bs);
 
@@ -2512,7 +2522,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                             c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
-                            Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                            //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
 
                             updateBoardState(c_, p_, "a", bs);
 

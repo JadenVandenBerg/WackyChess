@@ -181,7 +181,7 @@ public class onlineGame : MonoBehaviour
                     //HelperFunctions.updateCastleCondition();
                     HelperFunctions.addToCurrentMoveableCoordsTotal(currentColor, true, true, currentPiece, true, true);
                 }
-                else if (HelperFunctions.isColorOnSquare(gameData.selected, gameData.turn, false))
+                else if (HelperFunctions.isColorOnSquare(HelperFunctions.getPiecesOnSquareBoardGrid(gameData.selected), gameData.turn, false))
                 {
                     //TODO: Force selection from side panel
                     Debug.Log("SIDE PANEL SELECTION");

@@ -37,7 +37,8 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        nonResettables.isBotTournament = true;
+        
+        /*nonResettables.isBotTournament = true;
         nonResettables.logMatch = false;
 
         if (nonResettables.isBotTournament)
@@ -65,7 +66,7 @@ public class botMaster : MonoBehaviour
                     "Bloodbot",
                     "ShieldBot"
                 };
-                */
+                
 
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
@@ -100,7 +101,8 @@ public class botMaster : MonoBehaviour
                 botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
-        }
+        } 
+        */
         
         if (!gameOver)
         { 

@@ -3,13 +3,13 @@ using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
 
-public class PressureBot : BotTemplate
+public class AdventurousKingBot : BotTemplate
 {
-	public PressureBot(int botColor)
+	public AdventurousKingBot(int botColor)
 	{
 		color = botColor;
 		pieces = new List<Piece>();
-		name = "Pressure Bot";
+		name = "Adventurous King Bot";
 		choosePieces();
 	}
 
@@ -98,6 +98,16 @@ public class PressureBot : BotTemplate
 				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
+				if (piece.baseType == "King")
+				{
+					botPoints += (5 + coords[1]);
+				}
+
+                if (piece.baseType == "Misc")
+                {
+                    botPoints += 100;
+                }
+
                 float diff = botPoints - oppPoints;
 				if (diff < bestOppMoveDiff)
 				{
@@ -136,5 +146,3 @@ public class PressureBot : BotTemplate
 		return move;
 	}
 }
-
-	

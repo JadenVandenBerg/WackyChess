@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
+using System;
 
 public class OnePieceRandomBot : BotTemplate
 {
@@ -17,6 +18,12 @@ public class OnePieceRandomBot : BotTemplate
 	override
 	public NextMove nextMove()
 	{
+		List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
+
+		System.Random rnd = new System.Random();
+		var index = rnd.Next(piecesOnBoard.Count);
+		Piece chosenPiece = piecesOnBoard[index];
+
 		float bestMoveDiff = -1000;
 		List<NextMove> validMoves = new List<NextMove>();
 		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
@@ -96,6 +103,11 @@ public class OnePieceRandomBot : BotTemplate
 				List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
 				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+				if (piece == chosenPiece)
+				{
+					botPoints += 100;
+				}
 
 				float diff = botPoints - oppPoints;
 				if (diff < bestOppMoveDiff)

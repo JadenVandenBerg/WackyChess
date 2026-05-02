@@ -13,9 +13,10 @@ public class RestrictorBot : BotTemplate
 		choosePieces();
 	}
 
-    private int numGuards(BotTemplate bot, BoardState bs, int color, int[] coords)
+	/*
+    private bool isGuarded(BotTemplate bot, BoardState bs, int color, int[] coords)
     {
-        int numGuards = 0;
+        bool isGuarded = false;
         var attacks = getAllPossibleBotAttacks(bot, bs, color);
 
         foreach (var piece in attacks.pieceMoveList)
@@ -24,12 +25,13 @@ public class RestrictorBot : BotTemplate
             {
                 if (attack == coords)
                 {
-                    numGuards++;
+                    isGuarded = true;
                 }
             }
         }
-        return numGuards;
+        return isGuarded;
     }
+	*/
 
     override
 
@@ -75,8 +77,99 @@ public class RestrictorBot : BotTemplate
 
 			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
+			bool kingAlive = true;
+
             List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
 
+            int[] kingCoords = null;
+            foreach (Piece item in piecesOnBoard)
+            {
+                if (item.baseType == "King")
+                {
+                    kingCoords = item.position;
+                }
+            }
+
+            foreach (NextMove nextMoveOpp in allMovesOpp)
+			{
+                Piece pieceOpp;
+                int[] coordsOpp;
+
+                string moveTypeOpp = nextMoveOpp.moveType;
+
+                if (moveTypeOpp == "move")
+                {
+                    Move mv = nextMoveOpp.move;
+
+                    pieceOpp = mv.p;
+                    coordsOpp = mv.coords;
+                }
+                else
+                {
+                    PieceAbility pa = nextMoveOpp.ability;
+
+                    pieceOpp = pa.piece;
+                    coordsOpp = pa.coords;
+                }
+
+				if (coordsOpp == kingCoords)
+				{
+					kingAlive = false;
+				}
+            }
+
+			/*
+			foreach (NextMove nextMoveOpp in allMovesOpp)
+			{
+				Piece pieceOpp;
+				int[] coordsOpp;
+
+				string moveTypeOpp = nextMoveOpp.moveType;
+
+				if (moveTypeOpp == "move")
+				{
+					Move mv = nextMoveOpp.move;
+
+					pieceOpp = mv.p;
+					coordsOpp = mv.coords;
+				}
+				else
+				{
+					PieceAbility pa = nextMoveOpp.ability;
+
+					pieceOpp = pa.piece;
+					coordsOpp = pa.coords;
+				}
+
+				BoardState originalBoardState_ = this.currentBoardState;
+				BoardState cloneState_;
+				if (moveTypeOpp == "move")
+				{
+					cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
+				}
+				else
+				{
+					cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
+				}
+				this.currentBoardState = originalBoardState_;
+
+				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState_, this.color);
+
+				foreach (Piece piece_ in piecesOnBoard)
+				{
+					if (piece_.baseType == "King")
+					{
+						if (piece_.alive == 1)
+						{
+                            kingAlive = true;
+                        }
+					}
+				}
+			}
+			*/
+
+
+			/*
             int[] kingCoords = null;
             foreach (Piece item in piecesOnBoard)
             {
@@ -97,22 +190,30 @@ public class RestrictorBot : BotTemplate
                 }
             }
 
-            int checks = numGuards(this, cloneState, this.color, kingCoordsOpp);
-            int checksOpp = numGuards(this, cloneState, this.color * -1, kingCoords);
+            bool checkOpp = isGuarded(this, cloneState, this.color, kingCoordsOpp);
+            bool inCheck = isGuarded(this, cloneState, this.color * -1, kingCoords);
 
-			int moveScore = allMovesOpp.Count;
+			*/
 
-			if (checks >= 1)
+			int moveScore = 1000000;
+
+			/*
+			if (checkOpp == true)
 			{
-				moveScore -= 1000;
+				moveScore -= 1000000;
+			}
+			*/
+
+			if (kingAlive == true)
+			{
+                moveScore = allMovesOpp.Count;
+			}
+			else
+			{
+				moveScore = 100000000;
 			}
 
-			if (checksOpp >= 1)
-			{
-				moveScore += 10000;
-			}
-
-            if (bestOppNumMoves >= moveScore)
+			if (bestOppNumMoves >= moveScore)
 			{
 				if (bestOppNumMoves > moveScore)
 				{

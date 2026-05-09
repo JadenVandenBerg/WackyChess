@@ -286,176 +286,182 @@ public class BotHelperFunctions : MonoBehaviour
         List<PieceAbility> pieceAbilities = new List<PieceAbility>();
 
         foreach(Piece piece in pieces) {
-            string[] abilityNames = removeDuplicateAbilities(piece.ability).Split("-");
 
-            foreach (string ability in abilityNames) {
-                if (ability == "Vomit")
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Vomit))
+            {
+                if (piece.storage != null && piece.storage.Count < 1)
                 {
-                    if (piece.storage != null && piece.storage.Count < 1)
-                    {
-                        continue;
-                    }
-                    else if (piece.storage == null)
-                    {
-                        continue;
-                    }
-
-                    List<Piece> placePieces = new List<Piece>();
-
-                    foreach (Piece storedPiece in piece.storage)
-                    {
-                        placePieces.Add(storedPiece);
-                    }
-
-                    List<int[]> possibleCoords = isolatedGetCollateralSquares(piece, bs);
-
-                    if (possibleCoords.Count == 0)
-                    {
-                        continue;
-                    }
-
-                    PieceAbility vomit = new PieceAbility(piece, "Vomit", piece.position, placePieces, possibleCoords, null);
-                    pieceAbilities.Add(vomit);
+                    continue;
                 }
-                else if (ability == "CastleLeft")
+                else if (piece.storage == null)
                 {
-                    if (!isolatedCheckCanCastle(bot, bs, -1))
-                    {
-                        continue;
-                    }
-
-                    Piece king = bot.king;
-                    Piece rook;
-                    if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r1");
-                    else rook = HelperFunctions.findPieceFromPanelCode("b_r1");
-                    int[] coords = new int[] { king.position[0] - 2, king.position[1] };
-                    PieceAbility castle = new PieceAbility(king, "CastleLeft", coords, null, null, rook);
-                    pieceAbilities.Add(castle);
+                    continue;
                 }
-                else if (ability == "CastleRight")
-                {
-                    if (!isolatedCheckCanCastle(bot, bs, 1))
-                    {
-                        continue;
-                    }
 
-                    Piece king = bot.king;
-                    Piece rook;
-                    if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r2");
-                    else rook = HelperFunctions.findPieceFromPanelCode("b_r2");
-                    int[] coords = new int[] { king.position[0] - 2, king.position[1] };
-                    PieceAbility castle = new PieceAbility(king, "CastleRight", coords, null, null, rook);
-                    pieceAbilities.Add(castle);
+                List<Piece> placePieces = new List<Piece>();
+
+                foreach (Piece storedPiece in piece.storage)
+                {
+                    placePieces.Add(storedPiece);
                 }
-                else if (ability == "Unfreeze")
-                {
-                    if (!HelperFunctions.checkState(piece, PieceState.Frozen))
-                    {
-                        continue;
-                    }
 
-                    PieceAbility unFreeze = new PieceAbility(piece, "Unfreeze", piece.position, null, null, null);
-                    pieceAbilities.Add(unFreeze);
+                List<int[]> possibleCoords = isolatedGetCollateralSquares(piece, bs);
+
+                if (possibleCoords.Count == 0)
+                {
+                    continue;
                 }
-                else if (ability == "Freeze")
+
+                PieceAbility vomit = new PieceAbility(piece, PieceAbilities.Vomit, piece.position, placePieces, possibleCoords, null);
+                pieceAbilities.Add(vomit);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleLeft))
+            {
+                if (!isolatedCheckCanCastle(bot, bs, -1))
                 {
-                    if (!isolatedIsPieceSurroundingColor(piece, piece.color * -1, bs))
+                    continue;
+                }
+
+                Piece king = bot.king;
+                Piece rook;
+                if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r1");
+                else rook = HelperFunctions.findPieceFromPanelCode("b_r1");
+                int[] coords = new int[] { king.position[0] - 2, king.position[1] };
+                PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleLeft, coords, null, null, rook);
+                pieceAbilities.Add(castle);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleRight))
+            {
+                if (!isolatedCheckCanCastle(bot, bs, 1))
+                {
+                    continue;
+                }
+
+                Piece king = bot.king;
+                Piece rook;
+                if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r2");
+                else rook = HelperFunctions.findPieceFromPanelCode("b_r2");
+                int[] coords = new int[] { king.position[0] - 2, king.position[1] };
+                PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleRight, coords, null, null, rook);
+                pieceAbilities.Add(castle);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Unfreeze))
+            {
+                if (!HelperFunctions.checkState(piece, PieceState.Frozen))
+                {
+                    continue;
+                }
+
+                PieceAbility unFreeze = new PieceAbility(piece, PieceAbilities.Unfreeze, piece.position, null, null, null);
+                pieceAbilities.Add(unFreeze);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Freeze))
+            {
+                if (!isolatedIsPieceSurroundingColor(piece, piece.color * -1, bs))
+                {
+                    continue;
+                }
+
+                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
+                {
+                    int posX = piece.position[0] + dirX - 1;
+                    int posY = piece.position[1] + dirY - 1;
+
+                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
+
+                    List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
+                    foreach (Piece p_ in piecesOnDir)
                     {
-                        continue;
-                    }
-
-                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                    {
-                        int posX = piece.position[0] + dirX - 1;
-                        int posY = piece.position[1] + dirY - 1;
-
-                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
-
-                        List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
-                        foreach (Piece p_ in piecesOnDir)
+                        if (p_.color != piece.color && !HelperFunctions.checkState(p_, PieceState.Frozen))
                         {
-                            if (p_.color != piece.color && !HelperFunctions.checkState(p_, PieceState.Frozen))
-                            {
-                                PieceAbility freeze = new PieceAbility(piece, "Freeze", new int[] { posX + 1, posY + 1 }, null, null, p_);
-                                pieceAbilities.Add(freeze);
-                            }
+                            PieceAbility freeze = new PieceAbility(piece, PieceAbilities.Freeze, new int[] { posX + 1, posY + 1 }, null, null, p_);
+                            pieceAbilities.Add(freeze);
                         }
                     }
                 }
-                else if (ability == "Spawn")
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Spawn))
+            {
+                if (piece.numSpawns <= 0)
                 {
-                    if (piece.numSpawns <= 0)
+                    continue;
+                }
+
+                if (isolatedAreSurroundingSquaresFull(piece, bs))
+                {
+                    continue;
+                }
+
+                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
+                {
+                    int posX = piece.position[0] + dirX - 1;
+                    int posY = piece.position[1] + dirY - 1;
+
+                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
+
+                    List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
+                    if (piecesOnDir.Count > 0)
                     {
                         continue;
                     }
 
-                    if (isolatedAreSurroundingSquaresFull(piece, bs))
-                    {
-                        continue;
-                    }
-
-                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                    {
-                        int posX = piece.position[0] + dirX - 1;
-                        int posY = piece.position[1] + dirY - 1;
-
-                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
-
-                        List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
-                        if (piecesOnDir.Count > 0)
-                        {
-                            continue;
-                        }
-
-                        PieceAbility spawn = new PieceAbility(piece, "Spawn", new int[] { posX + 1, posY + 1 }, null, null, null);
-                        pieceAbilities.Add(spawn);
-                    }
+                    PieceAbility spawn = new PieceAbility(piece, PieceAbilities.Spawn, new int[] { posX + 1, posY + 1 }, null, null, null);
+                    pieceAbilities.Add(spawn);
                 }
-                else if (ability == "Spit")
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Spit))
+            {
+                if (piece.storage == null || (piece.storage != null && piece.storage.Count <= 0))
                 {
-                    if (piece.storage == null || (piece.storage != null && piece.storage.Count <= 0))
-                    {
-                        continue;
-                    }
-
-                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                    {
-                        int posX = piece.position[0] + dirX - 1;
-                        int posY = piece.position[1] + dirY - 1;
-
-                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
-
-                        //Debug.Log("NEW SPIT FOUND: " + piece.name + " -> " + piece.storage[0].name + "");
-
-                        PieceAbility spit = new PieceAbility(piece, "Spit", new int[] { posX + 1, posY + 1 }, null, null, piece.storage[0]);
-                        pieceAbilities.Add(spit);
-                    }
+                    continue;
                 }
-                else if (ability == "Dematerialize")
+
+                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
                 {
-                    if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
-                    {
-                        continue;
-                    }
+                    int posX = piece.position[0] + dirX - 1;
+                    int posY = piece.position[1] + dirY - 1;
 
-                    PieceAbility dematerialize = new PieceAbility(piece, "Dematerialize", piece.position, null, null, null);
-                    pieceAbilities.Add(dematerialize);
-                }
-                else if (ability == "Materialize")
-                {
-                    if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
-                    {
-                        continue;
-                    }
+                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
 
-                    PieceAbility materialize = new PieceAbility(piece, "Materialize", piece.position, null, null, null);
-                    pieceAbilities.Add(materialize);
+                    //Debug.Log("NEW SPIT FOUND: " + piece.name + " -> " + piece.storage[0].name + "");
+
+                    PieceAbility spit = new PieceAbility(piece, PieceAbilities.Spit, new int[] { posX + 1, posY + 1 }, null, null, piece.storage[0]);
+                    pieceAbilities.Add(spit);
                 }
-                else if (ability == "Split")
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize))
+            {
+                if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
                 {
-                    PieceAbility split = new PieceAbility(piece, "Split", piece.position, null, null, null);
-                    pieceAbilities.Add(split);
+                    continue;
                 }
+
+                PieceAbility dematerialize = new PieceAbility(piece, PieceAbilities.Dematerialize, piece.position, null, null, null);
+                pieceAbilities.Add(dematerialize);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Materialize))
+            {
+                if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
+                {
+                    continue;
+                }
+
+                PieceAbility materialize = new PieceAbility(piece, PieceAbilities.Materialize, piece.position, null, null, null);
+                pieceAbilities.Add(materialize);
+            }
+
+            if (HelperFunctions.checkAbility(piece, PieceAbilities.Split))
+            {
+                PieceAbility split = new PieceAbility(piece, PieceAbilities.Split, piece.position, null, null, null);
+                pieceAbilities.Add(split);
             }
         }
 
@@ -483,13 +489,14 @@ public class BotHelperFunctions : MonoBehaviour
     public class PieceAbility
     {
         public Piece piece; //The piece with the ability
-        public string ability; //Ability name
+        //public string ability; //Ability name
+        public PieceAbilities ability;
         public int[] coords; //Coords for abilities with one action (ie. Spawning, Freezing)
         public List<Piece> placePieces; //Pieces for abilities with multiple actions. Only hungry for now
         public List<int[]> placeCoords; //Coords for abilities with multiple actions. Only hungry for now
         public Piece secondPiece; //The second piece used in abilities. Used for castling/spawning
 
-        public PieceAbility(Piece piece, string ability, int[] coords, List<Piece> placePieces, List<int[]> placeCoords, Piece secondPiece)
+        public PieceAbility(Piece piece, PieceAbilities ability, int[] coords, List<Piece> placePieces, List<int[]> placeCoords, Piece secondPiece)
         {
             this.piece = piece;
             this.ability = ability;
@@ -977,7 +984,7 @@ public class BotHelperFunctions : MonoBehaviour
             if (comparator(piece, jump, pieceIsNull, pieceIsDiffColour, piecesOnCoords) || (theoretical && !jump))
             {
                 //TODO maybe add check functionality
-                //if (piece.name == "w_k1" || piece.name == "b_k1") Debug.Log("MOVE SIM " + newPosX + "," + newPosY);
+                //if (piece.name == "w_k1" || piece.name == "b_k1") Debug.Log("MOVE SIM " + newPosX + "," + newPosY + " J: " + jump + " PIN: " + pieceIsNull + " PID: " + pieceIsDiffColour + " POC: " + piecesOnCoords.Count);
                 allMoves.Add(new int[] { newPosX, newPosY });
             }
         }
@@ -1779,9 +1786,7 @@ public class BotHelperFunctions : MonoBehaviour
 
             if (
                 !isolatedIsColorOnCoords(piecesOnCoords, true, piece.color * -1) 
-                && (!HelperFunctions.checkState(piece, PieceState.Murderous) 
-                || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed)))
-                || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && piecesOnCoords.Count >= 2)
+                && !HelperFunctions.checkState(piece, PieceState.Murderous)
             )
             {
                 death = false;
@@ -1815,7 +1820,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         //Piece piece = pieceAbility.piece;
         Piece piece = getCloneFromOriginalPiece(pieceAbility.piece, bs.boardGrid);
-        string ability = pieceAbility.ability;
+        PieceAbilities ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
         int[] adjustedCoords = new int[] { coords[0] - 1, coords[1] - 1 };
         int[] adjustedPiecePosition = new int[] { piece.position[0] - 1, piece.position[1] - 1 };
@@ -1834,7 +1839,7 @@ public class BotHelperFunctions : MonoBehaviour
         //Piece secondPiece = pieceAbility.secondPiece;
         Piece secondPiece = getCloneFromOriginalPiece(pieceAbility.secondPiece, bs.boardGrid);
 
-        if (ability == "Vomit")
+        if (ability == PieceAbilities.Vomit)
         {
             int numPieces = placePieces.Count;
             int numCoords = placeCoords.Count;
@@ -1887,7 +1892,7 @@ public class BotHelperFunctions : MonoBehaviour
                 }
             }
         }
-        else if (ability == "CastleLeft")
+        else if (ability == PieceAbilities.CastleLeft)
         {
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
@@ -1903,10 +1908,10 @@ public class BotHelperFunctions : MonoBehaviour
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
-            HelperFunctions.removeAbility(piece, "CastleLeft");
-            HelperFunctions.removeAbility(piece, "CastleRight");
+            HelperFunctions.removeAbility(piece, PieceAbilities.CastleLeft);
+            HelperFunctions.removeAbility(piece, PieceAbilities.CastleRight);
         }
-        else if (ability == "CastleRight")
+        else if (ability == PieceAbilities.CastleRight)
         {
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
@@ -1922,31 +1927,31 @@ public class BotHelperFunctions : MonoBehaviour
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
-            HelperFunctions.removeAbility(piece, "CastleLeft");
-            HelperFunctions.removeAbility(piece, "CastleRight");
+            HelperFunctions.removeAbility(piece, PieceAbilities.CastleLeft);
+            HelperFunctions.removeAbility(piece, PieceAbilities.CastleRight);
         }
-        else if (ability == "Unfreeze")
+        else if (ability == PieceAbilities.Unfreeze)
         {
-            HelperFunctions.removeAbility(piece, "Unfreeze");
+            HelperFunctions.removeAbility(piece, PieceAbilities.Unfreeze);
             HelperFunctions.removeState(piece, PieceState.Frozen);
         }
-        else if (ability == "Freeze")
+        else if (ability == PieceAbilities.Freeze)
         {
             HelperFunctions.addState(secondPiece, PieceState.Frozen);
-            HelperFunctions.addAbility(secondPiece, "Unfreeze");
+            HelperFunctions.addAbility(secondPiece, PieceAbilities.Unfreeze);
         }
-        else if (ability == "Spawn")
+        else if (ability == PieceAbilities.Spawn)
         {
             Piece spawned = HelperFunctions.Spawnables.create(piece.spawnable, piece.color, false);
             piece.numSpawns--;
             if (piece.numSpawns <= 0)
             {
-                HelperFunctions.removeAbility(piece, "Spawn");
+                HelperFunctions.removeAbility(piece, PieceAbilities.Spawn);
             }
             Destroy(spawned.go);
             updateBoardState(adjustedCoords, spawned, "a", bs);
         }
-        else if (ability == "Spit")
+        else if (ability == PieceAbilities.Spit)
         {
             isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(adjustedCoords[0], adjustedCoords[1], bs.boardGrid, false), bs);
 
@@ -1954,25 +1959,25 @@ public class BotHelperFunctions : MonoBehaviour
 
             piece.storage.Remove(secondPiece);
         }
-        else if (ability == "Dematerialize")
+        else if (ability == PieceAbilities.Dematerialize)
         {
             HelperFunctions.addState(piece, PieceState.Dematerialized);
-            HelperFunctions.removeAbility(piece, "Dematerialize");
-            HelperFunctions.addAbility(piece, "Materialize");
+            HelperFunctions.removeAbility(piece, PieceAbilities.Dematerialize);
+            HelperFunctions.addAbility(piece, PieceAbilities.Materialize);
         }
-        else if (ability == "Materialize")
+        else if (ability == PieceAbilities.Materialize)
         {
             HelperFunctions.removeState(piece, PieceState.Dematerialized);
-            HelperFunctions.addAbility(piece, "Dematerialize");
-            HelperFunctions.removeAbility(piece, "Materialize");
+            HelperFunctions.addAbility(piece, PieceAbilities.Dematerialize);
+            HelperFunctions.removeAbility(piece, PieceAbilities.Materialize);
 
             isolatedOnDeathsDontIncludeAttacker(piece, coords, bs);
 
             isolatedCheckPromote(piece, bs);
         }
-        else if (ability == "Split")
+        else if (ability == PieceAbilities.Split)
         {
-            HelperFunctions.removeAbility(piece, "Split");
+            HelperFunctions.removeAbility(piece, PieceAbilities.Split);
 
             updateBoardState(adjustedPiecePosition, piece, "r", bs);
 
@@ -2058,7 +2063,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             if (HelperFunctions.checkState(pieceOnSquare, PieceState.Crook))
             {
-                if (piecesOnSquare.Count == 2) //why 2
+                if (piecesOnSquare.Count == 2)
                 {
                     HelperFunctions.removeState(pieceOnSquare, PieceState.Jailed);
                 }
@@ -2461,10 +2466,10 @@ public class BotHelperFunctions : MonoBehaviour
                 List<int[]> placeCoords_ = isolatedGetCollateralSquares(deadPiece, bs);
                 List<Piece> placePieces_ = deadPiece.storage;
 
-                PieceAbility pa = new PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces_, placeCoords_, null);
+                PieceAbility pa = new PieceAbility(deadPiece, PieceAbilities.Vomit, deadPiece.position, placePieces_, placeCoords_, null);
                 //Simulate Ability
                 Piece piece = getCloneFromOriginalPiece(pa.piece, bs.boardGrid);
-                string ability = pa.ability;
+                PieceAbilities ability = pa.ability;
 
                 List<Piece> placePieces = new List<Piece>();
                 if (pa.placePieces != null)
@@ -2477,7 +2482,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                 List<int[]> placeCoords = pa.placeCoords;
 
-                if (ability == "Vomit")
+                if (ability == PieceAbilities.Vomit)
                 {
                     int numPieces = placePieces.Count;
                     int numCoords = placeCoords.Count;
@@ -2564,16 +2569,7 @@ public class BotHelperFunctions : MonoBehaviour
             //attackerPiece.states |= deadPiece.states;
             tempInfo.stackingStates |= deadPiece.states;
 
-            string ability = deadPiece.ability;
-            string[] abilityParts = ability.Split('-');
-
-            foreach (string abilityPart in abilityParts)
-            {
-                if (!attackerPiece.ability.Contains(abilityPart))
-                {
-                    HelperFunctions.addAbility(attackerPiece, abilityPart);
-                }
-            }
+            HelperFunctions.addAbility(attackerPiece, deadPiece.abilities);
 
             //Moves
             int[,] moves = HelperFunctions.combineMoveSets(attackerPiece.moves, deadPiece.moves);
@@ -2652,9 +2648,9 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
-                    isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    //isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
                     isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
-                    tempInfo.attackerDied = true;
+                    //tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -2677,9 +2673,9 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
-                    isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
+                    //isolatedCollateralDeath(HelperFunctions.pieceToList(attackerPiece), bs);
                     isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
-                    tempInfo.attackerDied = true;
+                    //tempInfo.attackerDied = true;
                     return;
                 }
 

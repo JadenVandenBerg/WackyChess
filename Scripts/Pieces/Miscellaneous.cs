@@ -20,9 +20,8 @@ public class Template : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
-    public String secondaryState { get; set; } = "Normal";
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };
@@ -102,10 +101,8 @@ public class SuperPawn : Piece
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
     public int lives { get; set; } = 0;
-    public String ability { get; set; } = "None";
-    public String state { get; set; } = "Normal";
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
-    public String secondaryState { get; set; } = "Normal";
     public int collateralType { get; set; } = -1;
     public int[,] collateral { get; set; } = null;
     public int[] size { get; set; } = new int[] { 1, 1 };

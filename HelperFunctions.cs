@@ -62,31 +62,31 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
-        if (gameData.abilitySelected == "Freeze")
+        if (gameData.abilitySelected == PieceAbilities.Freeze)
         {
             gameData.selected = pointerEventData.pointerPress;
             gameData.selectedPiece = getPieceOnSquare(pointerEventData.pointerPress); //TODO maybe
             tempInfo.tempPiece = gameData.selectedPiece;
         }
-        else if (gameData.abilitySelected == "Spawn")
+        else if (gameData.abilitySelected == PieceAbilities.Spawn)
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
             tempInfo.tempSquare = pointerEventData.pointerPress;
         }
-        else if (gameData.abilitySelected == "Spit")
+        else if (gameData.abilitySelected == PieceAbilities.Spit)
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
             tempInfo.tempSquare = pointerEventData.pointerPress;
         }
-        else if (gameData.abilitySelected == "Split")
+        else if (gameData.abilitySelected == PieceAbilities.Split)
         {
             tempInfo.tempPiece = gameData.selectedPiece;
             gameData.selected = pointerEventData.pointerPress;
             tempInfo.tempSquare = pointerEventData.pointerPress;
         }
-        else if (gameData.abilitySelected != "")
+        else if (gameData.abilitySelected != PieceAbilities.None)
         {
             //return null;
         }
@@ -121,7 +121,7 @@ public class HelperFunctions : MonoBehaviour
     {
         PointerEventData pointerEventData = (PointerEventData)e;
 
-        if (pointerEventData.eligibleForClick && gameData.abilitySelected != "")
+        if (pointerEventData.eligibleForClick && gameData.abilitySelected != PieceAbilities.None)
         {
             if (pointerEventData.pointerPress.ToString().Contains("Pass"))
             {
@@ -162,9 +162,9 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static GameObject clickedAbility(BaseEventData e, SidePanelAdjust panel, string abilityName)
+    public static GameObject clickedAbility(BaseEventData e, SidePanelAdjust panel, PieceAbilities abilityName)
     {
-        if (gameData.abilitySelected != "")
+        if (gameData.abilitySelected != PieceAbilities.None)
         {
             return null;
         }
@@ -1584,7 +1584,7 @@ public class HelperFunctions : MonoBehaviour
                 List<int[]> placeCoords = getEmptySurroundingSquares(deadPiece.position);
                 List<Piece> placePieces = deadPiece.storage;
 
-                BotHelperFunctions.PieceAbility pa = new BotHelperFunctions.PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces, placeCoords, null);
+                BotHelperFunctions.PieceAbility pa = new BotHelperFunctions.PieceAbility(deadPiece, PieceAbilities.Vomit, deadPiece.position, placePieces, placeCoords, null);
                 gameData.helper.executeAbility(pa);
             }
         }
@@ -1622,16 +1622,7 @@ public class HelperFunctions : MonoBehaviour
             //attackerPiece.states |= deadPiece.states;
             tempInfo.stackingStates |= deadPiece.states;
 
-            string ability = deadPiece.ability;
-            string[] abilityParts = ability.Split('-');
-
-            foreach (string abilityPart in abilityParts)
-            {
-                if (!attackerPiece.ability.Contains(abilityPart))
-                {
-                    addAbility(attackerPiece, abilityPart);
-                }
-            }
+            addAbility(attackerPiece, deadPiece.abilities);
 
             //Moves
             int[,] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
@@ -1719,9 +1710,9 @@ public class HelperFunctions : MonoBehaviour
             {
                 if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
                 {
-                    collateralDeath(pieceToList(attackerPiece));
+                    //collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
-                    tempInfo.attackerDied = true;
+                    //tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1748,9 +1739,9 @@ public class HelperFunctions : MonoBehaviour
             {
                 if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
                 {
-                    collateralDeath(pieceToList(attackerPiece));
+                    //collateralDeath(pieceToList(attackerPiece));
                     collateralDeath(pieceToList(deadPiece));
-                    tempInfo.attackerDied = true;
+                    //tempInfo.attackerDied = true;
                     return;
                 }
 
@@ -1819,6 +1810,11 @@ public class HelperFunctions : MonoBehaviour
     public static bool checkState(Piece piece, PieceState state)
     {
         return (piece.states & state) != 0;
+    }
+
+    public static bool checkAbility(Piece piece, PieceAbilities ability)
+    {
+        return (piece.abilities & ability) != 0;
     }
 
     public static bool checkStateOnSquare(List<Piece> piecesOnSquare, PieceState state)
@@ -2513,6 +2509,12 @@ public class HelperFunctions : MonoBehaviour
         piece.states |= state;
     }
 
+    public static void addAbility(Piece piece, PieceAbilities ability)
+    {
+        piece.abilities |= ability;
+    }
+
+    /*
     public static void addAbility(Piece piece, String ability)
     {
         if (piece.ability == "" || piece.ability == null)
@@ -2539,6 +2541,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
     }
+    */
 
     public static bool areSurroundingSquaresFull(Piece piece)
     {
@@ -2641,12 +2644,19 @@ public class HelperFunctions : MonoBehaviour
         piece.states &= ~state;
     }
 
+    public static void removeAbility(Piece piece, PieceAbilities ability)
+    {
+        piece.abilities &= ~ability;
+    }
+
+    /*
     public static void removeAbility(Piece piece, string ability)
     {
 
         piece.ability = piece.ability.Replace("-" + ability, "");
         piece.ability = piece.ability.Replace(ability, "");
     }
+    */
 
     public static bool checkBounds(int x, int y)
     {
@@ -2966,7 +2976,7 @@ public class HelperFunctions : MonoBehaviour
         Piece secondPiece = BotHelperFunctions.getOriginalPieceFromClone(pieceAbility.secondPiece);
         if (secondPiece != null) Debug.Log(secondPiece.go);
 
-        string ability = pieceAbility.ability;
+        PieceAbilities ability = pieceAbility.ability;
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
 
         List<Piece> placePieces = new List<Piece>();
@@ -2985,7 +2995,7 @@ public class HelperFunctions : MonoBehaviour
             placeCoords = pieceAbility.placeCoords;
         }
         
-        if (ability == "Vomit")
+        if (ability == PieceAbilities.Vomit)
         {
             int numPieces = piece.storage.Count;
             int numCoords = placeCoords.Count;
@@ -3045,7 +3055,7 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
         }
-        else if (ability == "CastleLeft")
+        else if (ability == PieceAbilities.CastleLeft)
         {
             Debug.LogWarning("Ability: CastleLeft -> " + piece.name + " " + secondPiece.name);
             int[] kingCoords = coords;
@@ -3059,10 +3069,10 @@ public class HelperFunctions : MonoBehaviour
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
-            removeAbility(piece, "CastleLeft");
-            removeAbility(piece, "CastleRight");
+            removeAbility(piece, PieceAbilities.CastleLeft);
+            removeAbility(piece, PieceAbilities.CastleRight);
         }
-        else if (ability == "CastleRight")
+        else if (ability == PieceAbilities.CastleRight)
         {
             Debug.LogWarning("Ability: CastleRight -> " + piece.name + " " + secondPiece.name);
             int[] kingCoords = coords;
@@ -3076,14 +3086,14 @@ public class HelperFunctions : MonoBehaviour
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
-            removeAbility(piece, "CastleLeft");
-            removeAbility(piece, "CastleRight");
+            removeAbility(piece, PieceAbilities.CastleLeft);
+            removeAbility(piece, PieceAbilities.CastleRight);
         }
-        else if (ability == "Unfreeze")
+        else if (ability == PieceAbilities.Unfreeze)
         {
             Debug.LogWarning("Ability: Unfreeze -> " + piece.name);
             removeState(piece, PieceState.Frozen);
-            removeAbility(piece, "Unfreeze");
+            removeAbility(piece, PieceAbilities.Unfreeze);
 
             Image img = piece.go.GetComponent<Image>();
             Color c = img.color;
@@ -3094,18 +3104,18 @@ public class HelperFunctions : MonoBehaviour
 
             img.color = c;
         }
-        else if (ability == "Freeze")
+        else if (ability == PieceAbilities.Freeze)
         {
             Debug.LogWarning("Ability: Freeze -> " + piece.name);
             addState(secondPiece, PieceState.Frozen);
-            addAbility(secondPiece, "Unfreeze");
+            addAbility(secondPiece, PieceAbilities.Unfreeze);
 
             Image img = secondPiece.go.GetComponent<Image>();
             Color blueTint = Color.blue;
 
             img.color = Color.Lerp(img.color, blueTint, 0.4f);
         }
-        else if (ability == "Spawn")
+        else if (ability == PieceAbilities.Spawn)
         {
             Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords[0] + "," + coords[1]);
 
@@ -3114,12 +3124,12 @@ public class HelperFunctions : MonoBehaviour
 
             if (piece.numSpawns <= 0)
             {
-                removeAbility(piece, "Spawn");
+                removeAbility(piece, PieceAbilities.Spawn);
             }
 
             initPiece(spawned, coords);
         }
-        else if (ability == "Spit")
+        else if (ability == PieceAbilities.Spit)
         {
             Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
 
@@ -3143,13 +3153,13 @@ public class HelperFunctions : MonoBehaviour
 
             piece.storage.Remove(storagePiece);
         }
-        else if (ability == "Dematerialize")
+        else if (ability == PieceAbilities.Dematerialize)
         {
             Debug.LogWarning("Ability: Dematerialize -> " + piece.name);
 
             addState(piece, PieceState.Dematerialized);
-            removeAbility(piece, "Dematerialize");
-            addAbility(piece, "Materialize");
+            removeAbility(piece, PieceAbilities.Dematerialize);
+            addAbility(piece, PieceAbilities.Materialize);
 
             Image img = piece.go.GetComponent<Image>();
             Color c = img.color;
@@ -3157,13 +3167,13 @@ public class HelperFunctions : MonoBehaviour
             img.color = c;
             resetBoardColours();
         }
-        else if (ability == "Materialize")
+        else if (ability == PieceAbilities.Materialize)
         {
             Debug.LogWarning("Ability: Materialize -> " + piece.name);
 
             removeState(piece, PieceState.Dematerialized);
-            removeAbility(piece, "Materialize");
-            addAbility(piece, "Dematerialize");
+            removeAbility(piece, PieceAbilities.Materialize);
+            addAbility(piece, PieceAbilities.Dematerialize);
 
             death = true;
 
@@ -3177,11 +3187,11 @@ public class HelperFunctions : MonoBehaviour
             img.color = c;
             resetBoardColours();
         }
-        else if (ability == "Split")
+        else if (ability == PieceAbilities.Split)
         {
             Debug.LogWarning("Ability: Split -> " + piece.name);
 
-            removeAbility(piece, "Split");
+            removeAbility(piece, PieceAbilities.Split);
 
             forceRemove(piece);
             updateBoardGrid(coords, piece, "r");
@@ -3203,7 +3213,21 @@ public class HelperFunctions : MonoBehaviour
             king = gameData.whiteKing;
         }
 
-        bool isInCheck = isCheck(king);
+        bool isInCheck;
+
+        BoardState bs = new BoardState();
+        bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
+
+        Piece cloneKing = BotHelperFunctions.getCloneFromOriginalPiece(king, bs.boardGrid);
+
+        if (cloneKing == null)
+        {
+            isInCheck = true;
+        }
+        else
+        {
+            isInCheck = isCheck_(cloneKing, bs);
+        }
         bool isInCheckMate = isCheckMate(king, true);
 
         Debug.Log("Check: " + isInCheck);
@@ -3521,7 +3545,7 @@ public class HelperFunctions : MonoBehaviour
 
     public void abilityHandler()
     {
-        if (gameData.abilitySelected == "Vomit")
+        if (gameData.abilitySelected == PieceAbilities.Vomit)
         {
             //TODO make it so you can only pass if there are less pieces than spaces
             if (gameData.abilityAdvanceNext)
@@ -3540,7 +3564,7 @@ public class HelperFunctions : MonoBehaviour
 
                 if (tempInfo.tempSquare == null || gameData.selectedPiece.storage == null || gameData.selectedPiece.storage.Count == 0)
                 {
-                    gameData.abilitySelected = "";
+                    gameData.abilitySelected = PieceAbilities.None;
                     gameData.selected = null;
                     resetBoardColours();
                     gameData.turn = gameData.turn * -1;
@@ -3587,7 +3611,7 @@ public class HelperFunctions : MonoBehaviour
                 gameData.selected = null;
             }
         }
-        else if (gameData.abilitySelected == "CastleLeft")
+        else if (gameData.abilitySelected == PieceAbilities.CastleLeft)
         {
             string color;
 
@@ -3617,15 +3641,15 @@ public class HelperFunctions : MonoBehaviour
             gameData.selectedToMovePiece = rook;
             photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
 
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
             resetBoardColours();
             gameData.turn = gameData.turn * -1;
 
-            removeAbility(king, "CastleLeft");
-            removeAbility(king, "CastleRight");
+            removeAbility(king, PieceAbilities.CastleLeft);
+            removeAbility(king, PieceAbilities.CastleRight);
         }
-        else if (gameData.abilitySelected == "CastleRight")
+        else if (gameData.abilitySelected == PieceAbilities.CastleRight)
         {
             string color;
 
@@ -3655,15 +3679,15 @@ public class HelperFunctions : MonoBehaviour
             gameData.selectedToMovePiece = rook;
             photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
 
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
             resetBoardColours();
             gameData.turn = gameData.turn * -1;
 
-            removeAbility(king, "CastleLeft");
-            removeAbility(king, "CastleRight");
+            removeAbility(king, PieceAbilities.CastleLeft);
+            removeAbility(king, PieceAbilities.CastleRight);
         }
-        else if (gameData.abilitySelected == "Freeze")
+        else if (gameData.abilitySelected == PieceAbilities.Freeze)
         {
             if (gameData.abilityAdvanceNext)
             {
@@ -3675,27 +3699,27 @@ public class HelperFunctions : MonoBehaviour
             else if (gameData.selectedPiece != null && tempInfo.tempPiece == gameData.selectedPiece)
             {
                 addState(tempInfo.tempPiece, PieceState.Frozen);
-                addAbility(tempInfo.tempPiece, "Unfreeze");
+                addAbility(tempInfo.tempPiece, PieceAbilities.Unfreeze);
 
-                gameData.abilitySelected = "";
+                gameData.abilitySelected = PieceAbilities.None;
                 gameData.selected = null;
                 resetBoardColours();
                 gameData.turn = gameData.turn * -1;
                 tempInfo.tempPiece = null;
             }
         }
-        else if (gameData.abilitySelected == "Unfreeze")
+        else if (gameData.abilitySelected == PieceAbilities.Unfreeze)
         {
             Piece piece = gameData.selectedPiece;
             removeState(piece, PieceState.Frozen);
-            removeAbility(piece, "Unfreeze");
+            removeAbility(piece, PieceAbilities.Unfreeze);
 
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
             resetBoardColours();
             gameData.turn = gameData.turn * -1;
         }
-        else if (gameData.abilitySelected == "Spawn")
+        else if (gameData.abilitySelected == PieceAbilities.Spawn)
         {
             if (gameData.abilityAdvanceNext)
             {
@@ -3714,13 +3738,13 @@ public class HelperFunctions : MonoBehaviour
                 gameData.selectedPiece.numSpawns--;
                 initPiece(piece, findCoords(square));
 
-                gameData.abilitySelected = "";
+                gameData.abilitySelected = PieceAbilities.None;
                 gameData.selected = null;
                 resetBoardColours();
                 gameData.turn = gameData.turn * -1;
             }
         }
-        else if (gameData.abilitySelected == "Spit")
+        else if (gameData.abilitySelected == PieceAbilities.Spit)
         {
             if (gameData.abilityAdvanceNext)
             {
@@ -3753,26 +3777,26 @@ public class HelperFunctions : MonoBehaviour
                 tempInfo.tempPiece = null;
                 tempInfo.tempSquare = null;
                 gameData.selected = null;
-                gameData.abilitySelected = "";
+                gameData.abilitySelected = PieceAbilities.None;
                 gameData.turn = gameData.turn * -1;
                 resetBoardColours();
             }
         }
-        else if (gameData.abilitySelected == "Dematerialize")
+        else if (gameData.abilitySelected == PieceAbilities.Dematerialize)
         {
             Piece piece = gameData.selectedPiece;
             addState(piece, PieceState.Dematerialized);
-            removeAbility(piece, "Dematerialize");
-            addAbility(piece, "Materialize");
+            removeAbility(piece, PieceAbilities.Dematerialize);
+            addAbility(piece, PieceAbilities.Materialize);
 
-            Debug.Log("ABILITY: " + piece.ability);
-            Debug.Log("STATE: " + piece.state);
+            Debug.Log("ABILITY: " + piece.abilities);
+            Debug.Log("STATE: " + piece.states);
 
             gameData.selectedFromPanel = false;
             tempInfo.tempPiece = null;
             tempInfo.tempSquare = null;
             gameData.selected = null;
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.turn = gameData.turn * -1;
 
             Image img = piece.go.GetComponent<Image>();
@@ -3782,12 +3806,12 @@ public class HelperFunctions : MonoBehaviour
             resetBoardColours();
 
         }
-        else if (gameData.abilitySelected == "Materialize")
+        else if (gameData.abilitySelected == PieceAbilities.Materialize)
         {
             Piece piece = gameData.selectedPiece;
             removeState(piece, PieceState.Dematerialized);
-            removeAbility(piece, "Materialize");
-            addAbility(piece, "Dematerialize");
+            removeAbility(piece, PieceAbilities.Materialize);
+            addAbility(piece, PieceAbilities.Dematerialize);
 
             List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(gameData.selected);
             piecesOnSquare.Remove(piece);
@@ -3798,7 +3822,7 @@ public class HelperFunctions : MonoBehaviour
             tempInfo.tempPiece = null;
             tempInfo.tempSquare = null;
             gameData.selected = null;
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.turn = gameData.turn * -1;
 
             Image img = piece.go.GetComponent<Image>();
@@ -3807,7 +3831,7 @@ public class HelperFunctions : MonoBehaviour
             img.color = c;
             resetBoardColours();
         }
-        else if (gameData.abilitySelected == "Split")
+        else if (gameData.abilitySelected == PieceAbilities.Split)
         {
             forceRemove(gameData.selectedPiece);
 
@@ -3817,7 +3841,7 @@ public class HelperFunctions : MonoBehaviour
             Piece piece2 = Spawnables.create("RightPawn", tempInfo.tempPiece.color, false);
             initPiece(piece2, findCoords(gameData.selected));
 
-            gameData.abilitySelected = "";
+            gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
             resetBoardColours();
             gameData.turn = gameData.turn * -1;
@@ -3898,22 +3922,19 @@ public class HelperFunctions : MonoBehaviour
             selectedToMoveGo = piece.go;
 
             death = true;
-            //Debug.Log("Checking for Death");
+            //Debug.Log("Checking for Death: Square: " + square + " SelectedToMoveGo: " + selectedToMoveGo + " " + " Piece: " + piece.name);
 
-            if (
-                !getColorsOnSquare(square, true).Contains(piece.color * -1) && (
-                    !checkState(piece, PieceState.Murderous)
-                    || checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailer) && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed)
-                    || getPiecesOnSquare(square).Count >= 2 && checkStateOnSquare(getPiecesOnSquare(square), PieceState.Jailed))
-                )
+            List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(square);
+
+            if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && (!checkState(piece, PieceState.Murderous)))
             {
                 death = false;
             }
-            else if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Dematerialized))
+            else if (checkStateAllOnSquare(piecesOnSquare, PieceState.Dematerialized))
             {
                 death = false;
             }
-            else if (checkSquareCrowdingEligible(piece, getPiecesOnSquare(square)))
+            else if (checkSquareCrowdingEligible(piece, piecesOnSquare))
             {
                 death = false;
             }
@@ -3996,7 +4017,7 @@ public class HelperFunctions : MonoBehaviour
         clone.longDescription = original.longDescription;
         clone.alive = original.alive;
         clone.lives = original.lives;
-        clone.ability = original.ability.ToString();
+        clone.abilities = original.abilities;
         //clone.state = original.state.ToString();
         clone.states = original.states;
         //clone.secondaryState = original.secondaryState.ToString();
@@ -4112,7 +4133,7 @@ public class HelperFunctions : MonoBehaviour
 
         gameData.turn = 1;
         gameData.readyToMove = false;
-        gameData.abilitySelected = "";
+        gameData.abilitySelected = PieceAbilities.None;
 
         gameData.selectedToMove = null;
 
@@ -4257,5 +4278,23 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return null;
+    }
+
+    public static PieceAbilities[] getAllAbilities(PieceAbilities abilities)
+    {
+        List<PieceAbilities> singleAbilities = new List<PieceAbilities>();
+
+        foreach (PieceAbilities ability in System.Enum.GetValues(typeof(PieceAbilities)))
+        {
+            if (ability == PieceAbilities.None)
+                continue;
+
+            if ((abilities & ability) == ability)
+            {
+                singleAbilities.Add(ability);
+            }
+        }
+
+        return singleAbilities.ToArray();
     }
 }

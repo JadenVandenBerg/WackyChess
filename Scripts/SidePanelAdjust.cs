@@ -329,21 +329,24 @@ public class SidePanelAdjust : MonoBehaviour
             e.triggers.Add(entry);
 
             // Overlay Ability Image (bottom-right corner)
-            if (panelPieces != null && i < panelPieces.Count && !string.IsNullOrEmpty(panelPieces[i].ability))
+            if (panelPieces != null && i < panelPieces.Count && panelPieces[i].abilities != PieceAbilities.None)
             {
-                string[] abilityNames = panelPieces[i].ability.Split("-");
+                //string[] abilityNames = panelPieces[i].ability.Split("-");
+                PieceAbilities ability = panelPieces[i].abilities;
                 int color = panelPieces[i].color;
                 int gridColumns = 3;
                 float gridSpacing = 5f;
                 float size = 32f;
 
+                PieceAbilities[] abilityNames = HelperFunctions.getAllAbilities(ability);
+
                 int j = 0;
-                foreach (string abilityName in abilityNames)
+                foreach (PieceAbilities abilityName in abilityNames)
                 {
                     j++;
 
                     //Validate Ability
-                    if (abilityName == "Vomit")
+                    if (abilityName == PieceAbilities.Vomit)
                     {
                         if (panelPieces[i].storage != null && panelPieces[i].storage.Count < 1)
                         {
@@ -354,35 +357,35 @@ public class SidePanelAdjust : MonoBehaviour
                             continue;
                         }
                     }
-                    else if (abilityName == "CastleLeft")
+                    else if (abilityName == PieceAbilities.CastleLeft)
                     {
                         if (!HelperFunctions.checkCanCastle(color, -1))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "CastleRight")
+                    else if (abilityName == PieceAbilities.CastleRight)
                     {
                         if (!HelperFunctions.checkCanCastle(color, 1))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "Unfreeze")
+                    else if (abilityName == PieceAbilities.Unfreeze)
                     {
                         if (!HelperFunctions.checkState(panelPieces[i], PieceState.Frozen))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "Freeze")
+                    else if (abilityName == PieceAbilities.Freeze)
                     {
                         if (!HelperFunctions.isPieceSurroundingColor(panelPieces[i], panelPieces[i].color * -1))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "Spawn")
+                    else if (abilityName == PieceAbilities.Spawn)
                     {
                         if (panelPieces[i].numSpawns <= 0)
                         {
@@ -394,32 +397,32 @@ public class SidePanelAdjust : MonoBehaviour
                             continue;
                         }
                     }
-                    else if (abilityName == "Spit")
+                    else if (abilityName == PieceAbilities.Spit)
                     {
                         if (panelPieces[0].storage != null && panelPieces[0].storage.Count < 1)
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "None" || abilityName == "")
+                    else if (abilityName == PieceAbilities.None)
                     {
                         continue;
                     }
-                    else if (abilityName == "Dematerialize")
+                    else if (abilityName == PieceAbilities.Dematerialize)
                     {
                         if (HelperFunctions.checkState(panelPieces[i], PieceState.Dematerialized))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "Materialize")
+                    else if (abilityName == PieceAbilities.Materialize)
                     {
                         if (!HelperFunctions.checkState(panelPieces[i], PieceState.Dematerialized))
                         {
                             continue;
                         }
                     }
-                    else if (abilityName == "Split")
+                    else if (abilityName == PieceAbilities.Split)
                     {
                         //You can always split
                     }

@@ -2,14 +2,9 @@
 
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
-//ghoul king can stack on lite pawn
 // update piece check flags in simulated piece moves (costly)
-//for reverse atomic, if defused to not kill attacker
-//if you jump on jailed piece with captured piece (either color) kill both
 
 //Untested Bugfixes
-//if jailer jails infinite piece, it goes back to its start (should be jailed)
-//opp should be able to capture its own jailer pieces (THAT HAVE JAILED PIECE)
 
 //Dependant Attacks Need Fixing
 // OneTimeKnight

@@ -27,6 +27,8 @@ public class botMaster : MonoBehaviour
     BotTemplate botBlack;
     bool started = true;
 
+    static string SEASON_NAME;
+
     BotGameStatus bgs = new BotGameStatus();
 
     IEnumerator Start()
@@ -38,7 +40,8 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        /*nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = true;
+        //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
 
         if (nonResettables.isBotTournament)
@@ -47,26 +50,38 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "G2EBot",
-                    "KamikazeBot",
-                    "BotRoss",
-                    //"TwoMoveBot"
+                    "TwoMoveBot",
+                    "ThinkingBot",
+                    "Lobotomy",
+                    "BerserkerBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
-                
+
                 /*
-                List<string> randomBots = new List<string>
+                List<string> div1 = new List<string>
                 {
+                    "Bloodbot",
+                    "AssassinBot",
                     "PawnBot",
                     "BottusMaximus",
-                    "FiveXRandomBot",
-                    "IdiotBot",
-                    "BOTential",
-                    "AssassinBot",
-                    "Bloodbot",
-                    "ShieldBot"
+                    "G2EBot",
+                    "KamikazeBot",
+                    "OneMoveBot",
+                    "SavageBeastBot"
                 };
                 
+                List<string> div2 = new List<string>
+                {
+                    "OnePieceRandomBot",
+                    "AdventurousKingBot",
+                    "BotRoss",
+                    "RandomBot",
+                    "BOTential",
+                    "FiveXRandomBot",
+                    "ShieldBot",
+                    "IdiotBot"
+                };
+                */
 
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
@@ -76,7 +91,12 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Starting Tournament With: " + sb);
 
                 nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
-                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], false);
+                
+                //Div 1
+                //nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
+
+                //Div 2
+                //nonResettables.botTournament = new BotTournament(div2[0], div2[1], div2[2], div2[3], div2[4], div2[5], div2[6], div2[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -102,7 +122,6 @@ public class botMaster : MonoBehaviour
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         } 
-        */
         
         if (!gameOver)
         { 
@@ -113,8 +132,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new G2EBot(1);
-                botBlack = new SavageBeastBot(-1);
+                botWhite = new RandomBot(1);
+                botBlack = new RandomBot(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -163,15 +182,15 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botWhiteKnights = new List<Piece>
             {
-                getPieceTypeInstance("SpittingKnight", 1),
-                getPieceTypeInstance("SpittingKnight", 1),
+                getPieceTypeInstance("JailKnight", 1),
+                getPieceTypeInstance("JailKnight", 1),
             };
             */
             List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
             /*
             List<Piece> botWhiteKing = new List<Piece>
             {
-                getPieceTypeInstance("SpittingKing", 1)
+                getPieceTypeInstance("GhoulKing", 1)
             };
             */
             List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
@@ -236,18 +255,19 @@ public class botMaster : MonoBehaviour
             };
             */
             List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
-            /*
+           /*
             List<Piece> botBlackKnights = new List<Piece>
             {
-                getPieceTypeInstance("CrowdingKnight", -1),
-                getPieceTypeInstance("Knight", -1),
+                getPieceTypeInstance("JailKnight", -1),
+                getPieceTypeInstance("JailKnight", -1),
             };
             */
             List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
+           
             /*
             List<Piece> botBlackKing = new List<Piece>
             {
-                getPieceTypeInstance("HeartbrokenKing", -1),
+                getPieceTypeInstance("GhoulKing", -1),
             };
             */
             List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
@@ -343,8 +363,6 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
-        yield return new WaitForSeconds(0.1f);
-
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);
         botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
@@ -411,7 +429,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 
@@ -441,26 +459,26 @@ public class botMaster : MonoBehaviour
             {
                 valid = botValidateAbility(pa, currentBot);
             }
-        }
 
-        movePieceObj = getOriginalPieceFromClone(movePieceObj);
+            movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
-        if (movePieceObj.go == null)
-        {
-            GameObject newGO = new GameObject();
-            RectTransform rect = newGO.AddComponent<RectTransform>();
-            Image s = newGO.AddComponent<Image>();
-            string imgPath = movePieceObj.color == 1 ? movePieceObj.wImage : movePieceObj.bImage;
-            Sprite sp = Resources.Load<Sprite>(imgPath);
-            s.sprite = sp;
-            s.preserveAspect = true;
-            newGO.name = movePieceObj.name;
-            movePieceObj.go = newGO;
-            GameObject square = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
-            HelperFunctions.movePiece(movePieceObj, square);
+            if (movePieceObj.go == null)
+            {
+                GameObject newGO = new GameObject();
+                RectTransform rect = newGO.AddComponent<RectTransform>();
+                Image s = newGO.AddComponent<Image>();
+                string imgPath = movePieceObj.color == 1 ? movePieceObj.wImage : movePieceObj.bImage;
+                Sprite sp = Resources.Load<Sprite>(imgPath);
+                s.sprite = sp;
+                s.preserveAspect = true;
+                newGO.name = movePieceObj.name;
+                movePieceObj.go = newGO;
+                GameObject square = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+                HelperFunctions.movePiece(movePieceObj, square);
 
-            Debug.Log("Reassembling Broken GO");
-            Debug.Break();
+                Debug.Log("Reassembling Broken GO");
+                Debug.Break();
+            }
         }
 
         // Safe
@@ -527,6 +545,7 @@ public class botMaster : MonoBehaviour
             {
                 Debug.Log("Game Over - Stalemate (Condition 1)");
                 bgs.result = "Draw by Stalemate";
+                //Debug.Break();
             }
             else
             {
@@ -542,6 +561,8 @@ public class botMaster : MonoBehaviour
                     movePieceObj = randomMove.ability.piece;
                     moveCoords = randomMove.ability.coords;
                 }
+
+                movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
                 gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
                 gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
@@ -702,7 +723,6 @@ public class botMaster : MonoBehaviour
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         HelperFunctions.resetBoardColours();
-        yield return new WaitForSeconds(0.1f);
         isTurn = true;
 
         if (gameOver)
@@ -711,12 +731,12 @@ public class botMaster : MonoBehaviour
 
             if (nonResettables.logMatch)
             {
-                logger.publishLog("TEST");
+                logger.publishLog("SEASON2_" + botWhite.name + " vs " + botBlack.name + ".txt");
             }
 
             if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(0.5f);
 
             HelperFunctions.resetGameVars();
             SceneManager.LoadScene(7);
@@ -972,7 +992,7 @@ public class botMaster : MonoBehaviour
         string logText = sb.ToString();
 
         Debug.LogWarning(logText);
-        string filePath = Path.Combine(Application.persistentDataPath, "MatchHistory.txt");
+        string filePath = Path.Combine(Application.persistentDataPath, SEASON_NAME + "MatchHistory.txt");
         File.AppendAllText(filePath, logText + "\n------------------------\n");
 
         Debug.Log("Saved match log to: " + filePath);
@@ -1115,7 +1135,7 @@ public class botMaster : MonoBehaviour
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            string folderPath = Path.Combine(documentsPath, "WC_Tournaments");
+            string folderPath = Path.Combine(documentsPath, "WC_Tournaments/" + SEASON_NAME);
 
             if (!Directory.Exists(folderPath))
             {
@@ -1131,7 +1151,7 @@ public class botMaster : MonoBehaviour
             string fullPath = Path.Combine(folderPath, fileName);
 
             File.WriteAllText(fullPath, sb.ToString());
-            System.Diagnostics.Process.Start(fullPath);
+            //System.Diagnostics.Process.Start(fullPath);
         }
     }
 }

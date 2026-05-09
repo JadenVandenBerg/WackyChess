@@ -116,5 +116,8 @@ Scripts/Bots/ThreeMoveBot.cs
 Scripts/Bots/G2EBot.cs
 Scripts/Bots/KamikazeBot.cs
 Scripts/Bots/BotRoss.cs
+Scripts/Bots/BerserkerBot.cs
+Scripts/Bots/Lobotomy.cs
+Scripts/Bots/ThinkingBot.cs
 
 Scripts/Bots/Locked/

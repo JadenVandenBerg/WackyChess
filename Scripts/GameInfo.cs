@@ -22,7 +22,7 @@ public static class gameData
     public static bool refreshedSinceClick { get; set; } = false;
     public static int turn { get; set; } = 1;
     public static bool readyToMove { get; set; } = false;
-    public static string abilitySelected { get; set; } = "";
+    public static PieceAbilities abilitySelected { get; set; } = PieceAbilities.None;
     public static GameObject selectedToMove { get; set; }
     public static List<int[]> currentMoveableCoords { get; set; } = new List<int[]>();
     public static List<int[]> currentMoveableCoordsAllPieces { get; set; } = new List<int[]>();
@@ -171,7 +171,10 @@ public static class nonResettables
             "IdiotBot",
             "G2EBot",
             "KamikazeBot",
-            "BotRoss"
+            "BotRoss",
+            "TwoMoveBot",
+            "ThinkingBot",
+            "Lobotomy"
         };
 
         List<string> result = new List<string>();
@@ -497,6 +500,22 @@ public enum PieceState : long
     Spitting = 1L << 33,
     Stacking = 1L << 34,
     Jailer = 1L << 35,
+}
+
+public enum PieceAbilities : long
+{
+    None = 0,
+
+    Freeze = 1L << 0,
+    Unfreeze = 1L << 1,
+    Dematerialize = 1L << 2,
+    Materialize = 1L << 3,
+    Vomit = 1L << 4,
+    CastleLeft = 1L << 5,
+    CastleRight = 1L << 6,
+    Spawn = 1L << 7,
+    Spit = 1L << 8,
+    Split = 1L << 9,
 }
 
 public class BotSeason

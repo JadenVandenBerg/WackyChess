@@ -94,9 +94,9 @@ public struct UndoState
 public struct UndoAbility
 {
     public Piece piece;
-    public string ability;
+    public PieceAbilities ability;
 
-    public UndoAbility(Piece piece_, string pieceAbility_)
+    public UndoAbility(Piece piece_, PieceAbilities pieceAbility_)
     {
         piece = piece_;
         ability = pieceAbility_;
@@ -353,9 +353,9 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 UndoAbility a = entry.ability;
 
                 Piece piece = a.piece;
-                string ability = a.ability;
+                PieceAbilities ability = a.ability;
 
-                piece.ability = ability;
+                piece.abilities = ability;
             }
 
             if (entry.undoMoveType == "delayedQueue")
@@ -428,7 +428,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         UndoMove undo = new UndoMove();
 
         Piece piece = pieceAbility.piece;
-        string ability = pieceAbility.ability;
+        PieceAbilities ability = pieceAbility.ability;
 
         int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
         int[] adjustedCoords = new int[] { coords[0] - 1, coords[1] - 1 };
@@ -440,7 +440,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         System.Random rand = globalDefs.globalRand;
 
-        if (ability == "Vomit")
+        if (ability == PieceAbilities.Vomit)
         {
             int numPieces = placePieces.Count;
             int numCoords = placeCoords.Count;
@@ -474,7 +474,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     numCoords--;
 
                     int[] c_ = placeCoords[idx];
-                    placeCoords.Remove(c_);
+                    placeCoords.RemoveAt(idx);
 
                     c_ = new int[] { c_[0] - 1, c_[1] - 1 };
 
@@ -488,7 +488,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 }
             }
         }
-        else if (ability == "CastleLeft")
+        else if (ability == PieceAbilities.CastleLeft)
         {
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
@@ -503,21 +503,21 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             UndoMovedPiece rookMove = undo_movePieceBoardState(secondPiece, adjustedRookCoords, bs_);
             undo.addMove(rookMove);
 
-            if (piece.ability.Contains("CastleLeft"))
+            if (checkAbility(piece, PieceAbilities.CastleLeft))
             {
-                UndoAbility castleLeft = new UndoAbility(piece, piece.ability);
+                UndoAbility castleLeft = new UndoAbility(piece, piece.abilities);
                 undo.addAbility(castleLeft);
-                removeAbility(piece, "CastleLeft");
+                removeAbility(piece, PieceAbilities.CastleLeft);
             }
 
-            if (piece.ability.Contains("CastleRight"))
+            if (checkAbility(piece, PieceAbilities.CastleRight))
             {
-                UndoAbility castleRight = new UndoAbility(piece, piece.ability);
+                UndoAbility castleRight = new UndoAbility(piece, piece.abilities);
                 undo.addAbility(castleRight);
-                removeAbility(piece, "CastleRight");
+                removeAbility(piece, PieceAbilities.CastleRight);
             }
         }
-        else if (ability == "CastleRight")
+        else if (ability == PieceAbilities.CastleRight)
         {
             int[] kingCoords = coords;
             int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
@@ -532,41 +532,41 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             UndoMovedPiece rookMove = undo_movePieceBoardState(secondPiece, adjustedRookCoords, bs_);
             undo.addMove(rookMove);
 
-            if (piece.ability.Contains("CastleLeft"))
+            if (checkAbility(piece, PieceAbilities.CastleLeft))
             {
-                UndoAbility castleLeft = new UndoAbility(piece, piece.ability);
+                UndoAbility castleLeft = new UndoAbility(piece, piece.abilities);
                 undo.addAbility(castleLeft);
-                removeAbility(piece, "CastleLeft");
+                removeAbility(piece, PieceAbilities.CastleLeft);
             }
 
-            if (piece.ability.Contains("CastleRight"))
+            if (checkAbility(piece, PieceAbilities.CastleRight))
             {
-                UndoAbility castleRight = new UndoAbility(piece, piece.ability);
+                UndoAbility castleRight = new UndoAbility(piece, piece.abilities);
                 undo.addAbility(castleRight);
-                removeAbility(piece, "CastleRight");
+                removeAbility(piece, PieceAbilities.CastleRight);
             }
         }
-        else if (ability == "Freeze")
+        else if (ability == PieceAbilities.Freeze)
         {
             UndoState pieceFreeze = new UndoState(secondPiece, secondPiece.states);
             undo.addState(pieceFreeze);
             addState(secondPiece, PieceState.Frozen);
 
-            UndoAbility pieceUnfreeze = new UndoAbility(secondPiece, secondPiece.ability);
-            addAbility(secondPiece, "Unfreeze");
+            UndoAbility pieceUnfreeze = new UndoAbility(secondPiece, secondPiece.abilities);
+            addAbility(secondPiece, PieceAbilities.Unfreeze);
             undo.addAbility(pieceUnfreeze);
         }
-        else if (ability == "Unfreeze")
+        else if (ability == PieceAbilities.Unfreeze)
         {
-            UndoAbility pieceUnfreeze = new UndoAbility(piece, piece.ability);
-            removeAbility(piece, "Unfreeze");
+            UndoAbility pieceUnfreeze = new UndoAbility(piece, piece.abilities);
+            removeAbility(piece, PieceAbilities.Unfreeze);
             undo.addAbility(pieceUnfreeze);
 
             UndoState pieceFreeze = new UndoState(piece, piece.states);
             removeState(piece, PieceState.Frozen);
             undo.addState(pieceFreeze);
         }
-        else if (ability == "Spawn")
+        else if (ability == PieceAbilities.Spawn)
         {
             Piece spawned = Spawnables.create(piece.spawnable, piece.color, true);
             piece.numSpawns--;
@@ -574,16 +574,16 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             undo.addAction(incSpawn);
             if (piece.numSpawns <= 0)
             {
-                UndoAbility pieceSpawn = new UndoAbility(piece, piece.ability);
+                UndoAbility pieceSpawn = new UndoAbility(piece, piece.abilities);
                 undo.addAbility(pieceSpawn);
-                removeAbility(piece, "Spawn");
+                removeAbility(piece, PieceAbilities.Spawn);
             }
 
             UndoMovedPiece mp = new UndoMovedPiece(spawned, new coords(-1, -1), new coords(coords[0], coords[1]), false, true, false);
             undo.addMove(mp);
             updateBoardState(adjustedCoords, spawned, "a", bs_);
         }
-        else if (ability == "Spit")
+        else if (ability == PieceAbilities.Spit)
         {
             undo_isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(adjustedCoords[0], adjustedCoords[1], bs_.boardGrid, false), bs_, undo);
 
@@ -593,41 +593,41 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             updateBoardState(adjustedCoords, secondPiece, "a", bs_);
             piece.storage.RemoveAll(p => p.name == secondPiece.name);
         }
-        else if (ability == "Dematerialize")
+        else if (ability == PieceAbilities.Dematerialize)
         {
             UndoState pieceState = new UndoState(piece, piece.states);
             undo.addState(pieceState);
             addState(piece, PieceState.Dematerialized);
 
-            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.ability);
+            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.abilities);
             undo.addAbility(pieceDematerialize);
-            removeAbility(piece, "Dematerialize");
+            removeAbility(piece, PieceAbilities.Dematerialize);
 
-            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.ability);
+            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.abilities);
             undo.addAbility(pieceMaterialize);
-            addAbility(piece, "Materialize");
+            addAbility(piece, PieceAbilities.Materialize);
         }
-        else if (ability == "Materialize")
+        else if (ability == PieceAbilities.Materialize)
         {
             UndoState pieceState = new UndoState(piece, piece.states);
             undo.addState(pieceState);
             removeState(piece, PieceState.Dematerialized);
 
-            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.ability);
+            UndoAbility pieceDematerialize = new UndoAbility(piece, piece.abilities);
             undo.addAbility(pieceDematerialize);
-            addAbility(piece, "Dematerialize");
+            addAbility(piece, PieceAbilities.Dematerialize);
 
-            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.ability);
+            UndoAbility pieceMaterialize = new UndoAbility(piece, piece.abilities);
             undo.addAbility(pieceMaterialize);
-            removeAbility(piece, "Materialize");
+            removeAbility(piece, PieceAbilities.Materialize);
 
             undo_isolatedOnDeathsDontIncludeAttacker(piece, coords, bs_, undo);
 
             undo_isolatedCheckPromote(piece, bs_, undo);
         }
-        else if (ability == "Split")
+        else if (ability == PieceAbilities.Split)
         {
-            removeAbility(piece, "Split");
+            removeAbility(piece, PieceAbilities.Split);
 
             undo_isolatedRemovePiece(piece, bs_, undo);
 
@@ -775,7 +775,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 List<int[]> placeCoords_ = isolatedGetCollateralSquares(deadPiece, bs);
                 List<Piece> placePieces_ = deadPiece.storage;
 
-                PieceAbility pa = new PieceAbility(deadPiece, "Vomit", deadPiece.position, placePieces_, placeCoords_, null);
+                PieceAbility pa = new PieceAbility(deadPiece, PieceAbilities.Vomit, deadPiece.position, placePieces_, placeCoords_, null);
                 //Simulate Ability
 
                 List<Piece> placePieces = new List<Piece>(pa.placePieces);
@@ -797,7 +797,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         int[] coords__ = new int[] { coords_[0] - 1, coords_[1] - 1 };
 
                         //Track this update with an UndoStorage
-                        UndoStorage barf = new UndoStorage(deadPiece, p_, true, new coords(coords_[0], coords_[1]));
+                        UndoStorage barf = new UndoStorage(deadPiece, p_, false, new coords(coords_[0], coords_[1]));
                         undo.addStorage(barf);
 
                         updateBoardState(coords__, p_, "a", bs);
@@ -817,7 +817,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                         int[] gridCoords = new int[] { c[0] - 1, c[1] - 1 };
 
-                        UndoStorage barf = new UndoStorage(deadPiece, p_, true, new coords(c[0], c[1]));
+                        UndoStorage barf = new UndoStorage(deadPiece, p_, false, new coords(c[0], c[1]));
                         undo.addStorage(barf);
 
                         updateBoardState(gridCoords, p_, "a", bs);
@@ -864,16 +864,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
             stackingStates |= deadPiece.states;
 
-            string ability = deadPiece.ability;
-            string[] abilityParts = ability.Split('-');
-
-            foreach (string abilityPart in abilityParts)
-            {
-                if (!original.ability.Contains(abilityPart))
-                {
-                    addAbility(clone, abilityPart);
-                }
-            }
+            addAbility(attackerPiece, deadPiece.abilities);
 
             //Moves
             int[,] moves = combineMoveSets(original.moves, deadPiece.moves);
@@ -951,9 +942,9 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
-                    undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
+                    //undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
                     undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
-                    attackerDied = true;
+                    //attackerDied = true;
                     return (stackingStates, attackerDied);
                 }
 
@@ -976,8 +967,9 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
+                    //undo_isolatedCollateralDeath(pieceToList(attackerPiece), bs, undo);
                     undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
-                    attackerDied = true;
+                    //attackerDied = true;
                     return (stackingStates, attackerDied);
                 }
 
@@ -1214,6 +1206,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         Piece piece = pMove.piece;
         int[] coords = pMove.coords;
 
+        coords = new int[] { coords[0] - 1, coords[1] - 1 };
+
         List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords[0], coords[1], bs.boardGrid, false);
 
         if (/*!isolatedGetColorsOnCoords(piecesOnCoords, true).Contains(piece.color)*/!isolatedIsColorOnCoords(piecesOnCoords, true, piece.color))
@@ -1250,9 +1244,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
 
             piece.hasMoved = true;
-            Debug.Log("Delated Coords: " + coords[0] + "," + coords[1]);
+            Debug.Log("Delayed Coords: " + coords[0] + "," + coords[1]);
             UndoMovedPiece undoMovedPiece = undo_movePieceBoardState(piece, new coords(coords[0], coords[1]), bs);
-            undo.addMove(undoMovedPiece);
+
+            if (undoMovedPiece != null) { undo.addMove(undoMovedPiece); }
         }
     }
 

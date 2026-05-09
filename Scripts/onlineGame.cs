@@ -163,7 +163,7 @@ public class onlineGame : MonoBehaviour
 
     void Update()
     {
-        if (!gameData.isSelected && gameData.abilitySelected == "")
+        if (!gameData.isSelected && gameData.abilitySelected == PieceAbilities.None)
         {
             HelperFunctions.resetBoardColours();
         }
@@ -174,7 +174,7 @@ public class onlineGame : MonoBehaviour
             int currentColor = currentPiece.color;
             if ((gameData.selected.transform.GetChild(0).gameObject != null) || gameData.selectedFromPanel)
             {
-                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && gameData.abilitySelected == "" && currentColor == gameData.turn)
+                if (!HelperFunctions.isMultipleOnSquare(gameData.selected) && gameData.abilitySelected == PieceAbilities.None && currentColor == gameData.turn)
                 {
                     gameData.readyToMove = true;
 
@@ -240,7 +240,7 @@ public class onlineGame : MonoBehaviour
         }
 
         //ABILITY
-        if (gameData.abilitySelected != "" && gameData.selectedPiece != null)
+        if (gameData.abilitySelected != PieceAbilities.None && gameData.selectedPiece != null)
         {
             helper.abilityHandler();
         }

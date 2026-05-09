@@ -104,9 +104,9 @@ public class OneUndoMoveBot : BotTemplate
                 Debug.Log("Last Move: " + pieceOpp.name + " to " + coordsOpp[0] + "," + coordsOpp[1]);
                 debug_printBoardState(currentBoardState);
                 */
-        }
+            }
 
-        if (bestOppMoveDiff >= bestMoveDiff)
+            if (bestOppMoveDiff >= bestMoveDiff)
             {
                 if (bestOppMoveDiff > bestMoveDiff)
                 {
@@ -125,10 +125,10 @@ public class OneUndoMoveBot : BotTemplate
             Debug.Log("Last Move: " + piece.name + " to " + coords[0] + "," + coords[1]);
             debug_printBoardState(currentBoardState);
             */
-            }
+        }
 
 
-            System.Random rand = new System.Random();
+        System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves.Count);
 
         NextMove move = validMoves[rndIdx];

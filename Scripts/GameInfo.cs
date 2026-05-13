@@ -24,8 +24,8 @@ public static class gameData
     public static bool readyToMove { get; set; } = false;
     public static PieceAbilities abilitySelected { get; set; } = PieceAbilities.None;
     public static GameObject selectedToMove { get; set; }
-    public static List<int[]> currentMoveableCoords { get; set; } = new List<int[]>();
-    public static List<int[]> currentMoveableCoordsAllPieces { get; set; } = new List<int[]>();
+    public static List<coords> currentMoveableCoords { get; set; } = new List<coords>();
+    public static List<coords> currentMoveableCoordsAllPieces { get; set; } = new List<coords>();
     public static int[] isInCheck { get; set; } = { 0, 0 }; //0 white, 1 black
     public static Piece whiteKing { get; set; }
     public static Piece blackKing { get; set; }
@@ -552,6 +552,67 @@ public class Bot
     public List<string> Competing { get; set; }
 }
 
+public class PieceMove
+{
+    public Piece piece { get; set; }
+    public coords coords { get; set; }
+    public int turnsToRemove { get; set; }
+
+    public PieceMove(Piece piece, coords coords, int turnsToRemove)
+    {
+        this.piece = piece;
+        this.coords = coords;
+        this.turnsToRemove = turnsToRemove;
+    }
+}
+
+public class DelayedQueue
+{
+    public List<PieceMove> _items = new List<PieceMove>();
+
+    public int Count => _items.Count;
+
+    public void Enqueue(PieceMove item)
+    {
+        _items.Add(item);
+    }
+
+    public PieceMove Dequeue()
+    {
+        if (_items.Count == 0)
+        {
+            return null;
+        }
+
+        PieceMove item = _items[0];
+        _items.RemoveAt(0);
+        return item;
+    }
+
+    public PieceMove Peek()
+    {
+        if (_items.Count == 0)
+        {
+            return null;
+        }
+
+        return _items[0];
+    }
+
+    public void Clear()
+    {
+        _items.Clear();
+    }
+
+    public void deIncrement()
+    {
+        foreach (PieceMove item in _items)
+        {
+            item.turnsToRemove--;
+        }
+    }
+}
+
 /*
 Round 1
 1 v 8
@@ -595,3 +656,15 @@ Round 7
 5 v 6
 7 v 8
 */
+
+public class Move
+{
+    public Piece p;
+    public coords coords;
+
+    public Move(Piece piece, coords coords)
+    {
+        this.p = piece;
+        this.coords = coords;
+    }
+}

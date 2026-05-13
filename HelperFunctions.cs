@@ -143,7 +143,7 @@ public class HelperFunctions : MonoBehaviour
             //gameData.selectedToMove = gameData.selected;
             Piece piece = findPieceFromPanelCode(pointerEventData.pointerPress.ToString().Split(' ')[0]);
             Debug.Log("Selected " + piece.name + " from panel");
-            gameData.selected = findSquare(piece.position[0], piece.position[1]);
+            gameData.selected = findSquare(piece.position.x, piece.position.y);
             gameData.selectedPiece = piece;
             gameData.selectedFromPanel = true;
 
@@ -240,24 +240,24 @@ public class HelperFunctions : MonoBehaviour
             }
         }*/
 
-        int[] coords = findCoords(square);
+        coords coords = findCoords(square);
 
-        if (coords[0] < 1 || coords[1] < 1)
+        if (coords.x < 1 || coords.y < 1)
         {
             return null;
         }
 
-        if (gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count < 1)
+        if (gameData.boardGrid[coords.x - 1][coords.y - 1].Count < 1)
         {
             return null;
         }
 
-        return gameData.boardGrid[coords[0] - 1][coords[1] - 1][0];
+        return gameData.boardGrid[coords.x - 1][coords.y - 1][0];
 
         //return null;
     }
 
-    public static List<int[]> addMovesToCurrentMoveableCoords(Piece piece)
+    public static List<coords> addMovesToCurrentMoveableCoords(Piece piece)
     {
         clearCurrentMoveableCoords();
         if (piece == null)
@@ -265,7 +265,7 @@ public class HelperFunctions : MonoBehaviour
             return null;
         }
 
-        List<int[]> allMoves = new List<int[]>();
+        List<coords> allMoves = new List<coords>();
 
         int color = piece.color;
 
@@ -303,7 +303,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //todo use allMoves instead
-        foreach (int[] move in gameData.currentMoveableCoords)
+        foreach (coords move in gameData.currentMoveableCoords)
         {
             allMoves.Add(move);
         }
@@ -342,9 +342,9 @@ public class HelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static int[] findCoords(GameObject square)
+    public static coords findCoords(GameObject square)
     {
-        if (square == null) return null;
+        if (square == null) return new coords(-1, -1);
 
         int[] sq;
         sq = square.name.ToIntArray();
@@ -352,15 +352,15 @@ public class HelperFunctions : MonoBehaviour
         sq[0] = sq[0] - 48;
         sq[1] = sq[1] - 48;
 
-        return sq;
+        return new coords(sq[0], sq[1]);
     }
 
-    public static bool isJumpBouncing(Piece piece, int[] from, int[] to)
+    public static bool isJumpBouncing(Piece piece, coords from, coords to)
     {
-        int fromX = from[0];
-        int fromY = from[1];
-        int toX = to[0];
-        int toY = to[1];
+        int fromX = from.x;
+        int fromY = from.y;
+        int toX = to.x;
+        int toY = to.y;
 
         int[] coords = { fromX, fromY };
 
@@ -377,12 +377,12 @@ public class HelperFunctions : MonoBehaviour
             {
                 coords[0] = coords[0] + directions[j, 0];
                 coords[1] = coords[1] + directions[j, 1];
-                int[] newCoords = adjustCoordsForBouncing(piece, coords[0], coords[1]);
+                coords newCoords = adjustCoordsForBouncing(piece, coords[0], coords[1]);
 
-                GameObject square = findSquare(newCoords[0], newCoords[1]);
+                GameObject square = findSquare(newCoords.x, newCoords.y);
                 bool pieceOnSquare = isPieceOnSquare(square);
 
-                if (newCoords[0] == toX && newCoords[1] == toY)
+                if (newCoords.x == toX && newCoords.y == toY)
                 {
                     return false;
                 }
@@ -397,12 +397,12 @@ public class HelperFunctions : MonoBehaviour
         return true;
     }
 
-    public static bool isJumpPortal(Piece piece, int[] from, int[] to)
+    public static bool isJumpPortal(Piece piece, coords from, coords to)
     {
-        int fromX = from[0];
-        int fromY = from[1];
-        int toX = to[0];
-        int toY = to[1];
+        int fromX = from.x;
+        int fromY = from.y;
+        int toX = to.x;
+        int toY = to.y;
 
         int[][] directions = new int[][]
         {
@@ -463,16 +463,16 @@ public class HelperFunctions : MonoBehaviour
     }
 
 
-    public static bool isJump(Piece piece, int[] from, int[] to)
+    public static bool isJump(Piece piece, coords from, coords to)
     {
 
         int dirX, dirY;
 
-        if (from[0] > to[0])
+        if (from.x > to.x)
         {
             dirX = -1;
         }
-        else if (from[0] == to[0])
+        else if (from.x == to.x)
         {
             dirX = 0;
         }
@@ -481,11 +481,11 @@ public class HelperFunctions : MonoBehaviour
             dirX = 1;
         }
 
-        if (from[1] > to[1])
+        if (from.y > to.y)
         {
             dirY = -1;
         }
-        else if (from[1] == to[1])
+        else if (from.y == to.y)
         {
             dirY = 0;
         }
@@ -494,15 +494,15 @@ public class HelperFunctions : MonoBehaviour
             dirY = 1;
         }
 
-        int diff = Mathf.Abs(from[0] - to[0]);
-        if (Mathf.Abs(from[1] - to[1]) > diff)
+        int diff = Mathf.Abs(from.x - to.x);
+        if (Mathf.Abs(from.y - to.y) > diff)
         {
-            diff = Mathf.Abs(from[1] - to[1]);
+            diff = Mathf.Abs(from.y - to.y);
         }
 
         for (int i = 1; i <= diff - 1; i++)
         {
-            GameObject square = findSquare(from[0] + (i * dirX), from[1] + (i * dirY));
+            GameObject square = findSquare(from.x + (i * dirX), from.y + (i * dirY));
             if (square != null && isPieceOnSquare(square))
             {
                 List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
@@ -591,7 +591,7 @@ public class HelperFunctions : MonoBehaviour
         return pieceIsNull || pieceIsDiffColour;
     }
 
-    public static int[] adjustCoordsForPortal(Piece piece, int x, int y)
+    public static coords adjustCoordsForPortal(Piece piece, int x, int y)
     {
         if (checkState(piece, PieceState.Portal))
         {
@@ -614,10 +614,10 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        return new int[] { x, y };
+        return new coords( x, y );
     }
 
-    public static int[] adjustCoordsForBouncing(Piece piece, int x, int y)
+    public static coords adjustCoordsForBouncing(Piece piece, int x, int y)
     {
         if (checkState(piece, PieceState.Bouncing))
         {
@@ -643,16 +643,16 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        return new int[] { x, y };
+        return new coords( x, y );
     }
 
 
-    public static bool isCoordsDifferent(int[] one, int[] two)
+    public static bool isCoordsDifferent(coords one, coords two)
     {
-        return !(one[0] == two[0] && one[1] == two[1]);
+        return !(one.x == two.x && one.y == two.y);
     }
 
-    public static bool isKnightPortalBackRank(Piece piece, int[] old, int[] new_)
+    public static bool isKnightPortalBackRank(Piece piece, coords old, coords new_)
     {
         if (!piece.name.Contains("n"))
         {
@@ -661,14 +661,14 @@ public class HelperFunctions : MonoBehaviour
 
         if (piece.color == 1)
         {
-            if (new_[1] >= 7 && old[1] <= 2)
+            if (new_.y >= 7 && old.y <= 2)
             {
                 return true;
             }
         }
         else
         {
-            if (new_[1] <= 2 && old[1] >= 7)
+            if (new_.y <= 2 && old.y >= 7)
             {
                 return true;
             }
@@ -703,7 +703,7 @@ public class HelperFunctions : MonoBehaviour
     }
 
     /*todo rewrite this for isolated boardstate*/
-    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, int[,] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<int[]> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
+    public static void iterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, coords[] moveType, Piece highlightPiece, Color highlightColor, bool check, bool highlight, bool changeValue, List<coords> allMoves, int color, bool execDummyMove, bool ignoreDisabled, bool fromTotal)
     {
         if (checkState(piece, PieceState.Frozen) || checkState(piece, PieceState.Jailed))
         {
@@ -724,24 +724,24 @@ public class HelperFunctions : MonoBehaviour
         for (int i = 0; i < moveType.GetLength(0); i++)
         {
             //Portal
-            int[] oldCoords = new int[] { moveType[i, 0] + piece.position[0], moveType[i, 1] + piece.position[1] };
-            int[] coordsP = adjustCoordsForPortal(piece, oldCoords[0], oldCoords[1]);
-            int[] coordsB = adjustCoordsForBouncing(piece, oldCoords[0], oldCoords[1]);
+            coords oldCoords = new coords(moveType[i].x + piece.position.x, moveType[i].y + piece.position.y);
+            coords coordsP = adjustCoordsForPortal(piece, oldCoords.x, oldCoords.y);
+            coords coordsB = adjustCoordsForBouncing(piece, oldCoords.x, oldCoords.y);
 
-            int[] newPos = new int[] { oldCoords[0], oldCoords[1] };
+            coords newPos = new coords(oldCoords.x, oldCoords.y);
 
             if (checkState(piece, PieceState.Portal))
             {
-                newPos[0] = coordsP[0];
-                newPos[1] = coordsP[1];
+                newPos.x = coordsP.x;
+                newPos.y = coordsP.y;
             }
             else if (checkState(piece, PieceState.Bouncing))
             {
-                newPos[0] = coordsB[0];
-                newPos[1] = coordsB[1];
+                newPos.x = coordsB.x;
+                newPos.y = coordsB.y;
             }
 
-            GameObject goHighlight = findSquare(newPos[0], newPos[1]);
+            GameObject goHighlight = findSquare(newPos.x, newPos.y);
             if (goHighlight != null)
             {
                 //Piece pieceOnSquare = getPieceOnSquare(goHighlight);
@@ -846,7 +846,7 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static List<int[]> addToCurrentMoveableCoordsTotal(int color, bool changeValue, bool highlight, Piece highlightPiece, bool execDummyMove, bool ignoreDisabled)
+    public static List<coords> addToCurrentMoveableCoordsTotal(int color, bool changeValue, bool highlight, Piece highlightPiece, bool execDummyMove, bool ignoreDisabled)
     {
         bool fromTotal = true;
         gameData.currentMoveableCoordsAllPieces.Clear();
@@ -867,7 +867,7 @@ public class HelperFunctions : MonoBehaviour
             check = true;
         }
 
-        List<int[]> allMoves = new List<int[]>();
+        List<coords> allMoves = new List<coords>();
         Color highlightColor = Color.red;
 
         foreach (Piece piece in gameData.piecesDict.Values)
@@ -928,13 +928,13 @@ public class HelperFunctions : MonoBehaviour
         return allMoves;
     }
 
-    public static bool isInList(List<int[]> list, int[] compare, bool debug)
+    public static bool isInList(List<coords> list, coords compare, bool debug)
     {
         //if (debug) Debug.Log("Search Position: " + compare[0] + "," + compare[1]);
         for (int i = 0; i < list.Count; i++)
         {
             //if (debug) Debug.Log("" + list[i][0] + " : " + list[i][1]);
-            if (compare[0] == list[i][0] && compare[1] == list[i][1])
+            if (compare.x == list[i].x && compare.y == list[i].y)
             {
                 return true;
             }
@@ -946,7 +946,7 @@ public class HelperFunctions : MonoBehaviour
     public static bool isCheck(Piece king)
     {
         //Debug.Log("Searching for Check. Color: " + king.color);
-        List<int[]> moves = addToCurrentMoveableCoordsTotal(king.color * -1, false, false, null, false, true);
+        List<coords> moves = addToCurrentMoveableCoordsTotal(king.color * -1, false, false, null, false, true);
         //Debug.Log("CHECK SEARCH END");
         bool check = isInList(moves, king.position, false);
 
@@ -981,7 +981,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            List<int[]> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false);
+            List<coords> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false);
 
             if (isInList(moves, king.position, false)) {
                 return true;
@@ -1011,7 +1011,7 @@ public class HelperFunctions : MonoBehaviour
         return gos;
     }
 
-    public static bool dummyMove_(Piece piece, int[] coords)
+    public static bool dummyMove_(Piece piece, coords coords)
     {
         BoardState bs = new BoardState();
         bs.refresh(BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
@@ -1098,7 +1098,7 @@ public class HelperFunctions : MonoBehaviour
         return acceptedAbilities;
     }
 
-    public static void restorePieceToBoard(List<Piece> pieces, int[] position, List<GameObject> gos)
+    public static void restorePieceToBoard(List<Piece> pieces, coords position, List<GameObject> gos)
     {
         foreach (Piece piece in new List<Piece>(pieces))
         {
@@ -1168,14 +1168,14 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static bool dummyIsCheck(List<int[]> moves, Piece king)
+    public static bool dummyIsCheck(List<coords> moves, Piece king)
     {
         return isInList(moves, king.position, false);
     }
 
     public static bool isCheckMate(Piece king, bool execDummyMove)
     {
-        List<int[]> moves = addToCurrentMoveableCoordsTotal(king.color, true, false, null, execDummyMove, true);
+        List<coords> moves = addToCurrentMoveableCoordsTotal(king.color, true, false, null, execDummyMove, true);
 
         int arrPos = 0;
         if (king.color == -1)
@@ -1217,88 +1217,74 @@ public class HelperFunctions : MonoBehaviour
     {
         for (int i = 0; i < p.moves.GetLength(0); i++)
         {
-            p.moves[i, 1] = p.moves[i, 1] * p.color;
-            p.moves[i, 0] = p.moves[i, 0] * p.color;
+            p.moves[i].y = p.moves[i].y * p.color;
+            p.moves[i].x = p.moves[i].x * p.color;
         }
 
         for (int i = 0; i < p.oneTimeMoves.GetLength(0); i++)
         {
-            p.oneTimeMoves[i, 1] = p.oneTimeMoves[i, 1] * p.color;
-            p.oneTimeMoves[i, 0] = p.oneTimeMoves[i, 0] * p.color;
+            p.oneTimeMoves[i].y = p.oneTimeMoves[i].y * p.color;
+            p.oneTimeMoves[i].x = p.oneTimeMoves[i].x * p.color;
         }
 
         for (int i = 0; i < p.attacks.GetLength(0); i++)
         {
-            p.attacks[i, 1] = p.attacks[i, 1] * p.color;
-            p.attacks[i, 0] = p.attacks[i, 0] * p.color;
+            p.attacks[i].y = p.attacks[i].y * p.color;
+            p.attacks[i].x = p.attacks[i].x * p.color;
         }
 
         for (int i = 0; i < p.moveAndAttacks.GetLength(0); i++)
         {
-            p.moveAndAttacks[i, 1] = p.moveAndAttacks[i, 1] * p.color;
-            p.moveAndAttacks[i, 0] = p.moveAndAttacks[i, 0] * p.color;
+            p.moveAndAttacks[i].y = p.moveAndAttacks[i].y * p.color;
+            p.moveAndAttacks[i].x = p.moveAndAttacks[i].x * p.color;
         }
 
         for (int i = 0; i < p.jumpAttacks.GetLength(0); i++)
         {
-            p.jumpAttacks[i, 1] = p.jumpAttacks[i, 1] * p.color;
-            p.jumpAttacks[i, 0] = p.jumpAttacks[i, 0] * p.color;
+            p.jumpAttacks[i].y = p.jumpAttacks[i].y * p.color;
+            p.jumpAttacks[i].x = p.jumpAttacks[i].x * p.color;
         }
 
         for (int i = 0; i < p.murderousAttacks.GetLength(0); i++)
         {
-            p.murderousAttacks[i, 1] = p.murderousAttacks[i, 1] * p.color;
-            p.murderousAttacks[i, 0] = p.murderousAttacks[i, 0] * p.color;
+            p.murderousAttacks[i].y = p.murderousAttacks[i].y * p.color;
+            p.murderousAttacks[i].x = p.murderousAttacks[i].x * p.color;
         }
 
         for (int i = 0; i < p.conditionalAttacks.GetLength(0); i++)
         {
-            p.conditionalAttacks[i, 1] = p.conditionalAttacks[i, 1] * p.color;
-            p.conditionalAttacks[i, 0] = p.conditionalAttacks[i, 0] * p.color;
+            p.conditionalAttacks[i].y = p.conditionalAttacks[i].y * p.color;
+            p.conditionalAttacks[i].x = p.conditionalAttacks[i].x * p.color;
         }
 
         for (int i = 0; i < p.oneTimeMoveAndAttacks.GetLength(0); i++)
         {
-            p.oneTimeMoveAndAttacks[i, 1] = p.oneTimeMoveAndAttacks[i, 1] * p.color;
-            p.oneTimeMoveAndAttacks[i, 0] = p.oneTimeMoveAndAttacks[i, 0] * p.color;
+            p.oneTimeMoveAndAttacks[i].y = p.oneTimeMoveAndAttacks[i].y * p.color;
+            p.oneTimeMoveAndAttacks[i].x = p.oneTimeMoveAndAttacks[i].x * p.color;
         }
-
-        /*
-        for (int i = 0; i < p.dependentAttacks.GetLength(0); i++)
-        {
-            p.dependentAttacks[i, 1] = p.dependentAttacks[i, 1] * p.color;
-            p.dependentAttacks[i, 0] = p.dependentAttacks[i, 0] * p.color;
-        }
-
-        for (int i = 0; i < p.interactiveAttacks.GetLength(0); i++)
-        {
-            p.interactiveAttacks[i, 1] = p.interactiveAttacks[i, 1] * p.color;
-            p.interactiveAttacks[i, 0] = p.interactiveAttacks[i, 0] * p.color;
-        }
-        */
 
         for (int i = 0; i < p.flagMove1.GetLength(0); i++)
         {
-            p.flagMove1[i, 1] = p.flagMove1[i, 1] * p.color;
-            p.flagMove1[i, 0] = p.flagMove1[i, 0] * p.color;
+            p.flagMove1[i].y = p.flagMove1[i].y * p.color;
+            p.flagMove1[i].x = p.flagMove1[i].x * p.color;
         }
 
         for (int i = 0; i < p.flagMove2.GetLength(0); i++)
         {
-            p.flagMove2[i, 1] = p.flagMove2[i, 1] * p.color;
-            p.flagMove2[i, 0] = p.flagMove2[i, 0] * p.color;
+            p.flagMove2[i].y = p.flagMove2[i].y * p.color;
+            p.flagMove2[i].x = p.flagMove2[i].x * p.color;
         }
 
         for (int i = 0; i < p.pushMoves.GetLength(0); i++)
         {
-            p.pushMoves[i, 1] = p.pushMoves[i, 1] * p.color;
-            p.pushMoves[i, 0] = p.pushMoves[i, 0] * p.color;
+            p.pushMoves[i].y = p.pushMoves[i].y * p.color;
+            p.pushMoves[i].x = p.pushMoves[i].x * p.color;
         }
 
         for (int i = 0; i < p.enPassantMoves.GetLength(0); i++)
         {
-            p.enPassantMoves[i, 1] = p.enPassantMoves[i, 1] * p.color;
-            p.enPassantMoves[i, 0] = p.enPassantMoves[i, 0] * p.color;
+            p.enPassantMoves[i].y = p.enPassantMoves[i].y * p.color;
+            p.enPassantMoves[i].x = p.enPassantMoves[i].x * p.color;
         }
 
         if (p.color != 1)
@@ -1345,19 +1331,6 @@ public class HelperFunctions : MonoBehaviour
 
         panel.whiteCountText.text = $"{gameData.botWhite.name}: {gameData.pointsOnBoard[0]}";
         panel.blackCountText.text = $"{gameData.botBlack.name}: {gameData.pointsOnBoard[1]}";
-    }
-    public static void updateBotMoves(int color)
-    {
-        gameData.botMoves.Clear();
-
-        foreach (Piece piece in gameData.piecesDict.Values)
-        {
-            if (piece.color == color)
-            {
-                List<int[]> moves = addMovesToCurrentMoveableCoords(piece);
-                gameData.botMoves.Add(piece, moves);
-            }
-        }
     }
 
     public static int[,] addTo2DArray(int[,] arr, int[] toAdd)
@@ -1407,7 +1380,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position[0] + "," + deadPiece.position[1] + ")");
+            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position.x + "," + deadPiece.position.y + ")");
             GameObject dead = deadPiece.go;
             if (deadPiece.lives != 0)
             {
@@ -1489,7 +1462,7 @@ public class HelperFunctions : MonoBehaviour
             }
             else
             {
-                movePiece(deadPiece, findSquare(deadPiece.startSquare[0], deadPiece.startSquare[1]));
+                movePiece(deadPiece, findSquare(deadPiece.startSquare.x, deadPiece.startSquare.y));
             }
         }
         else
@@ -1513,7 +1486,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!checkState(piece, PieceState.Dematerialized))
             {
-                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                Debug.Log(piece.name + " died on (" + piece.position.x + "," + piece.position.y + ")");
                 onDeath(piece, piece.go, attackerPiece, attacker);
             }
         }
@@ -1528,7 +1501,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (!checkState(piece, PieceState.Dematerialized))
             {
-                Debug.Log(piece.name + " died on (" + piece.position[0] + "," + piece.position[1] + ")");
+                Debug.Log(piece.name + " died on (" + piece.position.x + "," + piece.position.y + ")");
                 onDeath(piece, piece.go, attackerPiece, attacker);
             }
         }
@@ -1539,8 +1512,8 @@ public class HelperFunctions : MonoBehaviour
     {
         
 
-        int[] attackerCoords = attackerPiece.position;
-        int[] deadPieceCoords = deadPiece.position;
+        coords attackerCoords = attackerPiece.position;
+        coords deadPieceCoords = deadPiece.position;
 
         bool skipCollateral = false;
         bool skipInfinite = false;
@@ -1581,7 +1554,7 @@ public class HelperFunctions : MonoBehaviour
         {
             if (deadPiece.storage != null && deadPiece.storage.Count > 0)
             {
-                List<int[]> placeCoords = getEmptySurroundingSquares(deadPiece.position);
+                List<coords> placeCoords = getEmptySurroundingSquares(deadPiece.position);
                 List<Piece> placePieces = deadPiece.storage;
 
                 BotHelperFunctions.PieceAbility pa = new BotHelperFunctions.PieceAbility(deadPiece, PieceAbilities.Vomit, deadPiece.position, placePieces, placeCoords, null);
@@ -1625,20 +1598,20 @@ public class HelperFunctions : MonoBehaviour
             addAbility(attackerPiece, deadPiece.abilities);
 
             //Moves
-            int[,] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
-            int[,] oneTimeMoves = combineMoveSets(attackerPiece.oneTimeMoves, deadPiece.oneTimeMoves);
-            int[,] moveAndAttacks = combineMoveSets(attackerPiece.moveAndAttacks, deadPiece.moveAndAttacks);
-            int[,] oneTimeMoveAndAttacks = combineMoveSets(attackerPiece.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
-            int[,] murderousAttacks = combineMoveSets(attackerPiece.murderousAttacks, deadPiece.murderousAttacks);
-            int[,] conditionalAttacks = combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
-            int[,] attacks = combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
-            int[,] jumpAttacks = combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
-            //int[,] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
-            //int[,] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
-            int[,] flagMove1 = combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
-            int[,] flagMove2 = combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
-            int[,] pushMoves = combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
-            int[,] enPassantMoves = combineMoveSets(attackerPiece.enPassantMoves, deadPiece.enPassantMoves);
+            coords[] moves = combineMoveSets(attackerPiece.moves, deadPiece.moves);
+            coords[] oneTimeMoves = combineMoveSets(attackerPiece.oneTimeMoves, deadPiece.oneTimeMoves);
+            coords[] moveAndAttacks = combineMoveSets(attackerPiece.moveAndAttacks, deadPiece.moveAndAttacks);
+            coords[] oneTimeMoveAndAttacks = combineMoveSets(attackerPiece.oneTimeMoveAndAttacks, deadPiece.oneTimeMoveAndAttacks);
+            coords[] murderousAttacks = combineMoveSets(attackerPiece.murderousAttacks, deadPiece.murderousAttacks);
+            coords[] conditionalAttacks = combineMoveSets(attackerPiece.conditionalAttacks, deadPiece.conditionalAttacks);
+            coords[] attacks = combineMoveSets(attackerPiece.attacks, deadPiece.attacks);
+            coords[] jumpAttacks = combineMoveSets(attackerPiece.jumpAttacks, deadPiece.jumpAttacks);
+            //coords[] dependentAttacks = combineMoveSets(attackerPiece.dependentAttacks, deadPiece.dependentAttacks);
+            //coords[] positionIndependentMoves = combineMoveSets(attackerPiece.positionIndependentMoves, deadPiece.positionIndependentMoves);
+            coords[] flagMove1 = combineMoveSets(attackerPiece.flagMove1, deadPiece.flagMove1);
+            coords[] flagMove2 = combineMoveSets(attackerPiece.flagMove2, deadPiece.flagMove2);
+            coords[] pushMoves = combineMoveSets(attackerPiece.pushMoves, deadPiece.pushMoves);
+            coords[] enPassantMoves = combineMoveSets(attackerPiece.enPassantMoves, deadPiece.enPassantMoves);
 
             attackerPiece.moves = moves;
             attackerPiece.oneTimeMoves = oneTimeMoves;
@@ -1683,7 +1656,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 attackerPiece.numSpawns--;
 
-                int[] pos = deadPiece.position;
+                coords pos = deadPiece.position;
                 removePieceFromBoard(pieceToList(deadPiece));
 
                 Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, false);
@@ -1718,10 +1691,10 @@ public class HelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
                 {
-                    int[] coords = new int[] { deadPieceCoords[0] + attackerPiece.collateral[i, 0], deadPieceCoords[1] + attackerPiece.collateral[i, 1] };
+                    int[] coords = new int[] { deadPieceCoords.x + attackerPiece.collateral[i].x, deadPieceCoords.y + attackerPiece.collateral[i].y };
                     GameObject square = findSquare(coords[0], coords[1]);
 
-                    if (attackerPiece.collateral[i, 0] == 0 && attackerPiece.collateral[i, 1] == 0)
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
                     {
                         collateralDeath(pieceToList(attackerPiece));
                         tempInfo.attackerDied = true;
@@ -1747,10 +1720,10 @@ public class HelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
                 {
-                    int[] coords = new int[] { deadPieceCoords[0] + deadPiece.collateral[i, 0], deadPieceCoords[1] + deadPiece.collateral[i, 1] };
+                    int[] coords = new int[] { deadPieceCoords.x + deadPiece.collateral[i].x, deadPieceCoords.y + deadPiece.collateral[i].y };
                     GameObject square = findSquare(coords[0], coords[1]);
 
-                    if (deadPiece.collateral[i, 0] == 0 && deadPiece.collateral[i, 1] == 0)
+                    if (deadPiece.collateral[i].x == 0 && deadPiece.collateral[i].y == 0)
                     {
                         collateralDeath(pieceToList(attackerPiece));
                         collateralDeath(pieceToList(deadPiece));
@@ -1792,19 +1765,19 @@ public class HelperFunctions : MonoBehaviour
     }
 
     [PunRPC]
-    public void _MovePieceRPC(int[] toMoveCoords, int[] coords)
+    public void _MovePieceRPC(int[] toMoveCoords, coords coords)
     {
         movePiece_(gameData.selectedPiece, coords);
     }
 
     public static bool isOnStartSquare(Piece piece)
     {
-        return piece.startSquare[0] == piece.position[0] && piece.startSquare[1] == piece.position[1];
+        return piece.startSquare.x == piece.position.x && piece.startSquare.y == piece.position.y;
     }
 
     public static bool isPieceOnStartSquare(Piece piece)
     {
-        return isPieceOnSquare(findSquare(piece.startSquare[0], piece.startSquare[1]));
+        return isPieceOnSquare(findSquare(piece.startSquare.x, piece.startSquare.y));
     }
 
     public static bool checkState(Piece piece, PieceState state)
@@ -1905,10 +1878,10 @@ public class HelperFunctions : MonoBehaviour
                 return pieces;
             }
 
-            int[] coords = findCoords(square);
+            coords coords = findCoords(square);
             foreach (Piece piece in gameData.piecesDict.Values)
             {
-                if (piece.position[0] == coords[0] && piece.position[1] == coords[1])
+                if (piece.position.x == coords.x && piece.position.y == coords.y)
                 {
                     if (!piece.disabled)
                     {
@@ -1966,9 +1939,9 @@ public class HelperFunctions : MonoBehaviour
         if (square != null)
         {
 
-            int[] coords = findCoords(square);
+            coords coords = findCoords(square);
 
-            return gameData.boardGrid[coords[0] - 1][coords[1] - 1];
+            return gameData.boardGrid[coords.x - 1][coords.y - 1];
         }
 
         return pieces;
@@ -1976,9 +1949,9 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isMultipleOnSquare(GameObject square)
     {
-        int[] coords = findCoords(square);
+        coords coords = findCoords(square);
 
-        return gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count > 1;
+        return gameData.boardGrid[coords.x - 1][coords.y - 1].Count > 1;
     }
 
     public static Piece findPieceFromPanelCode(String panelCode)
@@ -2102,14 +2075,14 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static void updateBoardGrid(int[] coords, Piece piece, String action)
+    public static void updateBoardGrid(coords coords, Piece piece, String action)
     {
-        if (coords[0] < 1 || coords[1] < 1)
+        if (coords.x < 1 || coords.y < 1)
         {
             return;
         }
 
-        var square = gameData.boardGrid[coords[0] - 1][coords[1] - 1];
+        var square = gameData.boardGrid[coords.x - 1][coords.y - 1];
 
         if (action.ToLower() == "a" || action.ToLower() == "add")
         {
@@ -2127,15 +2100,15 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static void movePieceBoardGrid(Piece piece, int[] position /*moveFrom*/, int[] coords /*moveTo*/)
+    public static void movePieceBoardGrid(Piece piece, coords position /*moveFrom*/, coords coords /*moveTo*/)
     {
-        if (position[0] < 1 || position[1] < 1 || coords[0] < 1 || coords[1] < 1)
+        if (position.x < 1 || position.y < 1 || coords.x < 1 || coords.y < 1)
         {
             return;
         }
 
         updateBoardGrid(position, piece, "r");
-        gameData.boardGrid[coords[0] - 1][coords[1] - 1].Add(piece);
+        gameData.boardGrid[coords.x - 1][coords.y - 1].Add(piece);
 
         piece.position = coords;
     }
@@ -2144,14 +2117,14 @@ public class HelperFunctions : MonoBehaviour
     {
         if (square == null) return true;
 
-        int[] coords = findCoords(square);
+        coords coords = findCoords(square);
 
-        if (coords[1] < 1 || coords[0] < 1)
+        if (coords.y < 1 || coords.x < 1)
         {
             return false;
         }
 
-        return gameData.boardGrid[coords[0] - 1][coords[1] - 1].Count > 0;
+        return gameData.boardGrid[coords.x - 1][coords.y - 1].Count > 0;
     }
 
     public static bool isColorNotOnSquare(GameObject square, int color)
@@ -2193,12 +2166,12 @@ public class HelperFunctions : MonoBehaviour
         {
             collateral.Remove(coords);
 
-            GameObject square = findSquare(coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1]);
+            GameObject square = findSquare(coords[0] + hungryPiece.position.x, coords[1] + hungryPiece.position.y);
             if (square == null) { continue; }
 
             if (!isPieceOnSquare(square))
             {
-                coord = new int[] { coords[0] + hungryPiece.position[0], coords[1] + hungryPiece.position[1] };
+                coord = new int[] { coords[0] + hungryPiece.position.x, coords[1] + hungryPiece.position.y };
                 break;
             }
         }
@@ -2211,20 +2184,20 @@ public class HelperFunctions : MonoBehaviour
         return findSquare(coord[0], coord[1]);
     }
 
-    public static List<int[]> getEmptySurroundingSquares(int[] coords)
+    public static List<coords> getEmptySurroundingSquares(coords coords)
     {
-        List<int[]> emptySurroundingSquares = new List<int[]>();
+        List<coords> emptySurroundingSquares = new List<coords>();
 
         foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
         {
-            int posX = coords[0] + dirX;
-            int posY = coords[1] + dirY;
+            int posX = coords.x + dirX;
+            int posY = coords.y + dirY;
 
             if (!checkBounds(posX, posY)) continue;
 
             if (!isPieceOnSquare(findSquare(posX, posY)))
             {
-                emptySurroundingSquares.Add(new int[] { posX, posY });
+                emptySurroundingSquares.Add(new coords(posX, posY));
             }
         }
 
@@ -2270,14 +2243,14 @@ public class HelperFunctions : MonoBehaviour
 
         if (piece.color == 1)
         {
-            if (piece.position[1] <= 2)
+            if (piece.position.y <= 2)
             {
                 return true;
             }
         }
         else
         {
-            if (piece.position[1] >= 7)
+            if (piece.position.y >= 7)
             {
                 return true;
             }
@@ -2346,8 +2319,8 @@ public class HelperFunctions : MonoBehaviour
         {
             //Debug.Log("King: " + king.position[0] + " : " + king.position[1]);
             //Debug.Log("Rook: " + rook.position[0] + " : " + rook.position[1]);
-            kingSquare = findSquare(king.position[0], king.position[1]);
-            rookSquare = findSquare(rook.position[0], rook.position[1]);
+            kingSquare = findSquare(king.position.x, king.position.y);
+            rookSquare = findSquare(rook.position.x, rook.position.y);
 
             if (getPiecesInBetweenSquaresHorizontal(kingSquare, rookSquare).Count > 0)
             {
@@ -2367,16 +2340,16 @@ public class HelperFunctions : MonoBehaviour
 
     public static List<Piece> getPiecesInBetweenSquaresHorizontal(GameObject s1, GameObject s2)
     {
-        if (findCoords(s1)[1] != findCoords(s2)[1])
+        if (findCoords(s1).y != findCoords(s2).y)
         {
             return new List<Piece>();
         }
 
-        int y = findCoords(s1)[1];
+        int y = findCoords(s1).y;
         List<Piece> pieces = new List<Piece>();
 
-        int x1 = findCoords(s1)[0];
-        int x2 = findCoords(s2)[0];
+        int x1 = findCoords(s1).x;
+        int x2 = findCoords(s2).x;
 
         if (x1 == x2)
         {
@@ -2438,8 +2411,8 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (var dir in directions)
         {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
+            int x = piece.position.x + dir[0];
+            int y = piece.position.x + dir[1];
 
             if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count > 0)
             {
@@ -2464,8 +2437,8 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (var dir in directions)
         {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
+            int x = piece.position.x + dir[0];
+            int y = piece.position.y + dir[1];
 
             if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count == 0)
             {
@@ -2490,8 +2463,8 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (var dir in directions)
         {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
+            int x = piece.position.x + dir[0];
+            int y = piece.position.y + dir[1];
 
             List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(findSquare(x, y));
 
@@ -2559,8 +2532,8 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (var dir in directions)
         {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
+            int x = piece.position.x + dir[0];
+            int y = piece.position.y + dir[1];
 
             if (getPiecesOnSquareBoardGrid(findSquare(x, y)).Count == 0)
             {
@@ -2685,8 +2658,8 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (var dir in directions)
         {
-            int x = piece.position[0] + dir[0];
-            int y = piece.position[1] + dir[1];
+            int x = piece.position.x + dir[0];
+            int y = piece.position.y + dir[1];
 
             if (checkStateOnSquare(getPiecesOnSquare(findSquare(x, y)), state))
             {
@@ -2697,28 +2670,27 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static int[,] combineMoveSets(int[,] a, int[,] b)
+    public static coords[] combineMoveSets(coords[] a, coords[] b)
     {
-        List<int[]> result = new List<int[]>();
+        List<coords> result = new List<coords>();
 
         for (int i = 0; i < a.GetLength(0); i++)
-            result.Add(new int[] { a[i, 0], a[i, 1] });
+            result.Add(new coords( a[i].x, a[i].y ));
 
         for (int i = 0; i < b.GetLength(0); i++)
         {
-            int x = b[i, 0];
-            int y = b[i, 1];
+            int x = b[i].x;
+            int y = b[i].y;
 
-            bool exists = result.Any(r => r[0] == x && r[1] == y);
+            bool exists = result.Any(r => r.x == x && r.y == y);
             if (!exists)
-                result.Add(new int[] { x, y });
+                result.Add(new coords( x, y ));
         }
 
-        int[,] merged = new int[result.Count, 2];
+        coords[] merged = new coords[result.Count];
         for (int i = 0; i < result.Count; i++)
         {
-            merged[i, 0] = result[i][0];
-            merged[i, 1] = result[i][1];
+            merged[i] = new coords(result[i].x, result[i].y);
         }
 
         return merged;
@@ -2844,7 +2816,7 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static void initPiece(Piece piece, int[] coords)
+    public static void initPiece(Piece piece, coords coords)
     {
         if (!gameData.piecesDict.ContainsKey(piece.go))
         {
@@ -2856,21 +2828,21 @@ public class HelperFunctions : MonoBehaviour
             gameData.allPiecesDict.Add(piece.go, piece);
         }
 
-        GameObject toAppend = findSquare(coords[0], coords[1]);
+        GameObject toAppend = findSquare(coords.x, coords.y);
         piece.position = coords;
 
         if (checkState(piece, PieceState.Pawn))
         {
             if (piece.color == 1)
             {
-                piece.position[1] = piece.position[1] + 1;
+                piece.position = new coords(piece.position.x, piece.position.y + 1);
             }
             else
             {
-                piece.position[1] = piece.position[1] - 1;
+                piece.position = new coords(piece.position.x, piece.position.y - 1);
             }
             
-            toAppend = findSquare(piece.position[0], piece.position[1]);
+            toAppend = findSquare(piece.position.x, piece.position.y);
         }
 
         if (checkState(piece, PieceState.Double))
@@ -2879,7 +2851,7 @@ public class HelperFunctions : MonoBehaviour
             initPiece(doublePawn, piece.position);
         }
 
-        piece.startSquare = new int[] { piece.position[0], piece.position[1] };
+        piece.startSquare = new coords(piece.position.x, piece.position.y);
 
         movePiece(piece, toAppend);
 
@@ -2977,7 +2949,7 @@ public class HelperFunctions : MonoBehaviour
         if (secondPiece != null) Debug.Log(secondPiece.go);
 
         PieceAbilities ability = pieceAbility.ability;
-        int[] coords = new int[] { pieceAbility.coords[0], pieceAbility.coords[1] };
+        coords coords = new coords(pieceAbility.coords.x, pieceAbility.coords.y);
 
         List<Piece> placePieces = new List<Piece>();
         if (pieceAbility.placePieces != null)
@@ -2989,7 +2961,7 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        List<int[]> placeCoords = new List<int[]>();
+        List<coords> placeCoords = new List<coords>();
         if (pieceAbility.placeCoords != null)
         {
             placeCoords = pieceAbility.placeCoords;
@@ -3009,7 +2981,7 @@ public class HelperFunctions : MonoBehaviour
 
             if (numPieces >= numCoords)
             {
-                foreach (int[] coords_ in placeCoords)
+                foreach (coords coords_ in placeCoords)
                 {
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numPieces);
@@ -3018,7 +2990,7 @@ public class HelperFunctions : MonoBehaviour
                     Piece p_ = placePieces[idx];
                     placePieces.Remove(p_);
 
-                    Debug.LogWarning("Vomiting on adjusted cords: " + coords_[0] + "," + coords_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + coords_.x + "," + coords_.y);
 
                     updateBoardGrid(coords_, p_, "a");
                     
@@ -3041,10 +3013,10 @@ public class HelperFunctions : MonoBehaviour
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numCoords); numCoords--;
 
-                    int[] c_ = placeCoords[idx];
+                    coords c_ = placeCoords[idx];
                     placeCoords.Remove(c_);
 
-                    Debug.LogWarning("Vomiting on adjusted cords: " + c_[0] + "," + c_[1]);
+                    Debug.LogWarning("Vomiting on adjusted cords: " + c_.x + "," + c_.y);
 
                     updateBoardGrid(c_, p_, "a");
 
@@ -3058,8 +3030,8 @@ public class HelperFunctions : MonoBehaviour
         else if (ability == PieceAbilities.CastleLeft)
         {
             Debug.LogWarning("Ability: CastleLeft -> " + piece.name + " " + secondPiece.name);
-            int[] kingCoords = coords;
-            int[] rookCoords = new int[] { kingCoords[0] + 1, kingCoords[1] };
+            coords kingCoords = coords;
+            coords rookCoords = new coords(kingCoords.x + 1, kingCoords.y);
 
             //King
             movePieceBoardGrid(piece, piece.position, kingCoords);
@@ -3075,8 +3047,8 @@ public class HelperFunctions : MonoBehaviour
         else if (ability == PieceAbilities.CastleRight)
         {
             Debug.LogWarning("Ability: CastleRight -> " + piece.name + " " + secondPiece.name);
-            int[] kingCoords = coords;
-            int[] rookCoords = new int[] { kingCoords[0] - 1, kingCoords[1] };
+            coords kingCoords = coords;
+            coords rookCoords = new coords(kingCoords.x - 1, kingCoords.y);
 
             //King
             movePieceBoardGrid(piece, piece.position, kingCoords);
@@ -3117,7 +3089,7 @@ public class HelperFunctions : MonoBehaviour
         }
         else if (ability == PieceAbilities.Spawn)
         {
-            Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords[0] + "," + coords[1]);
+            Debug.LogWarning("Ability: Spawn -> " + piece.spawnable + " " + coords.x + "," + coords.y);
 
             Piece spawned = Spawnables.create(piece.spawnable, piece.color, false);
             piece.numSpawns--;
@@ -3131,7 +3103,7 @@ public class HelperFunctions : MonoBehaviour
         }
         else if (ability == PieceAbilities.Spit)
         {
-            Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords[0] + "," + coords[1]);
+            Debug.LogWarning("Ability: Spit -> " + piece.storage[0].name + " " + coords.x + "," + coords.y);
 
             Piece storagePiece = BotHelperFunctions.getOriginalPieceFromClone(piece.storage[0]);
             if (storagePiece == null || storagePiece.go == null)
@@ -3139,7 +3111,7 @@ public class HelperFunctions : MonoBehaviour
                 storagePiece = secondPiece;
             }
 
-            List<Piece> spitPieces = getPiecesOnSquare(findSquare(coords[0], coords[1]));
+            List<Piece> spitPieces = getPiecesOnSquare(findSquare(coords.x, coords.y));
             if (spitPieces != null && spitPieces.Count > 0)
             {
                 collateralDeath(spitPieces);
@@ -3177,7 +3149,7 @@ public class HelperFunctions : MonoBehaviour
 
             death = true;
 
-            onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords[0], coords[1]));
+            onDeathsDontIncludeAttacker(piece, piece.go, findSquare(coords.x, coords.y));
 
             checkPromote(piece, piece.position);
 
@@ -3255,7 +3227,7 @@ public class HelperFunctions : MonoBehaviour
     }
 
     [PunRPC]
-    public void MovePieceRPC(int[] toMoveCoords, int[] coords)
+    public void MovePieceRPC(int[] toMoveCoords, coords coords)
     {
         GameObject square = findSquare(toMoveCoords[0], toMoveCoords[1]);
         Piece piece = gameData.selectedToMovePiece;
@@ -3265,7 +3237,7 @@ public class HelperFunctions : MonoBehaviour
     // 0 = ok
     // 1 = check
     // 2 = checkmate
-    public int movePiece_(Piece piece, int[] coords)
+    public int movePiece_(Piece piece, coords coords)
     {
         //Delayed Piece Move
         if (tempInfo.delayedQueue == null)
@@ -3304,12 +3276,12 @@ public class HelperFunctions : MonoBehaviour
         //Debug.Log("isSelected: " + gameData.isSelected);
         //Debug.Log("readyToMove: " + gameData.readyToMove);
 
-        GameObject toAppend = findSquare(coords[0], coords[1]);
-        GameObject pieceOriginalSquare = findSquare(piece.position[0], piece.position[1]);
+        GameObject toAppend = findSquare(coords.x, coords.y);
+        GameObject pieceOriginalSquare = findSquare(piece.position.x, piece.position.y);
 
         //before piece is moved
         //Loop through pieces for state check
-        List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1]));
+        List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(findSquare(piece.position.x, piece.position.y));
         foreach (Piece pieceOnSquare in piecesOnSquare)
         {
             if (checkState(pieceOnSquare, PieceState.Crook))
@@ -3417,8 +3389,8 @@ public class HelperFunctions : MonoBehaviour
                 {
                     int[] col_coords = new int[]
                     {
-                        piece.position[0] + collateral[i][0],
-                        piece.position[1] + collateral[i][1]
+                        piece.position.x + collateral[i][0],
+                        piece.position.y + collateral[i][1]
                     };
 
                     GameObject square = findSquare(col_coords[0], col_coords[1]);
@@ -3637,9 +3609,9 @@ public class HelperFunctions : MonoBehaviour
             }
 
             gameData.selectedToMovePiece = king;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position.x + kingMove, king.position.y });
             gameData.selectedToMovePiece = rook;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position.x + rookMove, rook.position.y });
 
             gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
@@ -3675,9 +3647,9 @@ public class HelperFunctions : MonoBehaviour
             }
 
             gameData.selectedToMovePiece = king;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position[0] + kingMove, king.position[1] });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position.x + kingMove, king.position.y });
             gameData.selectedToMovePiece = rook;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position[0] + rookMove, rook.position[1] });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position.x + rookMove, rook.position.y });
 
             gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
@@ -3848,11 +3820,11 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
-    public static void checkPromote(Piece piece, int[] coords)
+    public static void checkPromote(Piece piece, coords coords)
     {
         if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
         {
-            if (piece.position[1] == piece.promotingRow)
+            if (piece.position.y == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
                 Piece p = Spawnables.create(pname, piece.color, false);
@@ -3865,7 +3837,7 @@ public class HelperFunctions : MonoBehaviour
                     }
                 }
 
-                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position[0], piece.position[1])));
+                collateralDeath(getPiecesOnSquareBoardGrid(findSquare(piece.position.x, piece.position.y)));
                 forceRemove(piece);
                 initPiece(p, coords);
             }
@@ -3875,9 +3847,9 @@ public class HelperFunctions : MonoBehaviour
     public static void delayedMove(PieceMove pMove)
     {
         Piece piece = pMove.piece;
-        int[] coords = pMove.coords;
+        coords coords = pMove.coords;
 
-        GameObject square = findSquare(coords[0], coords[1]);
+        GameObject square = findSquare(coords.x, coords.y);
 
         if (true/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
             bool death;
@@ -3991,7 +3963,7 @@ public class HelperFunctions : MonoBehaviour
             //Piece destroyer = gameData.piecesDict[selectedToMoveGo];
             Piece destroyer = gameData.selectedToMovePiece;
 
-            Debug.Log("DESTROYING: Square: " + findCoords(gameData.selected)[0] + "," + findCoords(gameData.selected)[1]);
+            Debug.Log("DESTROYING: Square: " + findCoords(gameData.selected).x + "," + findCoords(gameData.selected).y);
             onDeaths(destroyer, selectedToMoveGo, gameData.selected);
             //photonView.TransferOwnership(PhotonNetwork.LocalPlayer);
             //PhotonNetwork.Destroy(gameData.selected.transform.GetChild(0).gameObject);
@@ -4025,7 +3997,6 @@ public class HelperFunctions : MonoBehaviour
         //clone.collateral = clone2dArray(original.collateral);
         clone.collateral = original.collateral;
         //clone.size = original.size?.ToArray();
-        clone.size = original.size;
         clone.promotesInto = original.promotesInto.ToString();
         clone.promotingRow = original.promotingRow;
         clone.canMoveTwice = original.canMoveTwice;
@@ -4080,7 +4051,7 @@ public class HelperFunctions : MonoBehaviour
         clone.pushMoves = original.pushMoves;
         clone.enPassantMoves = original.enPassantMoves;
 
-        clone.position = original.position?.ToArray();
+        clone.position = original.position;
         clone.hasMoved = original.hasMoved;
         //clone.wImage = original.wImage.ToString();
         //clone.bImage = original.bImage.ToString();
@@ -4137,8 +4108,8 @@ public class HelperFunctions : MonoBehaviour
 
         gameData.selectedToMove = null;
 
-        gameData.currentMoveableCoords = new List<int[]>();
-        gameData.currentMoveableCoordsAllPieces = new List<int[]>();
+        gameData.currentMoveableCoords = new List<coords>();
+        gameData.currentMoveableCoordsAllPieces = new List<coords>();
 
         gameData.isInCheck = new int[] { 0, 0 };
 
@@ -4189,9 +4160,9 @@ public class HelperFunctions : MonoBehaviour
         gameData.helper = null;
     }
 
-    public static bool coordsInList(List<int[]> coordsList, int[] coords) {
-        foreach (int[] c in coordsList) {
-            if (c[0] == coords[0] && c[1] == coords[1]) {
+    public static bool coordsInList(List<coords> coordsList, coords coords) {
+        foreach (coords c in coordsList) {
+            if (c.x == coords.x && c.y == coords.y) {
                 return true;
             } 
         }
@@ -4222,10 +4193,10 @@ public class HelperFunctions : MonoBehaviour
         {
             Piece newPiece = BotHelperFunctions.getCloneFromOriginalPiece(nm.move.p, cloneState.boardGrid);
 
-            int[] newCoords = null;
-            if (nm.move.coords != null)
+            coords newCoords = new coords(-1, -1);
+            if (nm.move.coords.x != -1)
             {
-                newCoords = new int[] { nm.move.coords[0], nm.move.coords[1] };
+                newCoords = new coords( nm.move.coords.x, nm.move.coords.y );
             }
 
             Move newMove = new Move(newPiece, newCoords);
@@ -4239,11 +4210,7 @@ public class HelperFunctions : MonoBehaviour
             Piece newMainPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.piece, cloneState.boardGrid);
             Piece newSecondPiece = BotHelperFunctions.getCloneFromOriginalPiece(old.secondPiece, cloneState.boardGrid);
 
-            int[] newCoords = null;
-            if (old.coords != null)
-            {
-                newCoords = new int[] { old.coords[0], old.coords[1] };
-            }
+            coords newCoords = old.coords;
 
             List<Piece> newPlacePieces = null;
             if (old.placePieces != null)
@@ -4255,13 +4222,13 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
-            List<int[]> newPlaceCoords = null;
+            List<coords> newPlaceCoords = null;
             if (old.placeCoords != null)
             {
-                newPlaceCoords = new List<int[]>();
-                foreach (int[] c in old.placeCoords)
+                newPlaceCoords = new List<coords>();
+                foreach (coords c in old.placeCoords)
                 {
-                    newPlaceCoords.Add(new int[] { c[0], c[1] });
+                    newPlaceCoords.Add(new coords( c.x, c.y ));
                 }
             }
 

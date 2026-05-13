@@ -39,14 +39,14 @@ public class OneMultiThreadMoveBot : BotTemplate
 
             var nextMoveVars = getNextMoveVars(thread_NextMove);
             Piece piece = nextMoveVars.piece;
-            int[] coords = nextMoveVars.coords;
+            coords coords = nextMoveVars.coords;
             string moveType = nextMoveVars.moveType;
 
             UndoMove undo;
 
             if (moveType == "move")
             {
-                undo = undo_simulatePieceMove(thread_BoardState, piece, new coords(coords[0], coords[1]));
+                undo = undo_simulatePieceMove(thread_BoardState, piece, new coords(coords.x, coords.y));
             }
             else
             {
@@ -59,14 +59,14 @@ public class OneMultiThreadMoveBot : BotTemplate
             {
                 var nextMoveOppVars = getNextMoveVars(nextMoveOpp);
                 Piece pieceOpp = nextMoveOppVars.piece;
-                int[] coordsOpp = nextMoveOppVars.coords;
+                coords coordsOpp = nextMoveOppVars.coords;
                 string moveTypeOpp = nextMoveOppVars.moveType;
 
                 UndoMove undo_ = null;
 
                 if (moveTypeOpp == "move")
                 {
-                    undo_ = undo_simulatePieceMove(thread_BoardState, pieceOpp, new coords(coordsOpp[0], coordsOpp[1]));
+                    undo_ = undo_simulatePieceMove(thread_BoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
                 }
                 else
                 {

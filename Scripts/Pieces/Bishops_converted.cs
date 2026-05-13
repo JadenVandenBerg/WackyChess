@@ -7,14 +7,13 @@ using System.IO;
 using System.Collections.Generic;
 using Photon.Pun;
 
-/*
 public class Bishop : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 0;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -23,31 +22,26 @@ public class Bishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -99,7 +93,7 @@ public class MurderousBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4f;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but you can kill your own pieces.";
     public String longDescription { get; set; } = "";
@@ -108,31 +102,26 @@ public class MurderousBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Murderous;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { 
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
+    public coords[] moves { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -183,7 +172,7 @@ public class GhostBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but you can go through your own pieces.";
     public String longDescription { get; set; } = "";
@@ -192,31 +181,26 @@ public class GhostBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Ghost;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -267,7 +251,7 @@ public class GhoulBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4f;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but your pieces can g=o through it.";
     public String longDescription { get; set; } = "";
@@ -276,31 +260,26 @@ public class GhoulBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Ghoul;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -351,7 +330,7 @@ public class OneTimeBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 1f;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but can only move once.";
     public String longDescription { get; set; } = "";
@@ -360,31 +339,26 @@ public class OneTimeBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -435,7 +409,7 @@ public class ElectricBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4.5f;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "This piece moves like a bishop. On capture, the capturing piece has a 50% chance of dying.";
     public String longDescription { get; set; } = "";
@@ -444,31 +418,26 @@ public class ElectricBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Electric;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -520,7 +489,7 @@ public class InfiniteBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 9f;
     public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -529,31 +498,26 @@ public class InfiniteBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -605,7 +569,7 @@ public class PortalBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -614,31 +578,26 @@ public class PortalBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Portal;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -690,7 +649,7 @@ public class AtomicBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -699,31 +658,26 @@ public class AtomicBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = 0;
-    public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+    public coords[] collateral { get; set; } = { new coords(0, 0), new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -775,7 +729,7 @@ public class LandmineBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -784,31 +738,26 @@ public class LandmineBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = 1;
-    public int[,] collateral { get; set; } = { { 0, 0 }, { 1, 1 }, { -1, 1 }, { 1, -1 }, { -1, -1 }, { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+    public coords[] collateral { get; set; } = { new coords(0, 0), new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -860,7 +809,7 @@ public class ColorChangingBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -869,31 +818,26 @@ public class ColorChangingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { { 1, 0 }, { -1, 0 } };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { new coords(1, 0), new coords(-1, 0) };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -945,7 +889,7 @@ public class LiteBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 0;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -954,26 +898,26 @@ public class LiteBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = { };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1025,7 +969,7 @@ public class SuperGhostBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5f;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "Moves like a bishop but your pieces can go through it.";
     public String longDescription { get; set; } = "";
@@ -1034,31 +978,26 @@ public class SuperGhostBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Ghost | PieceState.Ghoul;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1109,7 +1048,7 @@ public class Princess : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1118,34 +1057,26 @@ public class Princess : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = {
-        { 1, 2 }, { -1, 2 }, { 2, 1 },{ -2, 1 },
-        { 1, -2 }, { -1, -2 }, { 2, -1 },{ -2, -1 }
-    };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1197,7 +1128,7 @@ public class FragileBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 2;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1206,31 +1137,26 @@ public class FragileBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Fragile;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1282,7 +1208,7 @@ public class RoyalBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4.5f;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1291,32 +1217,26 @@ public class RoyalBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 },
-        { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1368,7 +1288,7 @@ public class BouncingBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1377,31 +1297,26 @@ public class BouncingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Bouncing;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1453,7 +1368,7 @@ public class CrowdingBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1462,31 +1377,26 @@ public class CrowdingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Crowding;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1538,7 +1448,7 @@ public class HungryBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1547,31 +1457,26 @@ public class HungryBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Vomit;
     public PieceState states { get; set; } = PieceState.Hungry;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1623,7 +1528,7 @@ public class CaptureTheFlagBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1632,31 +1537,26 @@ public class CaptureTheFlagBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.CaptureTheFlag;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1708,7 +1608,7 @@ public class FreezingBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1717,31 +1617,26 @@ public class FreezingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Freeze;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1793,7 +1688,7 @@ public class CloningBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 6;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1802,31 +1697,26 @@ public class CloningBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Spawn;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1878,7 +1768,7 @@ public class UndeadBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1887,31 +1777,26 @@ public class UndeadBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Spawn;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -1963,7 +1848,7 @@ public class PromotionBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -1972,31 +1857,26 @@ public class PromotionBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "Rook";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2048,7 +1928,7 @@ public class DefuserBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2057,31 +1937,26 @@ public class DefuserBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Defuser;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2133,7 +2008,7 @@ public class SpittingBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 3;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2142,31 +2017,26 @@ public class SpittingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Spit;
     public PieceState states { get; set; } = PieceState.Spitting;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = 1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2218,7 +2088,7 @@ public class PhantomBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 5;
     public int rarityLevel { get; set; } = 3;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2227,31 +2097,26 @@ public class PhantomBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.Dematerialize;
     public PieceState states { get; set; } = PieceState.None;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2296,14 +2161,14 @@ public class PhantomBishop : Piece
         }
     }
 }
-*//*
+*/
 public class StackingBishop : Piece
 {
     public bool disabled { get; set; } = false;
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 7;
     public int rarityLevel { get; set; } = 4;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2312,31 +2177,26 @@ public class StackingBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Stacking;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2388,7 +2248,7 @@ public class JailBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2397,31 +2257,26 @@ public class JailBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Jailer;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2473,7 +2328,7 @@ public class PiggybackBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2484,31 +2339,26 @@ public class PiggybackBishop : Piece
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2560,7 +2410,7 @@ public class JockeyBishop : Piece
     public int color { get; set; } = 1; //1 White, -1 Black
     public float points { get; set; } = 4;
     public int rarityLevel { get; set; } = 2;
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public string baseType { get; set; } = "Bishop";
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
@@ -2571,31 +2421,26 @@ public class JockeyBishop : Piece
     public int stackable { get; set; } = 0;
     public int reverseStackable { get; set; } = 0;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2648,7 +2493,7 @@ public class DelayedBishop : Piece
     public float points { get; set; } = 1;
     public int rarityLevel { get; set; } = 2;
     public string baseType { get; set; } = "Bishop";
-    public int[] startSquare { get; set; } = null;
+    public coords startSquare { get; set; } = new coords(-1, -1);
     public String description { get; set; } = "";
     public String longDescription { get; set; } = "";
     public int alive { get; set; } = 1;
@@ -2656,31 +2501,26 @@ public class DelayedBishop : Piece
     public PieceAbilities abilities { get; set; } = PieceAbilities.None;
     public PieceState states { get; set; } = PieceState.Delayed;
     public int collateralType { get; set; } = -1;
-    public int[,] collateral { get; set; } = null;
+    public coords[] collateral { get; set; } = null;
     public String promotesInto { get; set; } = "";
     public int promotingRow { get; set; } = 8;
     public int canMoveTwice { get; set; } = 0;
     public int storageLimit { get; set; } = -1;
     public List<Piece> storage { get; set; } = null;
-    public int[,] moves { get; set; } = { };
-    public int[,] oneTimeMoves { get; set; } = { };
-    public int[,] moveAndAttacks { get; set; } = {
-        { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 }, { 7, 7 }, { 8, 8 },
-        { -1, 1 }, { -2, 2 }, { -3, 3 }, { -4, 4 }, { -5, 5 }, { -6, 6 }, { -7, 7 }, { -8, 8 },
-        { 1, -1 }, { 2, -2 }, { 3, -3 }, { 4, -4 }, { 5, -5 }, { 6, -6 }, { 7, -7 }, { 8, -8 },
-        { -1, -1 }, { -2, -2 }, { -3, -3 }, { -4, -4 }, { -5, -5 }, { -6, -6 }, { -7, -7 }, { -8, -8 }
-    };
-    public int[,] oneTimeMoveAndAttacks { get; set; } = { };
-    public int[,] murderousAttacks { get; set; } = { };
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
     public bool condition { get; set; } = false;
-    public int[,] conditionalAttacks { get; set; } = { };
-    public int[,] jumpAttacks { get; set; } = { };
-    public int[,] attacks { get; set; } = { };
-    public int[,] flagMove1 { get; set; } = { };
-    public int[,] flagMove2 { get; set; } = { };
-    public int[,] pushMoves { get; set; } = { };
-    public int[,] enPassantMoves { get; set; } = { };
-    public int[] position { get; set; } = { 0, 0 };
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public coords position { get; set; } = new coords(0, 0);
     public GameObject go { get; set; } = null;
     public bool hasMoved { get; set; } = false;
 
@@ -2725,5 +2565,3 @@ public class DelayedBishop : Piece
         }
     }
 }
-
-*/

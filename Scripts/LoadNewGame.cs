@@ -29,8 +29,8 @@ public class LoadNewGame : MonoBehaviour
         gameData.isSelected = false;
         gameData.turn = 1;
         gameData.readyToMove = false;
-        gameData.currentMoveableCoords = new List<int[]>();
-        gameData.currentMoveableCoordsAllPieces = new List<int[]>();
+        gameData.currentMoveableCoords = new List<coords>();
+        gameData.currentMoveableCoordsAllPieces = new List<coords>();
         gameData.isInCheck = new int[] { 0, 0 }; //0 white, 1 black
         gameData.whiteRooks = new List<Piece>();
         gameData.blackRooks = new List<Piece>();

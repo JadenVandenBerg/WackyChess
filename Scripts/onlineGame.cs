@@ -75,41 +75,41 @@ public class onlineGame : MonoBehaviour
         bQueen = new Queen(-1, true, false);
         bKing = new HyperFastKing(-1, true, false);
 
-        HelperFunctions.initPiece(pawn, new int[] { 1, 2 });
-        HelperFunctions.initPiece(pawn2, new int[] { 2, 2 });
-        HelperFunctions.initPiece(pawn3, new int[] { 3, 2 });
-        HelperFunctions.initPiece(pawn4, new int[] { 4, 2 });
-        HelperFunctions.initPiece(pawn5, new int[] { 5, 2 });
-        HelperFunctions.initPiece(pawn6, new int[] { 6, 2 });
-        HelperFunctions.initPiece(pawn7, new int[] { 7, 2 });
-        HelperFunctions.initPiece(pawn8, new int[] { 8, 2 });
+        HelperFunctions.initPiece(pawn, new coords ( 1, 2 ));
+        HelperFunctions.initPiece(pawn2, new coords ( 2, 2 ));
+        HelperFunctions.initPiece(pawn3, new coords ( 3, 2 ));
+        HelperFunctions.initPiece(pawn4, new coords ( 4, 2 ));
+        HelperFunctions.initPiece(pawn5, new coords ( 5, 2 ));
+        HelperFunctions.initPiece(pawn6, new coords ( 6, 2 ));
+        HelperFunctions.initPiece(pawn7, new coords ( 7, 2 ));
+        HelperFunctions.initPiece(pawn8, new coords ( 8, 2 ));
 
-        HelperFunctions.initPiece(wRook, new int[] { 1, 1 });
-        HelperFunctions.initPiece(wRook2, new int[] { 8, 1 });
-        HelperFunctions.initPiece(wBishop, new int[] { 3, 1 });
-        HelperFunctions.initPiece(wBishop2, new int[] { 6, 1 });
-        HelperFunctions.initPiece(wKnight, new int[] { 2, 1 });
-        HelperFunctions.initPiece(wKnight2, new int[] { 7, 1 });
-        HelperFunctions.initPiece(wQueen, new int[] { 4, 1 });
-        HelperFunctions.initPiece(wKing, new int[] { 5, 1 });
+        HelperFunctions.initPiece(wRook, new coords ( 1, 1 ));
+        HelperFunctions.initPiece(wRook2, new coords ( 8, 1 ));
+        HelperFunctions.initPiece(wBishop, new coords ( 3, 1 ));
+        HelperFunctions.initPiece(wBishop2, new coords ( 6, 1 ));
+        HelperFunctions.initPiece(wKnight, new coords ( 2, 1 ));
+        HelperFunctions.initPiece(wKnight2, new coords ( 7, 1 ));
+        HelperFunctions.initPiece(wQueen, new coords ( 4, 1 ));
+        HelperFunctions.initPiece(wKing, new coords ( 5, 1 ));
 
-        HelperFunctions.initPiece(bpawn, new int[] { 1, 7 });
-        HelperFunctions.initPiece(bpawn2, new int[] { 2, 7 });
-        HelperFunctions.initPiece(bpawn3, new int[] { 3, 7 });
-        HelperFunctions.initPiece(bpawn4, new int[] { 4, 7 });
-        HelperFunctions.initPiece(bpawn5, new int[] { 5, 7 });
-        HelperFunctions.initPiece(bpawn6, new int[] { 6, 7 });
-        HelperFunctions.initPiece(bpawn7, new int[] { 7, 7 });
-        HelperFunctions.initPiece(bpawn8, new int[] { 8, 7 });
+        HelperFunctions.initPiece(bpawn, new coords ( 1, 7 ));
+        HelperFunctions.initPiece(bpawn2, new coords ( 2, 7 ));
+        HelperFunctions.initPiece(bpawn3, new coords ( 3, 7 ));
+        HelperFunctions.initPiece(bpawn4, new coords ( 4, 7 ));
+        HelperFunctions.initPiece(bpawn5, new coords ( 5, 7 ));
+        HelperFunctions.initPiece(bpawn6, new coords ( 6, 7 ));
+        HelperFunctions.initPiece(bpawn7, new coords ( 7, 7 ));
+        HelperFunctions.initPiece(bpawn8, new coords ( 8, 7 ));
 
-        HelperFunctions.initPiece(bRook, new int[] { 1, 8 });
-        HelperFunctions.initPiece(bRook2, new int[] { 8, 8 });
-        HelperFunctions.initPiece(bBishop, new int[] { 3, 8 });
-        HelperFunctions.initPiece(bBishop2, new int[] { 6, 8 });
-        HelperFunctions.initPiece(bKnight, new int[] { 2, 8 });
-        HelperFunctions.initPiece(bKnight2, new int[] { 7, 8 });
-        HelperFunctions.initPiece(bQueen, new int[] { 4, 8 });
-        HelperFunctions.initPiece(bKing, new int[] { 5, 8 });
+        HelperFunctions.initPiece(bRook, new coords ( 1, 8 ));
+        HelperFunctions.initPiece(bRook2, new coords ( 8, 8 ));
+        HelperFunctions.initPiece(bBishop, new coords ( 3, 8 ));
+        HelperFunctions.initPiece(bBishop2, new coords ( 6, 8 ));
+        HelperFunctions.initPiece(bKnight, new coords ( 2, 8 ));
+        HelperFunctions.initPiece(bKnight2, new coords ( 7, 8 ));
+        HelperFunctions.initPiece(bQueen, new coords ( 4, 8 ));
+        HelperFunctions.initPiece(bKing, new coords ( 5, 8 ));
 
         //This system will need to change once players can get more pieces, keep a tally of pieces using game vars
         pawn.name = "w_p1";

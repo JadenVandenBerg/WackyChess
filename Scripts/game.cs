@@ -107,41 +107,41 @@ public class game : MonoBehaviour
         gameData.piecesDict.Add(bKing.go, bKing);
         gameData.piecesDict.Add(bKnight2.go, bKnight2);
 
-        initPiece(pawn, new int[] { 1, 2 });
-        initPiece(pawn2, new int[] { 2, 2 });
-        initPiece(pawn3, new int[] { 3, 2 });
-        initPiece(pawn4, new int[] { 4, 2 });
-        initPiece(pawn5, new int[] { 5, 2 });
-        initPiece(pawn6, new int[] { 6, 2 });
-        initPiece(pawn7, new int[] { 7, 2 });
-        initPiece(pawn8, new int[] { 8, 2 });
+        initPiece(pawn, new coords( 1, 2 ));
+        initPiece(pawn2, new coords( 2, 2 ));
+        initPiece(pawn3, new coords( 3, 2 ));
+        initPiece(pawn4, new coords( 4, 2 ));
+        initPiece(pawn5, new coords( 5, 2 ));
+        initPiece(pawn6, new coords( 6, 2 ));
+        initPiece(pawn7, new coords( 7, 2 ));
+        initPiece(pawn8, new coords( 8, 2 ));
 
-        initPiece(wRook, new int[] { 1, 1 });
-        initPiece(wRook2, new int[] { 8, 1 });
-        initPiece(wBishop, new int[] { 3, 1 });
-        initPiece(wBishop2, new int[] { 6, 1 });
-        initPiece(wKnight, new int[] { 2, 1 });
-        initPiece(wKnight2, new int[] { 7, 1 });
-        initPiece(wQueen, new int[] { 4, 1 });
-        initPiece(wKing, new int[] { 5, 1 });
+        initPiece(wRook, new coords( 1, 1 ));
+        initPiece(wRook2, new coords( 8, 1 ));
+        initPiece(wBishop, new coords( 3, 1 ));
+        initPiece(wBishop2, new coords( 6, 1 ));
+        initPiece(wKnight, new coords( 2, 1 ));
+        initPiece(wKnight2, new coords( 7, 1 ));
+        initPiece(wQueen, new coords( 4, 1 ));
+        initPiece(wKing, new coords( 5, 1 ));
 
-        initPiece(bpawn, new int[] { 1, 7 });
-        initPiece(bpawn2, new int[] { 2, 7 });
-        initPiece(bpawn3, new int[] { 3, 7 });
-        initPiece(bpawn4, new int[] { 4, 7 });
-        initPiece(bpawn5, new int[] { 5, 7 });
-        initPiece(bpawn6, new int[] { 6, 7 });
-        initPiece(bpawn7, new int[] { 7, 7 });
-        initPiece(bpawn8, new int[] { 8, 7 });
+        initPiece(bpawn, new coords( 1, 7 ));
+        initPiece(bpawn2, new coords( 2, 7 ));
+        initPiece(bpawn3, new coords( 3, 7 ));
+        initPiece(bpawn4, new coords( 4, 7 ));
+        initPiece(bpawn5, new coords( 5, 7 ));
+        initPiece(bpawn6, new coords( 6, 7 ));
+        initPiece(bpawn7, new coords( 7, 7 ));
+        initPiece(bpawn8, new coords( 8, 7 ));
 
-        initPiece(bRook, new int[] { 1, 8 });
-        initPiece(bRook2, new int[] { 8, 8 });
-        initPiece(bBishop, new int[] { 3, 8 });
-        initPiece(bBishop2, new int[] { 6, 8 });
-        initPiece(bKnight, new int[] { 2, 8 });
-        initPiece(bKnight2, new int[] { 7, 8 });
-        initPiece(bQueen, new int[] { 4, 8 });
-        initPiece(bKing, new int[] { 5, 8 });
+        initPiece(bRook, new coords( 1, 8 ));
+        initPiece(bRook2, new coords( 8, 8 ));
+        initPiece(bBishop, new coords( 3, 8 ));
+        initPiece(bBishop2, new coords( 6, 8 ));
+        initPiece(bKnight, new coords( 2, 8 ));
+        initPiece(bKnight2, new coords( 7, 8 ));
+        initPiece(bQueen, new coords( 4, 8 ));
+        initPiece(bKing, new coords( 5, 8 ));
 
         gameData.whiteRooks.Add(wRook);
         gameData.whiteRooks.Add(wRook2);
@@ -240,7 +240,7 @@ public class game : MonoBehaviour
         }
     }
 
-    private void movePiece(Piece piece, int[] coords)
+    private void movePiece(Piece piece, coords coords)
     {
 
         //Debug.Log("Flags");
@@ -249,10 +249,10 @@ public class game : MonoBehaviour
         //Debug.Log("isSelected: " + gameData.isSelected);
         //Debug.Log("readyToMove: " + gameData.readyToMove);
 
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
+        GameObject toAppend = HelperFunctions.findSquare(coords.x, coords.y);
 
         //Check for castle (maybe make helper func)
-        int xDisp = piece.position[0] - coords[0];
+        int xDisp = piece.position.x - coords.x;
         if ((piece == wKing || piece == bKing) && (xDisp == 2 || xDisp == -2))
         {
             //Debug.Log("Castle Taken Place");
@@ -260,25 +260,25 @@ public class game : MonoBehaviour
             {
                 gameData.whiteRooks[0].hasMoved = true;
                 HelperFunctions.movePiece(gameData.whiteRooks[0], HelperFunctions.findSquare(4, 1));
-                gameData.whiteRooks[0].position = new int[] { 4, 1 };
+                gameData.whiteRooks[0].position = new coords( 4, 1 );
             }
             else if (piece == wKing && xDisp == -2)
             {
                 gameData.whiteRooks[1].hasMoved = true;
                 HelperFunctions.movePiece(gameData.whiteRooks[1], HelperFunctions.findSquare(6, 1));
-                gameData.whiteRooks[1].position = new int[] { 6, 1 };
+                gameData.whiteRooks[1].position = new coords( 6, 1 );
             }
             else if (piece == bKing && xDisp == 2)
             {
                 gameData.blackRooks[0].hasMoved = true;
                 HelperFunctions.movePiece(gameData.blackRooks[0], HelperFunctions.findSquare(4, 8));
-                gameData.blackRooks[0].position = new int[] { 4, 8 };
+                gameData.blackRooks[0].position = new coords( 4, 8 );
             }
             else if (piece == bKing && xDisp == -2)
             {
                 gameData.blackRooks[1].hasMoved = true;
                 HelperFunctions.movePiece(gameData.blackRooks[1], HelperFunctions.findSquare(6, 8));
-                gameData.blackRooks[0].position = new int[] { 6, 8 };
+                gameData.blackRooks[0].position = new coords( 6, 8 );
             }
         }
 
@@ -296,7 +296,7 @@ public class game : MonoBehaviour
         //Check for Pawn Promote
         if (piece.go.tag == "Pawn")
         {
-            if (piece.color == 1 && piece.position[1] == 8)
+            if (piece.color == 1 && piece.position.y == 8)
             {
                 Destroy(piece.go);
                 piece.alive = 0;
@@ -306,7 +306,7 @@ public class game : MonoBehaviour
 
                 gameData.piecesDict.Add(superPawn.go, superPawn);
             }
-            else if (piece.color == -1 && piece.position[1] == 1)
+            else if (piece.color == -1 && piece.position.y == 1)
             {
                 Destroy(piece.go);
                 piece.alive = 0;
@@ -352,9 +352,9 @@ public class game : MonoBehaviour
         checkmateUI.SetActive(true);
     }
 
-    private void initPiece(Piece piece, int[] coords)
+    private void initPiece(Piece piece, coords coords)
     {
-        GameObject toAppend = HelperFunctions.findSquare(coords[0], coords[1]);
+        GameObject toAppend = HelperFunctions.findSquare(coords.x, coords.y);
         piece.position = HelperFunctions.findCoords(toAppend);
         HelperFunctions.movePiece(piece, toAppend);
 

@@ -30,7 +30,7 @@ public class OneUndoMoveBot : BotTemplate
         {
             var nextMoveVars = getNextMoveVars(nextMove);
             Piece piece = nextMoveVars.piece;
-            int[] coords = nextMoveVars.coords;
+            coords coords = nextMoveVars.coords;
             string moveType = nextMoveVars.moveType;
 
             //BoardState originalBoardState = this.currentBoardState;
@@ -39,7 +39,7 @@ public class OneUndoMoveBot : BotTemplate
             if (moveType == "move")
             {
                 //cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-                undo = undo_simulatePieceMove(this.currentBoardState, piece, new coords(coords[0], coords[1]));
+                undo = undo_simulatePieceMove(this.currentBoardState, piece, new coords(coords.x, coords.y));
             }
             else
             {
@@ -63,7 +63,7 @@ public class OneUndoMoveBot : BotTemplate
             {
                 var nextMoveOppVars = getNextMoveVars(nextMoveOpp);
                 Piece pieceOpp = nextMoveOppVars.piece;
-                int[] coordsOpp = nextMoveOppVars.coords;
+                coords coordsOpp = nextMoveOppVars.coords;
                 string moveTypeOpp = nextMoveOppVars.moveType;
 
                 //BoardState originalBoardState_ = this.currentBoardState;
@@ -72,7 +72,7 @@ public class OneUndoMoveBot : BotTemplate
                 if (moveTypeOpp == "move")
                 {
                     //cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-                    undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp[0], coordsOpp[1]));
+                    undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
                 }
                 else
                 {

@@ -45,7 +45,8 @@ public interface Piece
      * The position of a piece on the board
      * using 1 base indexing
      */
-    public int[] position { get; set; }
+    //public int[] position { get; set; }
+    public coords position { get; set; }
 
 
     /*
@@ -53,7 +54,8 @@ public interface Piece
      * Where the piece starts
      * [x, y]
      */
-    public int[] startSquare { get; set; }
+    //public int[] startSquare { get; set; }
+    public coords startSquare { get; set; }
 
 
     /*
@@ -193,16 +195,8 @@ public interface Piece
      * Range of collateral
      * Collateral is not considered check/checkmate
      */
-    public int[,] collateral { get; set; }
-
-
-    /*
-     * Size (not implemented yet)
-     * How big this piece is
-     * [0]: Width
-     * [1]: Height
-     */
-    public int[] size { get; set; }
+    //public int[,] collateral { get; set; }
+    public coords[] collateral { get; set; }
 
 
     /*
@@ -252,7 +246,8 @@ public interface Piece
      * Moves
      * If there are no pieces on the square, move
      */
-    public int[,] moves { get; set; }
+    //public int[,] moves { get; set; }
+    public coords[] moves { get; set; }
 
 
     /*
@@ -260,7 +255,8 @@ public interface Piece
      * If there are no pieces on the square, move
      * Can only do these moves once
      */
-    public int[,] oneTimeMoves { get; set; }
+    //public int[,] oneTimeMoves { get; set; }
+    public coords[] oneTimeMoves { get; set; }
 
 
     /*
@@ -269,22 +265,24 @@ public interface Piece
      * If the piece on the square is the opposing colour, move
      * Can only do these moves once
      */
-    public int[,] oneTimeMoveAndAttacks { get; set; }
+    //public int[,] oneTimeMoveAndAttacks { get; set; }
+    public coords[] oneTimeMoveAndAttacks { get; set; }
 
 
     /* 
      * Attacks
      * If the piece on the square is the opposing colour, move
      */
-    public int[,] attacks { get; set; }
-
+    //public int[,] attacks { get; set; }
+    public coords[] attacks { get; set; }
 
     /*
      * Jump Attacks
      * Ignore all pieces in between the piece and the square when calculating moves
      * Serves as moveAndAttacks
      */
-    public int[,] jumpAttacks { get; set; }
+    //public int[,] jumpAttacks { get; set; }
+    public coords[] jumpAttacks { get; set; }
 
 
     /*
@@ -292,29 +290,34 @@ public interface Piece
      * If there are no pieces on the square, move
      * If the piece on the square is the opposing colour, move
      */
-    public int[,] moveAndAttacks { get; set; }
+    //public int[,] moveAndAttacks { get; set; }
+    public coords[] moveAndAttacks { get; set; }
 
     /*
      * Murderous Attacks
      * If there are no pieces on the square, move
      * If there is a piece on the square, move
      */
-    public int[,] murderousAttacks { get; set; }
+    //public int[,] murderousAttacks { get; set; }
+    public coords[] murderousAttacks { get; set; }
 
 
     /* 
      * Conditional Attacks
      * If the condition marked by the condition flag is met, move
      */
-    public int[,] conditionalAttacks { get; set; }
+    //public int[,] conditionalAttacks { get; set; }
+    public coords[] conditionalAttacks { get; set; }
 
 
     /*
      * Flag Moves
      * Can be one move set or another, depending on the flag "flagMove"
      */
-    public int[,] flagMove1 { get; set; }
-    public int[,] flagMove2 { get; set; }
+    //public int[,] flagMove1 { get; set; }
+    //public int[,] flagMove2 { get; set; }
+    public coords[] flagMove1 { get; set; }
+    public coords[] flagMove2 { get; set; }
 
 
     /*
@@ -322,14 +325,17 @@ public interface Piece
      * Moves the furthest it can in direction noted by the array
      * These are NOT attacks
      */
-    public int[,] pushMoves { get; set; }
+    //public int[,] pushMoves { get; set; }
+    public coords[] pushMoves { get; set; }
+
 
 
     /*
      * En Passant Moves (not implemented yet)
      * Captures as an en passant
      */
-    public int[,] enPassantMoves { get; set; }
+    //public int[,] enPassantMoves { get; set; }
+    public coords[] enPassantMoves { get; set; }
 
 
     /* ------------------- DEPENDANTS ------------------- */

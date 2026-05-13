@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
-
+/*
 public class RestrictorBot : BotTemplate
 {
 	public RestrictorBot(int botColor)
@@ -32,7 +32,7 @@ public class RestrictorBot : BotTemplate
         return isGuarded;
     }
 	*/
-
+/*
     override
 
 	public NextMove nextMove()
@@ -193,7 +193,7 @@ public class RestrictorBot : BotTemplate
             bool checkOpp = isGuarded(this, cloneState, this.color, kingCoordsOpp);
             bool inCheck = isGuarded(this, cloneState, this.color * -1, kingCoords);
 
-			*/
+			*//*
 
 			int moveScore = 1000000;
 
@@ -202,7 +202,7 @@ public class RestrictorBot : BotTemplate
 			{
 				moveScore -= 1000000;
 			}
-			*/
+			*//*
 
 			if (kingAlive == true)
 			{
@@ -242,4 +242,4 @@ public class RestrictorBot : BotTemplate
 		}
 		return move;
 	}
-}
+}*/

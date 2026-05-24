@@ -3,18 +3,6 @@ using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
 
-public class Move
-{
-    public Piece p;
-    public int[] coords;
-
-    public Move(Piece piece, int[] coords)
-    {
-        this.p = piece;
-        this.coords = coords;
-    }
-}
-
 public class OneMoveBot : BotTemplate
 {
     //The constructor, this function gets called when a new OneMoveBot is initialized
@@ -57,7 +45,7 @@ public class OneMoveBot : BotTemplate
         {
             //Find out what the moveType is and set vars accordingly
             Piece piece;
-            int[] coords;
+            coords coords;
             string moveType = nextMove.moveType;
             if (moveType == "move")
             {
@@ -100,7 +88,7 @@ public class OneMoveBot : BotTemplate
             foreach (NextMove nextMoveOpp in allMovesOpp)
             {
                 Piece pieceOpp;
-                int[] coordsOpp;
+                coords coordsOpp;
 
                 string moveTypeOpp = nextMoveOpp.moveType;
 

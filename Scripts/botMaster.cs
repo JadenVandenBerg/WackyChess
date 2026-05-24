@@ -27,6 +27,8 @@ public class botMaster : MonoBehaviour
     BotTemplate botBlack;
     bool started = true;
 
+    static string SEASON_NAME;
+
     BotGameStatus bgs = new BotGameStatus();
 
     IEnumerator Start()
@@ -38,7 +40,8 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        /*nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = true;
+        //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
 
         if (nonResettables.isBotTournament)
@@ -47,26 +50,38 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "G2EBot",
-                    "KamikazeBot",
-                    "BotRoss",
-                    "TwoMoveBot"
+                    "TwoMoveBot",
+                    "ThinkingBot",
+                    "Lobotomy",
+                    "BerserkerBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
-                
+
                 /*
-                List<string> randomBots = new List<string>
+                List<string> div1 = new List<string>
                 {
+                    "Bloodbot",
+                    "AssassinBot",
                     "PawnBot",
                     "BottusMaximus",
-                    "FiveXRandomBot",
-                    "IdiotBot",
-                    "BOTential",
-                    "AssassinBot",
-                    "Bloodbot",
-                    "ShieldBot"
+                    "G2EBot",
+                    "KamikazeBot",
+                    "OneMoveBot",
+                    "SavageBeastBot"
                 };
                 
+                List<string> div2 = new List<string>
+                {
+                    "OnePieceRandomBot",
+                    "AdventurousKingBot",
+                    "BotRoss",
+                    "RandomBot",
+                    "BOTential",
+                    "FiveXRandomBot",
+                    "ShieldBot",
+                    "IdiotBot"
+                };
+                */
 
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
@@ -76,7 +91,12 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Starting Tournament With: " + sb);
 
                 nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
-                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], false);
+                
+                //Div 1
+                //nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
+
+                //Div 2
+                //nonResettables.botTournament = new BotTournament(div2[0], div2[1], div2[2], div2[3], div2[4], div2[5], div2[6], div2[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -102,7 +122,6 @@ public class botMaster : MonoBehaviour
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         } 
-        */
         
         if (!gameOver)
         { 
@@ -113,8 +132,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new EqualityBot(1);
-                botBlack = new OneMoveBot(-1);
+                botWhite = new RandomBot(1);
+                botBlack = new RandomBot(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -163,15 +182,15 @@ public class botMaster : MonoBehaviour
             /*
             List<Piece> botWhiteKnights = new List<Piece>
             {
-                getPieceTypeInstance("SpittingKnight", 1),
-                getPieceTypeInstance("SpittingKnight", 1),
+                getPieceTypeInstance("JailKnight", 1),
+                getPieceTypeInstance("JailKnight", 1),
             };
             */
             List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
             /*
             List<Piece> botWhiteKing = new List<Piece>
             {
-                getPieceTypeInstance("SpittingKing", 1)
+                getPieceTypeInstance("GhoulKing", 1)
             };
             */
             List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
@@ -187,22 +206,22 @@ public class botMaster : MonoBehaviour
                 bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
-            HelperFunctions.initPiece(botWhitePawns[0], new int[] { 1, 2 });
-            HelperFunctions.initPiece(botWhitePawns[1], new int[] { 2, 2 });
-            HelperFunctions.initPiece(botWhitePawns[2], new int[] { 3, 2 });
-            HelperFunctions.initPiece(botWhitePawns[3], new int[] { 4, 2 });
-            HelperFunctions.initPiece(botWhitePawns[4], new int[] { 5, 2 });
-            HelperFunctions.initPiece(botWhitePawns[5], new int[] { 6, 2 });
-            HelperFunctions.initPiece(botWhitePawns[6], new int[] { 7, 2 });
-            HelperFunctions.initPiece(botWhitePawns[7], new int[] { 8, 2 });
-            HelperFunctions.initPiece(botWhiteRooks[0], new int[] { 1, 1 });
-            HelperFunctions.initPiece(botWhiteRooks[1], new int[] { 8, 1 });
-            HelperFunctions.initPiece(botWhiteBishops[0], new int[] { 3, 1 });
-            HelperFunctions.initPiece(botWhiteBishops[1], new int[] { 6, 1 });
-            HelperFunctions.initPiece(botWhiteKnights[0], new int[] { 2, 1 });
-            HelperFunctions.initPiece(botWhiteKnights[1], new int[] { 7, 1 });
-            HelperFunctions.initPiece(botWhiteQueen[0], new int[] { 4, 1 });
-            HelperFunctions.initPiece(botWhiteKing[0], new int[] { 5, 1 });
+            HelperFunctions.initPiece(botWhitePawns[0], new coords ( 1, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[1], new coords ( 2, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[2], new coords ( 3, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[3], new coords ( 4, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[4], new coords ( 5, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[5], new coords ( 6, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[6], new coords ( 7, 2 ));
+            HelperFunctions.initPiece(botWhitePawns[7], new coords ( 8, 2 ));
+            HelperFunctions.initPiece(botWhiteRooks[0], new coords ( 1, 1 ));
+            HelperFunctions.initPiece(botWhiteRooks[1], new coords ( 8, 1 ));
+            HelperFunctions.initPiece(botWhiteBishops[0], new coords ( 3, 1 ));
+            HelperFunctions.initPiece(botWhiteBishops[1], new coords ( 6, 1 ));
+            HelperFunctions.initPiece(botWhiteKnights[0], new coords ( 2, 1 ));
+            HelperFunctions.initPiece(botWhiteKnights[1], new coords ( 7, 1 ));
+            HelperFunctions.initPiece(botWhiteQueen[0], new coords ( 4, 1 ));
+            HelperFunctions.initPiece(botWhiteKing[0], new coords ( 5, 1 ));
 
             List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
             /*
@@ -236,18 +255,19 @@ public class botMaster : MonoBehaviour
             };
             */
             List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
-            /*
+           /*
             List<Piece> botBlackKnights = new List<Piece>
             {
-                getPieceTypeInstance("CrowdingKnight", -1),
-                getPieceTypeInstance("Knight", -1),
+                getPieceTypeInstance("JailKnight", -1),
+                getPieceTypeInstance("JailKnight", -1),
             };
             */
             List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
+           
             /*
             List<Piece> botBlackKing = new List<Piece>
             {
-                getPieceTypeInstance("HeartbrokenKing", -1),
+                getPieceTypeInstance("GhoulKing", -1),
             };
             */
             List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
@@ -263,22 +283,22 @@ public class botMaster : MonoBehaviour
                 bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
-            HelperFunctions.initPiece(botBlackPawns[0], new int[] { 1, 7 });
-            HelperFunctions.initPiece(botBlackPawns[1], new int[] { 2, 7 });
-            HelperFunctions.initPiece(botBlackPawns[2], new int[] { 3, 7 });
-            HelperFunctions.initPiece(botBlackPawns[3], new int[] { 4, 7 });
-            HelperFunctions.initPiece(botBlackPawns[4], new int[] { 5, 7 });
-            HelperFunctions.initPiece(botBlackPawns[5], new int[] { 6, 7 });
-            HelperFunctions.initPiece(botBlackPawns[6], new int[] { 7, 7 });
-            HelperFunctions.initPiece(botBlackPawns[7], new int[] { 8, 7 });
-            HelperFunctions.initPiece(botBlackRooks[0], new int[] { 1, 8 });
-            HelperFunctions.initPiece(botBlackRooks[1], new int[] { 8, 8 });
-            HelperFunctions.initPiece(botBlackBishops[0], new int[] { 3, 8 });
-            HelperFunctions.initPiece(botBlackBishops[1], new int[] { 6, 8 });
-            HelperFunctions.initPiece(botBlackKnights[0], new int[] { 2, 8 });
-            HelperFunctions.initPiece(botBlackKnights[1], new int[] { 7, 8 });
-            HelperFunctions.initPiece(botBlackQueen[0], new int[] { 4, 8 });
-            HelperFunctions.initPiece(botBlackKing[0], new int[] { 5, 8 });
+            HelperFunctions.initPiece(botBlackPawns[0], new coords ( 1, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[1], new coords ( 2, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[2], new coords ( 3, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[3], new coords ( 4, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[4], new coords ( 5, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[5], new coords ( 6, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[6], new coords ( 7, 7 ));
+            HelperFunctions.initPiece(botBlackPawns[7], new coords ( 8, 7 ));
+            HelperFunctions.initPiece(botBlackRooks[0], new coords ( 1, 8 ));
+            HelperFunctions.initPiece(botBlackRooks[1], new coords ( 8, 8 ));
+            HelperFunctions.initPiece(botBlackBishops[0], new coords ( 3, 8 ));
+            HelperFunctions.initPiece(botBlackBishops[1], new coords ( 6, 8 ));
+            HelperFunctions.initPiece(botBlackKnights[0], new coords ( 2, 8 ));
+            HelperFunctions.initPiece(botBlackKnights[1], new coords ( 7, 8 ));
+            HelperFunctions.initPiece(botBlackQueen[0], new coords ( 4, 8 ));
+            HelperFunctions.initPiece(botBlackKing[0], new coords ( 5, 8 ));
 
             gameData.whiteRooks.Add(botWhiteRooks[0]);
             gameData.whiteRooks.Add(botWhiteRooks[1]);
@@ -343,8 +363,6 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
-        yield return new WaitForSeconds(4f);
-
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);
         botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
@@ -354,7 +372,7 @@ public class botMaster : MonoBehaviour
         bool valid;
 
         Piece movePieceObj = null;
-        int[] moveCoords = null;
+        coords moveCoords = new coords(-1, -1);
         long watchMS = 0;
 
         if (turn == 1)
@@ -369,7 +387,7 @@ public class botMaster : MonoBehaviour
 
         NextMove selectedMove = null;
 
-        List<int[]> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, true, false, null, true, true);
+        List<coords> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, true, false, null, true, true);
         Debug.LogWarning("AllMoves: " + allMoves.Count);
         debug_printBoardGrid(gameData.boardGrid, true, false);
 
@@ -406,12 +424,12 @@ public class botMaster : MonoBehaviour
 
             movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
-            if (moveCoords != null && movePieceObj != null)
+            if (moveCoords.x != -1 && movePieceObj != null)
             {
-                HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]), Color.green);
-                HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords[0], moveCoords[1]), Color.red);
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 
@@ -432,7 +450,7 @@ public class botMaster : MonoBehaviour
                 }
             }
 
-            Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+            Debug.Log("RECIEVED MOVE: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
 
             if (nextMove.moveType == "move")
             {
@@ -441,22 +459,43 @@ public class botMaster : MonoBehaviour
             {
                 valid = botValidateAbility(pa, currentBot);
             }
+
+            movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
+            if (movePieceObj.go == null)
+            {
+                GameObject newGO = new GameObject();
+                RectTransform rect = newGO.AddComponent<RectTransform>();
+                Image s = newGO.AddComponent<Image>();
+                string imgPath = movePieceObj.color == 1 ? movePieceObj.wImage : movePieceObj.bImage;
+                Sprite sp = Resources.Load<Sprite>(imgPath);
+                s.sprite = sp;
+                s.preserveAspect = true;
+                newGO.name = movePieceObj.name;
+                movePieceObj.go = newGO;
+                GameObject square = HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y);
+                HelperFunctions.movePiece(movePieceObj, square);
+
+                Debug.Log("Reassembling Broken GO");
+                Debug.Break();
+            }
         }
 
-        movePieceObj = getOriginalPieceFromClone(movePieceObj);
+        // Safe
+        gameData.selectedToMovePiece = movePieceObj;
 
         bool death = false;
         bool countDeath = false;
         int check = 0;
         if (valid)
         {
-            gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
-            gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+            gameData.selected = HelperFunctions.findSquare(moveCoords.x, moveCoords.y);
+            gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y);
             gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
             gameData.selectedToMovePiece = movePieceObj;
 
-            Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
-            helper.addBotMessage(" " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords[0], moveCoords[1]).name + " in " + watchMS + "ms.");
+            Debug.Log("Bot " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords.x, moveCoords.y).name + " in " + watchMS + "ms.");
+            helper.addBotMessage(" " + currentBot.name + " moved " + movePieceObj.name + " to " + HelperFunctions.findSquare(moveCoords.x, moveCoords.y).name + " in " + watchMS + "ms.");
 
             repetitionTracker.addMove(selectedMove);
 
@@ -491,8 +530,8 @@ public class botMaster : MonoBehaviour
 
             if (movePieceObj != null)
             {
-                Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
-                helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords[0] + "," + moveCoords[1]);
+                Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
+                helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
             }
             else
             {
@@ -506,6 +545,7 @@ public class botMaster : MonoBehaviour
             {
                 Debug.Log("Game Over - Stalemate (Condition 1)");
                 bgs.result = "Draw by Stalemate";
+                //Debug.Break();
             }
             else
             {
@@ -522,8 +562,10 @@ public class botMaster : MonoBehaviour
                     moveCoords = randomMove.ability.coords;
                 }
 
-                gameData.selected = HelperFunctions.findSquare(moveCoords[0], moveCoords[1]);
-                gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position[0], movePieceObj.position[1]);
+                movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
+                gameData.selected = HelperFunctions.findSquare(moveCoords.x, moveCoords.y);
+                gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y);
                 gameData.selectedPiece = HelperFunctions.getPieceOnSquare(gameData.selected);
                 gameData.selectedToMovePiece = movePieceObj;
 
@@ -681,7 +723,6 @@ public class botMaster : MonoBehaviour
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
         HelperFunctions.resetBoardColours();
-        yield return new WaitForSeconds(0.1f);
         isTurn = true;
 
         if (gameOver)
@@ -690,12 +731,12 @@ public class botMaster : MonoBehaviour
 
             if (nonResettables.logMatch)
             {
-                logger.publishLog("TEST");
+                logger.publishLog("SEASON2_" + botWhite.name + " vs " + botBlack.name + ".txt");
             }
 
             if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(0.5f);
 
             HelperFunctions.resetGameVars();
             SceneManager.LoadScene(7);
@@ -706,13 +747,13 @@ public class botMaster : MonoBehaviour
         HelperFunctions.resetBoardColours();
     }
 
-    public bool botValidateMove(Piece piece, int[] coords) {
-        if (piece == null || coords == null)
+    public bool botValidateMove(Piece piece, coords coords) {
+        if (piece == null || coords.x == -1)
         {
             return false;
         }
 
-        List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
+        List<coords> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
 
         if (HelperFunctions.isInList(moves, coords, false)) {
             return true;
@@ -721,30 +762,30 @@ public class botMaster : MonoBehaviour
         return false;
     }
 
-    public static (Piece piece, int[] coords) performRandomBotMove(BotTemplate bot)
+    public static (Piece piece, coords coords) performRandomBotMove(BotTemplate bot)
     {
         var botMoves = getAllPossibleMovesPenalty(bot, bot.color);
 
-        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        List<Dictionary<Piece, List<coords>>> allMoves = botMoves.pieceMoveList;
 
         if (allMoves.Count == 0)
         {
-            return (null, null);
+            return (null, new coords(-1, -1));
         }
 
         System.Random rand = new System.Random();
 
         int dictIndex = rand.Next(allMoves.Count);
 
-        Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
+        Dictionary<Piece, List<coords>> pieceMovesDict = allMoves[dictIndex];
         //fix for checkamte
-        KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
+        KeyValuePair<Piece, List<coords>> pieceMovesKeyVal = pieceMovesDict.First();
 
         Piece randMovePiece = pieceMovesKeyVal.Key;
-        List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
+        List<coords> randMoveCoordsList = pieceMovesKeyVal.Value;
 
         int coordIndex = rand.Next(randMoveCoordsList.Count);
-        int[] randMoveCoords = randMoveCoordsList[coordIndex];
+        coords randMoveCoords = randMoveCoordsList[coordIndex];
 
         return (randMovePiece, randMoveCoords);
     }
@@ -753,7 +794,7 @@ public class botMaster : MonoBehaviour
     {
         var botMoves = getAllPossibleMovesPenalty(bot, bot.color);
 
-        List<Dictionary<Piece, List<int[]>>> allMoves = botMoves.pieceMoveList;
+        List<Dictionary<Piece, List<coords>>> allMoves = botMoves.pieceMoveList;
         List<PieceAbility> allAbilities = botMoves.pieceAbilities;
 
         int totalCount = allMoves.Count + allAbilities.Count;
@@ -777,14 +818,14 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-            Dictionary<Piece, List<int[]>> pieceMovesDict = allMoves[dictIndex];
-            KeyValuePair<Piece, List<int[]>> pieceMovesKeyVal = pieceMovesDict.First();
+            Dictionary<Piece, List<coords>> pieceMovesDict = allMoves[dictIndex];
+            KeyValuePair<Piece, List<coords>> pieceMovesKeyVal = pieceMovesDict.First();
 
             Piece randMovePiece = pieceMovesKeyVal.Key;
-            List<int[]> randMoveCoordsList = pieceMovesKeyVal.Value;
+            List<coords> randMoveCoordsList = pieceMovesKeyVal.Value;
 
             int coordIndex = rand.Next(randMoveCoordsList.Count);
-            int[] randMoveCoords = randMoveCoordsList[coordIndex];
+            coords randMoveCoords = randMoveCoordsList[coordIndex];
 
             Move move_ = new Move(randMovePiece, randMoveCoords);
             next = new NextMove(move_);
@@ -812,14 +853,14 @@ public class botMaster : MonoBehaviour
                 continue;
             }
 
-            if (pa_.coords != null && pa.coords != null)
+            if (pa_.coords.x != -1 && pa.coords.x != -1)
             {
-                if (pa_.coords[0] != pa.coords[0])
+                if (pa_.coords.x != pa.coords.x)
                 {
                     continue;
                 }
 
-                if (pa_.coords[1] != pa.coords[1])
+                if (pa_.coords.y != pa.coords.y)
                 {
                     continue;
                 }
@@ -867,14 +908,14 @@ public class botMaster : MonoBehaviour
 
             if (pa_.placeCoords != null && pa.placeCoords != null)
             {
-                foreach (int[] c_ in pa_.placeCoords)
+                foreach (coords c_ in pa_.placeCoords)
                 {
 
                     bool matchedCoords = false;
 
-                    foreach (int[] c in pa.placeCoords)
+                    foreach (coords c in pa.placeCoords)
                     {
-                        if (c[0] == c_[0] && c[1] == c_[1])
+                        if (c.x == c_.x && c.y == c_.y)
                         {
                             matchedCoords = true;
                         }
@@ -899,17 +940,17 @@ public class botMaster : MonoBehaviour
         return false;
     }
 
-    public static (List<Dictionary<Piece, List<int[]>>> pieceMoveList, List<PieceAbility> pieceAbilities) getAllPossibleMovesPenalty(BotTemplate bot, int color)
+    public static (List<Dictionary<Piece, List<coords>>> pieceMoveList, List<PieceAbility> pieceAbilities) getAllPossibleMovesPenalty(BotTemplate bot, int color)
     {
-        List<Dictionary<Piece, List<int[]>>> totalMoves = new List<Dictionary<Piece, List<int[]>>>();
+        List<Dictionary<Piece, List<coords>>> totalMoves = new List<Dictionary<Piece, List<coords>>>();
 
         foreach (Piece piece in bot.pieces)
         {
-            List<int[]> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
+            List<coords> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
 
             if (moves.Count > 0)
             {
-                Dictionary<Piece, List<int[]>> pMoveDict = new Dictionary<Piece, List<int[]>>();
+                Dictionary<Piece, List<coords>> pMoveDict = new Dictionary<Piece, List<coords>>();
 
                 pMoveDict.Add(piece, moves);
 
@@ -951,7 +992,7 @@ public class botMaster : MonoBehaviour
         string logText = sb.ToString();
 
         Debug.LogWarning(logText);
-        string filePath = Path.Combine(Application.persistentDataPath, "MatchHistory.txt");
+        string filePath = Path.Combine(Application.persistentDataPath, SEASON_NAME + "MatchHistory.txt");
         File.AppendAllText(filePath, logText + "\n------------------------\n");
 
         Debug.Log("Saved match log to: " + filePath);
@@ -1001,8 +1042,8 @@ public class botMaster : MonoBehaviour
         if (a.moveType == "move")
         {
             return a.move.p.name == b.move.p.name &&
-                   a.move.coords[0] == b.move.coords[0] &&
-                   a.move.coords[1] == b.move.coords[1];
+                   a.move.coords.x == b.move.coords.x &&
+                   a.move.coords.y == b.move.coords.y;
         }
         else
         {
@@ -1094,7 +1135,7 @@ public class botMaster : MonoBehaviour
         {
             string documentsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
-            string folderPath = Path.Combine(documentsPath, "WC_Tournaments");
+            string folderPath = Path.Combine(documentsPath, "WC_Tournaments/" + SEASON_NAME);
 
             if (!Directory.Exists(folderPath))
             {
@@ -1110,7 +1151,7 @@ public class botMaster : MonoBehaviour
             string fullPath = Path.Combine(folderPath, fileName);
 
             File.WriteAllText(fullPath, sb.ToString());
-            System.Diagnostics.Process.Start(fullPath);
+            //System.Diagnostics.Process.Start(fullPath);
         }
     }
 }

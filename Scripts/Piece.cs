@@ -45,7 +45,8 @@ public interface Piece
      * The position of a piece on the board
      * using 1 base indexing
      */
-    public int[] position { get; set; }
+    //public int[] position { get; set; }
+    public coords position { get; set; }
 
 
     /*
@@ -53,7 +54,8 @@ public interface Piece
      * Where the piece starts
      * [x, y]
      */
-    public int[] startSquare { get; set; }
+    //public int[] startSquare { get; set; }
+    public coords startSquare { get; set; }
 
 
     /*
@@ -121,14 +123,14 @@ public interface Piece
      * 
      * None: No ability
      * Freeze: Can freeze pieces within a 1 block radius
-     * Dematerialize: Can enter/exit dematerialized state (not implemented yet)
+     * Dematerialize: Can enter/exit dematerialized state
      * Vomit: Spit out all pieces in storage onto squares that have no pieces
      * Castle: Can castle
      * Rotate: Pieces can rotate 90 degrees and their moves rotate with them (not implemented yet)
-     * Spawn: Can spawn other pieces depending on spawnable flag (not implemented yet)
+     * Spawn: Can spawn other pieces depending on spawnable flag
      * Wizard: Dematerializes pieces that put it in check (not implemented yet)
      */
-    public String ability { get; set; }
+    public PieceAbilities abilities { get; set; }
 
 
     /* State
@@ -148,7 +150,7 @@ public interface Piece
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move
      * Uncastle: Can't castle
-     * Rulebreaker: Can castle in check or if rook has moved (as long as it's in start)
+     * Rulebreaker: Can castle in check or if rook has moved
      * Electric: Has a change of killing pieces that capture it (1/2)
      * Crook: Can't be captured, only jailed
      * Wall: Can't be jumped over (not implemented yet)
@@ -156,7 +158,7 @@ public interface Piece
      * Hungry: Adds pieces to storage, has the option of spitting out pieces
      * Piggyback: Carries pieces on top of it with it
      * Jockey: Other pieces carry it around with them
-     * Delayed: Move executed the turn after (if possible) (not implemented yet)
+     * Delayed: Move executed the turn after
      * Depressed: Cannot move if in check
      * Heartbroken: Becomes depressed if your queen dies
      * Portal: Can teleport through the board
@@ -169,9 +171,7 @@ public interface Piece
      * Protective: Moves like a queen when in check //used for flag moves
      * Scaredy: Moves 2 squares when in check //used for flag moves
      */
-    public String state { get; set; }
     public PieceState states { get; set; }
-    public String secondaryState { get; set; }
 
     /*
      * CollateralType
@@ -195,16 +195,8 @@ public interface Piece
      * Range of collateral
      * Collateral is not considered check/checkmate
      */
-    public int[,] collateral { get; set; }
-
-
-    /*
-     * Size (not implemented yet)
-     * How big this piece is
-     * [0]: Width
-     * [1]: Height
-     */
-    public int[] size { get; set; }
+    //public int[,] collateral { get; set; }
+    public coords[] collateral { get; set; }
 
 
     /*
@@ -254,7 +246,8 @@ public interface Piece
      * Moves
      * If there are no pieces on the square, move
      */
-    public int[,] moves { get; set; }
+    //public int[,] moves { get; set; }
+    public coords[] moves { get; set; }
 
 
     /*
@@ -262,7 +255,8 @@ public interface Piece
      * If there are no pieces on the square, move
      * Can only do these moves once
      */
-    public int[,] oneTimeMoves { get; set; }
+    //public int[,] oneTimeMoves { get; set; }
+    public coords[] oneTimeMoves { get; set; }
 
 
     /*
@@ -271,22 +265,24 @@ public interface Piece
      * If the piece on the square is the opposing colour, move
      * Can only do these moves once
      */
-    public int[,] oneTimeMoveAndAttacks { get; set; }
+    //public int[,] oneTimeMoveAndAttacks { get; set; }
+    public coords[] oneTimeMoveAndAttacks { get; set; }
 
 
     /* 
      * Attacks
      * If the piece on the square is the opposing colour, move
      */
-    public int[,] attacks { get; set; }
-
+    //public int[,] attacks { get; set; }
+    public coords[] attacks { get; set; }
 
     /*
      * Jump Attacks
      * Ignore all pieces in between the piece and the square when calculating moves
      * Serves as moveAndAttacks
      */
-    public int[,] jumpAttacks { get; set; }
+    //public int[,] jumpAttacks { get; set; }
+    public coords[] jumpAttacks { get; set; }
 
 
     /*
@@ -294,29 +290,34 @@ public interface Piece
      * If there are no pieces on the square, move
      * If the piece on the square is the opposing colour, move
      */
-    public int[,] moveAndAttacks { get; set; }
+    //public int[,] moveAndAttacks { get; set; }
+    public coords[] moveAndAttacks { get; set; }
 
     /*
      * Murderous Attacks
      * If there are no pieces on the square, move
      * If there is a piece on the square, move
      */
-    public int[,] murderousAttacks { get; set; }
+    //public int[,] murderousAttacks { get; set; }
+    public coords[] murderousAttacks { get; set; }
 
 
     /* 
      * Conditional Attacks
      * If the condition marked by the condition flag is met, move
      */
-    public int[,] conditionalAttacks { get; set; }
+    //public int[,] conditionalAttacks { get; set; }
+    public coords[] conditionalAttacks { get; set; }
 
 
     /*
      * Flag Moves
      * Can be one move set or another, depending on the flag "flagMove"
      */
-    public int[,] flagMove1 { get; set; }
-    public int[,] flagMove2 { get; set; }
+    //public int[,] flagMove1 { get; set; }
+    //public int[,] flagMove2 { get; set; }
+    public coords[] flagMove1 { get; set; }
+    public coords[] flagMove2 { get; set; }
 
 
     /*
@@ -324,14 +325,17 @@ public interface Piece
      * Moves the furthest it can in direction noted by the array
      * These are NOT attacks
      */
-    public int[,] pushMoves { get; set; }
+    //public int[,] pushMoves { get; set; }
+    public coords[] pushMoves { get; set; }
+
 
 
     /*
      * En Passant Moves (not implemented yet)
      * Captures as an en passant
      */
-    public int[,] enPassantMoves { get; set; }
+    //public int[,] enPassantMoves { get; set; }
+    public coords[] enPassantMoves { get; set; }
 
 
     /* ------------------- DEPENDANTS ------------------- */

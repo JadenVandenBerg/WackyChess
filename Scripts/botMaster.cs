@@ -113,7 +113,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new OnePieceRandomBot(1);
+                botWhite = new EqualityBot(1);
                 botBlack = new OneMoveBot(-1);
             }
 
@@ -343,7 +343,7 @@ public class botMaster : MonoBehaviour
 
     IEnumerator BotTurn()
     {
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(4f);
 
         resetBotPieces(botWhite);
         resetBotPieces(botBlack);

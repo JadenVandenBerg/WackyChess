@@ -12,18 +12,23 @@ public class RestrictorBot : BotTemplate
 		name = "RestrictorBot";
 		choosePieces();
 	}
-
-	/*
     private bool isGuarded(BotTemplate bot, BoardState bs, int color, int[] coords)
     {
         bool isGuarded = false;
         var attacks = getAllPossibleBotAttacks(bot, bs, color);
+        
+		string coordsStr = "";
+        coordsStr += (coords[0]).ToString();
+        coordsStr += (coords[1]).ToString();
 
         foreach (var piece in attacks.pieceMoveList)
         {
             foreach (var attack in piece.moves)
             {
-                if (attack == coords)
+                string attackStr = "";
+                attackStr += (attack[0]).ToString();
+                attackStr += (attack[1]).ToString();
+                if (attackStr == coordsStr)
                 {
                     isGuarded = true;
                 }
@@ -31,7 +36,6 @@ public class RestrictorBot : BotTemplate
         }
         return isGuarded;
     }
-	*/
 
     override
 
@@ -75,109 +79,18 @@ public class RestrictorBot : BotTemplate
 			}
 			this.currentBoardState = cloneState;
 
-			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
-
-			bool kingAlive = true;
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
             List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
 
             int[] kingCoords = null;
-            foreach (Piece item in piecesOnBoard)
-            {
-                if (item.baseType == "King")
-                {
-                    kingCoords = item.position;
-                }
-            }
-
-            foreach (NextMove nextMoveOpp in allMovesOpp)
+			foreach (Piece item in piecesOnBoard)
 			{
-                Piece pieceOpp;
-                int[] coordsOpp;
-
-                string moveTypeOpp = nextMoveOpp.moveType;
-
-                if (moveTypeOpp == "move")
-                {
-                    Move mv = nextMoveOpp.move;
-
-                    pieceOpp = mv.p;
-                    coordsOpp = mv.coords;
-                }
-                else
-                {
-                    PieceAbility pa = nextMoveOpp.ability;
-
-                    pieceOpp = pa.piece;
-                    coordsOpp = pa.coords;
-                }
-
-				if (coordsOpp == kingCoords)
+				if (item.baseType == "King")
 				{
-					kingAlive = false;
-				}
-            }
-
-			/*
-			foreach (NextMove nextMoveOpp in allMovesOpp)
-			{
-				Piece pieceOpp;
-				int[] coordsOpp;
-
-				string moveTypeOpp = nextMoveOpp.moveType;
-
-				if (moveTypeOpp == "move")
-				{
-					Move mv = nextMoveOpp.move;
-
-					pieceOpp = mv.p;
-					coordsOpp = mv.coords;
-				}
-				else
-				{
-					PieceAbility pa = nextMoveOpp.ability;
-
-					pieceOpp = pa.piece;
-					coordsOpp = pa.coords;
-				}
-
-				BoardState originalBoardState_ = this.currentBoardState;
-				BoardState cloneState_;
-				if (moveTypeOpp == "move")
-				{
-					cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-				}
-				else
-				{
-					cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-				}
-				this.currentBoardState = originalBoardState_;
-
-				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState_, this.color);
-
-				foreach (Piece piece_ in piecesOnBoard)
-				{
-					if (piece_.baseType == "King")
-					{
-						if (piece_.alive == 1)
-						{
-                            kingAlive = true;
-                        }
-					}
+					kingCoords = item.position;
 				}
 			}
-			*/
-
-
-			/*
-            int[] kingCoords = null;
-            foreach (Piece item in piecesOnBoard)
-            {
-                if (item.baseType == "King")
-                {
-                    kingCoords = item.position;
-                }
-            }
 
             List<Piece> piecesOnBoardOpp = getPiecesOnBoardState(cloneState, this.color * -1);
 
@@ -190,21 +103,22 @@ public class RestrictorBot : BotTemplate
                 }
             }
 
-            bool checkOpp = isGuarded(this, cloneState, this.color, kingCoordsOpp);
-            bool inCheck = isGuarded(this, cloneState, this.color * -1, kingCoords);
+			bool checkOpp = false;
+			bool inCheck = false;
 
-			*/
+			if (kingCoords != null)
+			{
+                checkOpp = isGuarded(this, cloneState, this.color, kingCoordsOpp);
+            }
+
+			if (kingCoordsOpp != null)
+			{
+				inCheck = isGuarded(this, cloneState, this.color * -1, kingCoords);
+            }
 
 			int moveScore = 1000000;
-
-			/*
-			if (checkOpp == true)
-			{
-				moveScore -= 1000000;
-			}
-			*/
-
-			if (kingAlive == true)
+			
+			if (inCheck == false)
 			{
                 moveScore = allMovesOpp.Count;
 			}
@@ -213,7 +127,12 @@ public class RestrictorBot : BotTemplate
 				moveScore = 100000000;
 			}
 
-			if (bestOppNumMoves >= moveScore)
+            if (checkOpp == true)
+            {
+                moveScore -= 1000000;
+            }
+
+            if (bestOppNumMoves >= moveScore)
 			{
 				if (bestOppNumMoves > moveScore)
 				{

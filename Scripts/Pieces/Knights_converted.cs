@@ -9,50 +9,49 @@ using Photon.Pun;
 
 public class Knight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
-    public int rarityLevel { get; set; } = 0;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 3;
+    public static readonly int rarityLevel = 0;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wKnight";
-    public String bImage { get; set; } = "Images/Knights/bKnight";
-    public String name { get; set; } = "Knight";
+    public static readonly string wImage = "Images/Knights/wKnight";
+    public static readonly string bImage = "Images/Knights/bKnight";
+    public string name = "Knight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public Knight(int color, bool online, bool simulated)
     {
@@ -90,49 +89,48 @@ public class Knight : Piece
 /*
 public class MurderousKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "Similar to a regular knight, but this piece can capture your own pieces.";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Murderous;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { };
-    public coords[] dependentAttacks { get; set; } = { new coords(2, 1), new coords(2, -1), new coords(1, 2), new coords(1, -2), new coords(-2, 1), new coords(-2, -1), new coords(-1, 2), new coords(-1, -2) };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "Similar to a regular knight, but this piece can capture your own pieces.";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Murderous;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = Array.Empty<coords>();
+    public static readonly coords[] dependentAttacks = moveDefs.knightMoves;
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wMurderousKnight";
-    public String bImage { get; set; } = "Images/Knights/bMurderousKnight";
-    public String name { get; set; } = "Murderous Knight";
-    public coords[] dependentMovesSet()
+    public static readonly string wImage = "Images/Knights/wMurderousKnight";
+    public static readonly string bImage = "Images/Knights/bMurderousKnight";
+    public string name = "Murderous Knight";
+    public static readonly coords[] dependentMovesSet()
     {
-        dependentAttacks = new coords[] { };
+        dependentAttacks = new coords[] Array.Empty<coords>();
         coords[] moveOptions = new coords[] { new coords(2, 1), new coords(2, -1), new coords(1, 2), new coords(1, -2), new coords(-2, 1), new coords(-2, -1), new coords(-1, 2), new coords(-1, -2) };
 
         for (int i = 0; i < moveOptions.GetLength(0); i++)
@@ -146,9 +144,9 @@ public class MurderousKnight : Piece
         return dependentAttacks;
     }
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public MurderousKnight(int color, bool online, bool simulated)
     {
@@ -185,49 +183,48 @@ public class MurderousKnight : Piece
 */
 public class GhoulKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3.5f;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "Similar to a regular knight, but your pieces can move through this piece.";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Ghoul;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(2, 1), new coords(2, -1), new coords(1, 2), new coords(1, -2), new coords(-2, 1), new coords(-2, -1), new coords(-1, 2), new coords(-1, -2) };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 3.5f;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "Similar to a regular knight, but your pieces can move through this piece.";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Ghoul;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wGhoulKnight";
-    public String bImage { get; set; } = "Images/Knights/bGhoulKnight";
-    public String name { get; set; } = "Ghoul Knight";
+    public static readonly string wImage = "Images/Knights/wGhoulKnight";
+    public static readonly string bImage = "Images/Knights/bGhoulKnight";
+    public string name = "Ghoul Knight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public GhoulKnight(int color, bool online, bool simulated)
     {
@@ -265,49 +262,48 @@ public class GhoulKnight : Piece
 /*
 public class OneTimeKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1f;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "Similar to a regular knight, but can only move once.";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { };
-    public coords[] dependentAttacks { get; set; } = { new coords(2, 1), new coords(2, -1), new coords(1, 2), new coords(1, -2), new coords(-2, 1), new coords(-2, -1), new coords(-1, 2), new coords(-1, -2) };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 1f;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "Similar to a regular knight, but can only move once.";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = Array.Empty<coords>();
+    public static readonly coords[] dependentAttacks = moveDefs.knightMoves;
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wOneTimeKnight";
-    public String bImage { get; set; } = "Images/Knights/bOneTimeKnight";
-    public String name { get; set; } = "One Time Knight";
-    public coords[] dependentMovesSet()
+    public static readonly string wImage = "Images/Knights/wOneTimeKnight";
+    public static readonly string bImage = "Images/Knights/bOneTimeKnight";
+    public string name = "One Time Knight";
+    public static readonly coords[] dependentMovesSet()
     {
-        dependentAttacks = new coords[] { };
+        dependentAttacks = new coords[] Array.Empty<coords>();
         coords[] moveOptions = new coords[] { new coords(2, 1), new coords(2, -1), new coords(1, 2), new coords(1, -2), new coords(-2, 1), new coords(-2, -1), new coords(-1, 2), new coords(-1, -2) };
 
         for (int i = 0; i < moveOptions.GetLength(0); i++)
@@ -324,9 +320,9 @@ public class OneTimeKnight : Piece
         return dependentAttacks;
     }
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public OneTimeKnight(int color, bool online, bool simulated)
     {
@@ -364,50 +360,49 @@ public class OneTimeKnight : Piece
 
 public class ElectricKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "This piece moves like a knight. On capture, there is a 50% chance the capturing piece will die.";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Electric;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 5;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "This piece moves like a knight. On capture, there is a 50% chance the capturing piece will die.";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Electric;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wElectricKnight";
-    public String bImage { get; set; } = "Images/Knights/bElectricKnight";
-    public String name { get; set; } = "Electric Knight";
+    public static readonly string wImage = "Images/Knights/wElectricKnight";
+    public static readonly string bImage = "Images/Knights/bElectricKnight";
+    public string name = "Electric Knight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public ElectricKnight(int color, bool online, bool simulated)
     {
@@ -445,50 +440,49 @@ public class ElectricKnight : Piece
 
 public class InfiniteKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 9;
-    public int rarityLevel { get; set; } = 4;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = -1;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 9;
+    public static readonly int rarityLevel = 4;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = -1;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wInfiniteKnight";
-    public String bImage { get; set; } = "Images/Knights/bInfiniteKnight";
-    public String name { get; set; } = "InfiniteKnight";
+    public static readonly string wImage = "Images/Knights/wInfiniteKnight";
+    public static readonly string bImage = "Images/Knights/bInfiniteKnight";
+    public string name = "InfiniteKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public InfiniteKnight(int color, bool online, bool simulated)
     {
@@ -526,50 +520,49 @@ public class InfiniteKnight : Piece
 
 public class PortalKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
-    public int rarityLevel { get; set; } = 4;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Portal;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 5;
+    public static readonly int rarityLevel = 4;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Portal;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wPortalKnight";
-    public String bImage { get; set; } = "Images/Knights/bPortalKnight";
-    public String name { get; set; } = "PortalKnight";
+    public static readonly string wImage = "Images/Knights/wPortalKnight";
+    public static readonly string bImage = "Images/Knights/bPortalKnight";
+    public string name = "PortalKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public PortalKnight(int color, bool online, bool simulated)
     {
@@ -607,50 +600,49 @@ public class PortalKnight : Piece
 
 public class AtomicKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6.5f;
-    public int rarityLevel { get; set; } = 5;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = 0;
-    public coords[] collateral { get; set; } = { new coords(0, 0), new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 6.5f;
+    public static readonly int rarityLevel = 5;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = 0;
+    public static readonly coords[] collateral = moveDefs.standardCollateral;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wAtomicKnight";
-    public String bImage { get; set; } = "Images/Knights/bAtomicKnight";
-    public String name { get; set; } = "AtomicKnight";
+    public static readonly string wImage = "Images/Knights/wAtomicKnight";
+    public static readonly string bImage = "Images/Knights/bAtomicKnight";
+    public string name = "AtomicKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public AtomicKnight(int color, bool online, bool simulated)
     {
@@ -688,50 +680,49 @@ public class AtomicKnight : Piece
 
 public class LandmineKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
-    public int rarityLevel { get; set; } = 4;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = 1;
-    public coords[] collateral { get; set; } = { new coords(0, 0), new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 6;
+    public static readonly int rarityLevel = 4;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = 1;
+    public static readonly coords[] collateral = moveDefs.standardCollateral;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wLandmineKnight";
-    public String bImage { get; set; } = "Images/Knights/bLandmineKnight";
-    public String name { get; set; } = "LandmineKnight";
+    public static readonly string wImage = "Images/Knights/wLandmineKnight";
+    public static readonly string bImage = "Images/Knights/bLandmineKnight";
+    public string name = "LandmineKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public LandmineKnight(int color, bool online, bool simulated)
     {
@@ -769,50 +760,49 @@ public class LandmineKnight : Piece
 
 public class LiteKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 0;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wLiteKnight";
-    public String bImage { get; set; } = "Images/Knights/bLiteKnight";
-    public String name { get; set; } = "LiteKnight";
+    public static readonly string wImage = "Images/Knights/wLiteKnight";
+    public static readonly string bImage = "Images/Knights/bLiteKnight";
+    public string name = "LiteKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public LiteKnight(int color, bool online, bool simulated)
     {
@@ -850,50 +840,49 @@ public class LiteKnight : Piece
 
 public class SpiderKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1), new coords(2, 0), new coords(-2, 0), new coords(0, 2), new coords(0, -2), new coords(2, 2), new coords(-2, 2), new coords(-2, -2), new coords(2, -2) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 6;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1), new coords(2, 0), new coords(-2, 0), new coords(0, 2), new coords(0, -2), new coords(2, 2), new coords(-2, 2), new coords(-2, -2), new coords(2, -2) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wSpiderKnight";
-    public String bImage { get; set; } = "Images/Knights/bSpiderKnight";
-    public String name { get; set; } = "SpiderKnight";
+    public static readonly string wImage = "Images/Knights/wSpiderKnight";
+    public static readonly string bImage = "Images/Knights/bSpiderKnight";
+    public string name = "SpiderKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public SpiderKnight(int color, bool online, bool simulated)
     {
@@ -931,50 +920,49 @@ public class SpiderKnight : Piece
 
 public class DisabledKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 2;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(0, 2), new coords(0, -2), new coords(2, 0), new coords(-2, 0) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 2;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(0, 2), new coords(0, -2), new coords(2, 0), new coords(-2, 0) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wDisabledKnight";
-    public String bImage { get; set; } = "Images/Knights/bDisabledKnight";
-    public String name { get; set; } = "DisabledKnight";
+    public static readonly string wImage = "Images/Knights/wDisabledKnight";
+    public static readonly string bImage = "Images/Knights/bDisabledKnight";
+    public string name = "DisabledKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public DisabledKnight(int color, bool online, bool simulated)
     {
@@ -1012,50 +1000,49 @@ public class DisabledKnight : Piece
 
 public class Elephant : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 2;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(2, -2), new coords(-2, -2), new coords(2, 2), new coords(-2, 2) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 2;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(2, -2), new coords(-2, -2), new coords(2, 2), new coords(-2, 2) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wElephant";
-    public String bImage { get; set; } = "Images/Knights/bElephant";
-    public String name { get; set; } = "KnightElephant";
+    public static readonly string wImage = "Images/Knights/wElephant";
+    public static readonly string bImage = "Images/Knights/bElephant";
+    public string name = "KnightElephant";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public Elephant(int color, bool online, bool simulated)
     {
@@ -1093,50 +1080,49 @@ public class Elephant : Piece
 
 public class SniperElephant : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(3, -3), new coords(-3, -3), new coords(3, 3), new coords(-3, 3) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 1;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(3, -3), new coords(-3, -3), new coords(3, 3), new coords(-3, 3) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wSniperElephant";
-    public String bImage { get; set; } = "Images/Knights/bSniperElephant";
-    public String name { get; set; } = "KnightSniperElephant";
+    public static readonly string wImage = "Images/Knights/wSniperElephant";
+    public static readonly string bImage = "Images/Knights/bSniperElephant";
+    public string name = "KnightSniperElephant";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public SniperElephant(int color, bool online, bool simulated)
     {
@@ -1174,50 +1160,49 @@ public class SniperElephant : Piece
 
 public class Camel : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 3), new coords(-1, 3), new coords(3, 1), new coords(-3, 1), new coords(1, -3), new coords(-1, -3), new coords(3, -1), new coords(-3, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 3;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(1, 3), new coords(-1, 3), new coords(3, 1), new coords(-3, 1), new coords(1, -3), new coords(-1, -3), new coords(3, -1), new coords(-3, -1) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wCamel";
-    public String bImage { get; set; } = "Images/Knights/bCamel";
-    public String name { get; set; } = "KnightCamel";
+    public static readonly string wImage = "Images/Knights/wCamel";
+    public static readonly string bImage = "Images/Knights/bCamel";
+    public string name = "KnightCamel";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public Camel(int color, bool online, bool simulated)
     {
@@ -1255,50 +1240,49 @@ public class Camel : Piece
 
 public class FragileKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 2;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Fragile;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 2;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Fragile;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wFragileKnight";
-    public String bImage { get; set; } = "Images/Knights/bFragileKnight";
-    public String name { get; set; } = "FragileKnight";
+    public static readonly string wImage = "Images/Knights/wFragileKnight";
+    public static readonly string bImage = "Images/Knights/bFragileKnight";
+    public string name = "FragileKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public FragileKnight(int color, bool online, bool simulated)
     {
@@ -1336,49 +1320,48 @@ public class FragileKnight : Piece
 
 public class SinisterMinisterKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] attacks { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = { new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wSinisterMinisterKnight";
-    public String bImage { get; set; } = "Images/Knights/bSinisterMinisterKnight";
-    public String name { get; set; } = "SinisterMinisterKnight";
+    public static readonly string wImage = "Images/Knights/wSinisterMinisterKnight";
+    public static readonly string bImage = "Images/Knights/bSinisterMinisterKnight";
+    public string name = "SinisterMinisterKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public SinisterMinisterKnight(int color, bool online, bool simulated)
     {
@@ -1416,50 +1399,49 @@ public class SinisterMinisterKnight : Piece
 
 public class RoyalKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 5;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = moveDefs.kingMoves;
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wRoyalKnight";
-    public String bImage { get; set; } = "Images/Knights/bRoyalKnight";
-    public String name { get; set; } = "RoyalKnight";
+    public static readonly string wImage = "Images/Knights/wRoyalKnight";
+    public static readonly string bImage = "Images/Knights/bRoyalKnight";
+    public string name = "RoyalKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public RoyalKnight(int color, bool online, bool simulated)
     {
@@ -1497,50 +1479,49 @@ public class RoyalKnight : Piece
 
 public class CrowdingKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Crowding;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Crowding;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wCrowdingKnight";
-    public String bImage { get; set; } = "Images/Knights/bCrowdingKnight";
-    public String name { get; set; } = "CrowdingKnight";
+    public static readonly string wImage = "Images/Knights/wCrowdingKnight";
+    public static readonly string bImage = "Images/Knights/bCrowdingKnight";
+    public string name = "CrowdingKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public CrowdingKnight(int color, bool online, bool simulated)
     {
@@ -1578,50 +1559,49 @@ public class CrowdingKnight : Piece
 
 public class HungryKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Vomit;
-    public PieceState states { get; set; } = PieceState.Hungry;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Vomit;
+    public PieceState states = PieceState.Hungry;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wHungryKnight";
-    public String bImage { get; set; } = "Images/Knights/bHungryKnight";
-    public String name { get; set; } = "HungryKnight";
+    public static readonly string wImage = "Images/Knights/wHungryKnight";
+    public static readonly string bImage = "Images/Knights/bHungryKnight";
+    public string name = "HungryKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public HungryKnight(int color, bool online, bool simulated)
     {
@@ -1659,50 +1639,49 @@ public class HungryKnight : Piece
 
 public class CaptureTheFlagKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.CaptureTheFlag;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.CaptureTheFlag;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wCaptureTheFlagKnight";
-    public String bImage { get; set; } = "Images/Knights/bCaptureTheFlagKnight";
-    public String name { get; set; } = "CaptureTheFlagKnight";
+    public static readonly string wImage = "Images/Knights/wCaptureTheFlagKnight";
+    public static readonly string bImage = "Images/Knights/bCaptureTheFlagKnight";
+    public string name = "CaptureTheFlagKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public CaptureTheFlagKnight(int color, bool online, bool simulated)
     {
@@ -1740,50 +1719,49 @@ public class CaptureTheFlagKnight : Piece
 
 public class FreezingKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Freeze;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Freeze;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wFreezingKnight";
-    public String bImage { get; set; } = "Images/Knights/bFreezingKnight";
-    public String name { get; set; } = "FreezingKnight";
+    public static readonly string wImage = "Images/Knights/wFreezingKnight";
+    public static readonly string bImage = "Images/Knights/bFreezingKnight";
+    public string name = "FreezingKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public FreezingKnight(int color, bool online, bool simulated)
     {
@@ -1821,50 +1799,49 @@ public class FreezingKnight : Piece
 
 public class CloningKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Spawn;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 6;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Spawn;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wCloningKnight";
-    public String bImage { get; set; } = "Images/Knights/bCloningKnight";
-    public String name { get; set; } = "CloningKnight";
+    public static readonly string wImage = "Images/Knights/wCloningKnight";
+    public static readonly string bImage = "Images/Knights/bCloningKnight";
+    public string name = "CloningKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "Knight";
-    public int numSpawns { get; set; } = 2;
+    public int flag = 0;
+    public static readonly string spawnable = "Knight";
+    public static readonly int numSpawns = 2;
 
     public CloningKnight(int color, bool online, bool simulated)
     {
@@ -1902,50 +1879,49 @@ public class CloningKnight : Piece
 
 public class UndeadKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Spawn;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Spawn;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wUndeadKnight";
-    public String bImage { get; set; } = "Images/Knights/bUndeadKnight";
-    public String name { get; set; } = "UndeadKnight";
+    public static readonly string wImage = "Images/Knights/wUndeadKnight";
+    public static readonly string bImage = "Images/Knights/bUndeadKnight";
+    public string name = "UndeadKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "ZombiePawn";
-    public int numSpawns { get; set; } = 3;
+    public int flag = 0;
+    public static readonly string spawnable = "ZombiePawn";
+    public static readonly int numSpawns = 3;
 
     public UndeadKnight(int color, bool online, bool simulated)
     {
@@ -1983,50 +1959,49 @@ public class UndeadKnight : Piece
 
 public class PromotionKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "Rook";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "Rook";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wPromotionKnight";
-    public String bImage { get; set; } = "Images/Knights/bPromotionKnight";
-    public String name { get; set; } = "PromotionKnight";
+    public static readonly string wImage = "Images/Knights/wPromotionKnight";
+    public static readonly string bImage = "Images/Knights/bPromotionKnight";
+    public string name = "PromotionKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public PromotionKnight(int color, bool online, bool simulated)
     {
@@ -2064,50 +2039,49 @@ public class PromotionKnight : Piece
 
 public class LongKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 7), new coords(-1, 7), new coords(7, 1), new coords(-7, 1), new coords(1, -7), new coords(-1, -7), new coords(7, -1), new coords(-7, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 5;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(1, 7), new coords(-1, 7), new coords(7, 1), new coords(-7, 1), new coords(1, -7), new coords(-1, -7), new coords(7, -1), new coords(-7, -1) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wLongKnight";
-    public String bImage { get; set; } = "Images/Knights/bLongKnight";
-    public String name { get; set; } = "LongKnight";
+    public static readonly string wImage = "Images/Knights/wLongKnight";
+    public static readonly string bImage = "Images/Knights/bLongKnight";
+    public string name = "LongKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public LongKnight(int color, bool online, bool simulated)
     {
@@ -2145,50 +2119,49 @@ public class LongKnight : Piece
 
 public class DefuserKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Defuser;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Defuser;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wDefuserKnight";
-    public String bImage { get; set; } = "Images/Knights/bDefuserKnight";
-    public String name { get; set; } = "DefuserKnight";
+    public static readonly string wImage = "Images/Knights/wDefuserKnight";
+    public static readonly string bImage = "Images/Knights/bDefuserKnight";
+    public string name = "DefuserKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public DefuserKnight(int color, bool online, bool simulated)
     {
@@ -2226,50 +2199,49 @@ public class DefuserKnight : Piece
 
 public class Hippocamelus : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 5;
-    public int rarityLevel { get; set; } = 4;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1), new coords(1, 3), new coords(-1, 3), new coords(3, 1), new coords(-3, 1), new coords(1, -3), new coords(-1, -3), new coords(3, -1), new coords(-3, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 5;
+    public static readonly int rarityLevel = 4;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1), new coords(1, 3), new coords(-1, 3), new coords(3, 1), new coords(-3, 1), new coords(1, -3), new coords(-1, -3), new coords(3, -1), new coords(-3, -1) };
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wHippocamelus";
-    public String bImage { get; set; } = "Images/Knights/bHippocamelus";
-    public String name { get; set; } = "Hippocamelus";
+    public static readonly string wImage = "Images/Knights/wHippocamelus";
+    public static readonly string bImage = "Images/Knights/bHippocamelus";
+    public string name = "Hippocamelus";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public Hippocamelus(int color, bool online, bool simulated)
     {
@@ -2307,50 +2279,49 @@ public class Hippocamelus : Piece
 
 public class SpittingKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 3;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Spit;
-    public PieceState states { get; set; } = PieceState.Spitting;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = 1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 3;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Spit;
+    public PieceState states = PieceState.Spitting;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = 1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wSpittingKnight";
-    public String bImage { get; set; } = "Images/Knights/bSpittingKnight";
-    public String name { get; set; } = "SpittingKnight";
+    public static readonly string wImage = "Images/Knights/wSpittingKnight";
+    public static readonly string bImage = "Images/Knights/bSpittingKnight";
+    public string name = "SpittingKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public SpittingKnight(int color, bool online, bool simulated)
     {
@@ -2388,50 +2359,49 @@ public class SpittingKnight : Piece
 /*
 public class PhantomKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 6;
-    public int rarityLevel { get; set; } = 4;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.Dematerialize;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 6;
+    public static readonly int rarityLevel = 4;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.Dematerialize;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wPhantomKnight";
-    public String bImage { get; set; } = "Images/Knights/bPhantomKnight";
-    public String name { get; set; } = "PhantomKnight";
+    public static readonly string wImage = "Images/Knights/wPhantomKnight";
+    public static readonly string bImage = "Images/Knights/bPhantomKnight";
+    public string name = "PhantomKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public PhantomKnight(int color, bool online, bool simulated)
     {
@@ -2469,50 +2439,49 @@ public class PhantomKnight : Piece
 */
 public class StackingKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 7;
-    public int rarityLevel { get; set; } = 5;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Stacking;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 7;
+    public static readonly int rarityLevel = 5;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Stacking;
+    public int collateralType = -1;
+    public coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public coords[] moves = Array.Empty<coords>();
+    public coords[] oneTimeMoves = Array.Empty<coords>();
+    public coords[] jumpAttacks = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
+    public coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public coords[] conditionalAttacks = Array.Empty<coords>();
+    public coords[] moveAndAttacks = Array.Empty<coords>();
+    public coords[] attacks = Array.Empty<coords>();
+    public coords[] flagMove1 = Array.Empty<coords>();
+    public coords[] flagMove2 = Array.Empty<coords>();
+    public coords[] pushMoves = Array.Empty<coords>();
+    public coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wStackingKnight";
-    public String bImage { get; set; } = "Images/Knights/bStackingKnight";
-    public String name { get; set; } = "StackingKnight";
+    public static readonly string wImage = "Images/Knights/wStackingKnight";
+    public static readonly string bImage = "Images/Knights/bStackingKnight";
+    public string name = "StackingKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public StackingKnight(int color, bool online, bool simulated)
     {
@@ -2550,50 +2519,49 @@ public class StackingKnight : Piece
 
 public class JailKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int rarityLevel { get; set; } = 2;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Jailer;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 1;
+    public static readonly int rarityLevel = 2;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Jailer;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wJailKnight";
-    public String bImage { get; set; } = "Images/Knights/bJailKnight";
-    public String name { get; set; } = "JailKnight";
+    public static readonly string wImage = "Images/Knights/wJailKnight";
+    public static readonly string bImage = "Images/Knights/bJailKnight";
+    public string name = "JailKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public JailKnight(int color, bool online, bool simulated)
     {
@@ -2631,52 +2599,49 @@ public class JailKnight : Piece
 
 public class PiggybackKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Piggyback;
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Piggyback;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wPiggybackKnight";
-    public String bImage { get; set; } = "Images/Knights/bPiggybackKnight";
-    public String name { get; set; } = "PiggybackKnight";
+    public static readonly string wImage = "Images/Knights/wPiggybackKnight";
+    public static readonly string bImage = "Images/Knights/bPiggybackKnight";
+    public string name = "PiggybackKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public PiggybackKnight(int color, bool online, bool simulated)
     {
@@ -2714,52 +2679,49 @@ public class PiggybackKnight : Piece
 
 public class JockeyKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 4;
-    public int rarityLevel { get; set; } = 3;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Knight";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Jockey;
-    public int stackable { get; set; } = 0;
-    public int reverseStackable { get; set; } = 0;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 4;
+    public static readonly int rarityLevel = 3;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Knight";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Jockey;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wJockeyKnight";
-    public String bImage { get; set; } = "Images/Knights/bJockeyKnight";
-    public String name { get; set; } = "JockeyKnight";
+    public static readonly string wImage = "Images/Knights/wJockeyKnight";
+    public static readonly string bImage = "Images/Knights/bJockeyKnight";
+    public string name = "JockeyKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public JockeyKnight(int color, bool online, bool simulated)
     {
@@ -2797,50 +2759,49 @@ public class JockeyKnight : Piece
 
 public class DelayedKnight : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 1;
-    public int rarityLevel { get; set; } = 2;
-    public string baseType { get; set; } = "Knight";
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.Delayed;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 1;
+    public static readonly int rarityLevel = 2;
+    public static readonly string baseType = "Knight";
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.Delayed;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
 
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Knights/wDelayedKnight";
-    public String bImage { get; set; } = "Images/Knights/bDelayedKnight";
-    public String name { get; set; } = "DelayedKnight";
+    public static readonly string wImage = "Images/Knights/wDelayedKnight";
+    public static readonly string bImage = "Images/Knights/bDelayedKnight";
+    public string name = "DelayedKnight";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public DelayedKnight(int color, bool online, bool simulated)
     {

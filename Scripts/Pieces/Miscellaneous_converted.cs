@@ -10,49 +10,48 @@ using Photon.Pun;
 /*
 public class Template : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 0;
-    public int rarityLevel { get; set; } = 0;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Misc";
-    public String description { get; set; } = "";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "SuperPawn";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] attacks { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 0;
+    public static readonly int rarityLevel = 0;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Misc";
+    public static readonly string description = "";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "SuperPawn";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/";
-    public String bImage { get; set; } = "Images/";
-    public String name { get; set; } = "";
+    public static readonly string wImage = "Images/";
+    public static readonly string bImage = "Images/";
+    public string name = "";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public Template(int color, bool online, bool simulated)
     {
@@ -90,49 +89,48 @@ public class Template : Piece
 
 public class SuperPawn : Piece
 {
-    public bool disabled { get; set; } = false;
-    public int color { get; set; } = 1; //1 White, -1 Black
-    public float points { get; set; } = 12;
-    public int rarityLevel { get; set; } = 0;
-    public coords startSquare { get; set; } = new coords(-1, -1);
-    public string baseType { get; set; } = "Misc";
-    public String description { get; set; } = "This piece can move like a queen and a knight";
-    public String longDescription { get; set; } = "";
-    public int alive { get; set; } = 1;
-    public int lives { get; set; } = 0;
-    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
-    public PieceState states { get; set; } = PieceState.None;
-    public int collateralType { get; set; } = -1;
-    public coords[] collateral { get; set; } = null;
-    public String promotesInto { get; set; } = "SuperPawn";
-    public int promotingRow { get; set; } = 8;
-    public int canMoveTwice { get; set; } = 0;
-    public int storageLimit { get; set; } = -1;
-    public List<Piece> storage { get; set; } = null;
-    public coords[] moves { get; set; } = { };
-    public coords[] oneTimeMoves { get; set; } = { };
-    public coords[] moveAndAttacks { get; set; } = { new coords(1, 1), new coords(2, 2), new coords(3, 3), new coords(4, 4), new coords(5, 5), new coords(6, 6), new coords(7, 7), new coords(8, 8), new coords(-1, 1), new coords(-2, 2), new coords(-3, 3), new coords(-4, 4), new coords(-5, 5), new coords(-6, 6), new coords(-7, 7), new coords(-8, 8), new coords(1, -1), new coords(2, -2), new coords(3, -3), new coords(4, -4), new coords(5, -5), new coords(6, -6), new coords(7, -7), new coords(8, -8), new coords(-1, -1), new coords(-2, -2), new coords(-3, -3), new coords(-4, -4), new coords(-5, -5), new coords(-6, -6), new coords(-7, -7), new coords(-8, -8), new coords(0, 1), new coords(0, 2), new coords(0, 3), new coords(0, 4), new coords(0, 5), new coords(0, 6), new coords(0, 7), new coords(0, 8), new coords(1, 0), new coords(2, 0), new coords(3, 0), new coords(4, 0), new coords(5, 0), new coords(6, 0), new coords(7, 0), new coords(8, 0), new coords(0, -1), new coords(0, -2), new coords(0, -3), new coords(0, -4), new coords(0, -5), new coords(0, -6), new coords(0, -7), new coords(0, -8), new coords(-1, 0), new coords(-2, 0), new coords(-3, 0), new coords(-4, 0), new coords(-5, 0), new coords(-6, 0), new coords(-7, 0), new coords(-8, 0) };
-    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
-    public coords[] murderousAttacks { get; set; } = { };
-    public bool condition { get; set; } = false;
-    public coords[] conditionalAttacks { get; set; } = { };
-    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
-    public coords[] attacks { get; set; } = { };
-    public coords[] flagMove1 { get; set; } = { };
-    public coords[] flagMove2 { get; set; } = { };
-    public coords[] pushMoves { get; set; } = { };
-    public coords[] enPassantMoves { get; set; } = { };
-    public coords position { get; set; } = new coords(0, 0);
-    public GameObject go { get; set; } = null;
-    public bool hasMoved { get; set; } = false;
+    public bool disabled = false;
+    public int color = 1; //1 White, -1 Black
+    public static readonly float points = 12;
+    public static readonly int rarityLevel = 0;
+    public coords startSquare = new coords(-1, -1);
+    public static readonly string baseType = "Misc";
+    public static readonly string description = "This piece can move like a queen and a knight";
+    public static readonly string longDescription = "";
+    public int alive = 1;
+    public int lives = 0;
+    public PieceAbilities abilities = PieceAbilities.None;
+    public PieceState states = PieceState.None;
+    public int collateralType = -1;
+    public static readonly coords[] collateral = null;
+    public static readonly string promotesInto = "SuperPawn";
+    public static readonly int promotingRow = 8;
+    public static readonly int storageLimit = -1;
+    public List<Piece> storage = null;
+    public static readonly coords[] moves = Array.Empty<coords>();
+    public static readonly coords[] oneTimeMoves = Array.Empty<coords>();
+    public static readonly coords[] moveAndAttacks = moveDefs.queenMoves;
+    public static readonly coords[] oneTimeMoveAndAttacks = Array.Empty<coords>();
+    public static readonly coords[] murderousAttacks = Array.Empty<coords>();
+    public bool condition = false;
+    public static readonly coords[] conditionalAttacks = Array.Empty<coords>();
+    public static readonly coords[] jumpAttacks = moveDefs.knightMoves;
+    public static readonly coords[] attacks = Array.Empty<coords>();
+    public static readonly coords[] flagMove1 = Array.Empty<coords>();
+    public static readonly coords[] flagMove2 = Array.Empty<coords>();
+    public static readonly coords[] pushMoves = Array.Empty<coords>();
+    public static readonly coords[] enPassantMoves = Array.Empty<coords>();
+    public coords position = new coords(0, 0);
+    public GameObject go = null;
+    public bool hasMoved = false;
 
-    public String wImage { get; set; } = "Images/Extras/wSuperPawn";
-    public String bImage { get; set; } = "Images/Extras/bSuperPawn";
-    public String name { get; set; } = "Super Pawn";
+    public static readonly string wImage = "Images/Extras/wSuperPawn";
+    public static readonly string bImage = "Images/Extras/bSuperPawn";
+    public string name = "Super Pawn";
 
-    public int flag { get; set; } = 0;
-    public string spawnable { get; set; } = "";
-    public int numSpawns { get; set; } = 0;
+    public int flag = 0;
+    public static readonly string spawnable = "";
+    public static readonly int numSpawns = 0;
 
     public SuperPawn(int color, bool online, bool simulated)
     {

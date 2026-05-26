@@ -69,8 +69,8 @@ public interface Piece
      * wImage/bImage
      * The links to a pieces image for both colours
      */
-    public String wImage { get; set; }
-    public String bImage { get; set; }
+    public string wImage { get; set; }
+    public string bImage { get; set; }
 
 
     /*
@@ -84,7 +84,7 @@ public interface Piece
      * Name
      * The name of a piece
      */
-    public String name { get; set; }
+    public string name { get; set; }
 
 
     /*
@@ -92,7 +92,7 @@ public interface Piece
      * A short description of the piece
      * Used in piece library
      */
-    public String description { get; set; }
+    public string description { get; set; }
 
 
     /*
@@ -100,7 +100,7 @@ public interface Piece
      * A longer description of the piece, if necessary for aditional rules
      * Used in piece library
      */
-    public String longDescription { get; set; }
+    public string longDescription { get; set; }
 
 
     /* Alive
@@ -204,7 +204,7 @@ public interface Piece
      * "": Can't promote
      * Anything else promotes into that piece
      */
-    public String promotesInto { get; set; }
+    public string promotesInto { get; set; }
 
 
     /*
@@ -212,14 +212,6 @@ public interface Piece
      * Where pieces promote (row)
      */
     public int promotingRow { get; set; }
-
-
-    /* 
-     * CanMoveTwice (not implemented yet)
-     * 0: Can't
-     * 1: Has a possibility of being able to move twice in one turn
-     */
-    public int canMoveTwice { get; set; }
 
 
     /*

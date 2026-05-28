@@ -40,9 +40,10 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = false;
         //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
+        nonResettables.ruleset = "Wacky";
 
         if (nonResettables.isBotTournament)
         {
@@ -50,10 +51,10 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "TwoMoveBot",
-                    "ThinkingBot",
-                    "Lobotomy",
-                    "BerserkerBot"
+                    //"TwoMoveBot",
+                    ///"ThinkingBot",
+                    //"Lobotomy",
+                    //"BerserkerBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
 
@@ -132,7 +133,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new RandomBot(1);
+                botWhite = new ThinkingBotII(1);
                 botBlack = new RandomBot(-1);
             }
 
@@ -367,6 +368,9 @@ public class botMaster : MonoBehaviour
         resetBotPieces(botBlack);
         botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
         botBlack.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+
+        botWhite.currentBoardState = copyBoardState(botWhite.currentBoardState);
+        botBlack.currentBoardState = copyBoardState(botBlack.currentBoardState);
 
         BotTemplate currentBot;
         bool valid;

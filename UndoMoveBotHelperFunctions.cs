@@ -650,6 +650,12 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             if (piece.position.y == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
+
+                if (nonResettables.ruleset == "Normal")
+                {
+                    pname = "Queen";
+                }
+
                 Piece p = Spawnables.create(pname, piece.color, true);
 
                 undo_isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(piece.position.x - 1, piece.position.y - 1, bs.boardGrid, false), bs, undo);
@@ -660,7 +666,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
         }
     }
-
+    /*
     public static void undo_isolatedCollateralDeath(List<Piece> deadPieces, BoardState bs, UndoMove undo)
     {
         foreach (Piece deadPiece in new List<Piece>(deadPieces))
@@ -688,6 +694,36 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
         }
     }
+    */
+    public static void undo_isolatedCollateralDeath(List<Piece> deadPieces, BoardState bs, UndoMove undo)
+    {
+        //foreach (Piece deadPiece in new List<Piece>(deadPieces))
+        for (int i = 0; i < deadPieces.Count; i++)
+        {
+            Piece deadPiece = deadPieces[i];
+            if (checkState(deadPiece, PieceState.Shield) || checkCaptureTheFlag(deadPiece))
+            {
+                continue;
+            }
+
+            if (deadPiece.lives != 0)
+            {
+                undo_isolatedHandleMultipleLivesDeath(deadPiece, bs, undo);
+
+                continue;
+            }
+            else
+            {
+                UndoMovedPiece deadPiece_ = new UndoMovedPiece(deadPiece, new coords(deadPiece.position.x, deadPiece.position.y), new coords(-1, -1), true, false, false);
+                undo.addMove(deadPiece_);
+                updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
+
+                UndoPieceAction undoAction = new UndoPieceAction(deadPiece, PieceAction.SetAlive);
+                undo.addAction(undoAction);
+                deadPiece.alive = 0;
+            }
+        }
+    }
 
     public static void undo_isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs, UndoMove undo)
     {
@@ -708,6 +744,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
     }
 
+    /*
     public static PieceState undo_isolatedOnDeathsDontIncludeAttacker(Piece attacker, coords deadCoords, BoardState bs, UndoMove undo)
     {
         List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false));
@@ -717,6 +754,30 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         foreach (Piece piece in pieces)
         {
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                var onDeathVars = undo_isolatedOnDeath(piece, attacker, bs, undo);
+                ps |= onDeathVars.stackingStates;
+            }
+        }
+
+        return ps;
+    }
+    */
+
+    public static PieceState undo_isolatedOnDeathsDontIncludeAttacker(Piece attacker, coords deadCoords, BoardState bs, UndoMove undo)
+    {
+        //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false));
+        //pieces.RemoveAll(p => p.name == attacker.name);
+        List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false);
+        pieces.Remove(attacker);
+
+        PieceState ps = PieceState.None;
+
+        //foreach (Piece piece in pieces)
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            Piece piece = pieces[i];
             if (!checkState(piece, PieceState.Dematerialized))
             {
                 var onDeathVars = undo_isolatedOnDeath(piece, attacker, bs, undo);
@@ -778,7 +839,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 PieceAbility pa = new PieceAbility(deadPiece, PieceAbilities.Vomit, deadPiece.position, placePieces_, placeCoords_, null);
                 //Simulate Ability
 
-                List<Piece> placePieces = new List<Piece>(pa.placePieces);
+                //List<Piece> placePieces = new List<Piece>(pa.placePieces);
+                List<Piece> placePieces = pa.placePieces;
                 List<coords> placeCoords = pa.placeCoords;
 
                 int numPieces = placePieces.Count;
@@ -807,8 +869,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 }
                 else
                 {
-                    foreach (Piece p_ in new List<Piece>(placePieces))
+                    //foreach (Piece p_ in new List<Piece>(placePieces))
+                    for (int i = 0; i < placePieces.Count; i++)
                     {
+                        Piece p_ = placePieces[i];
                         int idx = rand.Next(numCoords);
                         numCoords--;
 
@@ -958,7 +1022,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         attackerDied = true;
                     }
 
-                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
                     undo_isolatedCollateralDeath(pieces, bs, undo);
                 }
             }
@@ -975,7 +1040,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                 for (int i = 0; i < deadPiece.collateral.GetLength(0); i++)
                 {
-                    coords coords = new coords( adjustedDeadPieceCoords.x + deadPiece.collateral[i].x, adjustedDeadPieceCoords.y + deadPiece.collateral[i].y );
+                    coords coords = new coords(adjustedDeadPieceCoords.x + deadPiece.collateral[i].x, adjustedDeadPieceCoords.y + deadPiece.collateral[i].y);
 
                     if (deadPiece.collateral[i].x == 0 && deadPiece.collateral[i].y == 0)
                     {
@@ -984,7 +1049,8 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         attackerDied = true;
                     }
 
-                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
                     undo_isolatedCollateralDeath(pieces, bs, undo);
                 }
             }
@@ -1118,8 +1184,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         if (checkState(piece, PieceState.Piggyback))
         {
             List<Piece> piecesOnSquare2 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords.x - 1, originalCoords.y - 1, bs.boardGrid, false);
-            foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare2))
+            //foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare2))
+            for (int i = 0; i < piecesOnSquare2.Count; i++)
             {
+                Piece pieceOnSquare = piecesOnSquare2[i];
                 if (pieceOnSquare.color == piece.color)
                 {
                     UndoMovedPiece pm = undo_movePieceBoardState(pieceOnSquare, coords, bs);
@@ -1130,8 +1198,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         }
 
         List<Piece> piecesOnSquare3 = isolatedGetPiecesOnCoordsBoardGrid(originalCoords.x - 1, originalCoords.y - 1, bs.boardGrid, false);
-        foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare3))
+        //foreach (Piece pieceOnSquare in new List<Piece>(piecesOnSquare3))
+        for (int i = 0; i < piecesOnSquare3.Count; i++)
         {
+            Piece pieceOnSquare = piecesOnSquare3[i];
             if (checkState(pieceOnSquare, PieceState.Jockey))
             {
                 UndoMovedPiece pm = undo_movePieceBoardState(pieceOnSquare, coords, bs);
@@ -1145,6 +1215,12 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             if (piece.position.y == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
+
+                if (nonResettables.ruleset == "Normal")
+                {
+                    pname = "Queen";
+                }
+
                 Piece p = Spawnables.create(pname, piece.color, true);
                 updateBoardState(new coords( piece.position.x - 1, piece.position.y - 1 ), piece, "r", bs);
                 updateBoardState(new coords(coords.x, coords.y ), p, "a", bs);
@@ -1250,7 +1326,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             if (undoMovedPiece != null) { undo.addMove(undoMovedPiece); }
         }
     }
-
+    /*
     public static (PieceState stackingStates, bool attackerDied) undo_isolatedOnDeaths(Piece attacker, coords deadCoords, BoardState bs, UndoMove undo)
     {
         List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false));
@@ -1259,6 +1335,29 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         bool attackerDied = false;
         foreach (Piece piece in pieces)
         {
+            //Debug.Log(piece.name + " died on (" + piece.position.x + "," + piece.position.y + ") during a simulated move");
+            if (!checkState(piece, PieceState.Dematerialized))
+            {
+                var onDeathVars = undo_isolatedOnDeath(piece, attacker, bs, undo);
+                stacks = onDeathVars.stackingStates;
+                attackerDied = onDeathVars.attackerDied;
+            }
+        }
+
+        return (stacks, attackerDied);
+    }
+    */
+    public static (PieceState stackingStates, bool attackerDied) undo_isolatedOnDeaths(Piece attacker, coords deadCoords, BoardState bs, UndoMove undo)
+    {
+        //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false));
+        List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(deadCoords.x, deadCoords.y, bs.boardGrid, false);
+
+        PieceState stacks = PieceState.None;
+        bool attackerDied = false;
+        //foreach(Piece piece in pieces)
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            Piece piece = pieces[i];
             //Debug.Log(piece.name + " died on (" + piece.position.x + "," + piece.position.y + ") during a simulated move");
             if (!checkState(piece, PieceState.Dematerialized))
             {

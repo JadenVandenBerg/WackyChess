@@ -981,7 +981,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            List<coords> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false);
+            List<coords> moves = BotHelperFunctions.getIsolatedStatePieceAttacks(p, afterBS, false, false);
 
             if (isInList(moves, king.position, false)) {
                 return true;
@@ -3827,6 +3827,12 @@ public class HelperFunctions : MonoBehaviour
             if (piece.position.y == piece.promotingRow)
             {
                 string pname = piece.promotesInto;
+
+                if (nonResettables.ruleset == "Normal")
+                {
+                    pname = "Queen";
+                }
+
                 Piece p = Spawnables.create(pname, piece.color, false);
 
                 if (piece.storage != null)
@@ -3971,7 +3977,7 @@ public class HelperFunctions : MonoBehaviour
 
         return (death, countDeath);
     }
-
+    /*
     public static Piece clonePiece(Piece original)
     {
         Type type = original.GetType();
@@ -4035,8 +4041,7 @@ public class HelperFunctions : MonoBehaviour
         clone.flagMove2 = clone2dArray(original.flagMove2);
         clone.pushMoves = clone2dArray(original.pushMoves);
         clone.enPassantMoves = clone2dArray(original.enPassantMoves);
-        */
-
+        *//*
         clone.moves = original.moves;
         clone.oneTimeMoves = original.oneTimeMoves;
         clone.moveAndAttacks = original.moveAndAttacks;
@@ -4055,6 +4060,67 @@ public class HelperFunctions : MonoBehaviour
         clone.hasMoved = original.hasMoved;
         //clone.wImage = original.wImage.ToString();
         //clone.bImage = original.bImage.ToString();
+        clone.name = original.name.ToString();
+        clone.flag = original.flag;
+        clone.spawnable = original.spawnable.ToString();
+        clone.numSpawns = original.numSpawns;
+        clone.go = null;
+
+        return clone;
+    }
+    */
+    public static Piece clonePiece(Piece original)
+    {
+        Type type = original.GetType();
+
+        Piece clone = (Piece)Activator.CreateInstance(type, original.color, false, true);
+
+        clone.disabled = original.disabled;
+        clone.color = original.color;
+        clone.points = original.points;
+        clone.startSquare = original.startSquare;
+        clone.baseType = original.baseType;
+        clone.alive = original.alive;
+        clone.lives = original.lives;
+        clone.abilities = original.abilities;
+        clone.states = original.states;
+        clone.collateralType = original.collateralType;
+        clone.collateral = original.collateral;
+        clone.promotesInto = original.promotesInto.ToString();
+        clone.promotingRow = original.promotingRow;
+        clone.storageLimit = original.storageLimit;
+        if (original.storage == null || original.storage.Count == 0)
+        {
+            clone.storage = null;
+        }
+        else
+        {
+            clone.storage = new List<Piece>();
+            foreach (Piece p in original.storage)
+            {
+                if (p.name != original.name)
+                {
+                    clone.storage.Add(clonePiece(p));
+                }
+            }
+        }
+
+        clone.moves = original.moves;
+        clone.oneTimeMoves = original.oneTimeMoves;
+        clone.moveAndAttacks = original.moveAndAttacks;
+        clone.oneTimeMoveAndAttacks = original.oneTimeMoveAndAttacks;
+        clone.murderousAttacks = original.murderousAttacks;
+        clone.condition = original.condition;
+        clone.conditionalAttacks = original.conditionalAttacks;
+        clone.jumpAttacks = original.jumpAttacks;
+        clone.attacks = original.attacks;
+        clone.flagMove1 = original.flagMove1;
+        clone.flagMove2 = original.flagMove2;
+        clone.pushMoves = original.pushMoves;
+        clone.enPassantMoves = original.enPassantMoves;
+
+        clone.position = original.position;
+        clone.hasMoved = original.hasMoved;
         clone.name = original.name.ToString();
         clone.flag = original.flag;
         clone.spawnable = original.spawnable.ToString();

@@ -176,9 +176,10 @@ public static class nonResettables
             "TwoMoveBot",
             "ThinkingBot",
             "Lobotomy",
+            "BerserkerBot",
+            "HitmanBot",
             "Bot618",
-            "BotsUtd",
-            "ThinkingBotII"
+            "BotsUtd"
         };
 
         List<string> result = new List<string>();

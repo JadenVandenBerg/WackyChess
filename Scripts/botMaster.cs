@@ -21,6 +21,7 @@ public class botMaster : MonoBehaviour
     public GameObject boardWrapper;
     public GameObject checkmateUI;
     public HelperFunctions helper;
+    public AudioSource thinkingBotII;
     GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
@@ -43,7 +44,7 @@ public class botMaster : MonoBehaviour
         nonResettables.isBotTournament = false;
         //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
-        nonResettables.ruleset = "Wacky";
+        nonResettables.ruleset = "Normal";
 
         if (nonResettables.isBotTournament)
         {
@@ -133,7 +134,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new ThinkingBotII(1);
+                botWhite = new HitmanBot(1);
                 botBlack = new RandomBot(-1);
             }
 
@@ -148,84 +149,62 @@ public class botMaster : MonoBehaviour
 
             gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-            List<Piece> botWhitePawns = BotHelperFunctions.filterPieces("Pawn", botWhite.pieces);
+            List<Piece> botWhitePawns = filterPieces("Pawn", botWhite.pieces);
+            List<Piece> botWhiteRooks = filterPieces("Rook", botWhite.pieces);
+            List<Piece> botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
+            List<Piece> botWhiteKnights = filterPieces("Knight", botWhite.pieces);
+            List<Piece> botWhiteKing = filterPieces("King", botWhite.pieces);
+            List<Piece> botWhiteQueen = filterPieces("Queen", botWhite.pieces);
+
+            List<Piece> botBlackPawns = filterPieces("Pawn", botBlack.pieces);
+            List<Piece> botBlackRooks = filterPieces("Rook", botBlack.pieces);
+            List<Piece> botBlackBishops = filterPieces("Bishop", botBlack.pieces);
+            List<Piece> botBlackKnights = filterPieces("Knight", botBlack.pieces);
+            List<Piece> botBlackKing = filterPieces("King", botBlack.pieces);
+            List<Piece> botBlackQueen = filterPieces("Queen", botBlack.pieces);
             /*
+
             List<Piece> botWhitePawns = new List<Piece>
             {
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
-                getPieceTypeInstance("SpittingPawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
+                getPieceTypeInstance("Pawn", 1),
             };
-            */
 
-            List<Piece> botWhiteRooks = BotHelperFunctions.filterPieces("Rook", botWhite.pieces);
-            /*
             List<Piece> botWhiteRooks = new List<Piece>
             {
-                getPieceTypeInstance("StackingRook", 1),
-                getPieceTypeInstance("StackingRook", 1),
+                getPieceTypeInstance("Rook", 1),
+                getPieceTypeInstance("Rook", 1),
             };
-            */
-            List<Piece> botWhiteBishops = BotHelperFunctions.filterPieces("Bishop", botWhite.pieces);
-            /*
+
             List<Piece> botWhiteBishops = new List<Piece>
             {
-                getPieceTypeInstance("SpittingBishop", 1),
-                getPieceTypeInstance("SpittingBishop", 1),
+                getPieceTypeInstance("Bishop", 1),
+                getPieceTypeInstance("Bishop", 1),
             };
-            */
-            List<Piece> botWhiteKnights = BotHelperFunctions.filterPieces("Knight", botWhite.pieces);
-            /*
+
             List<Piece> botWhiteKnights = new List<Piece>
             {
-                getPieceTypeInstance("JailKnight", 1),
-                getPieceTypeInstance("JailKnight", 1),
+                getPieceTypeInstance("Knight", 1),
+                getPieceTypeInstance("Knight", 1),
             };
-            */
-            List<Piece> botWhiteKing = BotHelperFunctions.filterPieces("King", botWhite.pieces);
-            /*
+
             List<Piece> botWhiteKing = new List<Piece>
             {
-                getPieceTypeInstance("GhoulKing", 1)
+                getPieceTypeInstance("King", 1)
             };
-            */
-            List<Piece> botWhiteQueen = BotHelperFunctions.filterPieces("Queen", botWhite.pieces);
-            /*
+
             List<Piece> botWhiteQueen = new List<Piece>
             {
-                getPieceTypeInstance("SpittingQueen", 1)
+                getPieceTypeInstance("Queen", 1)
             };
-            */
 
-            foreach (Piece wp in botWhite.pieces)
-            {
-                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
-            }
-
-            HelperFunctions.initPiece(botWhitePawns[0], new coords ( 1, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[1], new coords ( 2, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[2], new coords ( 3, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[3], new coords ( 4, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[4], new coords ( 5, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[5], new coords ( 6, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[6], new coords ( 7, 2 ));
-            HelperFunctions.initPiece(botWhitePawns[7], new coords ( 8, 2 ));
-            HelperFunctions.initPiece(botWhiteRooks[0], new coords ( 1, 1 ));
-            HelperFunctions.initPiece(botWhiteRooks[1], new coords ( 8, 1 ));
-            HelperFunctions.initPiece(botWhiteBishops[0], new coords ( 3, 1 ));
-            HelperFunctions.initPiece(botWhiteBishops[1], new coords ( 6, 1 ));
-            HelperFunctions.initPiece(botWhiteKnights[0], new coords ( 2, 1 ));
-            HelperFunctions.initPiece(botWhiteKnights[1], new coords ( 7, 1 ));
-            HelperFunctions.initPiece(botWhiteQueen[0], new coords ( 4, 1 ));
-            HelperFunctions.initPiece(botWhiteKing[0], new coords ( 5, 1 ));
-
-            List<Piece> botBlackPawns = BotHelperFunctions.filterPieces("Pawn", botBlack.pieces);
-            /*
+            
             List<Piece> botBlackPawns = new List<Piece>
             {
                 getPieceTypeInstance("Pawn", -1),
@@ -237,47 +216,58 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Pawn", -1),
                 getPieceTypeInstance("Pawn", -1),
             };
-            */
 
-            List<Piece> botBlackRooks = BotHelperFunctions.filterPieces("Rook", botBlack.pieces);
-            /*
             List<Piece> botBlackRooks = new List<Piece>
             {
-                getPieceTypeInstance("Empress", -1),
-                getPieceTypeInstance("Empress", -1),
+                getPieceTypeInstance("Rook", -1),
+                getPieceTypeInstance("Rook", -1),
             };
-            */
-            List<Piece> botBlackBishops = BotHelperFunctions.filterPieces("Bishop", botBlack.pieces);
-            /*
+
             List<Piece> botBlackBishops = new List<Piece>
             {
-                getPieceTypeInstance("HungryBishop", -1),
-                getPieceTypeInstance("PortalBishop", -1),
+                getPieceTypeInstance("Bishop", -1),
+                getPieceTypeInstance("Bishop", -1),
             };
-            */
-            List<Piece> botBlackKnights = BotHelperFunctions.filterPieces("Knight", botBlack.pieces);
-           /*
+
             List<Piece> botBlackKnights = new List<Piece>
             {
-                getPieceTypeInstance("JailKnight", -1),
-                getPieceTypeInstance("JailKnight", -1),
+                getPieceTypeInstance("Knight", -1),
+                getPieceTypeInstance("Knight", -1),
             };
-            */
-            List<Piece> botBlackKing = BotHelperFunctions.filterPieces("King", botBlack.pieces);
-           
-            /*
+
             List<Piece> botBlackKing = new List<Piece>
             {
-                getPieceTypeInstance("GhoulKing", -1),
+                getPieceTypeInstance("King", -1),
             };
-            */
-            List<Piece> botBlackQueen = BotHelperFunctions.filterPieces("Queen", botBlack.pieces);
-            /*
+
             List<Piece> botBlackQueen = new List<Piece>
             {
-                getPieceTypeInstance("PhantomQueen", -1),
+                getPieceTypeInstance("Queen", -1),
             };
+
             */
+
+            foreach (Piece wp in botWhite.pieces)
+            {
+                bgs.whitePieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
+            }
+
+            HelperFunctions.initPiece(botWhitePawns[0], new coords(1, 2));
+            HelperFunctions.initPiece(botWhitePawns[1], new coords(2, 2));
+            HelperFunctions.initPiece(botWhitePawns[2], new coords(3, 2));
+            HelperFunctions.initPiece(botWhitePawns[3], new coords(4, 2));
+            HelperFunctions.initPiece(botWhitePawns[4], new coords(5, 2));
+            HelperFunctions.initPiece(botWhitePawns[5], new coords(6, 2));
+            HelperFunctions.initPiece(botWhitePawns[6], new coords(7, 2));
+            HelperFunctions.initPiece(botWhitePawns[7], new coords(8, 2));
+            HelperFunctions.initPiece(botWhiteRooks[0], new coords(1, 1));
+            HelperFunctions.initPiece(botWhiteRooks[1], new coords(8, 1));
+            HelperFunctions.initPiece(botWhiteBishops[0], new coords(3, 1));
+            HelperFunctions.initPiece(botWhiteBishops[1], new coords(6, 1));
+            HelperFunctions.initPiece(botWhiteKnights[0], new coords(2, 1));
+            HelperFunctions.initPiece(botWhiteKnights[1], new coords(7, 1));
+            HelperFunctions.initPiece(botWhiteQueen[0], new coords(4, 1));
+            HelperFunctions.initPiece(botWhiteKing[0], new coords(5, 1));
 
             foreach (Piece wp in botBlack.pieces)
             {
@@ -404,10 +394,20 @@ public class botMaster : MonoBehaviour
         }
         else
         {
+            if (currentBot.name == "Thinking Bot II")
+            {
+                thinkingBotII.Play();
+            }
+
             var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
+
+            if (currentBot.name == "Thinking Bot II")
+            {
+                thinkingBotII.Pause();
+            }
 
             Move mv = null;
             PieceAbility pa = null;

@@ -40,6 +40,7 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
+        /*
         nonResettables.isBotTournament = true;
         //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
@@ -82,7 +83,7 @@ public class botMaster : MonoBehaviour
                     "IdiotBot"
                 };
                 */
-
+        /*
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
                 {
@@ -122,6 +123,7 @@ public class botMaster : MonoBehaviour
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         } 
+        */
         
         if (!gameOver)
         { 
@@ -132,8 +134,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new RandomBot(1);
-                botBlack = new RandomBot(-1);
+                botWhite = new ChristopherColumbot(1);
+                botBlack = new OneMoveBot(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -429,7 +431,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(3f);
 
             selectedMove = nextMove;
 

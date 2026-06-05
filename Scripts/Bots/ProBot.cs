@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using static BotHelperFunctions;
+using static UnityEngine.GraphicsBuffer;
 
 public class ProBot : BotTemplate
 {
@@ -14,95 +16,189 @@ public class ProBot : BotTemplate
 		choosePieces();
 	}
 
-	private bool isGuarding(BotTemplate bot, BoardState bs, int color, int[] coords)
+	private List<Piece> getGuards(BotTemplate bot, BoardState bs, int color, coords coords)
 	{
-		bool isGuarding = false;
+		List<Piece> guards = new List<Piece>();
 		var attacks = getAllTheoreticalBotAttacks(bot, bs, color);
 
 		string coordsStr = "";
-		coordsStr += (coords[0]).ToString();
-		coordsStr += (coords[1]).ToString();
+		coordsStr += (coords.x).ToString();
+		coordsStr += (coords.y).ToString();
 
 		foreach (var piece in attacks.pieceMoveList)
 		{
+			bool isPieceGuarding = false;
 			foreach (var attack in piece.moves)
 			{
 				string attackStr = "";
-				attackStr += (attack[0]).ToString();
-				attackStr += (attack[1]).ToString();
+				attackStr += (attack.x).ToString();
+				attackStr += (attack.y).ToString();
 				if (attackStr == coordsStr)
 				{
-					isGuarding = true;
+					isPieceGuarding = true;
 				}
 			}
+			if (isPieceGuarding == true)
+			{
+				guards.Add(piece.piece);
+			}
 		}
-		return isGuarding;
-	}
+        return guards;
+    }
 
-	private bool isAttacking(BotTemplate bot, BoardState bs, int color, int[] coords)
+    private List<Piece> getAttackers(BotTemplate bot, BoardState bs, int color, coords coords)
+    {
+        List<Piece> Attackers = new List<Piece>();
+        var attacks = getAllPossibleBotAttacks(bot, bs, color * -1);
+
+        string coordsStr = "";
+        coordsStr += (coords.x).ToString();
+        coordsStr += (coords.y).ToString();
+
+        foreach (var piece in attacks.pieceMoveList)
+        {
+            bool isPieceAttacking = false;
+            foreach (var attack in piece.moves)
+            {
+                string attackStr = "";
+                attackStr += (attack.x).ToString();
+                attackStr += (attack.y).ToString();
+                if (attackStr == coordsStr)
+                {
+                    isPieceAttacking = true;
+                }
+            }
+            if (isPieceAttacking == true)
+            {
+                Attackers.Add(piece.piece);
+            }
+        }
+        return Attackers;
+    }
+
+    private List<Piece> getAttacking(BotTemplate bot, BoardState bs, int color, Piece piece)
+    {
+        List<Piece> Attacking = new List<Piece>();
+        var attacks = getIsolatedStatePieceAttacks(piece, bs, false);
+        List<Piece> oppPieces = getPiecesOnBoardState(bs, color * -1);
+
+        foreach (Piece piece_ in oppPieces)
+        {
+            string pieceStr = "";
+            pieceStr += (piece_.position.x).ToString();
+            pieceStr += (piece_.position.y).ToString();
+            bool isPieceAttacked = false;
+            foreach (coords coords in attacks)
+            {
+                string coordsStr = "";
+                coordsStr += (coords.x).ToString();
+                coordsStr += (coords.y).ToString();
+                if (coordsStr == pieceStr)
+                {
+                    isPieceAttacked = true;
+                }
+            }
+            if (isPieceAttacked == true)
+            {
+                Attacking.Add(piece_);
+            }
+        }
+        return Attacking;
+    }
+
+	private float getForkValue(BotTemplate bot, BoardState bs, int color, Piece piece)
 	{
-		bool isAttacking = false;
-		var attacks = getAllPossibleBotAttacks(bot, bs, color);
+		float forkValue = 0;
+		List<Piece> forkedPieces = new List<Piece>();
+		List<Piece> targets = getAttacking(bot, bs, color, piece);
 
-		string coordsStr = "";
-		coordsStr += (coords[0]).ToString();
-		coordsStr += (coords[1]).ToString();
-
-		foreach (var piece in attacks.pieceMoveList)
+		foreach (Piece target in targets)
 		{
-			foreach (var attack in piece.moves)
+			if (target.baseType == "King")
 			{
-				string attackStr = "";
-				attackStr += (attack[0]).ToString();
-				attackStr += (attack[1]).ToString();
-				if (attackStr == coordsStr)
+				forkedPieces.Add(target);
+			}
+			else
+			{
+                List<Piece> guards = getGuards(bot, bs, color * -1, target.position);
+                if (guards.Count == 0)
+                {
+                    forkedPieces.Add(target);
+                }
+            }
+		}
+		
+		if (forkedPieces.Count > 1)
+		{
+			int kingIndex = -1;
+			List<Piece> sortedPieces = forkedPieces.OrderByDescending(p => p.points).ToList();
+			foreach (Piece sp in sortedPieces)
+			{
+				if (sp.baseType == "King")
 				{
-					isAttacking = true;
+					kingIndex = sortedPieces.IndexOf(sp);
 				}
 			}
+			if (kingIndex >= 0)
+			{
+				Piece king = sortedPieces[kingIndex];
+                sortedPieces.Remove(king);
+                sortedPieces.Insert(0, king);
+            }
+            forkValue = sortedPieces[1].points;
 		}
-		return isAttacking;
+
+		return forkValue;
+
 	}
 
-	private bool isAttackingSafe(BotTemplate bot, BoardState bs, int color, int[] coords)
+	private float tradeOutcome(List<Piece> guards, List<Piece> oppGuards, Piece ogPiece)
 	{
-		bool isAttackingSafe = false;
-		var attacks = getAllPossibleBotAttacks(bot, bs, color);
+		float tradeOutcome = ogPiece.points * -1;
+		int dead;
+		int deadOpp;
 
-		string coordsStr = "";
-		coordsStr += (coords[0]).ToString();
-		coordsStr += (coords[1]).ToString();
-
-		foreach (var piece in attacks.pieceMoveList)
+		if (guards.Count >= oppGuards.Count)
 		{
-			foreach (var attack in piece.moves)
-			{
-				string attackStr = "";
-				attackStr += (attack[0]).ToString();
-				attackStr += (attack[1]).ToString();
-				if (attackStr == coordsStr)
-				{
-					if (isAttacking(bot, bs, color * -1, piece.piece.position) == false)
-					{
-						isAttackingSafe = true;
-					}
-				}
-			}
+			dead = oppGuards.Count - 1;
+			deadOpp = oppGuards.Count;
 		}
-		return isAttackingSafe;
-	}
+		else
+		{
+			dead = oppGuards.Count;
+			deadOpp = oppGuards.Count;
+		}
+
+        List<Piece> sortedGuards = guards.OrderByDescending(p => p.points).ToList();
+        List<Piece> sortedOppGuards = oppGuards.OrderByDescending(p => p.points).ToList();
+
+		List<Piece> dead_ = sortedGuards.Take(dead).ToList();
+        List<Piece> deadOpp_ = sortedGuards.Take(deadOpp).ToList();
+
+		foreach (Piece piece in dead_)
+		{
+			tradeOutcome -= piece.points;
+		}
+        foreach (Piece piece in deadOpp_)
+        {
+            tradeOutcome += piece.points;
+        }
+
+		return tradeOutcome;
+    }
 
 	override
 	public NextMove nextMove()
 	{
-		float bestMoveDiff = -1000;
+		float bestMoveValue = -10000;
 		List<NextMove> validMoves = new List<NextMove>();
 		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
 		foreach (NextMove nextMove in allMoves)
 		{
+			float moveValue = 0;
 			Piece piece;
-			int[] coords;
+			coords coords;
 			string moveType = nextMove.moveType;
 			if (moveType == "move")
 			{
@@ -132,82 +228,130 @@ public class ProBot : BotTemplate
 			}
 			this.currentBoardState = cloneState;
 
-			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+            /* Calculation area! */
 
-			NextMove bestOppNextMove;
-			float bestOppMoveDiff = +1000;
+            List<float> pointsOnBoard = getPointsOnBoardState(cloneState, true);
+            float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+            float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+			moveValue += botPoints;
+			moveValue -= oppPoints;
 
-			foreach (NextMove nextMoveOpp in allMovesOpp)
+			if (piece.baseType == "Pawn")
 			{
-				Piece pieceOpp;
-				int[] coordsOpp;
+				moveValue += 0.01f;
+			}
 
-				string moveTypeOpp = nextMoveOpp.moveType;
+            List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
+			List<Piece> piecesOnBoardOpp = getPiecesOnBoardState(cloneState, this.color * -1);
 
-				if (moveTypeOpp == "move")
+			foreach (Piece piece1 in piecesOnBoard)
+			{
+				float pieceValue = 0;
+				List<Piece> guards = getGuards(this, cloneState, this.color, piece1.position);
+                List<Piece> attackers = getAttackers(this, cloneState, this.color, piece1.position);
+                List<Piece> attacking = getAttacking(this, cloneState, this.color, piece1);
+
+				if (piece1.baseType == "King")
 				{
-					Move mv = nextMoveOpp.move;
-
-					pieceOpp = mv.p;
-					coordsOpp = mv.coords;
-				}
-				else
-				{
-					PieceAbility pa = nextMoveOpp.ability;
-
-					pieceOpp = pa.piece;
-					coordsOpp = pa.coords;
-				}
-
-				BoardState originalBoardState_ = this.currentBoardState;
-				BoardState cloneState_;
-				if (moveTypeOpp == "move")
-				{
-					cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-				}
-				else
-				{
-					cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-				}
-				this.currentBoardState = originalBoardState_;
-
-				List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
-				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color * -1);
-
-				foreach (Piece piece_ in piecesOnBoard)
-				{
-					if (isAttackingSafe(this, cloneState, this.color, piece_.position) == true)
+					if (attackers.Count > 0)
 					{
-						if (isGuarding(this, cloneState, this.color * -1, piece_.position) == true)
-						{
-							botPoints += piece_.points * 0.3f;
-						}
-						else
-						{
-							botPoints += piece_.points * 0.7f;
-						}
+						pieceValue -= 50;
 					}
 				}
 
-				float diff = botPoints - oppPoints;
-				if (diff < bestOppMoveDiff)
+				if (guards.Count > 0)
 				{
-					bestOppMoveDiff = diff;
-					bestOppNextMove = nextMoveOpp;
+					pieceValue += 0.001f;
+					if (attackers.Count > 0)
+					{
+						if (attacking.Count > 0)
+						{
+                            float tradeValue = tradeOutcome(guards, attackers, piece1);
+                            if (tradeValue < 0)
+                            {
+                                pieceValue += tradeValue;
+                            }
+							else
+							{
+								pieceValue += tradeValue * 0.3f;
+							}
+                        }
+						else
+						{
+							float tradeValue = tradeOutcome(guards, attackers, piece1);
+							if (tradeValue < 0)
+							{
+								pieceValue += tradeValue;
+							}
+						}
+					}
+					else
+					{
+						if (attacking.Count > 0)
+						{
+							if (attacking.Count > 1)
+							{
+                                pieceValue += getForkValue(this, cloneState, this.color, piece1);
+                            }
+							else
+							{
+                                List<Piece> oppGuards = getGuards(this, cloneState, this.color * -1, attacking[0].position);
+                                if (oppGuards.Count == 0)
+                                {
+                                    pieceValue += attacking[0].points * 0.3f;
+                                }
+                                else
+                                {
+                                    pieceValue += attacking[0].points * 0.1f;
+                                }
+                            }
+						}
+					}
 				}
-			}
+				else
+				{
+					if (attackers.Count > 0)
+					{
+						pieceValue -= piece1.points;
+					}
+					else
+					{
+                        if (attacking.Count > 0)
+                        {
+                            if (attacking.Count > 1)
+                            {
+                                pieceValue += getForkValue(this, cloneState, this.color, piece1);
+                            }
+                            else
+                            {
+                                List<Piece> oppGuards = getGuards(this, cloneState, this.color * -1, attacking[0].position);
+                                if (oppGuards.Count == 0)
+                                {
+                                    pieceValue += attacking[0].points * 0.3f;
+                                }
+                                else
+                                {
+                                    pieceValue += attacking[0].points * 0.1f;
+                                }
+                            }
+                        }
+                    }
+				}
 
-			if (bestOppMoveDiff >= bestMoveDiff)
+				moveValue += pieceValue;
+
+            }
+
+			/* End of calculation area! */
+
+			if (moveValue >= bestMoveValue)
 			{
-				if (bestOppMoveDiff > bestMoveDiff)
+				if (moveValue > bestMoveValue)
 				{
 					validMoves.Clear();
 				}
 
-				bestMoveDiff = bestOppMoveDiff;
+				bestMoveValue = moveValue;
 
 				validMoves.Add(nextMove);
 			}

@@ -14,7 +14,32 @@ public class EqualityBot : BotTemplate
 		choosePieces();
 	}
 
-	Dictionary<string,int> numMoves = new Dictionary<string,int>();
+    private bool isGuarded(BotTemplate bot, BoardState bs, int color, coords coords)
+    {
+        bool isGuarded = false;
+        var attacks = getAllPossibleBotAttacks(bot, bs, color);
+
+        string coordsStr = "";
+        coordsStr += (coords.x).ToString();
+        coordsStr += (coords.y).ToString();
+
+        foreach (var piece in attacks.pieceMoveList)
+        {
+            foreach (var attack in piece.moves)
+            {
+                string attackStr = "";
+                attackStr += (attack.x).ToString();
+                attackStr += (attack.y).ToString();
+                if (attackStr == coordsStr)
+                {
+                    isGuarded = true;
+                }
+            }
+        }
+        return isGuarded;
+    }
+
+    Dictionary<string,int> numMoves = new Dictionary<string,int>();
 
 	override
 	public NextMove nextMove()
@@ -36,7 +61,7 @@ public class EqualityBot : BotTemplate
 		foreach (NextMove nextMove in allMoves)
 		{
 			Piece piece;
-			int[] coords;
+			coords coords;
 			string moveType = nextMove.moveType;
 			if (moveType == "move")
 			{
@@ -71,10 +96,31 @@ public class EqualityBot : BotTemplate
 			NextMove bestOppNextMove;
 			float bestOppMoveDiff = +1000;
 
-			foreach (NextMove nextMoveOpp in allMovesOpp)
+            List<Piece> piecesOnBoard_ = getPiecesOnBoardState(cloneState, this.color);
+
+            coords kingCoords;
+            kingCoords.x = 0;
+            kingCoords.y = 0;
+
+            foreach (Piece item in piecesOnBoard_)
+            {
+                if (item.baseType == "King")
+                {
+                    kingCoords = item.position;
+                }
+            }
+
+            bool inCheck = false;
+
+            if (kingCoords.x != 0 && kingCoords.y != 0)
+            {
+                inCheck = isGuarded(this, cloneState, this.color * -1, kingCoords);
+            }
+
+            foreach (NextMove nextMoveOpp in allMovesOpp)
 			{
 				Piece pieceOpp;
-				int[] coordsOpp;
+				coords coordsOpp;
 
 				string moveTypeOpp = nextMoveOpp.moveType;
 
@@ -111,7 +157,12 @@ public class EqualityBot : BotTemplate
 
 				botPoints -= numMoves[piece.name]*100;
 
-				float diff = botPoints - oppPoints;
+				if (inCheck == true)
+                {
+                    botPoints -= 100000000000;
+                }
+
+                float diff = botPoints - oppPoints;
 				if (diff < bestOppMoveDiff)
 				{
 					bestOppMoveDiff = diff;

@@ -3,20 +3,19 @@ using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
 
-public class BotDefender : BotTemplate
-{	
-	public BotDefender(int botColor)
+public class PawnBot2 : BotTemplate
+{
+	public PawnBot2(int botColor)
 	{
 		color = botColor;
 		pieces = new List<Piece>();
-		name = "BotDefender";
-
+		name = "Pawn Bot 2.0";
 		choosePieces();
 	}
 
-	private bool isGuarded(BotTemplate bot, BoardState bs, int color, coords coords)
+	private int numGuards(BotTemplate bot, BoardState bs, int color, coords coords)
 	{
-		bool isGuarded = false;
+		int numGuards = 0;
 		var attacks = getAllTheoreticalBotAttacks(bot, bs, color);
 
 		string coordsStr = "";
@@ -25,6 +24,7 @@ public class BotDefender : BotTemplate
 
 		foreach (var piece in attacks.pieceMoveList)
 		{
+			bool isPieceGuarding = false;
 			foreach (var attack in piece.moves)
 			{
 				string attackStr = "";
@@ -32,14 +32,49 @@ public class BotDefender : BotTemplate
 				attackStr += (attack.y).ToString();
 				if (attackStr == coordsStr)
 				{
-					isGuarded = true;
+					isPieceGuarding = true;
 				}
 			}
-		}
-		return isGuarded;
+			if (isPieceGuarding == true)
+			{
+				numGuards += 1;
+			}
+        }
+		return numGuards;
 	}
 
-	override
+    private int numAttackers(BotTemplate bot, BoardState bs, int color, coords coords)
+    {
+        int numAttackers = 0;
+        var attacks = getAllPossibleBotAttacks(bot, bs, color * -1);
+
+        string coordsStr = "";
+        coordsStr += (coords.x).ToString();
+        coordsStr += (coords.y).ToString();
+
+        foreach (var piece in attacks.pieceMoveList)
+        {
+            bool isPieceAttacking = false;
+            foreach (var attack in piece.moves)
+            {
+                string attackStr = "";
+                attackStr += (attack.x).ToString();
+                attackStr += (attack.y).ToString();
+                if (attackStr == coordsStr)
+                {
+                    isPieceAttacking = true;
+                }
+            }
+            if (isPieceAttacking == true)
+            {
+                numAttackers += 1;
+            }
+        }
+        return numAttackers;
+    }
+
+    override
+
 	public NextMove nextMove()
 	{
 		float bestMoveDiff = -1000;
@@ -51,6 +86,7 @@ public class BotDefender : BotTemplate
 			Piece piece;
 			coords coords;
 			string moveType = nextMove.moveType;
+
 			if (moveType == "move")
 			{
 				Move mv = nextMove.move;
@@ -122,14 +158,39 @@ public class BotDefender : BotTemplate
 				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
+				if (piece.baseType == "Pawn")
+				{
+					botPoints += 2;
+				}
+
+				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState_, this.color);
 
 				foreach (Piece piece_ in piecesOnBoard)
-				{ 
-					if (isGuarded(this, cloneState, this.color, piece_.position) == true)
+				{
+					int numOfAttackers = 0;
+					int numOfGuards = 0;
+					if (piece_.baseType == "Pawn")
 					{
-						botPoints += 5;
-					}
+						botPoints += 3;
+						numOfAttackers = numAttackers(this, cloneState_, this.color, piece_.position);
+						numOfGuards = numGuards(this, cloneState_, this.color, piece_.position);
+						if (numOfAttackers != 0)
+						{
+                            botPoints += piece_.points * (numOfGuards - numOfAttackers);
+                        }
+						
+						if (numOfGuards > numOfAttackers)
+						{
+                            if (this.color == 1)
+                            {
+                                botPoints += piece_.position.y;
+                            }
+                            else
+                            {
+                                botPoints += 9 - piece_.position.y;
+                            }
+                        }
+                    }
 				}
 
 				float diff = botPoints - oppPoints;
@@ -148,18 +209,17 @@ public class BotDefender : BotTemplate
 				}
 
 				bestMoveDiff = bestOppMoveDiff;
-
 				validMoves.Add(nextMove);
 			}
 
 			this.currentBoardState = originalBoardState;
-
 		}
 
 		System.Random rand = new System.Random();
 		int rndIdx = rand.Next(validMoves.Count);
 
 		NextMove move = validMoves[rndIdx];
+
 		if (move.moveType == "move")
 		{
 			move.move.p = getOriginalPieceFromClone(move.move.p);
@@ -171,3 +231,4 @@ public class BotDefender : BotTemplate
 		return move;
 	}
 }
+

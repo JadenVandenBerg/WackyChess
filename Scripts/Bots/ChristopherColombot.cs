@@ -16,18 +16,17 @@ public class ChristopherColumbot : BotTemplate
 	}
 
 	List<string> discoveredSquares = new List<string>();
-	float prevDiff = 0;
 
 	override
 	public NextMove nextMove()
 	{
 		List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
 
-		foreach (Piece piece_ in piecesOnBoard)
+        foreach (Piece piece_ in piecesOnBoard)
 		{
 			string pieceStr = "";
-			pieceStr += (piece_.position[0]).ToString();
-			pieceStr += (piece_.position[1]).ToString();
+			pieceStr += (piece_.position.x).ToString();
+			pieceStr += (piece_.position.y).ToString();
 			if (discoveredSquares.Contains(pieceStr) == false)
 			{
 				discoveredSquares.Add(pieceStr);
@@ -36,13 +35,13 @@ public class ChristopherColumbot : BotTemplate
 		}
 
 		float bestMoveDiff = -1000;
-		List<NextMove> validMoves = new List<NextMove>();
+		Dictionary<NextMove, float> validMoves = new Dictionary<NextMove, float>();
 		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
 		foreach (NextMove nextMove in allMoves)
 		{
 			Piece piece;
-			int[] coords;
+			coords coords;
 			string moveType = nextMove.moveType;
 			if (moveType == "move")
 			{
@@ -80,7 +79,7 @@ public class ChristopherColumbot : BotTemplate
 			foreach (NextMove nextMoveOpp in allMovesOpp)
 			{
 				Piece pieceOpp;
-				int[] coordsOpp;
+				coords coordsOpp;
 
 				string moveTypeOpp = nextMoveOpp.moveType;
 
@@ -116,8 +115,8 @@ public class ChristopherColumbot : BotTemplate
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
                 string coordsStr = "";
-                coordsStr += (coords[0]).ToString();
-                coordsStr += (coords[1]).ToString();
+                coordsStr += (coords.x).ToString();
+                coordsStr += (coords.y).ToString();
 
                 if (discoveredSquares.Contains(coordsStr) == false)
 				{
@@ -133,38 +132,33 @@ public class ChristopherColumbot : BotTemplate
 
             }
 
-            if (bestOppMoveDiff == prevDiff)
+            List<string> undiscoveredSquares = new List<string>();
+            for (int x = 1; x < 9; x++)
             {
-                List<string> undiscoveredSquares = new List<string>();
-                for (int x = 1; x < 9; x++)
+                for (int y = 1; y < 9; y++)
                 {
-                    for (int y = 1; y < 9; y++)
-                    {
-                        string str = "";
-                        str += x.ToString();
-                        str += y.ToString();
+                    string str = "";
+                    str += x.ToString();
+                    str += y.ToString();
 
-                        if (discoveredSquares.Contains(str) == false)
-                        {
-                            undiscoveredSquares.Add(str);
-                        }
+                    if (discoveredSquares.Contains(str) == false)
+                    {
+                        undiscoveredSquares.Add(str);
                     }
                 }
+            }
 
-                List<Piece> piecesOnBoard_ = getPiecesOnBoardState(cloneState, this.color);
+            List<Piece> piecesOnBoard_ = getPiecesOnBoardState(cloneState, this.color);
 
-                float botPointsT = 0;
-                foreach (Piece piece__ in piecesOnBoard_)
+            float botPointsT = 0;
+            foreach (Piece piece__ in piecesOnBoard_)
+            {
+                foreach (string square in undiscoveredSquares)
                 {
-                    foreach (string square in undiscoveredSquares)
-                    {
-                        float distance = -14 * undiscoveredSquares.Count();
-                        distance += Math.Abs(piece__.position[0] - square[0]) + Math.Abs(piece__.position[1] - square[1]);
-                        botPointsT += (distance * -1) / 200;
-                    }
+                    float distance = 0;
+                    distance += Math.Abs(piece__.position.x - square[0]) + Math.Abs(piece__.position.y - square[1]);
+                    botPointsT += distance;
                 }
-
-                bestOppMoveDiff += botPointsT;
             }
 
             if (bestOppMoveDiff >= bestMoveDiff)
@@ -176,18 +170,36 @@ public class ChristopherColumbot : BotTemplate
 
 				bestMoveDiff = bestOppMoveDiff;
 
-				validMoves.Add(nextMove);
+				validMoves.Add(nextMove, botPointsT);
 			}
 
 			this.currentBoardState = originalBoardState;
 
 		}
 
-		System.Random rand = new System.Random();
-		int rndIdx = rand.Next(validMoves.Count);
+		List<NextMove> validMovesL = new List<NextMove>();
+		float bestDistance = 99999999999999;
 
-		NextMove move = validMoves[rndIdx];
-        int[] mvCoords = new int[2];
+		foreach (NextMove vMove in validMoves.Keys)
+		{
+            if (validMoves[vMove] <= bestDistance)
+            {
+                if (validMoves[vMove] < bestDistance)
+                {
+                    validMovesL.Clear();
+                }
+
+				bestDistance = validMoves[vMove];
+
+                validMovesL.Add(vMove);
+            }
+        }
+
+		System.Random rand = new System.Random();
+		int rndIdx = rand.Next(validMovesL.Count);
+
+		NextMove move = validMovesL[rndIdx];
+        coords mvCoords;
         if (move.moveType == "move")
 		{
 			move.move.p = getOriginalPieceFromClone(move.move.p);
@@ -200,16 +212,14 @@ public class ChristopherColumbot : BotTemplate
 		}
 
         string finalStr = "";
-        finalStr += (mvCoords[0]).ToString();
-        finalStr += (mvCoords[1]).ToString();
+        finalStr += (mvCoords.x).ToString();
+        finalStr += (mvCoords.y).ToString();
 
         if (discoveredSquares.Contains(finalStr) == false)
         {
             discoveredSquares.Add(finalStr);
             Debug.Log("New Square discovered at " + finalStr + ". " + discoveredSquares.Count() + " total.");
         }
-
-		prevDiff = bestMoveDiff;
 
         return move;
 	}

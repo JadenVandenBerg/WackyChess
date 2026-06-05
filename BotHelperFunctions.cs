@@ -1833,7 +1833,15 @@ public class BotHelperFunctions : MonoBehaviour
             && !HelperFunctions.checkState(piece, PieceState.Murderous)
         )
         {
-            return false;
+            if (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
         else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, PieceState.Dematerialized))
         {

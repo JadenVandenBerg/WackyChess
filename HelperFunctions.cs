@@ -3906,7 +3906,14 @@ public class HelperFunctions : MonoBehaviour
 
             if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && (!checkState(piece, PieceState.Murderous)))
             {
-                death = false;
+                if (checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Jailer))
+                {
+                    death = true;
+                }
+                else
+                {
+                    death = false;
+                }
             }
             else if (checkStateAllOnSquare(piecesOnSquare, PieceState.Dematerialized))
             {

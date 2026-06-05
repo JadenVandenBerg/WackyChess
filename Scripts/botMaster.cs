@@ -41,10 +41,10 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = false;
+        nonResettables.isBotTournament = true;
         //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
-        nonResettables.ruleset = "Normal";
+        nonResettables.ruleset = "Wacky";
 
         if (nonResettables.isBotTournament)
         {
@@ -52,10 +52,11 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    //"TwoMoveBot",
-                    ///"ThinkingBot",
-                    //"Lobotomy",
-                    //"BerserkerBot"
+                    "TwoMoveBot",
+                    "ThinkingBot",
+                    "Lobotomy",
+                    "BerserkerBot",
+                    "HitmanBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
 

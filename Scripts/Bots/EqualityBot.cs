@@ -159,7 +159,7 @@ public class EqualityBot : BotTemplate
 
 				if (inCheck == true)
                 {
-                    botPoints -= 100000000000;
+                    botPoints -= 10000;
                 }
 
                 float diff = botPoints - oppPoints;
@@ -184,6 +184,11 @@ public class EqualityBot : BotTemplate
 
 			this.currentBoardState = originalBoardState;
 
+		}
+
+		if (validMoves.Count == 0)
+		{
+			validMoves = allMoves;
 		}
 
 		System.Random rand = new System.Random();

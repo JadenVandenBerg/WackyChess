@@ -45,7 +45,7 @@ public class botMaster : MonoBehaviour
         //SEASON_NAME = "SEASON2";
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Normal";
-
+        /*
         if (nonResettables.isBotTournament)
         {
             if (nonResettables.botTournament == null)
@@ -135,8 +135,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new HitmanBot(1);
-                botBlack = new RandomBot(-1);
+                botWhite = new EqualityBot(1);
+                botBlack = new BotDefender(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -434,7 +434,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(1f);
 
             selectedMove = nextMove;
 

@@ -79,7 +79,19 @@ public class BotDefender : BotTemplate
 			}
 			this.currentBoardState = cloneState;
 
-			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+            List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
+
+			int guardPoints = 0;
+
+            foreach (Piece piece_ in piecesOnBoard)
+            {
+                if (isGuarded(this, cloneState, this.color, piece_.position) == true)
+                {
+                    guardPoints += 5;
+                }
+            }
+
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
 
 			NextMove bestOppNextMove;
 			float bestOppMoveDiff = +1000;
@@ -122,15 +134,7 @@ public class BotDefender : BotTemplate
 				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
 				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
-				List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
-
-				foreach (Piece piece_ in piecesOnBoard)
-				{ 
-					if (isGuarded(this, cloneState, this.color, piece_.position) == true)
-					{
-						botPoints += 5;
-					}
-				}
+				botPoints += guardPoints;
 
 				float diff = botPoints - oppPoints;
 				if (diff < bestOppMoveDiff)

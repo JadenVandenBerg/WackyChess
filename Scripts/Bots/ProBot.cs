@@ -79,7 +79,7 @@ public class ProBot : BotTemplate
     private List<Piece> getAttacking(BotTemplate bot, BoardState bs, int color, Piece piece)
     {
         List<Piece> Attacking = new List<Piece>();
-        var attacks = getIsolatedStatePieceAttacks(piece, bs, false);
+        var attacks = getIsolatedStatePieceAttacks(piece, bs, false, false);
         List<Piece> oppPieces = getPiecesOnBoardState(bs, color * -1);
 
         foreach (Piece piece_ in oppPieces)

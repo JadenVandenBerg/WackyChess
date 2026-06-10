@@ -747,7 +747,7 @@ public class HelperFunctions : MonoBehaviour
 
                     //if there is a jailer with a jailed piece, count it
                     if ((checkStateOnSquare(piecesOnSquare, PieceState.Jailer) && checkStateOnSquare(piecesOnSquare, PieceState.Jailed)
-                        || checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Crook))
+                        || checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Crook)))
                     {
                         pieceIsDiffColour = true;
                     }

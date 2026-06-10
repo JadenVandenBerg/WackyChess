@@ -877,7 +877,7 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        if (HelperFunctions.checkPieceType(piece, "q"))
+        if (piece.baseType == "Queen")
         {
             if (isolatedIsOppressorOnBoard(bs, piece.color))
             {
@@ -1075,6 +1075,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         bool jailerOnSquare = false;
         bool jailedOnSquare = false;
+        bool crookOnSquare = false;
 
         if (piecesOnCoords == null || piecesOnCoords.Count == 0)
         {
@@ -1100,6 +1101,11 @@ public class BotHelperFunctions : MonoBehaviour
                 if (HelperFunctions.checkState(p, PieceState.Jailed))
                 {
                     jailedOnSquare = true;
+                }
+
+                if (HelperFunctions.checkState(p, PieceState.Crook))
+                {
+                    crookOnSquare = true;
                 }
 
                 if (HelperFunctions.checkState(p, PieceState.Jailer))
@@ -1183,7 +1189,7 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
-        squareJailed = jailerOnSquare && jailedOnSquare;
+        squareJailed = jailerOnSquare && jailedOnSquare || jailedOnSquare && crookOnSquare;
 
         return (colorOnCoords, oppColorOnCoords, colorOnlyOnCoords, oppColorOnlyOnCoords, pieceIsNull, crowdingElegible, piecesDisabled, shieldOnSquare, captureTheFlagOnSquare, squareJailed);
     }
@@ -1262,7 +1268,6 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static bool isolatedIsJumpBouncing(Piece piece, coords from, int toX, int toY, BoardState bs)
     {
-        //TODO this does not work at all
         int fromX = from.x;
         int fromY = from.y;
 
@@ -1273,8 +1278,8 @@ public class BotHelperFunctions : MonoBehaviour
 
             for (int i = 0; i < 14; i++)
             {
-                x += dx;
-                y += dy;
+                x = fromX + dx * (i + 1);
+                y = fromY + dy * (i + 1);
 
                 coords newCoords = HelperFunctions.adjustCoordsForBouncing(piece, x, y);
                 int newX = newCoords.x;
@@ -1342,7 +1347,7 @@ public class BotHelperFunctions : MonoBehaviour
             //bool crossedBackRank = false;
             //bool jumpedPiece = false;
 
-            for (int step = 0; step < 8; step++)
+            for (int step = 0; step <= 8; step++)
             {
                 //x += dir.x;
                 //y += dir.y;
@@ -1363,23 +1368,13 @@ public class BotHelperFunctions : MonoBehaviour
 
                 if (x == toX && y == toY)
                 {
-                    //if (!(crossedBackRank || jumpedPiece))
-                    //{
-                        //anyPathFound = true;
-                        return false;
-                    //}
+                    return false;
                 }
 
-                //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
-                //if (bs.boardGrid[x - 1, y - 1].Count > 0)
-                //{
-                    //jumpedPiece = true;
-                    //break;
-                //}
 
                 if (!isolatedPieceCanJumpOver(x - 1, y - 1, bs.boardGrid, piece))
                 {
-                    return true;
+                    break;
                 }
             }
         }

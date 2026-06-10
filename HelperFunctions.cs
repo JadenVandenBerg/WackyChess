@@ -375,8 +375,8 @@ public class HelperFunctions : MonoBehaviour
             coords[1] = fromY;
             for (int i = 0; i < 14; i++)
             {
-                coords[0] = coords[0] + directions[j, 0];
-                coords[1] = coords[1] + directions[j, 1];
+                coords[0] = fromX + directions[j, 0] * (i + 1);
+                coords[1] = fromY + directions[j, 1] * (i + 1);
                 coords newCoords = adjustCoordsForBouncing(piece, coords[0], coords[1]);
 
                 GameObject square = findSquare(newCoords.x, newCoords.y);
@@ -416,7 +416,6 @@ public class HelperFunctions : MonoBehaviour
         new int[] {-1, -1 }  // down-left
         };
 
-        bool anyPathFound = false;
         foreach (var dir in directions)
         {
             int x = fromX;
@@ -424,12 +423,12 @@ public class HelperFunctions : MonoBehaviour
             bool crossedBackRank = false;
             bool jumpedPiece = false;
 
-            for (int step = 0; step < 8; step++)
+            for (int step = 0; step <= 8; step++)
             {
                 x += dir[0];
                 y += dir[1];
 
-                if (y == 0 && piece.color == 1 || y == 9 && piece.color == -1) crossedBackRank = true;
+                if (y == 0 && piece.color == 1 || y == 9 && piece.color == -1) break;
 
                 if (x < 1) x = 8;
                 if (x > 8) x = 1;
@@ -440,25 +439,17 @@ public class HelperFunctions : MonoBehaviour
 
                 if (x == toX && y == toY)
                 {
-                    //GameObject destSquare = findSquare(x, y);
-                    if (!(crossedBackRank || jumpedPiece))
-                    {
-                        anyPathFound = true;
-                    }
+                    return false;
                 }
 
                 GameObject square = findSquare(x, y);
                 if (isPieceOnSquare(square))
                 {
-                    jumpedPiece = true;
+                    break;
                 }
             }
         }
 
-        if (anyPathFound)
-        {
-            return false;
-        }
         return true;
     }
 
@@ -755,7 +746,8 @@ public class HelperFunctions : MonoBehaviour
                     pieceIsDiffColour = !getColorsOnSquare(goHighlight, true).Contains(piece.color);
 
                     //if there is a jailer with a jailed piece, count it
-                    if (checkStateOnSquare(piecesOnSquare, PieceState.Jailer) && checkStateOnSquare(piecesOnSquare, PieceState.Jailed))
+                    if ((checkStateOnSquare(piecesOnSquare, PieceState.Jailer) && checkStateOnSquare(piecesOnSquare, PieceState.Jailed)
+                        || checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Crook))
                     {
                         pieceIsDiffColour = true;
                     }
@@ -2816,7 +2808,7 @@ public class HelperFunctions : MonoBehaviour
         return false;
     }
 
-    public static void initPiece(Piece piece, coords coords)
+    public static void reinitPiece(Piece piece, coords coords)
     {
         if (!gameData.piecesDict.ContainsKey(piece.go))
         {
@@ -2850,8 +2842,6 @@ public class HelperFunctions : MonoBehaviour
             Piece doublePawn = Spawnables.create("Pawn", piece.color, false);
             initPiece(doublePawn, piece.position);
         }
-
-        piece.startSquare = new coords(piece.position.x, piece.position.y);
 
         movePiece(piece, toAppend);
 
@@ -2887,6 +2877,13 @@ public class HelperFunctions : MonoBehaviour
         piece.name = panelCode;
         gameData.panelCodes.Add(piece.name);
         piece.go.name = panelCode;
+    }
+
+    public static void initPiece(Piece piece, coords coords)
+    {
+        piece.startSquare = new coords(piece.position.x, piece.position.y);
+
+        reinitPiece(piece, coords);
     }
 
     public static string getPieceType(Piece p)
@@ -2997,7 +2994,7 @@ public class HelperFunctions : MonoBehaviour
                     restorePieceImageToBoard(p_);
 
                     removeState(p_, PieceState.Jailed);
-                    initPiece(p_, coords_);
+                    reinitPiece(p_, coords_);
 
                     piece.storage.Remove(p_);
                 }
@@ -3025,7 +3022,7 @@ public class HelperFunctions : MonoBehaviour
                     restorePieceImageToBoard(p_);
 
                     removeState(p_, PieceState.Jailed);
-                    initPiece(p_, c_);
+                    reinitPiece(p_, c_);
 
                     piece.storage.Remove(p_);
                 }
@@ -3124,7 +3121,7 @@ public class HelperFunctions : MonoBehaviour
 
             restorePieceImageToBoard(storagePiece);
             removeState(storagePiece, PieceState.Jailed);
-            initPiece(storagePiece, coords);
+            reinitPiece(storagePiece, coords);
 
             updateBoardGrid(coords, storagePiece, "a");
 
@@ -3436,8 +3433,6 @@ public class HelperFunctions : MonoBehaviour
         //Check for Pawn Promote
         checkPromote(piece, coords);
 
-        gameData.turn = gameData.turn * -1;
-
         //Add pieces to list
         Piece king;
         if (piece.color == 1)
@@ -3491,6 +3486,8 @@ public class HelperFunctions : MonoBehaviour
         }
 
         gameData.selectedPiece = null;
+
+        gameData.turn = gameData.turn * -1;
 
         if (isInCheckMate)
         {
@@ -3565,7 +3562,7 @@ public class HelperFunctions : MonoBehaviour
 
                     updateBoardGrid(findCoords(s), p, "a");
                     restorePieceImageToBoard(p);
-                    initPiece(p, findCoords(s));
+                    reinitPiece(p, findCoords(s));
 
                     gameData.selectedPiece.storage.Remove(p);
                 }
@@ -3742,7 +3739,7 @@ public class HelperFunctions : MonoBehaviour
                     //Todo maybe trigger collateral of killed piece
                     collateralDeath(getPiecesOnSquare(s));
 
-                    initPiece(p, findCoords(s));
+                    reinitPiece(p, findCoords(s));
                     updateBoardGrid(findCoords(s), p, "a");
                     restorePieceImageToBoard(p);
 

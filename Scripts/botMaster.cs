@@ -685,7 +685,7 @@ public class botMaster : MonoBehaviour
             checkLastTurn = false;
         }
 
-        if (check == 2)
+        if (check == 2 && !gameOver)
         {
             if (!gameData.staleMate)
             {

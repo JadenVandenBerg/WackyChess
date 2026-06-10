@@ -2995,6 +2995,8 @@ public class HelperFunctions : MonoBehaviour
                     updateBoardGrid(coords_, p_, "a");
                     
                     restorePieceImageToBoard(p_);
+
+                    removeState(p_, PieceState.Jailed);
                     initPiece(p_, coords_);
 
                     piece.storage.Remove(p_);
@@ -3021,6 +3023,8 @@ public class HelperFunctions : MonoBehaviour
                     updateBoardGrid(c_, p_, "a");
 
                     restorePieceImageToBoard(p_);
+
+                    removeState(p_, PieceState.Jailed);
                     initPiece(p_, c_);
 
                     piece.storage.Remove(p_);
@@ -3119,6 +3123,7 @@ public class HelperFunctions : MonoBehaviour
             }
 
             restorePieceImageToBoard(storagePiece);
+            removeState(storagePiece, PieceState.Jailed);
             initPiece(storagePiece, coords);
 
             updateBoardGrid(coords, storagePiece, "a");
@@ -3906,7 +3911,8 @@ public class HelperFunctions : MonoBehaviour
 
             if (!getColorsOnSquare(square, true).Contains(piece.color * -1) && (!checkState(piece, PieceState.Murderous)))
             {
-                if (checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Jailer))
+                if ((checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Jailer))
+                    || (checkStateOnSquare(piecesOnSquare, PieceState.Jailed) && checkStateOnSquare(piecesOnSquare, PieceState.Crook)))
                 {
                     death = true;
                 }
@@ -3963,7 +3969,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        //moveSound.Play();
+        moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 

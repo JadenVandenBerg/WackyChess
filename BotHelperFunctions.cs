@@ -1833,7 +1833,8 @@ public class BotHelperFunctions : MonoBehaviour
             && !HelperFunctions.checkState(piece, PieceState.Murderous)
         )
         {
-            if (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer))
+            if ((HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer))
+                || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Crook)))
             {
                 return true;
             }
@@ -1908,6 +1909,8 @@ public class BotHelperFunctions : MonoBehaviour
 
                     //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_.x + "," + coords_.y);
 
+                    HelperFunctions.removeState(p_, PieceState.Jailed);
+
                     updateBoardState(coords__, p_, "a", bs);
 
                     piece.storage.Remove(p_);
@@ -1932,6 +1935,8 @@ public class BotHelperFunctions : MonoBehaviour
                     c_ = new coords( c_.x - 1, c_.y - 1 );
 
                     //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_.x + "," + c_.y);
+
+                    HelperFunctions.removeState(p_, PieceState.Jailed);
 
                     updateBoardState(c_, p_, "a", bs);
 
@@ -2003,6 +2008,8 @@ public class BotHelperFunctions : MonoBehaviour
             isolatedCollateralDeath(isolatedGetPiecesOnCoordsBoardGrid(adjustedCoords.x, adjustedCoords.y, bs.boardGrid, false), bs);
 
             updateBoardState(adjustedCoords, secondPiece, "a", bs);
+
+            HelperFunctions.removeState(secondPiece, PieceState.Jailed);
 
             piece.storage.Remove(secondPiece);
         }
@@ -2553,6 +2560,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                             //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_.y);
 
+                            HelperFunctions.removeState(p_, PieceState.Jailed);
                             updateBoardState(coords__, p_, "a", bs);
 
                             piece.storage.Remove(p_);
@@ -2579,6 +2587,7 @@ public class BotHelperFunctions : MonoBehaviour
                             //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_.y);
 
                             updateBoardState(c_, p_, "a", bs);
+                            HelperFunctions.removeState(p_, PieceState.Jailed);
 
                             piece.storage.Remove(p_);
                         }

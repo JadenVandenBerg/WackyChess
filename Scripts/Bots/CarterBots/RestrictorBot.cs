@@ -9,7 +9,7 @@ public class RestrictorBot : BotTemplate
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "RestrictorBot";
+        name = "Restrictor Bot";
         choosePieces();
     }
     private bool isGuarded(BotTemplate bot, BoardState bs, int color, coords coords)

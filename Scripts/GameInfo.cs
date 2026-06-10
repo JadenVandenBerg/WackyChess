@@ -555,6 +555,7 @@ public class Bot
     public int MinElo { get; set; }
 
     public List<string> Competing { get; set; }
+    public List<string> Trophies { get; set; }
 }
 
 public class PieceMove

@@ -9,7 +9,7 @@ public class BotDefender : BotTemplate
 	{
 		color = botColor;
 		pieces = new List<Piece>();
-		name = "BotDefender";
+		name = "Botdefender";
 
 		choosePieces();
 	}

@@ -380,7 +380,7 @@ public class HelperFunctions : MonoBehaviour
                 coords newCoords = adjustCoordsForBouncing(piece, coords[0], coords[1]);
 
                 GameObject square = findSquare(newCoords.x, newCoords.y);
-                bool pieceOnSquare = isPieceOnSquare(square);
+                bool pieceOnSquare = isPieceOnSquare(square, false);
 
                 if (newCoords.x == toX && newCoords.y == toY)
                 {
@@ -420,8 +420,6 @@ public class HelperFunctions : MonoBehaviour
         {
             int x = fromX;
             int y = fromY;
-            bool crossedBackRank = false;
-            bool jumpedPiece = false;
 
             for (int step = 0; step <= 8; step++)
             {
@@ -443,7 +441,7 @@ public class HelperFunctions : MonoBehaviour
                 }
 
                 GameObject square = findSquare(x, y);
-                if (isPieceOnSquare(square))
+                if (isPieceOnSquare(square, false))
                 {
                     break;
                 }
@@ -494,7 +492,7 @@ public class HelperFunctions : MonoBehaviour
         for (int i = 1; i <= diff - 1; i++)
         {
             GameObject square = findSquare(from.x + (i * dirX), from.y + (i * dirY));
-            if (square != null && isPieceOnSquare(square))
+            if (square != null && isPieceOnSquare(square, false))
             {
                 List<Piece> onSquare = getPiecesOnSquareBoardGrid(square);
                 if (checkState(piece, PieceState.Ghost) && isColorNotOnSquare(square, piece.color * -1)
@@ -1699,6 +1697,45 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
+            if (attackerPiece.collateralType == 2) //Freeze on Capture
+            {
+                if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
+                {
+                    return;
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    int[] coords = new int[] { deadPieceCoords.x + attackerPiece.collateral[i].x, deadPieceCoords.y + attackerPiece.collateral[i].y };
+                    GameObject square = findSquare(coords[0], coords[1]);
+
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
+                    {
+                        addState(attackerPiece, PieceState.Frozen);
+                        addAbility(attackerPiece, PieceAbilities.Unfreeze);
+
+                        Image img = attackerPiece.go.GetComponent<Image>();
+                        Color blueTint = Color.blue;
+
+                        img.color = Color.Lerp(img.color, blueTint, 0.4f);
+                    }
+
+                    if (!square) continue;
+
+                    List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
+                    foreach(Piece p in pieces)
+                    {
+                        addState(p, PieceState.Frozen);
+                        addAbility(p, PieceAbilities.Unfreeze);
+
+                        Image img = p.go.GetComponent<Image>();
+                        Color blueTint = Color.blue;
+
+                        img.color = Color.Lerp(img.color, blueTint, 0.4f);
+                    }
+                }
+            }
+
             //Collateral (Attackee)
             if (deadPiece.collateralType == 1) //Kill on death
             {
@@ -1769,7 +1806,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isPieceOnStartSquare(Piece piece)
     {
-        return isPieceOnSquare(findSquare(piece.startSquare.x, piece.startSquare.y));
+        return isPieceOnSquare(findSquare(piece.startSquare.x, piece.startSquare.y), false);
     }
 
     public static bool checkState(Piece piece, PieceState state)
@@ -2105,7 +2142,7 @@ public class HelperFunctions : MonoBehaviour
         piece.position = coords;
     }
 
-    public static bool isPieceOnSquare(GameObject square)
+    public static bool isPieceOnSquare(GameObject square, bool includeDisabled)
     {
         if (square == null) return true;
 
@@ -2113,6 +2150,23 @@ public class HelperFunctions : MonoBehaviour
 
         if (coords.y < 1 || coords.x < 1)
         {
+            return false;
+        }
+
+        if (!includeDisabled)
+        {
+            List<Piece> pieces = gameData.boardGrid[coords.x - 1][coords.y - 1];
+
+            foreach (Piece p in pieces)
+            {
+                if (checkState(p, PieceState.Dematerialized) || p.disabled)
+                {
+                    continue;
+                }
+
+                return true;
+            }
+
             return false;
         }
 
@@ -2161,7 +2215,7 @@ public class HelperFunctions : MonoBehaviour
             GameObject square = findSquare(coords[0] + hungryPiece.position.x, coords[1] + hungryPiece.position.y);
             if (square == null) { continue; }
 
-            if (!isPieceOnSquare(square))
+            if (!isPieceOnSquare(square, false))
             {
                 coord = new int[] { coords[0] + hungryPiece.position.x, coords[1] + hungryPiece.position.y };
                 break;
@@ -2187,7 +2241,7 @@ public class HelperFunctions : MonoBehaviour
 
             if (!checkBounds(posX, posY)) continue;
 
-            if (!isPieceOnSquare(findSquare(posX, posY)))
+            if (!isPieceOnSquare(findSquare(posX, posY), false))
             {
                 emptySurroundingSquares.Add(new coords(posX, posY));
             }
@@ -2664,6 +2718,11 @@ public class HelperFunctions : MonoBehaviour
 
     public static coords[] combineMoveSets(coords[] a, coords[] b)
     {
+        if (a == null || b == null)
+        {
+            return new coords[] { };
+        }
+
         List<coords> result = new List<coords>();
 
         for (int i = 0; i < a.GetLength(0); i++)
@@ -2883,7 +2942,89 @@ public class HelperFunctions : MonoBehaviour
     {
         piece.startSquare = new coords(piece.position.x, piece.position.y);
 
+        if (checkState(piece, PieceState.Fusion))
+        {
+            List<Piece> pieces = getFusionPieces(piece.baseType, piece.color);
+
+            addAbility(piece, pieces[0].abilities);
+            addAbility(piece, pieces[1].abilities);
+            addState(piece, pieces[0].states);
+            addState(piece, pieces[1].states);
+
+            piece.collateralType = Math.Max(pieces[0].collateralType, pieces[1].collateralType);
+            piece.storageLimit = Math.Max(pieces[0].storageLimit, pieces[1].storageLimit);
+            piece.numSpawns = Math.Max(pieces[0].numSpawns, pieces[1].numSpawns);
+
+            piece.moves = combineMoveSets(pieces[0].moves, pieces[1].moves);
+            piece.oneTimeMoves = combineMoveSets(pieces[0].oneTimeMoves, pieces[1].oneTimeMoves);
+            piece.moveAndAttacks = combineMoveSets(pieces[0].moveAndAttacks, pieces[1].moveAndAttacks);
+            piece.oneTimeMoveAndAttacks = combineMoveSets(pieces[0].oneTimeMoveAndAttacks, pieces[1].oneTimeMoveAndAttacks);
+            piece.murderousAttacks = combineMoveSets(pieces[0].murderousAttacks, pieces[1].murderousAttacks);
+            piece.conditionalAttacks = combineMoveSets(pieces[0].conditionalAttacks, pieces[1].conditionalAttacks);
+            piece.jumpAttacks = combineMoveSets(pieces[0].jumpAttacks, pieces[1].jumpAttacks);
+            piece.attacks = combineMoveSets(pieces[0].attacks, pieces[1].attacks);
+            piece.flagMove1 = combineMoveSets(pieces[0].flagMove1, pieces[1].flagMove1);
+            piece.flagMove2 = combineMoveSets(pieces[0].flagMove2, pieces[1].flagMove2);
+            piece.pushMoves = combineMoveSets(pieces[0].pushMoves, pieces[1].pushMoves);
+            piece.enPassantMoves = combineMoveSets(pieces[0].enPassantMoves, pieces[1].enPassantMoves);
+
+            piece.collateral = new coords[] { };
+            piece.collateral = combineMoveSets(pieces[0].collateral, pieces[1].collateral);
+            if (piece.collateral.Length == 0)
+            {
+                piece.collateral = null;
+            }
+
+            piece.lives = pieces[0].lives;
+            if (piece.lives == 1)
+            {
+                piece.lives = pieces[1].lives;
+            }
+
+            piece.promotingRow = pieces[0].promotingRow;
+            if (piece.promotingRow == 8 || piece.promotingRow == 1)
+            {
+                piece.promotingRow = pieces[1].promotingRow;
+            }
+
+            piece.promotesInto = pieces[0].promotesInto;
+            if (piece.promotesInto == "")
+            {
+                piece.promotesInto = pieces[1].promotesInto;
+            }
+
+            piece.spawnable = pieces[0].spawnable;
+            if (piece.spawnable == "")
+            {
+                piece.spawnable = pieces[1].spawnable;
+            }
+        }
+
         reinitPiece(piece, coords);
+    }
+
+    public static List<Piece> getFusionPieces(string type, int color)
+    {
+        List<Type> pieces = BotHelperFunctions.getAllTypePieces(type, color);
+
+        List<Piece> selected = new List<Piece>();
+
+        int count = 2;
+
+        System.Random rand = new System.Random();
+
+        for (int i = 0; i < count; i++)
+        {
+            int index = rand.Next(pieces.Count);
+
+            Type type_ = pieces[index];
+            Piece piece = (Piece)Activator.CreateInstance(type_, color, false, false);
+
+            selected.Add(piece);
+            pieces.RemoveAt(index);
+        }
+
+        return selected;
     }
 
     public static string getPieceType(Piece p)

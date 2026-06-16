@@ -51,7 +51,7 @@ public class BotHelperFunctions : MonoBehaviour
         return piece;
     }
 
-    private static List<Type> getAllTypePieces(string type, int color)
+    public static List<Type> getAllTypePieces(string type, int color)
     {
 
         List<Type> allPieces = Lootbox.GetAllPieces();
@@ -1247,7 +1247,7 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                if (HelperFunctions.checkState(p, PieceState.Dematerialized) && p.color == piece.color)
+                if (HelperFunctions.checkState(p, PieceState.Dematerialized))
                 {
                     // Your Dematerialized
                     continue;
@@ -1317,7 +1317,7 @@ public class BotHelperFunctions : MonoBehaviour
                 continue;
             }
 
-            if (HelperFunctions.checkState(p, PieceState.Dematerialized) && p.color == piece.color)
+            if (HelperFunctions.checkState(p, PieceState.Dematerialized))
             {
                 // Your Dematerialized
                 continue;
@@ -2020,7 +2020,7 @@ public class BotHelperFunctions : MonoBehaviour
             HelperFunctions.addAbility(piece, PieceAbilities.Dematerialize);
             HelperFunctions.removeAbility(piece, PieceAbilities.Materialize);
 
-            isolatedOnDeathsDontIncludeAttacker(piece, coords, bs);
+            isolatedOnDeathsDontIncludeAttacker(piece, adjustedCoords, bs);
 
             isolatedCheckPromote(piece, bs);
         }
@@ -2722,6 +2722,32 @@ public class BotHelperFunctions : MonoBehaviour
                 }
             }
 
+            if (attackerPiece.collateralType == 2)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
+                {
+                    return;
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    coords coords = new coords(adjustedDeadPieceCoords.x + attackerPiece.collateral[i].x, adjustedDeadPieceCoords.y + attackerPiece.collateral[i].y);
+
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
+                    {
+                        HelperFunctions.addState(attackerPiece, PieceState.Frozen);
+                        HelperFunctions.addAbility(attackerPiece, PieceAbilities.Unfreeze);
+                    }
+
+                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    foreach (Piece p in pieces)
+                    {
+                        HelperFunctions.addState(p, PieceState.Frozen);
+                        HelperFunctions.addAbility(p, PieceAbilities.Unfreeze);
+                    }
+                }
+            }
+
             if (deadPiece.collateralType == 1)
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
@@ -2944,7 +2970,7 @@ public class BotHelperFunctions : MonoBehaviour
         if (duplicateName)
         {
             Debug.LogError("Duplicate Name Found");
-            Debug.Break();
+            //Debug.Break();
         }
     }
 

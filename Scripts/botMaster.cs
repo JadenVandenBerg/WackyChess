@@ -41,9 +41,9 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = true;
-        SEASON_NAME = "SEASON3";
-        nonResettables.logMatch = true;
+        nonResettables.isBotTournament = false;
+        //SEASON_NAME = "ACC_SEASON2";
+        nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
 
         if (nonResettables.isBotTournament)
@@ -52,36 +52,34 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "TwoMoveBot",
-                    "ThinkingBot",
-                    "Lobotomy",
-                    "BerserkerBot",
-                    "HitmanBot"
+                    "Bot618",
+                    "BotsUtd",
+                    "BerserkerBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
 
                 List<string> div1 = new List<string>
                 {
-                    "Bloodbot",
-                    "AssassinBot",
-                    "G2EBot",
-                    "BottusMaximus",
-                    "BOTential",
-                    "PawnBot",
-                    "KamikazeBot",
-                    "OnePieceRandomBot"
+                    Bots.SavageBeastBot,
+                    Bots.FiveXRandomBot,
+                    Bots.BottusMaximus,
+                    Bots.OneMoveBot,
+                    Bots.HitmanBot,
+                    Bots.ThinkingBot,
+                    Bots.OnePieceRandomBot,
+                    Bots.EqualityBot,
                 };
 
                 List<string> div2 = new List<string>
                 {
-                    "ThinkingBot",
-                    "RestrictorBot",
-                    "Abilibot",
-                    "ChristopherColumbot",
-                    "BotDefender",
-                    "HitmanBot",
-                    "TwoMoveBot",
-                    "EqualityBot"
+                    Bots.ShieldBot,
+                    Bots.Abilibot,
+                    Bots.RandomBot,
+                    Bots.BOTential,
+                    Bots.PawnBot,
+                    Bots.AdventurousKingBot,
+                    Bots.IdiotBot,
+                    Bots.BotRoss,
                 };
                 
                 List<string> div3 = new List<string>
@@ -103,10 +101,10 @@ public class botMaster : MonoBehaviour
                 }
                 Debug.Log("Starting Tournament With: " + sb);
 
-                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
+                nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
 
                 //Div 1
-                nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
+                //nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
 
                 //Div 2
                 //nonResettables.botTournament = new BotTournament(div2[0], div2[1], div2[2], div2[3], div2[4], div2[5], div2[6], div2[7], false);
@@ -148,8 +146,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new HitmanBot(1);
-                botBlack = new HitmanBot(-1);
+                botWhite = new TwoMoveBot(1);
+                botBlack = new G2EBot(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -166,18 +164,21 @@ public class botMaster : MonoBehaviour
             List<Piece> botWhitePawns = filterPieces("Pawn", botWhite.pieces);
             List<Piece> botWhiteRooks = filterPieces("Rook", botWhite.pieces);
             List<Piece> botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
+            /*
             List<Piece> botWhiteKnights = filterPieces("Knight", botWhite.pieces);
+            */
             List<Piece> botWhiteKing = filterPieces("King", botWhite.pieces);
             List<Piece> botWhiteQueen = filterPieces("Queen", botWhite.pieces);
 
             List<Piece> botBlackPawns = filterPieces("Pawn", botBlack.pieces);
             List<Piece> botBlackRooks = filterPieces("Rook", botBlack.pieces);
             List<Piece> botBlackBishops = filterPieces("Bishop", botBlack.pieces);
+            /*
             List<Piece> botBlackKnights = filterPieces("Knight", botBlack.pieces);
+            */
             List<Piece> botBlackKing = filterPieces("King", botBlack.pieces);
             List<Piece> botBlackQueen = filterPieces("Queen", botBlack.pieces);
             /*
-
             List<Piece> botWhitePawns = new List<Piece>
             {
                 getPieceTypeInstance("Pawn", 1),
@@ -201,13 +202,13 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", 1),
                 getPieceTypeInstance("Bishop", 1),
             };
-
+            */
             List<Piece> botWhiteKnights = new List<Piece>
             {
-                getPieceTypeInstance("Knight", 1),
-                getPieceTypeInstance("Knight", 1),
+                getPieceTypeInstance("PhantomKnight", 1),
+                getPieceTypeInstance("PhantomKnight", 1),
             };
-
+            /*
             List<Piece> botWhiteKing = new List<Piece>
             {
                 getPieceTypeInstance("King", 1)
@@ -242,13 +243,13 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", -1),
                 getPieceTypeInstance("Bishop", -1),
             };
-
+            */
             List<Piece> botBlackKnights = new List<Piece>
             {
-                getPieceTypeInstance("Knight", -1),
-                getPieceTypeInstance("Knight", -1),
+                getPieceTypeInstance("PhantomKnight", -1),
+                getPieceTypeInstance("PhantomKnight", -1),
             };
-
+            /*
             List<Piece> botBlackKing = new List<Piece>
             {
                 getPieceTypeInstance("King", -1),
@@ -258,7 +259,6 @@ public class botMaster : MonoBehaviour
             {
                 getPieceTypeInstance("Queen", -1),
             };
-
             */
 
             foreach (Piece wp in botWhite.pieces)
@@ -447,7 +447,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 
@@ -495,7 +495,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.movePiece(movePieceObj, square);
 
                 Debug.Log("Reassembling Broken GO");
-                Debug.Break();
+                //Debug.Break();
             }
         }
 

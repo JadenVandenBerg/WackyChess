@@ -264,6 +264,12 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 UndoMovedPiece ump = entry.movedPiece;
 
+                if (ump == null)
+                {
+                    //Debug.Break();
+                    continue;
+                }
+
                 Piece p = ump.p;
                 coords initialPosition = ump.initialPosition;
                 coords newPosition = ump.newPosition;
@@ -634,7 +640,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             undo.addAbility(pieceMaterialize);
             removeAbility(piece, PieceAbilities.Materialize);
 
-            undo_isolatedOnDeathsDontIncludeAttacker(piece, coords, bs_, undo);
+            undo_isolatedOnDeathsDontIncludeAttacker(piece, adjustedCoords, bs_, undo);
 
             undo_isolatedCheckPromote(piece, bs_, undo);
         }
@@ -1016,6 +1022,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 undo_isolatedRemovePiece(deadPiece, bs, undo);
 
                 Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, true);
+                shieldPawn.position = deadPiece.position;
 
                 undo_isolatedAddPiece(shieldPawn, bs, undo);
             }
@@ -1046,6 +1053,44 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
                     List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
                     undo_isolatedCollateralDeath(pieces, bs, undo);
+                }
+            }
+
+            if (attackerPiece.collateralType == 2)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
+                {
+                    return (stackingStates, attackerDied);
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    coords coords = new coords(adjustedDeadPieceCoords.x + attackerPiece.collateral[i].x, adjustedDeadPieceCoords.y + attackerPiece.collateral[i].y);
+
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
+                    {
+                        UndoState us = new UndoState(attackerPiece, attackerPiece.states);
+                        undo.addState(us);
+
+                        addState(attackerPiece, PieceState.Frozen);
+
+                        UndoAbility ua = new UndoAbility(attackerPiece, attackerPiece.abilities);
+                        undo.addAbility(ua);
+                        addAbility(attackerPiece, PieceAbilities.Unfreeze);
+                    }
+
+                    //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
+                    foreach (Piece p in pieces)
+                    {
+                        UndoState us = new UndoState(p, p.states);
+                        undo.addState(us);
+                        addState(p, PieceState.Frozen);
+
+                        UndoAbility ua = new UndoAbility(p, p.abilities);
+                        undo.addAbility(ua);
+                        addAbility(p, PieceAbilities.Unfreeze);
+                    }
                 }
             }
 

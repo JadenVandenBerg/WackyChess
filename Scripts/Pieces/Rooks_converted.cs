@@ -2022,7 +2022,7 @@ public class SpittingRook : Piece
         }
     }
 }
-/*
+
 public class PhantomRook : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2103,7 +2103,7 @@ public class PhantomRook : Piece
         }
     }
 }
-*/
+
 
 public class StackingRook : Piece
 {
@@ -2562,6 +2562,168 @@ public class DelayedRook : Piece
     public int numSpawns { get; set; } = 0;
 
     public DelayedRook(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}
+
+public class FreezeBombRook : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 6.5f;
+    public int rarityLevel { get; set; } = 3;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Rook";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.None;
+    public int collateralType { get; set; } = 2;
+    public coords[] collateral { get; set; } = { new coords(0, 0), new coords(1, 1), new coords(-1, 1), new coords(1, -1), new coords(-1, -1), new coords(0, 1), new coords(1, 0), new coords(0, -1), new coords(-1, 0) };
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(0, 1), new coords(0, 2), new coords(0, 3), new coords(0, 4), new coords(0, 5), new coords(0, 6), new coords(0, 7), new coords(0, 8), new coords(1, 0), new coords(2, 0), new coords(3, 0), new coords(4, 0), new coords(5, 0), new coords(6, 0), new coords(7, 0), new coords(8, 0), new coords(0, -1), new coords(0, -2), new coords(0, -3), new coords(0, -4), new coords(0, -5), new coords(0, -6), new coords(0, -7), new coords(0, -8), new coords(-1, 0), new coords(-2, 0), new coords(-3, 0), new coords(-4, 0), new coords(-5, 0), new coords(-6, 0), new coords(-7, 0), new coords(-8, 0) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public bool condition { get; set; } = false; //Condition: Castle
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Rooks/wFreezeBombRook";
+    public String bImage { get; set; } = "Images/Rooks/bFreezeBombRook";
+    public String name { get; set; } = "FreezeBombRook";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public FreezeBombRook(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}
+
+public class FusionRook : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 8;
+    public int rarityLevel { get; set; } = 0;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Rook";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.Fusion;
+    public int collateralType { get; set; } = -1;
+    public coords[] collateral { get; set; } = null;
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { new coords(0, 1), new coords(0, 2), new coords(0, 3), new coords(0, 4), new coords(0, 5), new coords(0, 6), new coords(0, 7), new coords(0, 8), new coords(1, 0), new coords(2, 0), new coords(3, 0), new coords(4, 0), new coords(5, 0), new coords(6, 0), new coords(7, 0), new coords(8, 0), new coords(0, -1), new coords(0, -2), new coords(0, -3), new coords(0, -4), new coords(0, -5), new coords(0, -6), new coords(0, -7), new coords(0, -8), new coords(-1, 0), new coords(-2, 0), new coords(-3, 0), new coords(-4, 0), new coords(-5, 0), new coords(-6, 0), new coords(-7, 0), new coords(-8, 0) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+    public bool condition { get; set; } = false; //Condition: Castle
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Rooks/wFusionRook";
+    public String bImage { get; set; } = "Images/Rooks/bFusionRook";
+    public String name { get; set; } = "FusionRook";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public FusionRook(int color, bool online, bool simulated)
     {
         if (online)
         {

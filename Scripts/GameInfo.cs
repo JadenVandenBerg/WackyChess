@@ -244,6 +244,36 @@ public static class nonResettables
     }
 }
 
+public static class Bots
+{
+    public const string Bloodbot = "Bloodbot";
+    public const string AssassinBot = "AssassinBot";
+    public const string G2EBot = "G2EBot";
+    public const string BottusMaximus = "BottusMaximus";
+    public const string BOTential = "BOTential";
+    public const string PawnBot = "PawnBot";
+    public const string KamikazeBot = "KamikazeBot";
+    public const string OnePieceRandomBot = "OnePieceRandomBot";
+
+    public const string ThinkingBot = "ThinkingBot";
+    public const string RestrictorBot = "RestrictorBot";
+    public const string Abilibot = "Abilibot";
+    public const string ChristopherColumbot = "ChristopherColumbot";
+    public const string BotDefender = "BotDefender";
+    public const string HitmanBot = "HitmanBot";
+    public const string TwoMoveBot = "TwoMoveBot";
+    public const string EqualityBot = "EqualityBot";
+
+    public const string FiveXRandomBot = "FiveXRandomBot";
+    public const string RandomBot = "RandomBot";
+    public const string OneMoveBot = "OneMoveBot";
+    public const string BotRoss = "BotRoss";
+    public const string AdventurousKingBot = "AdventurousKingBot";
+    public const string ShieldBot = "ShieldBot";
+    public const string SavageBeastBot = "SavageBeastBot";
+    public const string IdiotBot = "IdiotBot";
+}
+
 public static class globalDefs
 {
     public static readonly (int dx, int dy)[] globalDirectionsNoZero =
@@ -505,6 +535,7 @@ public enum PieceState : long
     Spitting = 1L << 33,
     Stacking = 1L << 34,
     Jailer = 1L << 35,
+    Fusion = 1L << 36,
 }
 
 public enum PieceAbilities : long

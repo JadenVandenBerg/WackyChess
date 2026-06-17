@@ -20,7 +20,7 @@ public class Botfish : BotTemplate
     public NextMove nextMove()
     {
         Botfish_BoardState botfishBS = Botfish_FixBoardState(this.currentBoardState);
-        NextMove validMoves = new List<NextMove>();
+        List<NextMove> validMoves = new List<NextMove>();
 
         List<NextMove> allMoves = Botfish_getAllBotMoves(botfishBS, this.color);
         //Todo game logic
@@ -38,7 +38,6 @@ public class Botfish : BotTemplate
 
         List<BotfishPiece> pieces = bs.allPieces;
 
-        int piecesCount = 0;
         for (int i = 0; i < pieces.Count; i++) {
             BotfishPiece piece = pieces[i];
 
@@ -48,7 +47,7 @@ public class Botfish : BotTemplate
 
             coords[] moves_ = Botfish_getIsolatedStatePieceMoves(piece, bs);
 
-            if (moves_ != null && moves_.Count > 0)
+            if (moves_ != null && moves_.Length > 0)
             {
                 foreach (coords move in moves_) {
                     Move mv = new Move(piece, move);
@@ -58,7 +57,7 @@ public class Botfish : BotTemplate
             }
         }
 
-        return totalMoves;
+        return moves;
     }
 
     public static List<BotfishPiece> Botfish_isolatedGetPiecesOnCoordsBoardGrid(int x, int y, List<BotfishPiece>[,] boardGrid)
@@ -102,11 +101,10 @@ public class Botfish : BotTemplate
             useDirections = 2;
         }
 
-        int x = position.x - 1; //0-based
-        int y = position.y - 1;
+        int x = p.position.x - 1; //0-based
+        int y = p.position.y - 1;
 
         if (useDirections == 1) {
-            coords[] position = p.position;
 
             foreach (var direction in directions)
             {
@@ -262,7 +260,7 @@ public class Botfish : BotTemplate
         return botFishPieces;
     }
 
-    public BotfishPiece fixBotfishPiece(Piece p) {
+    public static BotfishPiece fixBotfishPiece(Piece p) {
         if (p.baseType == "Queen") {
             return new Botfish_Queen(p.color, p.hasMoved);
         }
@@ -322,8 +320,10 @@ public class Botfish : BotTemplate
             }
         }
 
-        whitePointsOnBoard = wp;
-        blackPointsOnBoard = bp;
+        botfishBS.whitePointsOnBoard = wp;
+        botfishBS.blackPointsOnBoard = bp;
+
+        return botfishBS;
     }
 
     public interface BotfishPiece {
@@ -334,10 +334,12 @@ public class Botfish : BotTemplate
         public coords[] moves { get; set; }
         public (int dx, int dy)[] directions { get; set; }
         public float points { get; set; }
+        public coords position { get; set; }
     }
 
     public class Botfish_Queen : BotfishPiece {
         public int color { get; set; } = 1;
+        public coords position { get; set; } = new coords(-1, -1);
         public bool hasMoved { get; set; } = false;
         public string baseType { get; set; } = "Queen";
         public string name { get; set; } = "";
@@ -347,7 +349,7 @@ public class Botfish : BotTemplate
             (0, 1), (1, 1), (1, 0), (0, -1),
             (-1, -1), (-1, 0), (-1, 1), (1, -1)
         };
-        public coords[] moves = {};
+        public coords[] moves { get; set; } = { };
 
         public Botfish_Queen(int color, bool hasMoved) {
             this.color = color;
@@ -359,6 +361,7 @@ public class Botfish : BotTemplate
 
     public class Botfish_Rook : BotfishPiece {
         public int color { get; set; } = 1;
+        public coords position { get; set; } = new coords(-1,-1);
         public bool hasMoved { get; set; } = false;
         public string baseType { get; set; } = "Rook";
         public string name { get; set; } = "";
@@ -367,7 +370,7 @@ public class Botfish : BotTemplate
         {
             (0, 1), (1, 0), (0, -1), (-1, 0)
         };
-        public coords[] moves = {};
+        public coords[] moves { get; set; } = {};
 
         public Botfish_Rook(int color, bool hasMoved) {
             this.color = color;
@@ -379,6 +382,7 @@ public class Botfish : BotTemplate
 
     public class Botfish_Bishop : BotfishPiece {
         public int color { get; set; } = 1;
+        public coords position { get; set; } = new coords(-1, -1);
         public bool hasMoved { get; set; } = false;
         public string baseType { get; set; } = "Bishop";
         public string name { get; set; } = "";
@@ -387,7 +391,7 @@ public class Botfish : BotTemplate
         {
             (1, 1), (-1, -1), (-1, 1), (1, -1)
         };
-        public coords[] moves = {};
+        public coords[] moves { get; set; } = {};
 
         public Botfish_Bishop(int color, bool hasMoved) {
             this.color = color;
@@ -399,12 +403,13 @@ public class Botfish : BotTemplate
 
     public class Botfish_King : BotfishPiece {
         public int color { get; set; } = 1;
+        public coords position { get; set; } = new coords(-1, -1);
         public bool hasMoved { get; set; } = false;
         public string baseType { get; set; } = "King";
         public string name { get; set; } = "";
         public float points { get; set; } = 100;
         public (int dx, int dy)[] directions { get; set; } = new (int, int)[] { };
-        public coords[] moves = new coords[]
+        public coords[] moves { get; set; } = new coords[]
         {
             new coords(0, 1), new coords(1, 1), new coords(1, 0), new coords(0, -1),
             new coords(-1, -1), new coords(-1, 0), new coords(-1, 1), new coords(1, -1)
@@ -420,15 +425,16 @@ public class Botfish : BotTemplate
 
     public class Botfish_Knight : BotfishPiece {
         public int color { get; set; } = 1;
+        public coords position { get; set; } = new coords(-1, -1);
         public bool hasMoved { get; set; } = false;
         public string baseType { get; set; } = "Knight";
         public string name { get; set; } = "";
         public float points { get; set; } = 3;
         public (int dx, int dy)[] directions { get; set; } = new (int, int)[] { };
-        public coords[] moves = new coords[] {
+        public coords[] moves { get; set; } = new coords[] {
             new coords(2, 1), new coords(-2, 1), new coords(2, -1), new coords(-2, -1)
             , new coords(1, 2), new coords(-1, 2), new coords(1, -2), new coords(-1, -2)
-        }
+        };
 
         public Botfish_Knight(int color, bool hasMoved) {
             this.color = color;
@@ -438,13 +444,16 @@ public class Botfish : BotTemplate
         }
     }
 
-    public class Botfish_Pawn : BotfishPiece {
+    public class Botfish_Pawn : BotfishPiece
+    {
+        public int color { get; set; } = 1;
         public bool hasMoved { get; set; } = false;
+        public coords position { get; set; } = new coords(-1, -1);
         public string baseType { get; set; } = "Pawn";
         public string name { get; set; } = "";
         public float points { get; set; } = 1;
         public (int dx, int dy)[] directions { get; set; } = new (int, int)[] { };
-        public coords[] moves { get; set; } = { }
+        public coords[] moves { get; set; } = { };
 
         public Botfish_Pawn(int color, bool hasMoved) {
             this.color = color;
@@ -504,7 +513,7 @@ public class Botfish : BotTemplate
         }
     }
 
-    public static void Botfish_updateBoardState(coords coords, BotfishPiece piece, String action, Botfish_BoardState boardState)
+    public static void Botfish_updateBoardState(coords coords, BotfishPiece piece, string action, Botfish_BoardState boardState)
     {
         if (coords.x < 0 || coords.y < 0)
         {
@@ -574,16 +583,16 @@ public class Botfish : BotTemplate
             }
         }
 
-        Botfish_move(p, coords, undo, bs);
+        Botfish_move(piece, coords, undo, bs);
 
         if (piece.baseType == "Pawn") {
-            if (p.color == 1 && p.position.y == 8 || p.color == -1 && p.position.y == 1) {
-                BotfishPiece queen = new Botfish_Queen(p.color, false);
-                queen.position = new coords(p.position.x, p.position.y);
+            if (piece.color == 1 && piece.position.y == 8 || piece.color == -1 && piece.position.y == 1) {
+                BotfishPiece queen = new Botfish_Queen(piece.color, false);
+                queen.position = new coords(piece.position.x, piece.position.y);
 
-                Botfish_UndoMovedPiece umpbf = new Botfish_UndoMovedPiece(queen, queen.position, false, true, false);
+                Botfish_UndoMovedPiece umpbf = new Botfish_UndoMovedPiece(queen, new coords(-1, -1), queen.position, false, true, false);
                 undo.addMove(umpbf);
-                Botfish_kill(p, undo, bs);
+                Botfish_kill(piece, undo, bs);
             }
         }
 

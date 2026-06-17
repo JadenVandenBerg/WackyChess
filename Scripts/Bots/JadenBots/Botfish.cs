@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
 using static UndoMoveBotHelperFunctions;
-
 /*
 public class Botfish : BotTemplate
 {
@@ -16,25 +15,119 @@ public class Botfish : BotTemplate
         choosePieces();
     }
 
+    public class Botfish_Move
+    {
+        public BotfishPiece p;
+        public coords coords;
+
+        public Move(BotfishPiece piece, coords coords)
+        {
+            this.p = piece;
+            this.coords = coords;
+        }
+    }
+
     override
     public NextMove nextMove()
     {
-        Botfish_BoardState botfishBS = Botfish_FixBoardState(this.currentBoardState);
-        List<NextMove> validMoves = new List<NextMove>();
+        Dictionary<BotfishPiece, Piece> pieceMap = new Dictionary<BotfishPiece, Piece>();
 
-        List<NextMove> allMoves = Botfish_getAllBotMoves(botfishBS, this.color);
-        //Todo game logic
+        Botfish_BoardState botfishBS = Botfish_FixBoardState(this.currentBoardState, pieceMap);
+        List<Botfish_Move> validMoves = new List<Botfish_Move>();
 
-        //Todo if botfish returns no moves, choose random move
-        System.Random rand = new System.Random();
-        int rndIdx = rand.Next(validMoves.Count);
+        List<Botfish_Move> allMoves = Botfish_getAllBotMoves(botfishBS, this.color);
 
-        NextMove move = validMoves[rndIdx];
-        return move;
+        float bestScore_fold1 = Mathf.NegativeInfinity;
+
+        foreach(Botfish_Move botFishMove in allMoves) {
+            BotfishPiece piece_fold1 = botFishMove.p;
+            coords coords_fold1 = botFishMove.coords;
+
+            Botfish_UndoMove undo_fold1 = Botfish_simulatePieceMove(botfishBS, piece_fold1, coords_fold1);
+
+            List<Botfish_Move> allMoves_fold1 = Botfish_getAllBotMoves(botfishBS, this.color * -1);
+
+            float worstScore_fold2 = Mathf.Infinity;
+
+            foreach(Botfish_Move botFishMove_fold2 in allMoves_fold1) {
+                BotfishPiece piece_fold2 = botFishMove_fold2.p;
+                coords coords_fold2 = botFishMove_fold2.coords;
+
+                Botfish_UndoMove undo_fold2 = Botfish_simulatePieceMove(botfishBS, piece_fold2, coords_fold2);
+
+                List<Botfish_Move> allMoves_fold2 = Botfish_getAllBotMoves(botfishBS, this.color * 1);
+
+                float bestScore_fold3 = Mathf.NegativeInfinity;
+
+                foreach(Botfish_Move botFishMove_fold3 in allMoves_fold2) {
+                    BotfishPiece piece_fold3 = botFishMove_fold3.p;
+                    coords coords_fold3 = botFishMove_fold3.coords;
+
+                    Botfish_UndoMove undo_fold3 = Botfish_simulatePieceMove(botfishBS, piece_fold3, coords_fold3);
+
+                    List<Botfish_Move> allMoves_fold3 = Botfish_getAllBotMoves(botfishBS, this.color * -1);
+
+                    float worstScore_fold4 = Mathf.Infinity;
+
+                    foreach(Botfish_Move botFishMove_fold4 in allMoves_fold3) {
+                        BotfishPiece piece_fold4 = botFishMove_fold4.p;
+                        coords coords_fold4 = botFishMove_fold4.coords;
+
+                        Botfish_UndoMove undo_fold4 = Botfish_simulatePieceMove(botfishBS, piece_fold4, coords_fold4);
+
+                        float botPoints_fold4 = this.color == 1 ? botfishBS.whitePointsOnBoard : botfishBS.blackPointsOnBoard;
+                        float oppPoints_fold4 = this.color == -1 ? botfishBS.whitePointsOnBoard : botfishBS.blackPointsOnBoard;
+
+                        float score = botPoints_fold4 - oppPoints_fold4;
+                        worstScore_fold4 = Mathf.Min(worstScore_fold4, score);
+
+                        Botfish_undoMove(undo_fold4);
+                    }
+
+                    bestScore_fold3 = Mathf.Max(bestScore_fold3, worstScore_fold4);
+
+                    Botfish_undoMove(undo_fold3);
+                }
+
+                worstScore_fold2 = Mathf.Min(worstScore_fold2, bestScore_fold3);
+
+                Botfish_undoMove(undo_fold2);
+            }
+
+            if (worstScore_fold2 >= bestScore_fold1)
+            {
+                if (worstScore_fold2 > bestScore_fold1) {
+                    validMoves.Clear();
+                }
+
+                validMoves.Add(botFishMove);
+
+                bestScore_fold1 = worstScore_fold2;
+            }
+
+            Botfish_undoMove(undo_fold1);
+        }
+
+        if (validMoves.Count == 0) {
+            NextMove move_ = BotHelperFunctions.getRandomBotMove(this);
+
+            Debug.Log("Botfish: Returning Random Move");
+
+            return move_;
+        }
+        else {
+            int rndIdx = globalDefs.globalRand.Next(validMoves.Count);
+
+            Botfish_Move move = validMoves[rndIdx];
+            Piece movePiece = pieceMap[move.p];
+            coords moveCoords = move.coords;
+
+            return new NextMove(new Move(movePiece, moveCoords));
+        }
     }
 
-    public static List<NextMove> Botfish_getAllBotMoves(Botfish_BoardState bs, int color) {
-        List<NextMove> moves = new List<NextMove>();
+    public static List<Botfish_Move> Botfish_getAllBotMoves(Botfish_BoardState bs, int color) {
+        List<Botfish_Move> moves = new List<Botfish_Move>();
 
         List<BotfishPiece> pieces = bs.allPieces;
 
@@ -50,9 +143,9 @@ public class Botfish : BotTemplate
             if (moves_ != null && moves_.Length > 0)
             {
                 foreach (coords move in moves_) {
-                    Move mv = new Move(piece, move);
+                    Botfish_Move mv = new Botfish_Move(piece, move);
 
-                    moves.Add(new NextMove(mv));
+                    moves.Add(mv);
                 }
             }
         }
@@ -308,6 +401,11 @@ public class Botfish : BotTemplate
                 foreach (Piece piece in bs.boardGrid[x, y])
                 {
                     BotfishPiece bfp = fixBotfishPiece(piece);
+
+                    if (pieceMap != null) {
+                        pieceMap[bfp] = piece;
+                    }
+
                     if (bfp.color == 1) {
                         wp += bfp.points;
                     }
@@ -543,6 +641,13 @@ public class Botfish : BotTemplate
         undo.addMove(ump);
 
         Botfish_updateBoardState(new coords( p.position.x - 1, p.position.y - 1 ), p, "r", bs);
+
+        if (p.color == 1) {
+            bs.whitePointsOnBoard -= p.points;
+        }
+        else {
+            bs.blackPointsOnBoard -= p.points;
+        }
     }
 
     public static void Botfish_move(BotfishPiece p, coords to, Botfish_UndoMove undo, Botfish_BoardState bs) {
@@ -590,6 +695,13 @@ public class Botfish : BotTemplate
                 BotfishPiece queen = new Botfish_Queen(piece.color, false);
                 queen.position = new coords(piece.position.x, piece.position.y);
 
+                if (p.color == 1) {
+                    bs.whitePointsOnBoard += queen.points;
+                }
+                else {
+                    bs.blackPointsOnBoard += queen.points;
+                }
+
                 Botfish_UndoMovedPiece umpbf = new Botfish_UndoMovedPiece(queen, new coords(-1, -1), queen.position, false, true, false);
                 undo.addMove(umpbf);
                 Botfish_kill(piece, undo, bs);
@@ -599,7 +711,7 @@ public class Botfish : BotTemplate
         return undo;
     }
 
-    public static void undoMove(Botfish_UndoMove undo, Botfish_BoardState bs)
+    public static void Botfish_undoMove(Botfish_UndoMove undo, Botfish_BoardState bs)
     {
         for (int i = undo.entries.Count - 1; i >= 0; i--)
         {
@@ -620,10 +732,24 @@ public class Botfish : BotTemplate
             if (spawned)
             {
                 Botfish_updateBoardState(new coords( newPosition.x - 1, newPosition.y - 1 ),p, "r", bs);
+
+                if (p.color == 1) {
+                    bs.whitePointsOnBoard -= p.points;
+                }
+                else {
+                    bs.blackPointsOnBoard -= p.points;
+                }
             }
             else if (dead)
             {
                 Botfish_updateBoardState(new coords( initialPosition.x - 1, initialPosition.y - 1 ),p, "a", bs);
+
+                if (p.color == 1) {
+                    bs.whitePointsOnBoard += p.points;
+                }
+                else {
+                    bs.blackPointsOnBoard += p.points;
+                }
             }
             else
             {

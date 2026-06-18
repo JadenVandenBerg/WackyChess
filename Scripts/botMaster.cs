@@ -44,7 +44,7 @@ public class botMaster : MonoBehaviour
         nonResettables.isBotTournament = false;
         //SEASON_NAME = "ACC_SEASON2";
         nonResettables.logMatch = false;
-        nonResettables.ruleset = "Wacky";
+        nonResettables.ruleset = "Normal";
 
         if (nonResettables.isBotTournament)
         {
@@ -146,7 +146,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new TwoMoveBot(1);
+                botWhite = new Botfish(1);
                 botBlack = new G2EBot(-1);
             }
 
@@ -161,24 +161,21 @@ public class botMaster : MonoBehaviour
 
             gameData.boardGrid = HelperFunctions.initBoardGrid();
 
+            /*
             List<Piece> botWhitePawns = filterPieces("Pawn", botWhite.pieces);
             List<Piece> botWhiteRooks = filterPieces("Rook", botWhite.pieces);
             List<Piece> botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
-            /*
             List<Piece> botWhiteKnights = filterPieces("Knight", botWhite.pieces);
-            */
             List<Piece> botWhiteKing = filterPieces("King", botWhite.pieces);
             List<Piece> botWhiteQueen = filterPieces("Queen", botWhite.pieces);
 
             List<Piece> botBlackPawns = filterPieces("Pawn", botBlack.pieces);
             List<Piece> botBlackRooks = filterPieces("Rook", botBlack.pieces);
             List<Piece> botBlackBishops = filterPieces("Bishop", botBlack.pieces);
-            /*
             List<Piece> botBlackKnights = filterPieces("Knight", botBlack.pieces);
-            */
             List<Piece> botBlackKing = filterPieces("King", botBlack.pieces);
             List<Piece> botBlackQueen = filterPieces("Queen", botBlack.pieces);
-            /*
+            */
             List<Piece> botWhitePawns = new List<Piece>
             {
                 getPieceTypeInstance("Pawn", 1),
@@ -202,13 +199,11 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", 1),
                 getPieceTypeInstance("Bishop", 1),
             };
-            */
             List<Piece> botWhiteKnights = new List<Piece>
             {
-                getPieceTypeInstance("PhantomKnight", 1),
-                getPieceTypeInstance("PhantomKnight", 1),
+                getPieceTypeInstance("Knight", 1),
+                getPieceTypeInstance("Knight", 1),
             };
-            /*
             List<Piece> botWhiteKing = new List<Piece>
             {
                 getPieceTypeInstance("King", 1)
@@ -243,13 +238,11 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", -1),
                 getPieceTypeInstance("Bishop", -1),
             };
-            */
             List<Piece> botBlackKnights = new List<Piece>
             {
-                getPieceTypeInstance("PhantomKnight", -1),
-                getPieceTypeInstance("PhantomKnight", -1),
+                getPieceTypeInstance("Knight", -1),
+                getPieceTypeInstance("Knight", -1),
             };
-            /*
             List<Piece> botBlackKing = new List<Piece>
             {
                 getPieceTypeInstance("King", -1),
@@ -259,7 +252,6 @@ public class botMaster : MonoBehaviour
             {
                 getPieceTypeInstance("Queen", -1),
             };
-            */
 
             foreach (Piece wp in botWhite.pieces)
             {

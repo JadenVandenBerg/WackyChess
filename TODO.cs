@@ -45,7 +45,6 @@
  * JumpingRook                  6
  * SuperRook                    7
  * CrusherRook                  7
- * FusionRook                   8
  * DuplicateRook                8
  * 
  ***** Queens
@@ -57,7 +56,6 @@
  * CastlerQueen                 9
  * PromotionQueen               10
  * SuperQueen                   11
- * FusionQueen                  14
  * 
  ***** Bishops
  *
@@ -67,7 +65,6 @@
  * CastlerBishop                3
  * MusketBishop                 4
  * SuperBishop                  5
- * FusionBishop                 6
  * DuplicateBishop              6
  * 
  ***** Knights
@@ -81,7 +78,6 @@
  * WorkingTitleKnight           6
  * HistoricallyAccurateKnight   6
  * CheckersKnight (jump kill)   6
- * FusionKnight                 7
  * 
  ***** Kings
  * FatKing                      -5
@@ -98,6 +94,5 @@
  * ExtraLifeKing                4
  * ForceFieldKing               4
  * TakeHimKing                  5
- * FusionKing                   7
  * Wizard                       8
  */

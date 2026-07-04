@@ -170,6 +170,8 @@ public interface Piece
      * Double: Starts as two pawns
      * Protective: Moves like a queen when in check //used for flag moves
      * Scaredy: Moves 2 squares when in check //used for flag moves
+     * Thief: Steals pieces (not implemented yet)
+     * PawnShop: Converts pawn to a new random pawn (not implemented yet)
      */
     public PieceState states { get; set; }
 
@@ -180,12 +182,8 @@ public interface Piece
      * -1: None
      * 0: Kill (After Capture)
      * 1: Kill (After Captured)
-     * 2: Push (not implemented yet)
+     * 2: Freeze (After Capture)
      * 3: Magnet (not implemented yet)
-     * 4: Prevent Explosion (not implemented yet)
-     * 5: Pawn Shop (After Capture) (not implemented yet)
-     * 6: Thief (Converts enemy pieces into your pieces) (not implemented yet)
-     * 7: Lift (Basically Magnet but for the square you're on) (not implemented yet)
      */
     public int collateralType { get; set; }
 

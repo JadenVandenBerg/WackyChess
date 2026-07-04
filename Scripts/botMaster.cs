@@ -42,49 +42,58 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
         nonResettables.isBotTournament = false;
-        //SEASON_NAME = "SEASON2";
+        //SEASON_NAME = "ACC_SEASON2";
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Normal";
-        /*
+
         if (nonResettables.isBotTournament)
         {
             if (nonResettables.botTournament == null)
             {
                 List<string> forceNames = new List<string>
                 {
-                    //"TwoMoveBot",
-                    ///"ThinkingBot",
-                    //"Lobotomy",
-                    //"BerserkerBot"
+                    "Bot618",
+                    "BotsUtd",
+                    "BerserkerBot"
                 };
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames);
 
-                /*
                 List<string> div1 = new List<string>
                 {
-                    "Bloodbot",
-                    "AssassinBot",
-                    "PawnBot",
-                    "BottusMaximus",
-                    "G2EBot",
-                    "KamikazeBot",
-                    "OneMoveBot",
-                    "SavageBeastBot"
+                    Bots.SavageBeastBot,
+                    Bots.FiveXRandomBot,
+                    Bots.BottusMaximus,
+                    Bots.OneMoveBot,
+                    Bots.HitmanBot,
+                    Bots.ThinkingBot,
+                    Bots.OnePieceRandomBot,
+                    Bots.EqualityBot,
                 };
-                
+
                 List<string> div2 = new List<string>
                 {
-                    "OnePieceRandomBot",
-                    "AdventurousKingBot",
-                    "BotRoss",
-                    "RandomBot",
-                    "BOTential",
+                    Bots.ShieldBot,
+                    Bots.Abilibot,
+                    Bots.RandomBot,
+                    Bots.BOTential,
+                    Bots.PawnBot,
+                    Bots.AdventurousKingBot,
+                    Bots.IdiotBot,
+                    Bots.BotRoss,
+                };
+                
+                List<string> div3 = new List<string>
+                {
                     "FiveXRandomBot",
+                    "RandomBot",
+                    "OneMoveBot",
+                    "BotRoss",
+                    "AdventurousKingBot",
                     "ShieldBot",
+                    "SavageBeastBot",
                     "IdiotBot"
                 };
-                */
-        /*
+
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
                 {
@@ -93,12 +102,15 @@ public class botMaster : MonoBehaviour
                 Debug.Log("Starting Tournament With: " + sb);
 
                 nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
-                
+
                 //Div 1
                 //nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
 
                 //Div 2
                 //nonResettables.botTournament = new BotTournament(div2[0], div2[1], div2[2], div2[3], div2[4], div2[5], div2[6], div2[7], false);
+
+                //Div 3
+                //nonResettables.botTournament = new BotTournament(div3[0], div3[1], div3[2], div3[3], div3[4], div3[5], div3[6], div3[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -123,8 +135,7 @@ public class botMaster : MonoBehaviour
                 botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
-        } 
-        */
+        }
         
         if (!gameOver)
         { 
@@ -135,8 +146,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new ForkBot(1);
-                botBlack = new OneMoveBot(-1);
+                botWhite = new Botfish(1);
+                botBlack = new G2EBot(-1);
             }
 
             gameData.botWhite = botWhite;
@@ -150,6 +161,7 @@ public class botMaster : MonoBehaviour
 
             gameData.boardGrid = HelperFunctions.initBoardGrid();
 
+            /*
             List<Piece> botWhitePawns = filterPieces("Pawn", botWhite.pieces);
             List<Piece> botWhiteRooks = filterPieces("Rook", botWhite.pieces);
             List<Piece> botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
@@ -163,8 +175,7 @@ public class botMaster : MonoBehaviour
             List<Piece> botBlackKnights = filterPieces("Knight", botBlack.pieces);
             List<Piece> botBlackKing = filterPieces("King", botBlack.pieces);
             List<Piece> botBlackQueen = filterPieces("Queen", botBlack.pieces);
-            /*
-
+            */
             List<Piece> botWhitePawns = new List<Piece>
             {
                 getPieceTypeInstance("Pawn", 1),
@@ -188,13 +199,11 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", 1),
                 getPieceTypeInstance("Bishop", 1),
             };
-
             List<Piece> botWhiteKnights = new List<Piece>
             {
                 getPieceTypeInstance("Knight", 1),
                 getPieceTypeInstance("Knight", 1),
             };
-
             List<Piece> botWhiteKing = new List<Piece>
             {
                 getPieceTypeInstance("King", 1)
@@ -229,13 +238,11 @@ public class botMaster : MonoBehaviour
                 getPieceTypeInstance("Bishop", -1),
                 getPieceTypeInstance("Bishop", -1),
             };
-
             List<Piece> botBlackKnights = new List<Piece>
             {
                 getPieceTypeInstance("Knight", -1),
                 getPieceTypeInstance("Knight", -1),
             };
-
             List<Piece> botBlackKing = new List<Piece>
             {
                 getPieceTypeInstance("King", -1),
@@ -245,8 +252,6 @@ public class botMaster : MonoBehaviour
             {
                 getPieceTypeInstance("Queen", -1),
             };
-
-            */
 
             foreach (Piece wp in botWhite.pieces)
             {
@@ -434,7 +439,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.1f);
 
             selectedMove = nextMove;
 
@@ -482,7 +487,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.movePiece(movePieceObj, square);
 
                 Debug.Log("Reassembling Broken GO");
-                Debug.Break();
+                //Debug.Break();
             }
         }
 
@@ -522,7 +527,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                //helper.moveSound.Play();
+                helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -592,7 +597,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
-                    //helper.moveSound.Play();
+                    helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;
@@ -672,7 +677,7 @@ public class botMaster : MonoBehaviour
             checkLastTurn = false;
         }
 
-        if (check == 2)
+        if (check == 2 && !gameOver)
         {
             if (!gameData.staleMate)
             {
@@ -736,12 +741,12 @@ public class botMaster : MonoBehaviour
 
             if (nonResettables.logMatch)
             {
-                logger.publishLog("SEASON2_" + botWhite.name + " vs " + botBlack.name + ".txt");
+                logger.publishLog(SEASON_NAME + "_" + botWhite.name + " vs " + botBlack.name + ".txt");
             }
 
             if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(5f);
 
             HelperFunctions.resetGameVars();
             SceneManager.LoadScene(7);

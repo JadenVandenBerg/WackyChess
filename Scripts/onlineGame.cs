@@ -215,7 +215,7 @@ public class onlineGame : MonoBehaviour
         Debug.Log("Ability: " + gameData.abilitySelected);*/
 
         //MOVE
-        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMovePiece != null && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove))
+        if (gameData.readyToMove && gameData.isSelected && gameData.selected && gameData.selectedToMovePiece != null && gameData.selectedToMove && HelperFunctions.isPieceOnSquare(gameData.selectedToMove, true))
         {
             //Debug.Log("READY TO MOVE");
             //Debug.Log("Found Move? " + HelperFunctions.findCoords(gameData.selected)[0] + "," + HelperFunctions.findCoords(gameData.selected)[1] + " : " + isInList(gameData.currentMoveableCoords, HelperFunctions.findCoords(gameData.selected)));

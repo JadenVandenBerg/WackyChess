@@ -51,7 +51,7 @@ public class BotHelperFunctions : MonoBehaviour
         return piece;
     }
 
-    private static List<Type> getAllTypePieces(string type, int color)
+    public static List<Type> getAllTypePieces(string type, int color)
     {
 
         List<Type> allPieces = Lootbox.GetAllPieces();
@@ -877,7 +877,7 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        if (HelperFunctions.checkPieceType(piece, "q"))
+        if (piece.baseType == "Queen")
         {
             if (isolatedIsOppressorOnBoard(bs, piece.color))
             {
@@ -1075,6 +1075,7 @@ public class BotHelperFunctions : MonoBehaviour
 
         bool jailerOnSquare = false;
         bool jailedOnSquare = false;
+        bool crookOnSquare = false;
 
         if (piecesOnCoords == null || piecesOnCoords.Count == 0)
         {
@@ -1100,6 +1101,11 @@ public class BotHelperFunctions : MonoBehaviour
                 if (HelperFunctions.checkState(p, PieceState.Jailed))
                 {
                     jailedOnSquare = true;
+                }
+
+                if (HelperFunctions.checkState(p, PieceState.Crook))
+                {
+                    crookOnSquare = true;
                 }
 
                 if (HelperFunctions.checkState(p, PieceState.Jailer))
@@ -1183,7 +1189,7 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
-        squareJailed = jailerOnSquare && jailedOnSquare;
+        squareJailed = jailerOnSquare && jailedOnSquare || jailedOnSquare && crookOnSquare;
 
         return (colorOnCoords, oppColorOnCoords, colorOnlyOnCoords, oppColorOnlyOnCoords, pieceIsNull, crowdingElegible, piecesDisabled, shieldOnSquare, captureTheFlagOnSquare, squareJailed);
     }
@@ -1241,7 +1247,7 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                if (HelperFunctions.checkState(p, PieceState.Dematerialized) && p.color == piece.color)
+                if (HelperFunctions.checkState(p, PieceState.Dematerialized))
                 {
                     // Your Dematerialized
                     continue;
@@ -1262,7 +1268,6 @@ public class BotHelperFunctions : MonoBehaviour
 
     public static bool isolatedIsJumpBouncing(Piece piece, coords from, int toX, int toY, BoardState bs)
     {
-        //TODO this does not work at all
         int fromX = from.x;
         int fromY = from.y;
 
@@ -1273,8 +1278,8 @@ public class BotHelperFunctions : MonoBehaviour
 
             for (int i = 0; i < 14; i++)
             {
-                x += dx;
-                y += dy;
+                x = fromX + dx * (i + 1);
+                y = fromY + dy * (i + 1);
 
                 coords newCoords = HelperFunctions.adjustCoordsForBouncing(piece, x, y);
                 int newX = newCoords.x;
@@ -1312,7 +1317,7 @@ public class BotHelperFunctions : MonoBehaviour
                 continue;
             }
 
-            if (HelperFunctions.checkState(p, PieceState.Dematerialized) && p.color == piece.color)
+            if (HelperFunctions.checkState(p, PieceState.Dematerialized))
             {
                 // Your Dematerialized
                 continue;
@@ -1342,7 +1347,7 @@ public class BotHelperFunctions : MonoBehaviour
             //bool crossedBackRank = false;
             //bool jumpedPiece = false;
 
-            for (int step = 0; step < 8; step++)
+            for (int step = 0; step <= 8; step++)
             {
                 //x += dir.x;
                 //y += dir.y;
@@ -1363,23 +1368,13 @@ public class BotHelperFunctions : MonoBehaviour
 
                 if (x == toX && y == toY)
                 {
-                    //if (!(crossedBackRank || jumpedPiece))
-                    //{
-                        //anyPathFound = true;
-                        return false;
-                    //}
+                    return false;
                 }
 
-                //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false);
-                //if (bs.boardGrid[x - 1, y - 1].Count > 0)
-                //{
-                    //jumpedPiece = true;
-                    //break;
-                //}
 
                 if (!isolatedPieceCanJumpOver(x - 1, y - 1, bs.boardGrid, piece))
                 {
-                    return true;
+                    break;
                 }
             }
         }
@@ -1833,7 +1828,16 @@ public class BotHelperFunctions : MonoBehaviour
             && !HelperFunctions.checkState(piece, PieceState.Murderous)
         )
         {
-            return false;
+            if ((HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailer))
+                || (HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Jailed) && HelperFunctions.checkStateOnSquare(piecesOnCoords, PieceState.Crook)))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+            
         }
         else if (HelperFunctions.checkStateAllOnSquare(piecesOnCoords, PieceState.Dematerialized))
         {
@@ -1900,6 +1904,8 @@ public class BotHelperFunctions : MonoBehaviour
 
                     //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + coords_.x + "," + coords_.y);
 
+                    HelperFunctions.removeState(p_, PieceState.Jailed);
+
                     updateBoardState(coords__, p_, "a", bs);
 
                     piece.storage.Remove(p_);
@@ -1924,6 +1930,8 @@ public class BotHelperFunctions : MonoBehaviour
                     c_ = new coords( c_.x - 1, c_.y - 1 );
 
                     //Debug.LogWarning("Simulating Vomiting on adjusted cords: " + c_.x + "," + c_.y);
+
+                    HelperFunctions.removeState(p_, PieceState.Jailed);
 
                     updateBoardState(c_, p_, "a", bs);
 
@@ -1996,6 +2004,8 @@ public class BotHelperFunctions : MonoBehaviour
 
             updateBoardState(adjustedCoords, secondPiece, "a", bs);
 
+            HelperFunctions.removeState(secondPiece, PieceState.Jailed);
+
             piece.storage.Remove(secondPiece);
         }
         else if (ability == PieceAbilities.Dematerialize)
@@ -2010,7 +2020,7 @@ public class BotHelperFunctions : MonoBehaviour
             HelperFunctions.addAbility(piece, PieceAbilities.Dematerialize);
             HelperFunctions.removeAbility(piece, PieceAbilities.Materialize);
 
-            isolatedOnDeathsDontIncludeAttacker(piece, coords, bs);
+            isolatedOnDeathsDontIncludeAttacker(piece, adjustedCoords, bs);
 
             isolatedCheckPromote(piece, bs);
         }
@@ -2545,6 +2555,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                             //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + coords_[0] + "," + coords_.y);
 
+                            HelperFunctions.removeState(p_, PieceState.Jailed);
                             updateBoardState(coords__, p_, "a", bs);
 
                             piece.storage.Remove(p_);
@@ -2571,6 +2582,7 @@ public class BotHelperFunctions : MonoBehaviour
                             //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_.y);
 
                             updateBoardState(c_, p_, "a", bs);
+                            HelperFunctions.removeState(p_, PieceState.Jailed);
 
                             piece.storage.Remove(p_);
                         }
@@ -2707,6 +2719,32 @@ public class BotHelperFunctions : MonoBehaviour
 
                     List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
                     isolatedCollateralDeath(pieces, bs);
+                }
+            }
+
+            if (attackerPiece.collateralType == 2)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
+                {
+                    return;
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    coords coords = new coords(adjustedDeadPieceCoords.x + attackerPiece.collateral[i].x, adjustedDeadPieceCoords.y + attackerPiece.collateral[i].y);
+
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
+                    {
+                        HelperFunctions.addState(attackerPiece, PieceState.Frozen);
+                        HelperFunctions.addAbility(attackerPiece, PieceAbilities.Unfreeze);
+                    }
+
+                    List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    foreach (Piece p in pieces)
+                    {
+                        HelperFunctions.addState(p, PieceState.Frozen);
+                        HelperFunctions.addAbility(p, PieceAbilities.Unfreeze);
+                    }
                 }
             }
 
@@ -2932,7 +2970,7 @@ public class BotHelperFunctions : MonoBehaviour
         if (duplicateName)
         {
             Debug.LogError("Duplicate Name Found");
-            Debug.Break();
+            //Debug.Break();
         }
     }
 

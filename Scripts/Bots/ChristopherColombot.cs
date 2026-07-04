@@ -30,7 +30,7 @@ public class ChristopherColumbot : BotTemplate
 			if (discoveredSquares.Contains(pieceStr) == false)
 			{
 				discoveredSquares.Add(pieceStr);
-				Debug.Log("New Square discovered at " + pieceStr + ". " + discoveredSquares.Count() + " total.");
+				//Debug.Log("New Square discovered at " + pieceStr + ". " + discoveredSquares.Count() + " total.");
 			}
 		}
 

@@ -264,6 +264,12 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             {
                 UndoMovedPiece ump = entry.movedPiece;
 
+                if (ump == null)
+                {
+                    //Debug.Break();
+                    continue;
+                }
+
                 Piece p = ump.p;
                 coords initialPosition = ump.initialPosition;
                 coords newPosition = ump.newPosition;
@@ -463,6 +469,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                     updateBoardState(coords__, p_, "a", bs_);
 
+                    UndoState pieceJailedFix = new UndoState(p_, p_.states);
+                    undo.addState(pieceJailedFix);
+                    removeState(p_, PieceState.Jailed);
+                    
+
                     piece.storage.Remove(p_);
                 }
             }
@@ -483,6 +494,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     undo.addStorage(barf);
 
                     updateBoardState(c_, p_, "a", bs_);
+
+                    UndoState pieceJailedFix = new UndoState(p_, p_.states);
+                    undo.addState(pieceJailedFix);
+                    removeState(p_, PieceState.Jailed);
 
                     piece.storage.Remove(p_);
                 }
@@ -590,6 +605,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             UndoStorage spit = new UndoStorage(piece, secondPiece, false, new coords(coords.x, coords.y));
             undo.addStorage(spit);
 
+            UndoState pieceJailedFix = new UndoState(secondPiece, secondPiece.states);
+            undo.addState(pieceJailedFix);
+            removeState(secondPiece, PieceState.Jailed);
+
             updateBoardState(adjustedCoords, secondPiece, "a", bs_);
             piece.storage.RemoveAll(p => p.name == secondPiece.name);
         }
@@ -621,7 +640,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             undo.addAbility(pieceMaterialize);
             removeAbility(piece, PieceAbilities.Materialize);
 
-            undo_isolatedOnDeathsDontIncludeAttacker(piece, coords, bs_, undo);
+            undo_isolatedOnDeathsDontIncludeAttacker(piece, adjustedCoords, bs_, undo);
 
             undo_isolatedCheckPromote(piece, bs_, undo);
         }
@@ -864,6 +883,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                         updateBoardState(coords__, p_, "a", bs);
 
+                        UndoState pieceJailedFix = new UndoState(p_, p_.states);
+                        undo.addState(pieceJailedFix);
+                        removeState(p_, PieceState.Jailed);
+
                         deadPiece.storage.RemoveAll(p => p.name == p_.name);
                     }
                 }
@@ -885,6 +908,10 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         undo.addStorage(barf);
 
                         updateBoardState(gridCoords, p_, "a", bs);
+
+                        UndoState pieceJailedFix = new UndoState(p_, p_.states);
+                        undo.addState(pieceJailedFix);
+                        removeState(p_, PieceState.Jailed);
 
                         deadPiece.storage.RemoveAll(p => p.name == p_.name); ;
                     }
@@ -995,6 +1022,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 undo_isolatedRemovePiece(deadPiece, bs, undo);
 
                 Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, true);
+                shieldPawn.position = deadPiece.position;
 
                 undo_isolatedAddPiece(shieldPawn, bs, undo);
             }
@@ -1025,6 +1053,44 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
                     List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
                     undo_isolatedCollateralDeath(pieces, bs, undo);
+                }
+            }
+
+            if (attackerPiece.collateralType == 2)
+            {
+                if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
+                {
+                    return (stackingStates, attackerDied);
+                }
+
+                for (int i = 0; i < attackerPiece.collateral.GetLength(0); i++)
+                {
+                    coords coords = new coords(adjustedDeadPieceCoords.x + attackerPiece.collateral[i].x, adjustedDeadPieceCoords.y + attackerPiece.collateral[i].y);
+
+                    if (attackerPiece.collateral[i].x == 0 && attackerPiece.collateral[i].y == 0)
+                    {
+                        UndoState us = new UndoState(attackerPiece, attackerPiece.states);
+                        undo.addState(us);
+
+                        addState(attackerPiece, PieceState.Frozen);
+
+                        UndoAbility ua = new UndoAbility(attackerPiece, attackerPiece.abilities);
+                        undo.addAbility(ua);
+                        addAbility(attackerPiece, PieceAbilities.Unfreeze);
+                    }
+
+                    //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
+                    List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
+                    foreach (Piece p in pieces)
+                    {
+                        UndoState us = new UndoState(p, p.states);
+                        undo.addState(us);
+                        addState(p, PieceState.Frozen);
+
+                        UndoAbility ua = new UndoAbility(p, p.abilities);
+                        undo.addAbility(ua);
+                        addAbility(p, PieceAbilities.Unfreeze);
+                    }
                 }
             }
 
@@ -1320,7 +1386,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             }
 
             piece.hasMoved = true;
-            Debug.Log("Delayed Coords: " + coords.x + "," + coords.y);
+            //Debug.Log("Delayed Coords: " + coords.x + "," + coords.y);
             UndoMovedPiece undoMovedPiece = undo_movePieceBoardState(piece, new coords(coords.x, coords.y), bs);
 
             if (undoMovedPiece != null) { undo.addMove(undoMovedPiece); }

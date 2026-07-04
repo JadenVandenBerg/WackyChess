@@ -131,7 +131,7 @@ public class HitmanBot : BotTemplate
 
             float distanceToTarget = Mathf.Sqrt(distToTarget.x + distToTarget.y);
 
-            addOns += 0.3f * (11.5f - distanceToTarget);
+            addOns += 0.1f * (11.5f - distanceToTarget);
 
             // Target is DEAD
             if (targetIsDead(bestOppMoveBS))

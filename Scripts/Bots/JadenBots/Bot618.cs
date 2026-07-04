@@ -122,6 +122,11 @@ public class Bot618 : BotTemplate
                 undoMove(undo_, this.currentBoardState);
             }
 
+            if (bestMoveOppBS == null)
+            {
+                continue;
+            }
+
             List<NextMove> allMoves_L2 = getAllPossibleBotMovesAndAbilities(this, bestMoveOppBS, this.color);
 
             foreach (NextMove nextMove_L2 in allMoves_L2)
@@ -179,11 +184,19 @@ public class Bot618 : BotTemplate
 
 
         System.Random rand = new System.Random();
-        int rndIdx = rand.Next(validMoves_L2.Count);
 
-        NextMove move = validMoves_L2[rndIdx];
+        if (validMoves_L2.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+        else
+        {
+            int rndIdx = rand.Next(validMoves_L2.Count);
 
-        return move;
+            NextMove move = validMoves_L2[rndIdx];
+
+            return move;
+        }
     }
 
     private List<float> Bot618_getPointsOnBoardState(BoardState bs, bool isKingWorthMore, Piece movePiece, coords moveCoords)

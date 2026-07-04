@@ -3,6 +3,7 @@
 //Bug
 //When selecting from side panel, cannot properly deselect without clicking a new square
 // update piece check flags in simulated piece moves (costly)
+// bouncing move accepted in bot moves but not botmaster
 
 //Untested Bugfixes
 
@@ -12,9 +13,8 @@
 
 //Feature
 //Side panel only show selectable pieces
-//opponent can unfreeze but it is still considered stalemate
-//add draw by repetition
-// Game Saves && Replayer
+// Game Replayer
+// Eval bar
 
 //Remove
 //Dependent Attacks

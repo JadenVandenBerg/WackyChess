@@ -1178,6 +1178,14 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     crowdingElegible = true;
                 }
+
+                if (HelperFunctions.checkState(piecesOnCoords[0], PieceState.Piggyback) && piecesOnCoords[0].baseType == "King")
+                {
+                    if (HelperFunctions.checkState(piece, PieceState.Piggyback))
+                    {
+                        crowdingElegible = false;
+                    }
+                }
             }
             else if (piecesOnCoordsCount == 1 && HelperFunctions.checkState(piece, PieceState.Jockey) && colorOnlyOnCoords)
             {

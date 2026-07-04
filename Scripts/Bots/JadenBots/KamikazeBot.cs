@@ -77,23 +77,23 @@ public class KamikazeBot : BotTemplate
 
         if (containsAtomic)
         {
-            Debug.Log("Kamikaze Bot Move Type: Atomic");
+            //Debug.Log("Kamikaze Bot Move Type: Atomic");
             move = atomicMove();
         }
         else if (containsLandmine || containsSpontaneousCombusting)
         {
-            Debug.Log("Kamikaze Bot Move Type: Landmine");
+            //Debug.Log("Kamikaze Bot Move Type: Landmine");
             move = landmineMove();
         }
         else if (containsInfinite || containsCrook)
         {
-            Debug.Log("Kamikaze Bot Move Type: Infinite");
+            //Debug.Log("Kamikaze Bot Move Type: Infinite");
             move = infiniteMove();
         }
 
         if (move == null)
         {
-            Debug.Log("Kamikaze Bot Move Type: One Move");
+            //Debug.Log("Kamikaze Bot Move Type: One Move");
             move = oneMove();
         }
 

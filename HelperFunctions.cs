@@ -821,7 +821,7 @@ public class HelperFunctions : MonoBehaviour
                         if (!stillInCheck)
                         {
                             //Debug.Log("MOVE ACCEPTED");
-                            if (highlight && piece == highlightPiece) goHighlight.GetComponent<Image>().color = highlightColor;
+                            if (highlight && piece == highlightPiece || highlight && highlightPiece == null) goHighlight.GetComponent<Image>().color = highlightColor;
                             if (changeValue) gameData.currentMoveableCoordsAllPieces.Add(newPos);
 
                             allMoves.Add(newPos);
@@ -829,7 +829,12 @@ public class HelperFunctions : MonoBehaviour
                     }
                     else
                     {
-                        if (!check) allMoves.Add(newPos);
+                        if (nonResettables.debug_highlight)
+                        {
+                            highlightSquare(goHighlight, Color.blue);
+                        }
+
+                        allMoves.Add(newPos);
                     }
                 }
             }
@@ -960,6 +965,36 @@ public class HelperFunctions : MonoBehaviour
         return check;
     }
 
+    public static bool debug_isCheck(Piece king)
+    {
+
+        //Debug.Log("Searching for Check. Color: " + king.color);
+        nonResettables.debug_highlight = true;
+        List<coords> moves = addToCurrentMoveableCoordsTotal(king.color * -1, false, true, null, false, true);
+        nonResettables.debug_highlight = false;
+        //Debug.Log("CHECK SEARCH END");
+        bool check = isInList(moves, king.position, false);
+
+        if (check && king.color == 1)
+        {
+            gameData.isInCheck[0] = 1;
+        }
+        else if (check && king.color == -1)
+        {
+            gameData.isInCheck[1] = 1;
+        }
+        else if (!check && king.color == 1)
+        {
+            gameData.isInCheck[0] = 0;
+        }
+        else if (!check && king.color == -1)
+        {
+            gameData.isInCheck[1] = 0;
+        }
+
+        return check;
+    }
+
     public static bool isCheck_(Piece king, BoardState afterBS) 
     {
         List<Piece> pieces = BotHelperFunctions.getPiecesOnBoardState(afterBS, king.color * -1);
@@ -986,8 +1021,6 @@ public class HelperFunctions : MonoBehaviour
 
         foreach (Piece piece in new List<Piece>(pieces))
         {
-            piece.disabled = true;
-
             updateBoardGrid(piece.position, piece, "r");
             //piece.position = new int[] { -1, -1 };
 
@@ -1113,6 +1146,11 @@ public class HelperFunctions : MonoBehaviour
         if (botMatch == "True")
         {
             //Debug.Log("BOT MATCH DEATH");
+            if (go == null)
+            {
+                return;
+            }
+
             Piece p = gameData.allPiecesDict[go];
             if (p.color == 1)
             {
@@ -1441,6 +1479,8 @@ public class HelperFunctions : MonoBehaviour
     {
         deadPiece.lives--;
 
+        Debug.Log("INFINITE PIECE DIED START SQUARE: " + deadPiece.startSquare.x + "," + deadPiece.startSquare.y + " : " + isOnStartSquare(deadPiece) + " : " + isPieceOnStartSquare(deadPiece));
+
         if (!isOnStartSquare(deadPiece) && !isPieceOnStartSquare(deadPiece))
         {
             movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
@@ -1654,10 +1694,11 @@ public class HelperFunctions : MonoBehaviour
             }
         }
 
-        if (!skipInfinite)
+        if (deadPiece.lives != 0)
         {
+            Debug.Log("INFINITE PIECE DIED: " + skipInfinite);
             //Infinite / Multi-Lives
-            if (deadPiece.lives != 0)
+            if (!skipInfinite)
             {
                 handleMultipleLivesDeath(deadPiece);
 
@@ -2080,6 +2121,14 @@ public class HelperFunctions : MonoBehaviour
         //There is one piece on square, piece on square is piggyback
         if (piecesOnSquare.Count == 1 && checkState(piecesOnSquare[0], PieceState.Piggyback) && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
         {
+            if (checkState(piecesOnSquare[0], PieceState.Piggyback) && piecesOnSquare[0].baseType == "King")
+            {
+                if (checkState(piece, PieceState.Piggyback))
+                {
+                    return false;
+                }
+            }
+
             if (!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
             {
                 return true;
@@ -2276,6 +2325,11 @@ public class HelperFunctions : MonoBehaviour
     public static void restorePieceImageToBoard(Piece piece)
     {
         GameObject go = piece.go;
+
+        if (go == null)
+        {
+            return;
+        }
 
         go.SetActive(true);
     }
@@ -2940,7 +2994,7 @@ public class HelperFunctions : MonoBehaviour
 
     public static void initPiece(Piece piece, coords coords)
     {
-        piece.startSquare = new coords(piece.position.x, piece.position.y);
+        piece.startSquare = new coords(coords.x, coords.y);
 
         if (checkState(piece, PieceState.Fusion))
         {
@@ -2970,8 +3024,9 @@ public class HelperFunctions : MonoBehaviour
 
             piece.collateral = new coords[] { };
             piece.collateral = combineMoveSets(pieces[0].collateral, pieces[1].collateral);
-            if (piece.collateral.Length == 0)
+            if (piece.collateral.GetLength(0) == 0)
             {
+                piece.collateralType = -1;
                 piece.collateral = null;
             }
 
@@ -4085,12 +4140,12 @@ public class HelperFunctions : MonoBehaviour
                 countDeath = false;
             }
 
-            if (checkStateAllOnSquare(getPiecesOnSquare(square), PieceState.Crook))
+            if (checkStateAllOnSquare(getPiecesOnSquareBoardGrid(square), PieceState.Crook))
             {
                 countDeath = false;
             }
 
-            List<Piece> piecesOnSquare = getPiecesOnSquare(square);
+            List<Piece> piecesOnSquare = getPiecesOnSquareBoardGrid(square);
             foreach(Piece p in piecesOnSquare)
             {
                 if (p.lives == 0)
@@ -4107,7 +4162,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        moveSound.Play();
+        //moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 

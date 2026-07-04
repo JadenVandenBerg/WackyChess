@@ -102,7 +102,8 @@ public static class nonResettables
     public static BotTournament botTournament { get; set; } = null;
     public static bool isBotTournament { get; set; } = false;
     public static bool logMatch { get; set; } = false;
-    public static string ruleset { get; set; } = "Normal";
+    public static string ruleset { get; set; } = "Wacky";
+    public static bool debug_highlight { get; set; } = false;
 
     public static void calculateElo(Bot botA, Bot botB, string winner)
     {
@@ -158,29 +159,52 @@ public static class nonResettables
         return botName;
     }
 
-    public static List<string> get8RandomBots(List<string> forceNames)
+    public static List<string> get8RandomBots(List<string> forceNames, string owner)
     {
-        List<string> options = new List<string>
+        List<string> options = new List<string>();
+
+        if (owner == "Jaden" || owner == "All")
         {
-            "BottusMaximus",
-            "Abilibot",
-            "Bloodbot",
-            "SavageBeastBot",
-            "FiveXRandomBot",
-            "RandomBot",
-            "OneMoveBot",
-            "IdiotBot",
-            "G2EBot",
-            "KamikazeBot",
-            "BotRoss",
-            "TwoMoveBot",
-            "ThinkingBot",
-            "Lobotomy",
-            "BerserkerBot",
-            "HitmanBot",
-            "Bot618",
-            "BotsUtd"
-        };
+            options.AddRange(new List<string> {
+                "BottusMaximus",
+                "Abilibot",
+                "Bloodbot",
+                "SavageBeastBot",
+                "FiveXRandomBot",
+                "RandomBot",
+                "OneMoveBot",
+                "IdiotBot",
+                "G2EBot",
+                "KamikazeBot",
+                "BotRoss",
+                "TwoMoveBot",
+                "ThinkingBot",
+                "Lobotomy",
+                "BerserkerBot",
+                "HitmanBot",
+                "Bot618",
+                "BotsUtd",
+                "MarchingBot",
+                "Botfish",
+                "BotniaAndHerzebotvina",
+            });
+        }
+
+        if (owner == "Carter" || owner == "All")
+        {
+            options.AddRange(new List<string> {
+                "AssassinBot",
+                "ShieldBot",
+                "AdventurousKingBot",
+                "RestrictorBot",
+                "OnePieceRandomBot",
+                "ChristopherColumbot",
+                "BotDefender",
+                "EqualityBot",
+                "PawnBot",
+                "BOTential"
+            });
+        }
 
         List<string> result = new List<string>();
         result.AddRange(forceNames);
@@ -570,9 +594,7 @@ public class Bot
     public string Id { get; set; }
     public string Name { get; set; }
     public int Elo { get; set; }
-    public int Division { get; set; }
     public string Profile { get; set; }
-    public int Position { get; set; }
 
     public int WinsTotal { get; set; }
     public int LossesTotal { get; set; }
@@ -580,13 +602,12 @@ public class Bot
 
     public string Creator { get; set; }
 
-    public List<BotSeason> Seasons { get; set; }
-
     public int PeakElo { get; set; }
     public int MinElo { get; set; }
 
     public List<string> Competing { get; set; }
     public List<string> Trophies { get; set; }
+    public string Class { get; set; }
 }
 
 public class PieceMove

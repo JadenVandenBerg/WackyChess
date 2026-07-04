@@ -205,6 +205,11 @@ public class HitmanBot : BotTemplate
 
     public bool targetIsDead(BoardState bs)
     {
+        if (bs == null)
+        {
+            return true;
+        }
+
         List<Piece> pieces = getPiecesOnBoardState(bs, this.color * -1);
 
         foreach (Piece p in pieces)

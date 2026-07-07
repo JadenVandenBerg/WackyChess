@@ -4162,7 +4162,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        //moveSound.Play();
+        moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 

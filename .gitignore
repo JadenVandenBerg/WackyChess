@@ -88,7 +88,7 @@ crashlytics-build.properties
 *.meta
 
 # Ignore Photon directory
-Photon/
+# Photon/
 
 # Ignore TextMesh Pro directory
 TextMesh Pro/

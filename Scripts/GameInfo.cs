@@ -202,7 +202,10 @@ public static class nonResettables
                 "BotDefender",
                 "EqualityBot",
                 "PawnBot",
-                "BOTential"
+                "BOTential",
+                "LaserBot",
+                "CountingBot",
+                "MigratingBot"
             });
         }
 
@@ -296,6 +299,15 @@ public static class Bots
     public const string ShieldBot = "ShieldBot";
     public const string SavageBeastBot = "SavageBeastBot";
     public const string IdiotBot = "IdiotBot";
+
+    public const string CountingBot = "CountingBot";
+    public const string LaserBot = "LaserBot";
+    public const string MigratingBot = "MigratingBot";
+    public const string BotniaAndHerzebotvina = "BotniaAndHerzebotvina";
+    public const string Botfish = "Botfish";
+    public const string Lobotomy = "Lobotomy";
+    public const string BotsUnited = "BotsUnited";
+    public const string MarchingBot = "MarchingBot";
 }
 
 public static class globalDefs
@@ -604,8 +616,6 @@ public class Bot
 
     public int PeakElo { get; set; }
     public int MinElo { get; set; }
-
-    public List<string> Competing { get; set; }
     public List<string> Trophies { get; set; }
     public string Class { get; set; }
 }

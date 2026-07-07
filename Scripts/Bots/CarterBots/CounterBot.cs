@@ -4,13 +4,13 @@ using System.Linq;
 using static BotHelperFunctions;
 using System;
 
-public class CounterBot : BotTemplate
+public class CountingBot : BotTemplate
 {
-	public CounterBot(int botColor)
+	public CountingBot(int botColor)
 	{
 		color = botColor;
 		pieces = new List<Piece>();
-		name = "Counter Bot";
+		name = "Counting Bot";
 		choosePieces();
 	}
 

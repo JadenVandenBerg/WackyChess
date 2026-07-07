@@ -5,13 +5,13 @@ using static BotHelperFunctions;
 using static UndoMoveBotHelperFunctions;
 using static HelperFunctions;
 
-public class BotsUtd : BotTemplate
+public class BotsUnited : BotTemplate
 {
-    public BotsUtd(int botColor)
+    public BotsUnited(int botColor)
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "Bots Utd.";
+        name = "Bots United";
 
         choosePieces();
     }

@@ -91,7 +91,7 @@ crashlytics-build.properties
 # Photon/
 
 # Ignore TextMesh Pro directory
-TextMesh Pro/
+# TextMesh Pro/
 
 # API
 google-services.json

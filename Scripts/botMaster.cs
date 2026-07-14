@@ -124,7 +124,7 @@ public class botMaster : MonoBehaviour
                 //Div 3
                 //nonResettables.botTournament = new BotTournament(div3[0], div3[1], div3[2], div3[3], div3[4], div3[5], div3[6], div3[7], false);
 
-                //Div 4
+                //Div 4 
                 //nonResettables.botTournament = new BotTournament(div4[0], div4[1], div4[2], div4[3], div4[4], div4[5], div4[6], div4[7], false);
             }
 

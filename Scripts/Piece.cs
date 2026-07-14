@@ -146,7 +146,7 @@ public interface Piece
      * Ghoul: Your pieces can go through this piece
      * Feminist: Cannot capture female opponent pieces
      * Oppressive: Cannot capture male opponent pieces
-     * Combustable: May explode after every turn (1/6)
+     * Combustable: May explode after every move (1/6)
      * Fragile: May die after each move (1/6)
      * Jailed: Piece temporarily cant move
      * Uncastle: Can't castle

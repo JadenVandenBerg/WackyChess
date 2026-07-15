@@ -50,7 +50,7 @@ public class Botkrieg : BotTemplate
             all = new List<Piece>();
         }
     }
-    
+
     private int checkNumDead(Botkrieg_info info)
     {
         int numDead = 0;
@@ -102,10 +102,10 @@ public class Botkrieg : BotTemplate
                 numDead++;
             }
         }
-        
+
         return numDead;
     }
-    
+
     private bool isLandmineNextToKing(Piece p, BoardState bs)
     {
         if (p.collateralType != 1)
@@ -123,14 +123,14 @@ public class Botkrieg : BotTemplate
         int x = Mathf.Abs(p.position.x - oppKing.position.x);
         int y = Mathf.Abs(p.position.y - oppKing.position.y);
 
-        if (x == 1 && y == 1)
+        if (x == 1 && y == 1 || x == 0 && y == 1 || x == 1 && y == 0)
         {
             return true;
         }
 
         return false;
     }
-    
+
     private bool isLandmineAttackingNextToKing(Piece p, BoardState bs)
     {
         if (p.collateralType != 1)
@@ -149,10 +149,10 @@ public class Botkrieg : BotTemplate
 
         foreach (coords c in landmineAttacking)
         {
-            int x = Mathf.Abs(p.position.x + c.x - oppKing.position.x);
-            int y = Mathf.Abs(p.position.y + c.y - oppKing.position.y);
+            int x = Mathf.Abs(c.x - oppKing.position.x);
+            int y = Mathf.Abs(c.y - oppKing.position.y);
 
-            if (x == 1 && y == 1)
+            if (x == 1 && y == 1 || x == 0 && y == 1 || x == 1 && y == 0)
             {
                 return true;
             }
@@ -210,20 +210,20 @@ public class Botkrieg : BotTemplate
 
         foreach (coords c in atomicAttacking)
         {
-            int x = Mathf.Abs((p.position.x + c.x) - oppKing.position.x);
-            int y = Mathf.Abs((p.position.y + c.y) - oppKing.position.y);
+            int x = Mathf.Abs(c.x - oppKing.position.x);
+            int y = Mathf.Abs(c.y - oppKing.position.y);
 
             if (x == 1 && y == 1 || x == 0 && y == 0)
             {
                 kingDies = true;
             }
 
-            if (!checkBounds(x, y))
+            if (!checkBounds(c.x, c.y))
             {
                 continue;
             }
 
-            foreach (Piece p_ in bs.boardGrid[x - 1, y - 1])
+            foreach (Piece p_ in bs.boardGrid[c.x - 1, c.y - 1])
             {
                 if (checkState(p_, PieceState.Defuser) && !(x == 0 && y == 0))
                 {
@@ -254,20 +254,20 @@ public class Botkrieg : BotTemplate
 
         foreach (coords c in freezeBombAttacking)
         {
-            int x = Mathf.Abs((p.position.x + c.x) - oppKing.position.x);
-            int y = Mathf.Abs((p.position.y + c.y) - oppKing.position.y);
+            int x = Mathf.Abs(c.x - oppKing.position.x);
+            int y = Mathf.Abs(c.y - oppKing.position.y);
 
             if (x == 1 && y == 1 || x == 0 && y == 0)
             {
                 kingDies = true;
             }
 
-            if (!checkBounds(x, y))
+            if (!checkBounds(c.x, c.y))
             {
                 continue;
             }
 
-            foreach (Piece p_ in bs.boardGrid[x - 1, y - 1])
+            foreach (Piece p_ in bs.boardGrid[c.x - 1, c.y - 1])
             {
                 if (checkState(p_, PieceState.Defuser) && !(x == 0 && y == 0))
                 {
@@ -339,6 +339,8 @@ public class Botkrieg : BotTemplate
         return false;
     }
 
+    private const int MAX_PHANTOM_SEARCH_DEPTH = 5;
+
     private List<coords> getPhantomPathToKing(Piece p, BoardState bs)
     {
         // Only call this if dematerialized
@@ -352,7 +354,7 @@ public class Botkrieg : BotTemplate
         List<coords> path = new List<coords>();
         HashSet<coords> visited = new HashSet<coords>();
 
-        if (DFS_phantomToKing(p, bs, oppKing, path, visited))
+        if (DFS_phantomToKing(p, bs, oppKing, path, visited, 0))
         {
             return path;
         }
@@ -360,11 +362,16 @@ public class Botkrieg : BotTemplate
         return null;
     }
 
-    private bool DFS_phantomToKing(Piece p, BoardState bs, Piece oppKing, List<coords> path, HashSet<coords> visited)
+    private bool DFS_phantomToKing(Piece p, BoardState bs, Piece oppKing, List<coords> path, HashSet<coords> visited, int depth)
     {
         if (isPiecePositionOppKing(p, oppKing))
         {
             return true;
+        }
+
+        if (depth >= MAX_PHANTOM_SEARCH_DEPTH)
+        {
+            return false;
         }
 
         coords currentPos = p.position;
@@ -372,24 +379,26 @@ public class Botkrieg : BotTemplate
 
         List<coords> moves = getIsolatedStatePieceMoves(p, bs, false);
 
-        foreach (coords move in moves)
+        foreach (coords offset in moves)
         {
-            if (visited.Contains(move))
+            coords move = new coords(offset.x, offset.y);
+
+            if (visited.Contains(move) || !checkBounds(move.x, move.y))
             {
                 continue;
             }
 
+            Debug.Log("DFS Searh Move: " + move.x + ", " + move.y);
             UndoMove undo = undo_simulatePieceMove(bs, p, move);
 
             path.Add(move);
 
-            if (DFS_phantomToKing(p, bs, oppKing, path, visited))
+            if (DFS_phantomToKing(p, bs, oppKing, path, visited, depth + 1))
             {
                 return true;
             }
 
             path.RemoveAt(path.Count - 1);
-
             undoMove(undo, bs);
         }
 
@@ -540,13 +549,26 @@ public class Botkrieg : BotTemplate
                 addPointsMoveOne += 5f;
             }
 
-            if (checkState(piece, PieceState.Dematerialized)) {
+            float subtractPointsMoveOne = 0f;
+
+            if (moveInQueue(lastFiveMoves, nextMove))
+            {
+                subtractPointsMoveOne += 2f;
+            }
+
+            if (moveInQueueTwice(lastFiveMoves, nextMove))
+            {
+                subtractPointsMoveOne += 10f;
+            }
+
+            if (checkState(piece, PieceState.Dematerialized))
+            {
                 List<coords> phantomPath = getPhantomPathToKing(piece, this.currentBoardState);
 
                 if (!(phantomPath == null || phantomPath.Count == 0))
                 {
                     coords coordsPath = phantomPath[0];
-                    if (coordsPath.x == coords.x || coordsPath.y == coords.y)
+                    if (coordsPath.x == coords.x && coordsPath.y == coords.y)
                     {
                         Debug.Log("Botkrieg: Phantom Move in Path");
 
@@ -665,12 +687,15 @@ public class Botkrieg : BotTemplate
                 float addDiff = (addPointsMoveOne * 0.5f) + (addBoardControlMoveOne * 0.1f);
                 diff += addDiff;
 
+                float minusDiff = subtractPointsMoveOne;
+                diff -= minusDiff;
+
                 if (diff >= bestL2MoveDiff)
                 {
                     if (diff > bestL2MoveDiff)
                     {
-                        Debug.LogWarning("Botkrieg: After Move Analysis: " + (diff - addDiff) + " (" + (addDiff - addBoardControlMoveOne) + ") " + " (" + (addDiff - addPointsMoveOne) + ").");
-                        
+                        Debug.LogWarning("Botkrieg: After Move Analysis: " + (diff - addDiff + minusDiff) + " (" + (addDiff - minusDiff - addBoardControlMoveOne) + ") " + " (" + (addDiff - minusDiff - addPointsMoveOne) + ").");
+
                         validMoves_L2.Clear();
                     }
                     else
@@ -709,6 +734,13 @@ public class Botkrieg : BotTemplate
             int rndIdx = rand.Next(validMoves_L2.Count);
 
             NextMove move = validMoves_L2[rndIdx];
+
+            lastFiveMoves.Enqueue(move);
+
+            if (lastFiveMoves.Count > 6)
+            {
+                lastFiveMoves.Dequeue();
+            }
 
             return move;
         }
@@ -876,5 +908,76 @@ public class Botkrieg : BotTemplate
         choiceBoardControl.Add((int)choiceScore);
 
         return (boardControl, choiceBoardControl);
+    }
+
+    private static bool moveInQueue(Queue<NextMove> moves, NextMove move)
+    {
+        foreach (NextMove m in moves)
+        {
+            if (m.moveType != move.moveType)
+                continue;
+
+            if (move.moveType == "move")
+            {
+                if (m.move.p.name == move.move.p.name &&
+                    m.move.coords.x == move.move.coords.x &&
+                    m.move.coords.y == move.move.coords.y)
+                {
+                    return true;
+                }
+            }
+            else if (move.moveType == "ability")
+            {
+                if (m.ability.piece.name == move.ability.piece.name &&
+                    m.ability.coords.x == move.ability.coords.x &&
+                    m.ability.coords.y == move.ability.coords.y)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool moveInQueueTwice(Queue<NextMove> moves, NextMove move)
+    {
+        bool once = false;
+        foreach (NextMove m in moves)
+        {
+            if (m.moveType != move.moveType)
+                continue;
+
+            if (move.moveType == "move")
+            {
+                if (m.move.p.name == move.move.p.name &&
+                    m.move.coords.x == move.move.coords.x &&
+                    m.move.coords.y == move.move.coords.y)
+                {
+                    if (once == true)
+                    {
+                        return true;
+                    }
+
+                    once = true;
+                }
+            }
+            else if (move.moveType == "ability")
+            {
+                if (m.ability.piece.name == move.ability.piece.name &&
+                    m.ability.coords.x == move.ability.coords.x &&
+                    m.ability.coords.y == move.ability.coords.y)
+                {
+                    if (once == true)
+                    {
+                        return true;
+                    }
+
+                    once = true;
+                }
+            }
+        }
+
+        return false;
     }
 }

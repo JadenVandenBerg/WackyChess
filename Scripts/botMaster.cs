@@ -43,9 +43,9 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
         nonResettables.isBotTournament = false;
-        SEASON_NAME = "SEASON4";
+        //SEASON_NAME = "NCC_SEASON3";
         waitTime = 1.5f;
-        nonResettables.logMatch = true;
+        nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
 
         if (nonResettables.isBotTournament)
@@ -61,38 +61,38 @@ public class botMaster : MonoBehaviour
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.Bloodbot,
-                    Bots.G2EBot,
-                    Bots.BottusMaximus,
-                    Bots.ChristopherColumbot,
                     Bots.TwoMoveBot,
-                    Bots.OneMoveBot,
-                    Bots.KamikazeBot,
+                    Bots.G2EBot,
+                    Bots.ThinkingBot,
                     Bots.AssassinBot,
+                    Bots.LaserBot,
+                    Bots.KamikazeBot,
+                    Bots.BotniaAndHerzebotvina,
+                    Bots.BottusMaximus,
                 };
 
                 List<string> div2 = new List<string>
                 {
-                    Bots.HitmanBot,
-                    Bots.BotniaAndHerzebotvina,
-                    Bots.LaserBot,
-                    Bots.CountingBot,
-                    Bots.MarchingBot,
-                    Bots.MigratingBot,
+                    Bots.BOTential,
+                    Bots.OneMoveBot,
+                    Bots.EqualityBot,
                     Bots.BotsUnited,
-                    Bots.Botfish,
+                    Bots.Lobotomy,
+                    Bots.OnePieceRandomBot,
+                    Bots.BotDefender,
+                    Bots.ChristopherColumbot,
                 };
 
                 List<string> div3 = new List<string>
                 {
-                    Bots.Lobotomy,
-                    Bots.ThinkingBot,
-                    Bots.RestrictorBot,
-                    Bots.PawnBot,
                     Bots.AdventurousKingBot,
-                    Bots.OnePieceRandomBot,
-                    Bots.BOTential,
+                    Bots.ShieldBot,
                     Bots.SavageBeastBot,
+                    Bots.RandomBot,
+                    Bots.BotRoss,
+                    Bots.Bloodbot,
+                    Bots.FiveXRandomBot,
+                    Bots.HitmanBot,
                 };
 
                 List<string> div4 = new List<string>
@@ -114,10 +114,10 @@ public class botMaster : MonoBehaviour
                 }
                 Debug.Log("Starting Tournament With: " + sb);
 
-                //nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
+                nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
 
                 //Div 1
-                nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
+                //nonResettables.botTournament = new BotTournament(div1[0], div1[1], div1[2], div1[3], div1[4], div1[5], div1[6], div1[7], false);
 
                 //Div 2
                 //nonResettables.botTournament = new BotTournament(div2[0], div2[1], div2[2], div2[3], div2[4], div2[5], div2[6], div2[7], false);
@@ -162,8 +162,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new SpeedRunnerBot(1);
-                botBlack = new LazyBot(-1);
+                botWhite = new Botkrieg(1);
+                botBlack = new Bot618(-1);
                 /*
                 // For WCSingle
                 int rand = globalDefs.globalRand.Next(1, 3);

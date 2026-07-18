@@ -42,7 +42,7 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = false;
         SEASON_NAME = "SEASON4";
         waitTime = 1.5f;
         nonResettables.logMatch = true;
@@ -56,7 +56,8 @@ public class botMaster : MonoBehaviour
                 {
                 };
 
-                List<string> randomBots = nonResettables.get8RandomBots(forceNames, "All");
+                //List<string> randomBots = nonResettables.get8RandomBots(forceNames, "All");
+                List<string> randomBots = new List<string>{"Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot", "Speedrunner Bot"};
 
                 List<string> div1 = new List<string>
                 {
@@ -161,8 +162,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new Botfish(1);
-                botBlack = new Botfish(-1);
+                botWhite = new SpeedRunnerBot(1);
+                botBlack = new LazyBot(-1);
                 /*
                 // For WCSingle
                 int rand = globalDefs.globalRand.Next(1, 3);

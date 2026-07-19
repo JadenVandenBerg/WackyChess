@@ -42,9 +42,9 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = false;
-        //SEASON_NAME = "NCC_SEASON3";
-        waitTime = 1.5f;
+        nonResettables.isBotTournament = true;
+        //SEASON_NAME = "LCC_SEASON1";
+        waitTime = 0f;
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
 
@@ -54,20 +54,21 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
+                    "Botkrieg"
                 };
 
-                List<string> randomBots = nonResettables.get8RandomBots(forceNames, "All");
+                List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
 
                 List<string> div1 = new List<string>
                 {
+                    Bots.RandomBot,
+                    Bots.IdiotBot,
+                    Bots.OnePieceRandomBot,
                     Bots.TwoMoveBot,
-                    Bots.G2EBot,
-                    Bots.ThinkingBot,
-                    Bots.AssassinBot,
-                    Bots.LaserBot,
-                    Bots.KamikazeBot,
-                    Bots.BotniaAndHerzebotvina,
-                    Bots.BottusMaximus,
+                    Bots.SavageBeastBot,
+                    Bots.Lobotomy,
+                    Bots.HitmanBot,
+                    Bots.RestrictorBot,
                 };
 
                 List<string> div2 = new List<string>
@@ -297,6 +298,85 @@ public class botMaster : MonoBehaviour
                 botBlackQueen = new List<Piece>
                 {
                     getPieceTypeInstance("FusionQueen", -1),
+                };
+            }
+            else if (nonResettables.ruleset == "Landmine")
+            {
+                botWhitePawns = new List<Piece>
+                {
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                };
+
+                botWhiteRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineRook", 1),
+                    getPieceTypeInstance("LandmineRook", 1),
+                };
+
+                botWhiteBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineBishop", 1),
+                    getPieceTypeInstance("LandmineBishop", 1),
+                };
+                botWhiteKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKnight", 1),
+                    getPieceTypeInstance("LandmineKnight", 1),
+                };
+                botWhiteKing = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKing", 1)
+                };
+
+                botWhiteQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineQueen", 1)
+                };
+
+
+                botBlackPawns = new List<Piece>
+                {
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                };
+
+                botBlackRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineRook", -1),
+                    getPieceTypeInstance("LandmineRook", -1),
+                };
+
+                botBlackBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineBishop", -1),
+                    getPieceTypeInstance("LandmineBishop", -1),
+                };
+                botBlackKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKnight", -1),
+                    getPieceTypeInstance("LandmineKnight", -1),
+                };
+                botBlackKing = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKing", -1),
+                };
+
+                botBlackQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineQueen", -1),
                 };
             }
             else //if (nonResettables.ruleset == "Normal")
@@ -655,7 +735,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                helper.moveSound.Play();
+                //helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -725,7 +805,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
-                    helper.moveSound.Play();
+                    //helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;

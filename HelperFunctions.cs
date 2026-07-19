@@ -3235,11 +3235,17 @@ public class HelperFunctions : MonoBehaviour
             //Rook
             movePieceBoardGrid(secondPiece, secondPiece.position, rookCoords);
 
+            movePiece(piece, findSquare(kingCoords.x, kingCoords.y));
+            movePiece(secondPiece, findSquare(rookCoords.x, rookCoords.y));
+
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
             removeAbility(piece, PieceAbilities.CastleLeft);
             removeAbility(piece, PieceAbilities.CastleRight);
+
+            //Debug.Log("CASTLED");
+            //Debug.Break();
         }
         else if (ability == PieceAbilities.CastleRight)
         {
@@ -3252,11 +3258,17 @@ public class HelperFunctions : MonoBehaviour
             //Rook
             movePieceBoardGrid(secondPiece, secondPiece.position, rookCoords);
 
+            movePiece(piece, findSquare(kingCoords.x, kingCoords.y));
+            movePiece(secondPiece, findSquare(rookCoords.x, rookCoords.y));
+
             piece.hasMoved = true;
             secondPiece.hasMoved = true;
 
             removeAbility(piece, PieceAbilities.CastleLeft);
             removeAbility(piece, PieceAbilities.CastleRight);
+
+            //Debug.Log("CASTLED");
+            //Debug.Break();
         }
         else if (ability == PieceAbilities.Unfreeze)
         {
@@ -4162,7 +4174,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        moveSound.Play();
+        //moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 

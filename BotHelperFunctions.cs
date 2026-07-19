@@ -136,12 +136,17 @@ public class BotHelperFunctions : MonoBehaviour
     {
         if (posY1 != posY2)
         {
-            return false;
+            return true;
         }
 
         int y = posY1;
         int x1 = posX1;
         int x2 = posX2;
+
+        if (x1 == x2)
+        {
+            return true;
+        }
 
         int dir = (x1 - x2) / Math.Abs(x1 - x2);
 
@@ -322,7 +327,7 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                Piece king = bot.king;
+                Piece king = bot.king == null ? isolatedGetKing(bs, bot.color) : bot.king;
                 Piece rook;
 
                 if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r1");
@@ -346,7 +351,7 @@ public class BotHelperFunctions : MonoBehaviour
                     //Debug.Break();
                 }
 
-                Piece king = bot.king;
+                Piece king = bot.king == null ? isolatedGetKing(bs, bot.color) : bot.king;
                 Piece rook;
                 if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r2");
                 else rook = HelperFunctions.findPieceFromPanelCode("b_r2");
@@ -1882,10 +1887,15 @@ public class BotHelperFunctions : MonoBehaviour
 
         //Piece piece = pieceAbility.piece;
         Piece piece = getCloneFromOriginalPiece(pieceAbility.piece, bs.boardGrid);
+        if (piece == null)
+        {
+            piece = pieceAbility.piece;
+        }
+
         PieceAbilities ability = pieceAbility.ability;
         coords coords = new coords ( pieceAbility.coords.x, pieceAbility.coords.y );
         coords adjustedCoords = new coords(coords.x - 1, coords.y - 1 );
-    coords adjustedPiecePosition = new coords(piece.position.x - 1, piece.position.y - 1 );
+        coords adjustedPiecePosition = new coords(piece.position.x - 1, piece.position.y - 1 );
 
         //List<Piece> placePieces = pieceAbility.placePieces;
         List<Piece> placePieces = new List<Piece>();

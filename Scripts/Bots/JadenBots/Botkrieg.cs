@@ -388,7 +388,7 @@ public class Botkrieg : BotTemplate
                 continue;
             }
 
-            Debug.Log("DFS Searh Move: " + move.x + ", " + move.y);
+            //Debug.Log("DFS Searh Move: " + move.x + ", " + move.y);
             UndoMove undo = undo_simulatePieceMove(bs, p, move);
 
             path.Add(move);
@@ -481,6 +481,7 @@ public class Botkrieg : BotTemplate
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
             float addPointsMoveOne = 0f;
+            float subtractPointsMoveTwo = 0f;
 
             BoardState bestMoveOppBS = null;
             NextMove bestOppMove = null;
@@ -498,67 +499,82 @@ public class Botkrieg : BotTemplate
                 return nextMove;
             }
 
-
             // Move point addons
+            if (botkrieg_info.all.Contains(piece) && piece.baseType != "King")
+            {
+                Debug.Log("Botkrieg: Moving Choice Piece");
+
+                addPointsMoveOne += 1f;
+            }
+
             if (isDematerializedPhantomOnKing(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Phantom Piece On King");
 
-                addPointsMoveOne += 1f;
+                addPointsMoveOne += 4f;
             }
 
             if (isAtomicAttackingKingCollateral(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Atomic Piece is Attacking King");
 
-                addPointsMoveOne += 2f;
+                addPointsMoveOne += 8f;
             }
 
             if (isOppKingJailed(this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Opponents King is Jailed");
 
-                addPointsMoveOne += 1f;
+                addPointsMoveOne += 16f;
             }
 
             if (isDematerializedPhantomAttackingKing(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Dematerialized Phantom Attacking King");
 
-                addPointsMoveOne += 0.5f;
+                addPointsMoveOne += 2f;
             }
 
             if (isFreezeBombAttackingKingCollateral(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Freeze Bomb Attacking King");
 
-                addPointsMoveOne += 0.5f;
+                addPointsMoveOne += 2f;
             }
 
             if (isLandmineAttackingNextToKing(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Landmine Attacking Next to King");
 
-                addPointsMoveOne += 0.5f;
+                addPointsMoveOne += 2f;
             }
 
             if (isLandmineNextToKing(piece, this.currentBoardState))
             {
                 Debug.Log("Botkrieg: Landmine Next to King");
 
-                addPointsMoveOne += 5f;
+                addPointsMoveOne += 16f;
+            }
+
+            if (checkAbility(piece, PieceAbilities.Dematerialize) && nextMove.moveType == "ability" && nextMove.ability.ability == PieceAbilities.Dematerialize)
+            {
+                Debug.Log("Botkrieg: Phantom can Dematerialize");
+
+                addPointsMoveOne += 4f;
             }
 
             float subtractPointsMoveOne = 0f;
 
             if (moveInQueue(lastFiveMoves, nextMove))
             {
-                subtractPointsMoveOne += 2f;
+                Debug.Log("Botkrieg Move in Last Five");
+                subtractPointsMoveOne += 4f;
             }
 
             if (moveInQueueTwice(lastFiveMoves, nextMove))
             {
-                subtractPointsMoveOne += 10f;
+                Debug.Log("Botkrieg Move in Last Five x2");
+                subtractPointsMoveOne += 20f;
             }
 
             if (checkState(piece, PieceState.Dematerialized))
@@ -649,6 +665,10 @@ public class Botkrieg : BotTemplate
 
                     bestOppMove = nextMoveOpp;
                     bestMoveOppBS = copyBoardState(this.currentBoardState);
+
+                    Debug.Log("New best opp response: " + pieceOpp + " -> " + coordsOpp.x + "," + coordsOpp.y);
+
+                    subtractPointsMoveTwo = checkNumDead(botkrieg_info);
                 }
 
                 undoMove(undo_, this.currentBoardState);
@@ -684,17 +704,28 @@ public class Botkrieg : BotTemplate
                 float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
                 float diff = botPoints - oppPoints;
-                float addDiff = (addPointsMoveOne * 0.5f) + (addBoardControlMoveOne * 0.1f);
+
+                string debugStr = " Points: " + diff;
+
+                float addDiff = (addPointsMoveOne * 0.5f) + (addBoardControlMoveOne * 0.2f);
                 diff += addDiff;
+
+                debugStr += " AddDiff: " + addDiff;
 
                 float minusDiff = subtractPointsMoveOne;
                 diff -= minusDiff;
+
+                debugStr += " MinusDiff (1): " + minusDiff;
+
+                subtractPointsMoveTwo = subtractPointsMoveTwo * 2;
+                diff -= subtractPointsMoveTwo;
+                debugStr += " MinusDiff (2): " + subtractPointsMoveTwo;
 
                 if (diff >= bestL2MoveDiff)
                 {
                     if (diff > bestL2MoveDiff)
                     {
-                        Debug.LogWarning("Botkrieg: After Move Analysis: " + (diff - addDiff + minusDiff) + " (" + (addDiff - minusDiff - addBoardControlMoveOne) + ") " + " (" + (addDiff - minusDiff - addPointsMoveOne) + ").");
+                        Debug.LogWarning("Botkrieg: After Move Analysis: " + debugStr + "." + " Total: " + diff);
 
                         validMoves_L2.Clear();
                     }
@@ -796,6 +827,11 @@ public class Botkrieg : BotTemplate
                     if (checkState(piece, PieceState.Frozen))
                     {
                         pts -= piece.points / 2;
+                    }
+
+                    if (checkAbility(piece, PieceAbilities.Materialize) && this.color == piece.color)
+                    {
+                        pts += 1.5f;
                     }
 
                     if (x == moveCoords.x - 1 && y == moveCoords.y - 1)

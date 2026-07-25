@@ -42,7 +42,7 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = false;
         //SEASON_NAME = "LCC_SEASON1";
         waitTime = 0f;
         nonResettables.logMatch = false;
@@ -54,7 +54,7 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "Botkrieg"
+                    "Botkrieg",
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
@@ -162,22 +162,22 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new Botkrieg(1);
-                botBlack = new Bot618(-1);
-                /*
+                //botWhite = new Botkrieg(1);
+                //botBlack = new Bot618(-1);
+                
                 // For WCSingle
                 int rand = globalDefs.globalRand.Next(1, 3);
                 if (rand == 1)
                 {
-                    botWhite = new HitmanBot(1);
-                    botBlack = new RestrictorBot(-1);
+                    botWhite = new TwoMoveBot(1);
+                    botBlack = new G2EBot(-1);
                 }
                 else
                 {
-                    botWhite = new RestrictorBot(1);
-                    botBlack = new HitmanBot(-1);
+                    botWhite = new G2EBot(1);
+                    botBlack = new TwoMoveBot(-1);
                 }
-                */
+                
             }
 
             gameData.botWhite = botWhite;
@@ -608,7 +608,7 @@ public class botMaster : MonoBehaviour
         {
             if (currentBot.name == "Thinking Bot II")
             {
-                thinkingBotII.Play();
+                //thinkingBotII.Play();
             }
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -618,7 +618,7 @@ public class botMaster : MonoBehaviour
 
             if (currentBot.name == "Thinking Bot II")
             {
-                thinkingBotII.Pause();
+                //thinkingBotII.Pause();
             }
 
             Move mv = null;
@@ -749,7 +749,7 @@ public class botMaster : MonoBehaviour
             if (movePieceObj != null)
             {
                 Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
-                helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
+                //helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
             }
             else
             {

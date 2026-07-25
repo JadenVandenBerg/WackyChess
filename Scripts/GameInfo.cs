@@ -187,6 +187,7 @@ public static class nonResettables
                 "MarchingBot",
                 "Botfish",
                 "BotniaAndHerzebotvina",
+                "Botkrieg"
             });
         }
 

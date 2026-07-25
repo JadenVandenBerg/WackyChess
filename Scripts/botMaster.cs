@@ -162,8 +162,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new Botkrieg(1);
-                botBlack = new Bot618(-1);
+                botWhite = new SpeedRunnerBot(1); //Botkrieg
+                botBlack = new LazyBot(-1); //Bot618
                 /*
                 // For WCSingle
                 int rand = globalDefs.globalRand.Next(1, 3);

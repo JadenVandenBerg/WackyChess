@@ -41,7 +41,69 @@ public class LazyBot : BotTemplate
         //public List<int[]> placeCoords; //Coords for abilities with multiple actions. Only hungry for now
         //public Piece secondPiece; //The second piece used in abilities. Used for castling/spawning
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
-        //Loop through all moves
+         if (turn == 1)
+        {
+            foreach (NextMove nextMove in allMoves)
+            {
+                Piece piece;
+                coords coords;
+                string moveType = nextMove.moveType;
+
+                if (moveType == "move")
+                {
+                  Move mv = nextMove.move;
+
+                 piece = mv.p;
+                 coords = mv.coords;
+                 if (piece.baseType == "Pawn")
+                    {
+                        if (piece.color == -1)
+                        {
+                            if (piece.startSquare.x == 1 & piece.startSquare.y == 7 | piece.startSquare.x == 8 & piece.startSquare.y == 7)
+                            {
+                                validMoves.Clear();
+                                validMoves.Add(nextMove);
+                            }
+                        } 
+                        else if (piece.color == 1)
+                        {
+                            if (piece.startSquare.x == 1 & piece.startSquare.y == 2 | piece.startSquare.x == 8 & piece.startSquare.y == 2)
+                            {
+                                validMoves.Clear();
+                                validMoves.Add(nextMove);
+                            }
+                        }
+                        
+                    }
+                }
+            }
+
+        }
+        else if (turn > 1 & turn <= 8)
+        {
+            foreach (NextMove nextMove in allMoves)
+            {
+                Piece piece;
+                coords coords;
+                string moveType = nextMove.moveType;
+
+                if (moveType == "move")
+                {
+                  Move mv = nextMove.move;
+
+                 piece = mv.p;
+                 coords = mv.coords;
+                 if (piece.baseType == "Rook")
+                    {
+                        validMoves.Clear();
+                        validMoves.Add(nextMove);
+                    }
+                }
+            }
+        } 
+        if (validMoves.Count == 0)
+        {
+         //Loop through all moves
 
            foreach (NextMove nextMove in allMoves)
         {
@@ -164,68 +226,8 @@ public class LazyBot : BotTemplate
 
             //Reset the currentBoardState and go to the next move
             this.currentBoardState = originalBoardState;
+        }   
         }
-
-        if (turn == 1)
-        {
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-
-                if (moveType == "move")
-                {
-                  Move mv = nextMove.move;
-
-                 piece = mv.p;
-                 coords = mv.coords;
-                 if (piece.baseType == "Pawn")
-                    {
-                        if (piece.color == -1)
-                        {
-                            if (piece.startSquare.x == 1 & piece.startSquare.y == 7 | piece.startSquare.x == 8 & piece.startSquare.y == 7)
-                            {
-                                validMoves.Clear();
-                                validMoves.Add(nextMove);
-                            }
-                        } 
-                        else if (piece.color == 1)
-                        {
-                            if (piece.startSquare.x == 1 & piece.startSquare.y == 2 | piece.startSquare.x == 8 & piece.startSquare.y == 2)
-                            {
-                                validMoves.Clear();
-                                validMoves.Add(nextMove);
-                            }
-                        }
-                        
-                    }
-                }
-            }
-
-        }
-        else if (turn > 1 & turn <= 8)
-        {
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-
-                if (moveType == "move")
-                {
-                  Move mv = nextMove.move;
-
-                 piece = mv.p;
-                 coords = mv.coords;
-                 if (piece.baseType == "Rook")
-                    {
-                        validMoves.Clear();
-                        validMoves.Add(nextMove);
-                    }
-                }
-            }
-        } 
         //Pick a random move from our list of tied moves
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves.Count);

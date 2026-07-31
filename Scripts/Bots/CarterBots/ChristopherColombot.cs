@@ -218,7 +218,7 @@ public class ChristopherColumbot : BotTemplate
         if (discoveredSquares.Contains(finalStr) == false)
         {
             discoveredSquares.Add(finalStr);
-            Debug.Log("New Square discovered at " + finalStr + ". " + discoveredSquares.Count() + " total.");
+            //Debug.Log("New Square discovered at " + finalStr + ". " + discoveredSquares.Count() + " total.");
         }
 
         return move;

@@ -169,46 +169,58 @@ public class ThinkingBotII : BotTemplate
                         undoResponse = undo_simulatePieceAbility(thread_BoardState, nextMoveResponse.ability);
                     }
 
+
                     float opponentBestCounter = 999999f;
 
                     List<NextMove> allOpponentCounters = getAllPossibleBotKillsAndAbilities(this, thread_BoardState, this.color * -1);
-
-                    foreach (NextMove opponentCounter in allOpponentCounters)
+                    if (allOpponentCounters.Count == 0)
                     {
-                        movesAnalyzed++;
-
-                        var opponentCounterVars = getNextMoveVars(opponentCounter);
-
-                        Piece opponentCounterPiece = opponentCounterVars.piece;
-                        coords opponentCounterCoords = opponentCounterVars.coords;
-                        string opponentCounterMoveType = opponentCounterVars.moveType;
-
-                        UndoMove undoOpponentCounter;
-
-                        if (opponentCounterMoveType == "move")
-                        {
-                            undoOpponentCounter = undo_simulatePieceMove(thread_BoardState, opponentCounterPiece, new coords(opponentCounterCoords.x, opponentCounterCoords.y));
-                        }
-                        else
-                        {
-                            undoOpponentCounter = undo_simulatePieceAbility(thread_BoardState, opponentCounter.ability);
-                        }
-
                         var points = ThinkingBot_getPointsOnBoardState(thread_BoardState, true, pieceResponse, coordsResponse);
 
                         float botPoints = this.color == 1 ? points.white : points.black;
                         float oppPoints = this.color == -1 ? points.white : points.black;
 
-                        float diff = botPoints - oppPoints + firstModePointsAdd;
-
-                        diff += boardControlDiff * 0.01f;
-
-                        if (diff < opponentBestCounter)
+                        opponentBestCounter = botPoints - oppPoints;
+                    }
+                    else
+                    {
+                        foreach (NextMove opponentCounter in allOpponentCounters)
                         {
-                            opponentBestCounter = diff;
-                        }
+                            movesAnalyzed++;
 
-                        undoMove(undoOpponentCounter, thread_BoardState);
+                            var opponentCounterVars = getNextMoveVars(opponentCounter);
+
+                            Piece opponentCounterPiece = opponentCounterVars.piece;
+                            coords opponentCounterCoords = opponentCounterVars.coords;
+                            string opponentCounterMoveType = opponentCounterVars.moveType;
+
+                            UndoMove undoOpponentCounter;
+
+                            if (opponentCounterMoveType == "move")
+                            {
+                                undoOpponentCounter = undo_simulatePieceMove(thread_BoardState, opponentCounterPiece, new coords(opponentCounterCoords.x, opponentCounterCoords.y));
+                            }
+                            else
+                            {
+                                undoOpponentCounter = undo_simulatePieceAbility(thread_BoardState, opponentCounter.ability);
+                            }
+
+                            var points = ThinkingBot_getPointsOnBoardState(thread_BoardState, true, pieceResponse, coordsResponse);
+
+                            float botPoints = this.color == 1 ? points.white : points.black;
+                            float oppPoints = this.color == -1 ? points.white : points.black;
+
+                            float diff = botPoints - oppPoints + firstModePointsAdd;
+
+                            diff += boardControlDiff * 0.05f;
+
+                            if (diff < opponentBestCounter)
+                            {
+                                opponentBestCounter = diff;
+                            }
+
+                            undoMove(undoOpponentCounter, thread_BoardState);
+                        }
                     }
 
                     if (opponentBestCounter > bestResponseDiff)
@@ -227,6 +239,10 @@ public class ThinkingBotII : BotTemplate
                 undoMove(undoOpp, thread_BoardState);
             }
 
+            // Score Adjust
+            worstCaseScenario += firstModePointsAdd;
+            worstCaseScenario += boardControlDiff * 0.05f;
+
             results.Add((nextMove, worstCaseScenario));
 
             undoMove(undo, thread_BoardState);
@@ -244,7 +260,7 @@ public class ThinkingBotII : BotTemplate
 
         List<NextMove> validMoves = new List<NextMove>();
 
-        float bestMoveDiff = -1000;
+        float bestMoveDiff = -10000;
         foreach (var result in results)
         {
             if (result.diff >= bestMoveDiff)
@@ -421,7 +437,7 @@ public class ThinkingBotII : BotTemplate
             }
         }
 
-        return ( whiteScore, blackScore );
+        return (whiteScore, blackScore);
     }
 
     private static bool moveInQueue(Queue<NextMove> moves, NextMove move)

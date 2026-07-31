@@ -31,6 +31,7 @@ public class botMaster : MonoBehaviour
     static string SEASON_NAME;
 
     BotGameStatus bgs = new BotGameStatus();
+    float waitTime;
 
     IEnumerator Start()
     {
@@ -41,8 +42,9 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
         
-        nonResettables.isBotTournament = false;
-        //SEASON_NAME = "ACC_SEASON2";
+        nonResettables.isBotTournament = true;
+        //SEASON_NAME = "LCC_SEASON1";
+        waitTime = 0f;
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
 
@@ -52,46 +54,57 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "Bot618",
-                    "BotsUtd",
-                    "BerserkerBot"
+                    "Botkrieg"
                 };
-                List<string> randomBots = nonResettables.get8RandomBots(forceNames);
+
+                List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.SavageBeastBot,
-                    Bots.FiveXRandomBot,
-                    Bots.BottusMaximus,
-                    Bots.OneMoveBot,
-                    Bots.HitmanBot,
-                    Bots.ThinkingBot,
+                    Bots.RandomBot,
+                    Bots.IdiotBot,
                     Bots.OnePieceRandomBot,
-                    Bots.EqualityBot,
+                    Bots.TwoMoveBot,
+                    Bots.SavageBeastBot,
+                    Bots.Lobotomy,
+                    Bots.HitmanBot,
+                    Bots.RestrictorBot,
                 };
 
                 List<string> div2 = new List<string>
                 {
-                    Bots.ShieldBot,
-                    Bots.Abilibot,
-                    Bots.RandomBot,
                     Bots.BOTential,
-                    Bots.PawnBot,
-                    Bots.AdventurousKingBot,
-                    Bots.IdiotBot,
-                    Bots.BotRoss,
+                    Bots.OneMoveBot,
+                    Bots.EqualityBot,
+                    Bots.BotsUnited,
+                    Bots.Lobotomy,
+                    Bots.OnePieceRandomBot,
+                    Bots.BotDefender,
+                    Bots.ChristopherColumbot,
                 };
-                
+
                 List<string> div3 = new List<string>
                 {
-                    "FiveXRandomBot",
-                    "RandomBot",
-                    "OneMoveBot",
-                    "BotRoss",
-                    "AdventurousKingBot",
-                    "ShieldBot",
-                    "SavageBeastBot",
-                    "IdiotBot"
+                    Bots.AdventurousKingBot,
+                    Bots.ShieldBot,
+                    Bots.SavageBeastBot,
+                    Bots.RandomBot,
+                    Bots.BotRoss,
+                    Bots.Bloodbot,
+                    Bots.FiveXRandomBot,
+                    Bots.HitmanBot,
+                };
+
+                List<string> div4 = new List<string>
+                {
+                    Bots.EqualityBot,
+                    Bots.BotDefender,
+                    Bots.ShieldBot,
+                    Bots.Abilibot,
+                    Bots.IdiotBot,
+                    Bots.FiveXRandomBot,
+                    Bots.BotRoss,
+                    Bots.RandomBot,
                 };
 
                 StringBuilder sb = new StringBuilder();
@@ -111,6 +124,9 @@ public class botMaster : MonoBehaviour
 
                 //Div 3
                 //nonResettables.botTournament = new BotTournament(div3[0], div3[1], div3[2], div3[3], div3[4], div3[5], div3[6], div3[7], false);
+
+                //Div 4 
+                //nonResettables.botTournament = new BotTournament(div4[0], div4[1], div4[2], div4[3], div4[4], div4[5], div4[6], div4[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -146,8 +162,22 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new Amoebot(1);
-                botBlack = new OneMoveBot(-1);
+                botWhite = new SpeedRunnerBot(1); //Botkrieg
+                botBlack = new LazyBot(-1); //Bot618
+                /*
+                // For WCSingle
+                int rand = globalDefs.globalRand.Next(1, 3);
+                if (rand == 1)
+                {
+                    botWhite = new HitmanBot(1);
+                    botBlack = new RestrictorBot(-1);
+                }
+                else
+                {
+                    botWhite = new RestrictorBot(1);
+                    botBlack = new HitmanBot(-1);
+                }
+                */
             }
 
             gameData.botWhite = botWhite;
@@ -161,97 +191,273 @@ public class botMaster : MonoBehaviour
 
             gameData.boardGrid = HelperFunctions.initBoardGrid();
 
-            /*
-            List<Piece> botWhitePawns = filterPieces("Pawn", botWhite.pieces);
-            List<Piece> botWhiteRooks = filterPieces("Rook", botWhite.pieces);
-            List<Piece> botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
-            List<Piece> botWhiteKnights = filterPieces("Knight", botWhite.pieces);
-            List<Piece> botWhiteKing = filterPieces("King", botWhite.pieces);
-            List<Piece> botWhiteQueen = filterPieces("Queen", botWhite.pieces);
+            List<Piece> botWhitePawns;
+            List<Piece> botWhiteRooks;
+            List<Piece> botWhiteBishops;
+            List<Piece> botWhiteKnights;
+            List<Piece> botWhiteKing;
+            List<Piece> botWhiteQueen;
 
-            List<Piece> botBlackPawns = filterPieces("Pawn", botBlack.pieces);
-            List<Piece> botBlackRooks = filterPieces("Rook", botBlack.pieces);
-            List<Piece> botBlackBishops = filterPieces("Bishop", botBlack.pieces);
-            List<Piece> botBlackKnights = filterPieces("Knight", botBlack.pieces);
-            List<Piece> botBlackKing = filterPieces("King", botBlack.pieces);
-            List<Piece> botBlackQueen = filterPieces("Queen", botBlack.pieces);
-            */
-            List<Piece> botWhitePawns = new List<Piece>
-            {
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-                getPieceTypeInstance("Pawn", 1),
-            };
+            List<Piece> botBlackPawns;
+            List<Piece> botBlackRooks;
+            List<Piece> botBlackBishops;
+            List<Piece> botBlackKnights;
+            List<Piece> botBlackKing;
+            List<Piece> botBlackQueen;
 
-            List<Piece> botWhiteRooks = new List<Piece>
+            if (nonResettables.ruleset == "Wacky")
             {
-                getPieceTypeInstance("Rook", 1),
-                getPieceTypeInstance("Rook", 1),
-            };
+                botWhitePawns = filterPieces("Pawn", botWhite.pieces);
+                botWhiteRooks = filterPieces("Rook", botWhite.pieces);
+                botWhiteBishops = filterPieces("Bishop", botWhite.pieces);
+                botWhiteKnights = filterPieces("Knight", botWhite.pieces);
+                botWhiteKing = filterPieces("King", botWhite.pieces);
+                botWhiteQueen = filterPieces("Queen", botWhite.pieces);
 
-            List<Piece> botWhiteBishops = new List<Piece>
+                botBlackPawns = filterPieces("Pawn", botBlack.pieces);
+                botBlackRooks = filterPieces("Rook", botBlack.pieces);
+                botBlackBishops = filterPieces("Bishop", botBlack.pieces);
+                botBlackKnights = filterPieces("Knight", botBlack.pieces);
+                botBlackKing = filterPieces("King", botBlack.pieces);
+                botBlackQueen = filterPieces("Queen", botBlack.pieces);
+            }
+            else if (nonResettables.ruleset == "Fusion")
             {
-                getPieceTypeInstance("Bishop", 1),
-                getPieceTypeInstance("Bishop", 1),
-            };
-            List<Piece> botWhiteKnights = new List<Piece>
-            {
-                getPieceTypeInstance("Knight", 1),
-                getPieceTypeInstance("Knight", 1),
-            };
-            List<Piece> botWhiteKing = new List<Piece>
-            {
-                getPieceTypeInstance("King", 1)
-            };
+                botWhitePawns = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                    getPieceTypeInstance("FusionPawn", 1),
+                };
 
-            List<Piece> botWhiteQueen = new List<Piece>
-            {
-                getPieceTypeInstance("Queen", 1)
-            };
+                botWhiteRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionRook", 1),
+                    getPieceTypeInstance("FusionRook", 1),
+                };
 
-            
-            List<Piece> botBlackPawns = new List<Piece>
-            {
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-                getPieceTypeInstance("Pawn", -1),
-            };
+                botWhiteBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionBishop", 1),
+                    getPieceTypeInstance("FusionBishop", 1),
+                };
+                botWhiteKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionKnight", 1),
+                    getPieceTypeInstance("FusionKnight", 1),
+                };
+                botWhiteKing = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionKing", 1)
+                };
 
-            List<Piece> botBlackRooks = new List<Piece>
-            {
-                getPieceTypeInstance("Rook", -1),
-                getPieceTypeInstance("Rook", -1),
-            };
+                botWhiteQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionQueen", 1)
+                };
 
-            List<Piece> botBlackBishops = new List<Piece>
-            {
-                getPieceTypeInstance("Bishop", -1),
-                getPieceTypeInstance("Bishop", -1),
-            };
-            List<Piece> botBlackKnights = new List<Piece>
-            {
-                getPieceTypeInstance("Knight", -1),
-                getPieceTypeInstance("Knight", -1),
-            };
-            List<Piece> botBlackKing = new List<Piece>
-            {
-                getPieceTypeInstance("King", -1),
-            };
 
-            List<Piece> botBlackQueen = new List<Piece>
+                botBlackPawns = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                    getPieceTypeInstance("FusionPawn", -1),
+                };
+
+                botBlackRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionRook", -1),
+                    getPieceTypeInstance("FusionRook", -1),
+                };
+
+                botBlackBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionBishop", -1),
+                    getPieceTypeInstance("FusionBishop", -1),
+                };
+                botBlackKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionKnight", -1),
+                    getPieceTypeInstance("FusionKnight", -1),
+                };
+                botBlackKing = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionKing", -1),
+                };
+
+                botBlackQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("FusionQueen", -1),
+                };
+            }
+            else if (nonResettables.ruleset == "Landmine")
             {
-                getPieceTypeInstance("Queen", -1),
-            };
+                botWhitePawns = new List<Piece>
+                {
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                    getPieceTypeInstance("LandminePawn", 1),
+                };
+
+                botWhiteRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineRook", 1),
+                    getPieceTypeInstance("LandmineRook", 1),
+                };
+
+                botWhiteBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineBishop", 1),
+                    getPieceTypeInstance("LandmineBishop", 1),
+                };
+                botWhiteKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKnight", 1),
+                    getPieceTypeInstance("LandmineKnight", 1),
+                };
+                botWhiteKing = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKing", 1)
+                };
+
+                botWhiteQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineQueen", 1)
+                };
+
+
+                botBlackPawns = new List<Piece>
+                {
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                    getPieceTypeInstance("LandminePawn", -1),
+                };
+
+                botBlackRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineRook", -1),
+                    getPieceTypeInstance("LandmineRook", -1),
+                };
+
+                botBlackBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineBishop", -1),
+                    getPieceTypeInstance("LandmineBishop", -1),
+                };
+                botBlackKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKnight", -1),
+                    getPieceTypeInstance("LandmineKnight", -1),
+                };
+                botBlackKing = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineKing", -1),
+                };
+
+                botBlackQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("LandmineQueen", -1),
+                };
+            }
+            else //if (nonResettables.ruleset == "Normal")
+            {
+                botWhitePawns = new List<Piece>
+                {
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                    getPieceTypeInstance("Pawn", 1),
+                };
+
+                botWhiteRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("Rook", 1),
+                    getPieceTypeInstance("Rook", 1),
+                };
+
+                botWhiteBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("Bishop", 1),
+                    getPieceTypeInstance("Bishop", 1),
+                };
+                botWhiteKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("Knight", 1),
+                    getPieceTypeInstance("Knight", 1),
+                };
+                botWhiteKing = new List<Piece>
+                {
+                    getPieceTypeInstance("King", 1)
+                };
+
+                botWhiteQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("Queen", 1)
+                };
+
+
+                botBlackPawns = new List<Piece>
+                {
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                    getPieceTypeInstance("Pawn", -1),
+                };
+
+                botBlackRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("Rook", -1),
+                    getPieceTypeInstance("Rook", -1),
+                };
+
+                botBlackBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("Bishop", -1),
+                    getPieceTypeInstance("Bishop", -1),
+                };
+                botBlackKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("Knight", -1),
+                    getPieceTypeInstance("Knight", -1),
+                };
+                botBlackKing = new List<Piece>
+                {
+                    getPieceTypeInstance("King", -1),
+                };
+
+                botBlackQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("Queen", -1),
+                };
+            }
 
             foreach (Piece wp in botWhite.pieces)
             {
@@ -439,7 +645,7 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y), Color.green);
                 HelperFunctions.highlightSquare(HelperFunctions.findSquare(moveCoords.x, moveCoords.y), Color.red);
             }
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(waitTime);
 
             selectedMove = nextMove;
 
@@ -487,6 +693,8 @@ public class botMaster : MonoBehaviour
                 HelperFunctions.movePiece(movePieceObj, square);
 
                 Debug.Log("Reassembling Broken GO");
+
+                gameData.allPiecesDict.Add(movePieceObj.go, movePieceObj);
                 //Debug.Break();
             }
         }
@@ -527,7 +735,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                helper.moveSound.Play();
+                //helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -546,7 +754,7 @@ public class botMaster : MonoBehaviour
             else
             {
                 Debug.Log("No Move Provided or Penalty");
-                helper.addBotMessage(" No Move Provided or Penalty");
+                //helper.addBotMessage(" No Move Provided or Penalty");
             }
 
             NextMove randomMove = performRandomBotMove_(currentBot);
@@ -597,7 +805,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
-                    helper.moveSound.Play();
+                    //helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;
@@ -696,10 +904,48 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                if (!kingDead)
+                //Double check if its really stalemate
+                Piece king = null;
+                List<Piece> pieces = HelperFunctions.getPiecesOnBoard();
+                foreach (Piece p in pieces)
+                {
+                    if (p.color == turn && p.baseType == "King")
+                    {
+                        king = p;
+                    }
+                }
+
+                if (king != null)
+                {
+                    bool check_ = HelperFunctions.isCheck(king);
+
+                    if (check_)
+                    {
+                        Debug.Log("Game Over - Checkmate. Originally marked as Stalemate");
+                        bgs.result = "Won by Checkmate";
+                        if (turn == -1)
+                        {
+                            bgs.winner = "White";
+                            bgs.winnerName = botWhite.name;
+                        }
+                        else
+                        {
+                            bgs.winner = "Black";
+                            bgs.winnerName = botBlack.name;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Game Over - Stalemate (Condition 2)");
+                        bgs.result = "Draw by Stalemate";
+                        //Debug.Break();
+                    }
+                }
+                
+                else if (!kingDead)
                 {
                     //Debug.Break();
-                    Debug.Log("Game Over - Stalemate (Condition 2)");
+                    Debug.Log("Game Over - Stalemate (Condition 2.1)");
                     bgs.result = "Draw by Stalemate";
                 }
             }
@@ -732,7 +978,7 @@ public class botMaster : MonoBehaviour
         }
 
         //BotHelperFunctions.debug_printBoardGrid(gameData.boardGrid);
-        HelperFunctions.resetBoardColours();
+        //HelperFunctions.resetBoardColours();
         isTurn = true;
 
         if (gameOver)

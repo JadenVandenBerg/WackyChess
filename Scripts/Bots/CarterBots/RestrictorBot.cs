@@ -153,6 +153,12 @@ public class RestrictorBot : BotTemplate
         }
 
         System.Random rand = new System.Random();
+
+        if (validMoves.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+
         int rndIdx = rand.Next(validMoves.Count);
 
         NextMove move = validMoves[rndIdx];

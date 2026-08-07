@@ -74,14 +74,29 @@ public class CastlerBot : BotTemplate
 			rookR = findPieceOnBoardStateFromPanelCode(this.currentBoardState, "b_r2");
 		}
 
-		if (rookL.hasMoved == true || king.hasMoved == true)
+		if (rookL.alive == 0)
 		{
 			castleLeftPossible = false;
 		}
-		if (rookR.hasMoved == true || king.hasMoved == true)
+		else
 		{
-			castleRightPossible = false;
-		}
+            if (rookL.hasMoved == true || king.hasMoved == true)
+            {
+                castleLeftPossible = false;
+            }
+        }
+
+        if (rookR.alive == 0)
+        {
+            castleRightPossible = false;
+        }
+		else
+		{
+            if (rookR.hasMoved == true || king.hasMoved == true)
+            {
+                castleRightPossible = false;
+            }
+        }
 
         foreach (Piece piece1 in piecesOnBoard)
         {

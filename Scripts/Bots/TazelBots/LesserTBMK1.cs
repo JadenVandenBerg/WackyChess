@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
@@ -46,3 +46,4 @@ public class LesserT : BotTemplate
         return move;
     }
 }
+*/

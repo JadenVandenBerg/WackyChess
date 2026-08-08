@@ -10,7 +10,7 @@ using System.IO;
 using System.Collections;
 using System.Linq;
 using System.Text;
-using static HelperFunctions;
+using static HelperFunctions
 
 public class BotHelperFunctions : MonoBehaviour
 {

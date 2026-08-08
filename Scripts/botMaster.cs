@@ -166,7 +166,6 @@ public class botMaster : MonoBehaviour
                 //Replace these with your bots if it is a tournament
                 botWhite = new Botkrieg(1);
                 botBlack = new FiveXRandomBot(-1);
-                
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);

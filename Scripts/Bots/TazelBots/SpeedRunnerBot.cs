@@ -60,10 +60,10 @@ public class SpeedRunnerBot : BotTemplate
             int currentPieceValue = 0;
             if (piece.baseType != "King" & ! HelperFunctions.checkState(piece, PieceState.Jailed))
             {
-                if (piece.hasMoved == true & piece.oneTimeMoveAndAttacks != null)
-                {
-                    currentPieceValue -= 10;
-                }
+                //if (piece.hasMoved == true & piece.oneTimeMoveAndAttacks != null)
+                //{
+                    //currentPieceValue -= 10;
+                //}
                 if (piece.position.x == oppKingPos.x & piece.position.y == oppKingPos.y){}
                 else
                 {
@@ -161,26 +161,12 @@ public class SpeedRunnerBot : BotTemplate
                         {
                             //Get the closest possible to the king
                             double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2)); 
-                            double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));
-                            
-                            if (pieceDistanceToKing < 6){// | (piece.position.y == piece.startSquare.y & piece.position.x == piece.startSquare.x)) {
-                                if (pieceDistanceToKing < closestDistanceToKing) {
-                                    validMoves.Clear();
-                                    validMoves.Add(nextMove);
-                                    closestDistanceToKing = pieceDistanceToKing;
-                                }
+                            double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));     
+                            if (pieceDistanceToKing < closestDistanceToKing) {
+                                validMoves.Clear();
+                                validMoves.Add(nextMove);
+                                closestDistanceToKing = pieceDistanceToKing;
                             }
-                            else
-                            {
-                                if (pieceDistanceToKing > curretPieceDistanceToKing)
-                                {
-                                    if (pieceDistanceToKing < closestDistanceToKing) {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        closestDistanceToKing = pieceDistanceToKing;
-                                    }
-                                }
-                        }
                         }                 
                         else
                         {
@@ -193,7 +179,6 @@ public class SpeedRunnerBot : BotTemplate
                                     {
                                         if (piece.color == -1) {
                                             if (coords.y - 8 > furthestDistance) {
-                                                validMoves.Clear();
                                                 validMoves.Add(nextMove);
                                                 furthestDistance = coords.y - 8;
                                             }
@@ -202,7 +187,6 @@ public class SpeedRunnerBot : BotTemplate
                                             }
                                         } else if (piece.color == 1) {
                                             if (coords.y > furthestDistance) {
-                                                validMoves.Clear();
                                                 validMoves.Add(nextMove);
                                                 furthestDistance = coords.y;
                                             } 
@@ -272,145 +256,7 @@ public class SpeedRunnerBot : BotTemplate
                     {
                         //If the main piece cannot solo
                         double curretMainPieceDistanceToKing = Math.Sqrt(Math.Pow(mainPiece.position.y - oppKingPos.y, 2) + Math.Pow(mainPiece.position.x - oppKingPos.x, 2));
-                        if ((mainPiece.color == 1 & (mainPiece.position.y > 3 & secondPiece.position.y <= 3)) | (mainPiece.color == -1 & mainPiece.position.y < 6 & secondPiece.position.y >= 6)  | curretMainPieceDistanceToKing < 2.5)
-                        {
-                        if (piece.name == secondPiece.name)
-                        {
-                            double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2)); 
-                            double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));
-                            double yDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2));
-                            double currentYDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2));
-
-                            if (piece.baseType == "Rook")
-                            {
-                                if (yDistanceToKing < 6){// | (piece.position.y == piece.startSquare.y & piece.position.x == piece.startSquare.x)) {
-                                    if (yDistanceToKing < closestYToKing) {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        closestYToKing = yDistanceToKing;
-                                    }
-                                }
-                                else
-                                {
-                                    if (yDistanceToKing > currentYDistanceToKing)
-                                    {
-                                        if (yDistanceToKing < closestYToKing) {
-                                            validMoves.Clear();
-                                            validMoves.Add(nextMove);
-                                            closestYToKing = yDistanceToKing;
-                                        }
-                                    }
-                                }                                    
-                            }
-                            else
-                            {
-                                if (pieceDistanceToKing < 6){// | (piece.position.y == piece.startSquare.y & piece.position.x == piece.startSquare.x)) {
-                                    if (pieceDistanceToKing < closestDistanceToKing) {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        closestDistanceToKing = pieceDistanceToKing;
-                                    }
-                                }
-                                else
-                                {
-                                    if (pieceDistanceToKing > curretPieceDistanceToKing)
-                                    {
-                                        if (pieceDistanceToKing < closestDistanceToKing) {
-                                            validMoves.Clear();
-                                            validMoves.Add(nextMove);
-                                            closestDistanceToKing = pieceDistanceToKing;
-                                        }
-                                    }
-                                }
-                            }
-                        }                 
-                        else
-                        {
-                            if (validMoves.Count == 0)
-                            {
-                                if (secondPiece.baseType == "Rook")
-                                {
-                                    if (piece.position.x == secondPiece.position.x)
-                                    {
-                                        if (piece.color == -1) {
-                                            if (coords.y - 8 > furthestDistance) {
-                                                validMoves.Clear();
-                                                validMoves.Add(nextMove);
-                                                furthestDistance = coords.y - 8;
-                                            }
-                                            else if (coords.y == furthestDistance) {
-                                                validMoves.Add(nextMove);
-                                            }
-                                        } else if (piece.color == 1) {
-                                            if (coords.y > furthestDistance) {
-                                                validMoves.Clear();
-                                                validMoves.Add(nextMove);
-                                                furthestDistance = coords.y;
-                                            } 
-                                            else if (coords.y == furthestDistance) {
-                                                validMoves.Add(nextMove);
-                                            }
-                                        }              
-                                    }
-                                }
-                                else if (secondPiece.baseType == "Bishop" | secondPiece.baseType == "Queen")
-                                {
-                                    if (piece.color == 1 & piece.position.y - 1 == secondPiece.position.y) 
-                                    {
-                                        if (piece.position.x + 1 == secondPiece.position.x | piece.position.x - 1 == secondPiece.position.x)
-                                        {
-                                            if (piece.color == -1) {
-                                                if (coords.y - 8 > furthestDistance) {
-                                                    validMoves.Clear();
-                                                    validMoves.Add(nextMove);
-                                                    furthestDistance = coords.y - 8;
-                                                }
-                                                else if (coords.y == furthestDistance) {
-                                                    validMoves.Add(nextMove);
-                                                }
-                                            } else if (piece.color == 1) {
-                                                if (coords.y > furthestDistance) {
-                                                    validMoves.Clear();
-                                                    validMoves.Add(nextMove);
-                                                    furthestDistance = coords.y;
-                                                } 
-                                                else if (coords.y == furthestDistance) {
-                                                    validMoves.Add(nextMove);
-                                                }
-                                            }              
-                                        }
-                                    }
-                                    else if (piece.color == -1 & piece.position.y + 1 == secondPiece.position.y)
-                                    {
-                                        if (piece.position.x + 1 == secondPiece.position.x | piece.position.x - 1 == secondPiece.position.x)
-                                        {
-                                            if (piece.color == -1) {
-                                                if (coords.y - 8 > furthestDistance) {
-                                                    validMoves.Clear();
-                                                    validMoves.Add(nextMove);
-                                                    furthestDistance = coords.y - 8;
-                                                }
-                                                else if (coords.y == furthestDistance) {
-                                                    validMoves.Add(nextMove);
-                                                }
-                                            } else if (piece.color == 1) {
-                                                if (coords.y > furthestDistance) {
-                                                    validMoves.Clear();
-                                                    validMoves.Add(nextMove);
-                                                    furthestDistance = coords.y;
-                                                } 
-                                                else if (coords.y == furthestDistance) {
-                                                    validMoves.Add(nextMove);
-                                                }
-                                            }              
-                                        }
-                                    }
-                                }
-                            }
-                        }      
-                    } else
-                        {
-                            if (piece.name == mainPiece.name)
+                        if (piece.name == mainPiece.name)
                         {
                             //Get the closest possible to the king
                             double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2)); 
@@ -420,44 +266,18 @@ public class SpeedRunnerBot : BotTemplate
 
                             if (piece.baseType == "Rook")
                             {
-                                if (yDistanceToKing < 6){// | (piece.position.y == piece.startSquare.y & piece.position.x == piece.startSquare.x)) {
-                                    if (yDistanceToKing < closestYToKing) {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        closestYToKing = yDistanceToKing;
-                                    }
-                                }
-                                else
-                                {
-                                    if (yDistanceToKing > currentYDistanceToKing)
-                                    {
-                                        if (yDistanceToKing < closestYToKing) {
-                                            validMoves.Clear();
-                                            validMoves.Add(nextMove);
-                                            closestYToKing = yDistanceToKing;
-                                        }
-                                    }
-                                }                                    
+                                if (yDistanceToKing < closestYToKing) {
+                                    validMoves.Clear();
+                                    validMoves.Add(nextMove);
+                                    closestYToKing = yDistanceToKing;
+                                }                                  
                             }
                             else
                             {
-                                if (pieceDistanceToKing < 6){// | (piece.position.y == piece.startSquare.y & piece.position.x == piece.startSquare.x)) {
-                                    if (pieceDistanceToKing < closestDistanceToKing) {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        closestDistanceToKing = pieceDistanceToKing;
-                                    }
-                                }
-                                else
-                                {
-                                    if (pieceDistanceToKing > curretPieceDistanceToKing)
-                                    {
-                                        if (pieceDistanceToKing < closestDistanceToKing) {
-                                            validMoves.Clear();
-                                            validMoves.Add(nextMove);
-                                            closestDistanceToKing = pieceDistanceToKing;
-                                        }
-                                    }
+                                if (pieceDistanceToKing < closestDistanceToKing) {
+                                    validMoves.Clear();
+                                    validMoves.Add(nextMove);
+                                    closestDistanceToKing = pieceDistanceToKing;
                                 }
                             }
                         }                 
@@ -547,7 +367,6 @@ public class SpeedRunnerBot : BotTemplate
                             }
                         }
                         }
-                    }
                     }    
                     else
                     {

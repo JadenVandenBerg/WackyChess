@@ -54,10 +54,6 @@ public class ThinkingBotII : BotTemplate
                 undo = undo_simulatePieceAbility(thread_BoardState, nextMove.ability);
             }
 
-            if (isBoardStateOppStalemate(thread_BoardState))
-            {
-                return;
-            }
 
             float firstModePointsAdd = 0f;
 
@@ -104,22 +100,53 @@ public class ThinkingBotII : BotTemplate
                     undoOppOrdering = undo_simulatePieceAbility(thread_BoardState, nextMoveOpp.ability);
                 }
 
-                float orderingScore = 0f;
+                float orderingScore = 999999f;
 
-                var points = ThinkingBot_getPointsOnBoardState(thread_BoardState, true, pieceOpp, coordsOpp);
+                List<NextMove> allBotMovesResponseOrdering = getAllPossibleBotMovesAndAbilities(this, thread_BoardState, this.color);
 
-                float botPoints = this.color == 1 ? points.white : points.black;
-                float oppPoints = this.color == -1 ? points.white : points.black;
+                foreach (NextMove nextMoveResponse in allBotMovesResponseOrdering)
+                {
+                    var nextMoveResponseVars = getNextMoveVars(nextMoveResponse);
 
-                orderingScore = oppPoints - botPoints;
+                    Piece pieceResponse = nextMoveResponseVars.piece;
+                    coords coordsResponse = nextMoveResponseVars.coords;
+                    string moveTypeResponse = nextMoveResponseVars.moveType;
+
+                    UndoMove undoResponseOrdering;
+
+                    if (moveTypeResponse == "move")
+                    {
+                        undoResponseOrdering = undo_simulatePieceMove(thread_BoardState, pieceResponse, new coords(coordsResponse.x, coordsResponse.y));
+                    }
+                    else
+                    {
+                        undoResponseOrdering = undo_simulatePieceAbility(thread_BoardState, nextMoveResponse.ability);
+                    }
+
+                    var points = ThinkingBot_getPointsOnBoardState(thread_BoardState, true, pieceResponse, coordsResponse);
+
+                    float botPoints = this.color == 1 ? points.white : points.black;
+                    float oppPoints = this.color == -1 ? points.white : points.black;
+
+                    float responseScore = oppPoints - botPoints;
+
+                    if (responseScore < orderingScore)
+                    {
+                        orderingScore = responseScore;
+                    }
+
+                    undoMove(undoResponseOrdering, thread_BoardState);
+                    //validateBoardState(thread_BoardState);
+                }
 
                 orderedOpponentMoves.Add((nextMoveOpp, orderingScore));
 
                 undoMove(undoOppOrdering, thread_BoardState);
+                //validateBoardState(thread_BoardState);
             }
 
-            orderedOpponentMoves = orderedOpponentMoves.OrderByDescending(x => x.score).Take(5).ToList();
-            debug_printMoveOrder(orderedOpponentMoves, nextMove);
+            orderedOpponentMoves = orderedOpponentMoves.OrderByDescending(x => x.score).Take(3).ToList();
+            //debug_printMoveOrder(orderedOpponentMoves, nextMove);
 
             foreach (var orderedMove in orderedOpponentMoves)
             {
@@ -212,7 +239,7 @@ public class ThinkingBotII : BotTemplate
 
                             float diff = botPoints - oppPoints + firstModePointsAdd;
 
-                            diff += boardControlDiff * 0.05f;
+                            diff += boardControlDiff * 0.01f;
 
                             if (diff < opponentBestCounter)
                             {
@@ -220,6 +247,7 @@ public class ThinkingBotII : BotTemplate
                             }
 
                             undoMove(undoOpponentCounter, thread_BoardState);
+                            //validateBoardState(thread_BoardState);
                         }
                     }
 
@@ -229,6 +257,7 @@ public class ThinkingBotII : BotTemplate
                     }
 
                     undoMove(undoResponse, thread_BoardState);
+                    //validateBoardState(thread_BoardState);
                 }
 
                 if (bestResponseDiff < worstCaseScenario)
@@ -237,20 +266,22 @@ public class ThinkingBotII : BotTemplate
                 }
 
                 undoMove(undoOpp, thread_BoardState);
+                //validateBoardState(thread_BoardState);
             }
 
             // Score Adjust
-            worstCaseScenario += firstModePointsAdd;
-            worstCaseScenario += boardControlDiff * 0.05f;
+            //worstCaseScenario += firstModePointsAdd;
+            //worstCaseScenario += boardControlDiff * 0.01f;
 
             results.Add((nextMove, worstCaseScenario));
 
             undoMove(undo, thread_BoardState);
+            //validateBoardState(thread_BoardState);
 
             watch.Stop();
             var watchMS = watch.ElapsedMilliseconds;
 
-            Debug.Log("Thread for move: " + piece + " to " + coords.x + "," + coords.y + " took " + watchMS + "ms.");
+            //Debug.Log("Thread for move: " + piece + " to " + coords.x + "," + coords.y + " took " + watchMS + "ms. WCS: " + worstCaseScenario);
         });
 
         if (results.Count == 0)
@@ -287,7 +318,7 @@ public class ThinkingBotII : BotTemplate
             lastFiveMoves.Dequeue();
         }
 
-        Debug.Log("Analyzed: " + movesAnalyzed);
+        //Debug.Log("Analyzed: " + movesAnalyzed);
 
         return move;
     }
@@ -339,7 +370,7 @@ public class ThinkingBotII : BotTemplate
                         pts -= piece.points;
                     }
 
-                    if (checkState(piece, PieceState.Frozen))
+                    if (checkState(piece, PieceState.Frozen) || checkState(piece, PieceState.Jailed))
                     {
                         pts -= piece.points / 2;
                     }
@@ -509,39 +540,6 @@ public class ThinkingBotII : BotTemplate
         }
 
         return false;
-    }
-
-    private bool isBoardStateOppStalemate(BoardState bs)
-    {
-        bool _check = isCheckBoardState(bs, this.color * -1);
-        if (_check)
-        {
-            return false;
-        }
-
-        List<Piece> oppPieces = getPiecesOnBoardState(bs, this.color * -1);
-
-        foreach (Piece oppPiece in oppPieces)
-        {
-            List<NextMove> possibleNextMoves = getAllPossibleBotPieceMoves(bs, oppPiece);
-
-            foreach (NextMove nm in possibleNextMoves)
-            {
-                Piece p = nm.move.p;
-                coords coords = nm.move.coords;
-
-                BoardState afterMoveBS = simulatePieceMove(this, bs, p, coords);
-
-                bool check = isCheckBoardState(afterMoveBS, this.color * -1);
-
-                if (!check)
-                {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 
     private bool isCheckBoardState(BoardState bs, int color)

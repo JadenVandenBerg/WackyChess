@@ -261,7 +261,7 @@ public class TwoMoveBot : BotTemplate
 
         Debug.Log("Selected Move: " + bestMoveStates[rndIdx].leadingPiece + " to " + bestMoveStates[rndIdx].leadingCoords.x + "," + bestMoveStates[rndIdx].leadingCoords.y + " Diff: " + bestMoveStates[rndIdx].diff);
         Debug.Log("Move Chain: " + bestMoveStates[rndIdx].moveChain);
-        debug_printBoardState(bestMoveStates[rndIdx].bs);
+        //debug_printBoardState(bestMoveStates[rndIdx].bs);
         return move;
     }
 }

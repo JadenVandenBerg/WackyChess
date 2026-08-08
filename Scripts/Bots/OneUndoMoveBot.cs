@@ -80,7 +80,7 @@ public class OneUndoMoveBot : BotTemplate
                     undo_ = undo_simulatePieceAbility(this.currentBoardState, nextMoveOpp.ability);
                 }
 
-                //Debug.Log("Simulating Opponent Piece " + moveTypeOpp + ": " + pieceOpp.name + " to " + coordsOpp[0] + ", " + coordsOpp[1]);
+                Debug.Log("Simulating Opponent Piece " + moveTypeOpp + ": " + pieceOpp.name + " to " + coordsOpp.x + ", " + coordsOpp.y + " after " + piece.name + " to " + coords.x + ", " + coords.y);
                 //debug_printBoardState(currentBoardState);
 
                 //this.currentBoardState = originalBoardState_;
@@ -98,6 +98,7 @@ public class OneUndoMoveBot : BotTemplate
                 }
 
                 undoMove(undo_, this.currentBoardState);
+                //validateBoardState(this.currentBoardState);
 
                 /*
                 Debug.Log("Undoing Move Outer");
@@ -119,6 +120,7 @@ public class OneUndoMoveBot : BotTemplate
 
             //this.currentBoardState = originalBoardState;
             undoMove(undo, this.currentBoardState);
+            //validateBoardState(this.currentBoardState);
 
             /*
             Debug.Log("Undoing Move");

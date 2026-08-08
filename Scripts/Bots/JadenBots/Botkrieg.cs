@@ -173,6 +173,34 @@ public class Botkrieg : BotTemplate
         return false;
     }
 
+    private bool isOppKingSurrounded(BoardState bs)
+    {
+        Piece oppKing = isolatedGetKing(bs, this.color * -1);
+
+        if (oppKing == null || oppKing.position.x == -1 || oppKing.alive == 0)
+        {
+            return false;
+        }
+
+        foreach ((int dx, int dy) in globalDefs.globalDirectionsNoZero)
+        {
+            int x = oppKing.position.x + dx;
+            int y = oppKing.position.y + dy;
+
+            if (!checkBounds(x, y))
+            {
+                continue;
+            }
+
+            if (isolatedGetPiecesOnCoordsBoardGrid(x, y, bs.boardGrid, false).Count == 0)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private bool isOppKingJailed(BoardState bs)
     {
         Piece oppKing = isolatedGetKing(bs, this.color * -1);
@@ -351,33 +379,41 @@ public class Botkrieg : BotTemplate
             return null;
         }
 
-        List<coords> path = new List<coords>();
-        HashSet<coords> visited = new HashSet<coords>();
+        List<coords> bestPath = null;
 
-        if (DFS_phantomToKing(p, bs, oppKing, path, visited, 0))
-        {
-            return path;
-        }
+        DFS_phantomToKing(p, bs, oppKing, new List<coords>(), new HashSet<coords>(), 0, ref bestPath);
 
-        return null;
+        return bestPath;
     }
 
-    private bool DFS_phantomToKing(Piece p, BoardState bs, Piece oppKing, List<coords> path, HashSet<coords> visited, int depth)
+    private void DFS_phantomToKing(Piece p, BoardState bs, Piece oppKing, List<coords> path, HashSet<coords> visited, int depth, ref List<coords> bestPath)
     {
         if (isPiecePositionOppKing(p, oppKing))
         {
-            return true;
+            if (bestPath == null || path.Count < bestPath.Count)
+            {
+                bestPath = new List<coords>(path);
+            }
+
+            return;
         }
 
         if (depth >= MAX_PHANTOM_SEARCH_DEPTH)
         {
-            return false;
+            return;
+        }
+
+        if (bestPath != null && path.Count >= bestPath.Count)
+        {
+            return;
         }
 
         coords currentPos = p.position;
         visited.Add(currentPos);
 
         List<coords> moves = getIsolatedStatePieceMoves(p, bs, false);
+
+        moves = moves.OrderBy(x =>Mathf.Abs(x.x - oppKing.position.x) + Mathf.Abs(x.y - oppKing.position.y)).ToList();
 
         foreach (coords offset in moves)
         {
@@ -388,23 +424,17 @@ public class Botkrieg : BotTemplate
                 continue;
             }
 
-            //Debug.Log("DFS Searh Move: " + move.x + ", " + move.y);
             UndoMove undo = undo_simulatePieceMove(bs, p, move);
 
             path.Add(move);
 
-            if (DFS_phantomToKing(p, bs, oppKing, path, visited, depth + 1))
-            {
-                return true;
-            }
+            DFS_phantomToKing(p, bs, oppKing, path, visited, depth + 1, ref bestPath);
 
             path.RemoveAt(path.Count - 1);
             undoMove(undo, bs);
         }
 
         visited.Remove(currentPos);
-
-        return false;
     }
 
     private bool isPiecePositionOppKing(Piece p, Piece oppKing)
@@ -468,6 +498,28 @@ public class Botkrieg : BotTemplate
             string moveType = nextMoveVars.moveType;
 
             UndoMove undo;
+            float addPointsMoveOne = 0f;
+
+            if (checkState(piece, PieceState.Dematerialized))
+            {
+                List<coords> phantomPath = getPhantomPathToKing(piece, this.currentBoardState);
+
+                if (!(phantomPath == null || phantomPath.Count == 0))
+                {
+                    foreach (coords c in phantomPath)
+                    {
+
+                        coords coordsPath = c;
+                        if (coordsPath.x == coords.x && coordsPath.y == coords.y)
+                        {
+                            Debug.Log("Botkrieg: Phantom Move in Path");
+
+                            addPointsMoveOne += 6f;
+                        }
+                    }
+
+                }
+            }
 
             if (moveType == "move")
             {
@@ -480,7 +532,6 @@ public class Botkrieg : BotTemplate
 
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
-            float addPointsMoveOne = 0f;
             float subtractPointsMoveTwo = 0f;
 
             BoardState bestMoveOppBS = null;
@@ -512,6 +563,13 @@ public class Botkrieg : BotTemplate
                 Debug.Log("Botkrieg: Phantom Piece On King");
 
                 addPointsMoveOne += 4f;
+
+                if (isOppKingSurrounded(this.currentBoardState))
+                {
+                    Debug.Log("Botkrieg: Phantom Piece On Surrounded King");
+
+                    addPointsMoveOne += 25f;
+                }
             }
 
             if (isAtomicAttackingKingCollateral(piece, this.currentBoardState))
@@ -556,11 +614,11 @@ public class Botkrieg : BotTemplate
                 addPointsMoveOne += 16f;
             }
 
-            if (checkAbility(piece, PieceAbilities.Dematerialize) && nextMove.moveType == "ability" && nextMove.ability.ability == PieceAbilities.Dematerialize)
+            if (nextMove.moveType == "ability" && nextMove.ability.ability == PieceAbilities.Dematerialize)
             {
                 Debug.Log("Botkrieg: Phantom can Dematerialize");
 
-                addPointsMoveOne += 4f;
+                addPointsMoveOne += 126f;
             }
 
             float subtractPointsMoveOne = 0f;
@@ -575,22 +633,6 @@ public class Botkrieg : BotTemplate
             {
                 Debug.Log("Botkrieg Move in Last Five x2");
                 subtractPointsMoveOne += 20f;
-            }
-
-            if (checkState(piece, PieceState.Dematerialized))
-            {
-                List<coords> phantomPath = getPhantomPathToKing(piece, this.currentBoardState);
-
-                if (!(phantomPath == null || phantomPath.Count == 0))
-                {
-                    coords coordsPath = phantomPath[0];
-                    if (coordsPath.x == coords.x && coordsPath.y == coords.y)
-                    {
-                        Debug.Log("Botkrieg: Phantom Move in Path");
-
-                        addPointsMoveOne += 0.5f;
-                    }
-                }
             }
 
             var boardControlAttributes_levelOne = Botkrieg_getBoardControlOnBoardState(this.currentBoardState);
@@ -666,7 +708,7 @@ public class Botkrieg : BotTemplate
                     bestOppMove = nextMoveOpp;
                     bestMoveOppBS = copyBoardState(this.currentBoardState);
 
-                    Debug.Log("New best opp response: " + pieceOpp + " -> " + coordsOpp.x + "," + coordsOpp.y);
+                    //Debug.Log("New best opp response: " + pieceOpp + " -> " + coordsOpp.x + "," + coordsOpp.y);
 
                     subtractPointsMoveTwo = checkNumDead(botkrieg_info);
                 }
@@ -707,7 +749,7 @@ public class Botkrieg : BotTemplate
 
                 string debugStr = " Points: " + diff;
 
-                float addDiff = (addPointsMoveOne * 0.5f) + (addBoardControlMoveOne * 0.2f);
+                float addDiff = (addPointsMoveOne) + (addBoardControlMoveOne * 0.01f);
                 diff += addDiff;
 
                 debugStr += " AddDiff: " + addDiff;
@@ -831,7 +873,7 @@ public class Botkrieg : BotTemplate
 
                     if (checkAbility(piece, PieceAbilities.Materialize) && this.color == piece.color)
                     {
-                        pts += 1.5f;
+                        pts += 3.5f;
                     }
 
                     if (x == moveCoords.x - 1 && y == moveCoords.y - 1)

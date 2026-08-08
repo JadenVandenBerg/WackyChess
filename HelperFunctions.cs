@@ -454,6 +454,10 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isJump(Piece piece, coords from, coords to)
     {
+        if (checkState(piece, PieceState.Dematerialized))
+        {
+            return false;
+        }
 
         int dirX, dirY;
 
@@ -1408,7 +1412,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position.x + "," + deadPiece.position.y + ")");
+            //Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position.x + "," + deadPiece.position.y + ")");
             GameObject dead = deadPiece.go;
             if (deadPiece.lives != 0)
             {
@@ -1479,7 +1483,7 @@ public class HelperFunctions : MonoBehaviour
     {
         deadPiece.lives--;
 
-        Debug.Log("INFINITE PIECE DIED START SQUARE: " + deadPiece.startSquare.x + "," + deadPiece.startSquare.y + " : " + isOnStartSquare(deadPiece) + " : " + isPieceOnStartSquare(deadPiece));
+        //Debug.Log("INFINITE PIECE DIED START SQUARE: " + deadPiece.startSquare.x + "," + deadPiece.startSquare.y + " : " + isOnStartSquare(deadPiece) + " : " + isPieceOnStartSquare(deadPiece));
 
         if (!isOnStartSquare(deadPiece) && !isPieceOnStartSquare(deadPiece))
         {
@@ -2136,7 +2140,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //There is one piece on square, piece is jockey
-        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && !isColorOnSquare(piecesOnSquare, piece.color * -1, true))
         {
             return true;
         }
@@ -3437,11 +3441,16 @@ public class HelperFunctions : MonoBehaviour
     }
 
     [PunRPC]
-    public void MovePieceRPC(int[] toMoveCoords, coords coords)
+    public void MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
         GameObject square = findSquare(toMoveCoords[0], toMoveCoords[1]);
         Piece piece = gameData.selectedToMovePiece;
-        movePiece_(piece, coords);
+        movePiece_(piece, intArrToCoords(coords));
+    }
+
+    public static coords intArrToCoords(int[] coords)
+    {
+        return new coords(coords[0], coords[1]);
     }
 
     // 0 = ok
@@ -3819,9 +3828,9 @@ public class HelperFunctions : MonoBehaviour
             }
 
             gameData.selectedToMovePiece = king;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position.x + kingMove, king.position.y });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, coordsToIntArr(king.position), new int[] { king.position.x + kingMove, king.position.y });
             gameData.selectedToMovePiece = rook;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position.x + rookMove, rook.position.y });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, coordsToIntArr(rook.position), new int[] { rook.position.x + rookMove, rook.position.y });
 
             gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
@@ -4030,6 +4039,11 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    public static int[] coordsToIntArr(coords coords)
+    {
+        return new int[] { coords.x, coords.y };
+    }
+
     public static void checkPromote(Piece piece, coords coords)
     {
         if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
@@ -4174,7 +4188,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        //moveSound.Play();
+        if (nonResettables.playAudio) moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 

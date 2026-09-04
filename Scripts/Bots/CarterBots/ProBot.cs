@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static BotHelperFunctions;
+using static UndoMoveBotHelperFunctions;
 using static UnityEngine.GraphicsBuffer;
 
 public class ProBot : BotTemplate
@@ -139,7 +141,7 @@ public class ProBot : BotTemplate
 					kingIndex = sortedPieces.IndexOf(sp);
 				}
 			}
-			if (kingIndex >= 0)
+			if (kingIndex > 0)
 			{
 				Piece king = sortedPieces[kingIndex];
                 sortedPieces.Remove(king);
@@ -169,8 +171,8 @@ public class ProBot : BotTemplate
 			deadOpp = oppGuards.Count;
 		}
 
-        List<Piece> sortedGuards = guards.OrderByDescending(p => p.points).ToList();
-        List<Piece> sortedOppGuards = oppGuards.OrderByDescending(p => p.points).ToList();
+        List<Piece> sortedGuards = guards.OrderBy(p => p.points).ToList();
+        List<Piece> sortedOppGuards = oppGuards.OrderBy(p => p.points).ToList();
 
 		List<Piece> dead_ = sortedGuards.Take(dead).ToList();
         List<Piece> deadOpp_ = sortedGuards.Take(deadOpp).ToList();
@@ -188,7 +190,298 @@ public class ProBot : BotTemplate
     }
 
 	override
-	public NextMove nextMove()
+
+    public NextMove nextMove()
+    {
+        float bestMoveDiff = -1000;
+        List<NextMove> validMoves = new List<NextMove>();
+        List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+
+        foreach (NextMove nextMove in allMoves)
+        {
+            Piece piece;
+            coords coords;
+            string moveType = nextMove.moveType;
+
+            if (moveType == "move")
+            {
+                Move mv = nextMove.move;
+
+                piece = mv.p;
+                coords = mv.coords;
+            }
+            else
+            {
+                PieceAbility pa = nextMove.ability;
+
+                piece = pa.piece;
+                coords = pa.coords;
+            }
+
+            UndoMove undo;
+
+            if (moveType == "move")
+            {
+                undo = undo_simulatePieceMove(this.currentBoardState, piece, new coords(coords.x, coords.y));
+            }
+            else
+            {
+                undo = undo_simulatePieceAbility(this.currentBoardState, nextMove.ability);
+            }
+
+            coords kingPos = new coords(-1, -1);
+            List<Piece> piecesOnBoard1 = getPiecesOnBoardState(this.currentBoardState, this.color);
+            foreach (Piece item in piecesOnBoard1)
+            {
+                if (item.baseType == "King")
+                {
+                    kingPos = item.position;
+                }
+            }
+
+            bool inCheck = getAttackers(this, this.currentBoardState, this.color * -1, kingPos).Count > 0;
+
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
+
+            float bestOppMoveDiff = +1000;
+            NextMove bestOppNextMove;
+
+            foreach (NextMove nextMoveOpp in allMovesOpp)
+            {
+                Piece pieceOpp;
+                coords coordsOpp;
+
+                string moveTypeOpp = nextMoveOpp.moveType;
+
+                if (moveTypeOpp == "move")
+                {
+                    Move mv = nextMoveOpp.move;
+
+                    pieceOpp = mv.p;
+                    coordsOpp = mv.coords;
+                }
+                else
+                {
+                    PieceAbility pa = nextMoveOpp.ability;
+
+                    pieceOpp = pa.piece;
+                    coordsOpp = pa.coords;
+                }
+
+                UndoMove undo_ = null;
+
+                if (moveTypeOpp == "move")
+                {
+                    undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
+                }
+                else
+                {
+                    undo_ = undo_simulatePieceAbility(this.currentBoardState, nextMoveOpp.ability);
+                }
+
+                List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+
+                float bestMoveDiff2 = -1000;
+
+                foreach (NextMove nextMove2 in allMoves2)
+                {
+                    Piece piece2;
+                    coords coords2;
+                    string moveType2 = nextMove2.moveType;
+
+                    if (moveType2 == "move")
+                    {
+                        Move mv2 = nextMove2.move;
+
+                        piece2 = mv2.p;
+                        coords2 = mv2.coords;
+                    }
+                    else
+                    {
+                        PieceAbility pa2 = nextMove2.ability;
+
+                        piece2 = pa2.piece;
+                        coords2 = pa2.coords;
+                    }
+
+                    UndoMove undo2 = null;
+
+                    if (moveType2 == "move")
+                    {
+                        undo2 = undo_simulatePieceMove(this.currentBoardState, piece2, new coords(coords2.x, coords2.y));
+                    }
+                    else
+                    {
+                        undo2 = undo_simulatePieceAbility(this.currentBoardState, nextMove2.ability);
+                    }
+
+                    /* Calculation area! */
+
+                    List<float> pointsOnBoard = getPointsOnBoardState(this.currentBoardState, true);
+                    float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                    float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                    if (inCheck == true)
+                    {
+                        botPoints -= 100;
+                    }
+
+                    bool inCheckSecondMove = getAttackers(this, this.currentBoardState, this.color * -1, kingPos).Count > 0;
+
+                    if (inCheckSecondMove == true)
+                    {
+                        botPoints -= 100;
+                    }
+
+                    if (piece.baseType == "Pawn")
+                    {
+                        botPoints += 0.01f;
+                    }
+
+                    List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
+                    List<Piece> piecesOnBoardOpp = getPiecesOnBoardState(this.currentBoardState, this.color * -1);
+
+                    foreach (Piece piece1 in piecesOnBoard)
+                    {
+                        float pieceValue = 0;
+                        List<Piece> guards = getGuards(this, this.currentBoardState, this.color, piece1.position);
+                        List<Piece> attackers = getAttackers(this, this.currentBoardState, this.color, piece1.position);
+                        List<Piece> attacking = getAttacking(this, this.currentBoardState, this.color, piece1);
+
+                        if (guards.Count > 0)
+                        {
+                            pieceValue += 0.001f;
+                            if (attackers.Count > 0)
+                            {
+                                if (attacking.Count > 0)
+                                {
+                                    float tradeValue = tradeOutcome(guards, attackers, piece1);
+                                    if (tradeValue < 0)
+                                    {
+                                        pieceValue += tradeValue;
+                                    }
+                                    else
+                                    {
+                                        /* pieceValue += tradeValue * 0.3f; */
+                                    }
+                                }
+                                else
+                                {
+                                    float tradeValue = tradeOutcome(guards, attackers, piece1);
+                                    if (tradeValue < 0)
+                                    {
+                                        pieceValue += tradeValue;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (attacking.Count > 0)
+                                {
+                                    if (attacking.Count > 1)
+                                    {
+                                        pieceValue += getForkValue(this, this.currentBoardState, this.color, piece1);
+                                    }
+                                    else
+                                    {
+                                        List<Piece> oppGuards = getGuards(this, this.currentBoardState, this.color * -1, attacking[0].position);
+                                        if (oppGuards.Count == 0)
+                                        {
+                                            pieceValue += attacking[0].points * 0.3f;
+                                        }
+                                        else
+                                        {
+                                            pieceValue += attacking[0].points * 0.1f;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (attackers.Count > 0)
+                            {
+                                pieceValue -= piece1.points;
+                            }
+                            else
+                            {
+                                if (attacking.Count > 0)
+                                {
+                                    if (attacking.Count > 1)
+                                    {
+                                        pieceValue += getForkValue(this, this.currentBoardState, this.color, piece1);
+                                    }
+                                    else
+                                    {
+                                        List<Piece> oppGuards = getGuards(this, this.currentBoardState, this.color * -1, attacking[0].position);
+                                        if (oppGuards.Count == 0)
+                                        {
+                                            pieceValue += attacking[0].points * 0.3f;
+                                        }
+                                        else
+                                        {
+                                            pieceValue += attacking[0].points * 0.1f;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        botPoints += pieceValue;
+
+                    }
+
+                    /* End of calculation area! */
+
+                    float diff = botPoints - oppPoints;
+                    if (diff > bestMoveDiff2)
+                    {
+                        bestMoveDiff2 = diff;
+                    }
+
+                    undoMove(undo2, this.currentBoardState);
+
+                }
+
+                if (bestOppMoveDiff > bestMoveDiff2)
+                {
+                    bestOppMoveDiff = bestMoveDiff2;
+                }
+
+                undoMove(undo_, this.currentBoardState);
+            }
+
+            if (bestOppMoveDiff >= bestMoveDiff)
+            {
+                if (bestOppMoveDiff > bestMoveDiff)
+                {
+                    validMoves.Clear();
+                }
+
+                bestMoveDiff = bestOppMoveDiff;
+                validMoves.Add(nextMove);
+            }
+
+            undoMove(undo, this.currentBoardState);
+        }
+
+        System.Random rand = new System.Random();
+        int rndIdx = rand.Next(validMoves.Count);
+
+        NextMove move = validMoves[rndIdx];
+
+        if (move.moveType == "move")
+        {
+            move.move.p = getOriginalPieceFromClone(move.move.p);
+        }
+        else
+        {
+            move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
+        }
+        return move;
+    }
+}
+	/*public NextMove nextMove()
 	{
 		float bestMoveValue = -10000;
 		List<NextMove> validMoves = new List<NextMove>();
@@ -228,7 +521,7 @@ public class ProBot : BotTemplate
 			}
 			this.currentBoardState = cloneState;
 
-            /* Calculation area! */
+             Calculation area! 
 
             List<float> pointsOnBoard = getPointsOnBoardState(cloneState, true);
             float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
@@ -342,7 +635,7 @@ public class ProBot : BotTemplate
 
             }
 
-			/* End of calculation area! */
+			 End of calculation area! 
 
 			if (moveValue >= bestMoveValue)
 			{
@@ -374,4 +667,4 @@ public class ProBot : BotTemplate
 		}
 		return move;
 	}
-}
+}*/

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static UndoMoveBotHelperFunctions;
 using static BotHelperFunctions;
 
 public class ForkBot : BotTemplate
@@ -12,6 +13,27 @@ public class ForkBot : BotTemplate
 		name = "Fork Bot";
 		choosePieces();
 	}
+
+    private List<Piece> getHanging(BotTemplate bot, BoardState bs, int color)
+    {
+        List<Piece> hangingPieces = new List<Piece>();
+        List<Piece> piecesOnBoard = getPiecesOnBoardState(bs, color);
+
+        foreach (Piece piece in piecesOnBoard)
+        {
+            List<Piece> guards = getGuards(this, bs, color, piece.position);
+            List<Piece> attackers = getGuards(this, bs, color * -1, piece.position);
+
+            if (guards.Count == 0 && attackers.Count > 0)
+            {
+                if (piece.points > 0)
+                {
+                    hangingPieces.Add(piece);
+                }
+            }
+        }
+        return hangingPieces;
+    }
 
 	private List<Piece> getGuards(BotTemplate bot, BoardState bs, int color, coords coords)
 	{
@@ -121,140 +143,212 @@ public class ForkBot : BotTemplate
 
 	override
 
-	public NextMove nextMove()
-	{
-		float bestMoveDiff = -1000;
-		List<NextMove> validMoves = new List<NextMove>();
-		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+    public NextMove nextMove()
+    {
+        float bestMoveDiff = -1000;
+        List<NextMove> validMoves = new List<NextMove>();
+        List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
-		foreach (NextMove nextMove in allMoves)
-		{
-			Piece piece;
-			coords coords;
-			string moveType = nextMove.moveType;
+        foreach (NextMove nextMove in allMoves)
+        {
+            Piece piece;
+            coords coords;
+            string moveType = nextMove.moveType;
 
-			if (moveType == "move")
-			{
-				Move mv = nextMove.move;
+            if (moveType == "move")
+            {
+                Move mv = nextMove.move;
 
-				piece = mv.p;
-				coords = mv.coords;
-			}
-			else
-			{
-				PieceAbility pa = nextMove.ability;
+                piece = mv.p;
+                coords = mv.coords;
+            }
+            else
+            {
+                PieceAbility pa = nextMove.ability;
 
-				piece = pa.piece;
-				coords = pa.coords;
-			}
+                piece = pa.piece;
+                coords = pa.coords;
+            }
 
-			BoardState originalBoardState = this.currentBoardState;
+            UndoMove undo;
 
-			BoardState cloneState;
-			if (moveType == "move")
-			{
-				cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-			}
-			else
-			{
-				cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
-			}
-			this.currentBoardState = cloneState;
+            if (moveType == "move")
+            {
+                undo = undo_simulatePieceMove(this.currentBoardState, piece, new coords(coords.x, coords.y));
+            }
+            else
+            {
+                undo = undo_simulatePieceAbility(this.currentBoardState, nextMove.ability);
+            }
 
-			List<Piece> piecesOnBoard = getPiecesOnBoardState(cloneState, this.color);
+            coords kingPos = new coords(-1, -1);
+            List<Piece> piecesOnBoard1 = getPiecesOnBoardState(this.currentBoardState, this.color);
+            foreach (Piece item in piecesOnBoard1)
+            {
+                if (item.baseType == "King")
+                {
+                    kingPos = item.position;
+                }
+            }
 
-			float bestForkValue = 0;
+            bool inCheck = getGuards(this, this.currentBoardState, this.color * -1, kingPos).Count > 0;
 
-			foreach(Piece myPiece in piecesOnBoard)
-			{
-				float forkValue = getForkValue(this, cloneState, this.color, myPiece);
-				if (forkValue > bestForkValue)
-				{
-					bestForkValue = forkValue;
-				}
-			}
+            List<Piece> hanging = getHanging(this, this.currentBoardState, this.color);
 
-			List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
-			NextMove bestOppNextMove;
-			float bestOppMoveDiff = +1000;
+            float bestOppMoveDiff = +1000;
+            NextMove bestOppNextMove;
 
-			foreach (NextMove nextMoveOpp in allMovesOpp)
-			{
-				Piece pieceOpp;
-				coords coordsOpp;
+            foreach (NextMove nextMoveOpp in allMovesOpp)
+            {
+                Piece pieceOpp;
+                coords coordsOpp;
 
-				string moveTypeOpp = nextMoveOpp.moveType;
+                string moveTypeOpp = nextMoveOpp.moveType;
 
-				if (moveTypeOpp == "move")
-				{
-					Move mv = nextMoveOpp.move;
+                if (moveTypeOpp == "move")
+                {
+                    Move mv = nextMoveOpp.move;
 
-					pieceOpp = mv.p;
-					coordsOpp = mv.coords;
-				}
-				else
-				{
-					PieceAbility pa = nextMoveOpp.ability;
+                    pieceOpp = mv.p;
+                    coordsOpp = mv.coords;
+                }
+                else
+                {
+                    PieceAbility pa = nextMoveOpp.ability;
 
-					pieceOpp = pa.piece;
-					coordsOpp = pa.coords;
-				}
+                    pieceOpp = pa.piece;
+                    coordsOpp = pa.coords;
+                }
 
-				BoardState originalBoardState_ = this.currentBoardState;
-				BoardState cloneState_;
-				if (moveTypeOpp == "move")
-				{
-					cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-				}
-				else
-				{
-					cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-				}
-				this.currentBoardState = originalBoardState_;
+                UndoMove undo_ = null;
 
-				List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
-				float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-				float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                if (moveTypeOpp == "move")
+                {
+                    undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
+                }
+                else
+                {
+                    undo_ = undo_simulatePieceAbility(this.currentBoardState, nextMoveOpp.ability);
+                }
 
-                float diff = botPoints - oppPoints;
+                bool isOppCapturingHanging = false;
 
-				botPoints += bestForkValue;
+                foreach (Piece hungPiece in hanging)
+                {
+                    if (hungPiece.position.x == coordsOpp.x && hungPiece.position.y == coordsOpp.y)
+                    {
+                        isOppCapturingHanging = true;
+                    }
+                }
 
-				if (diff < bestOppMoveDiff)
-				{
-					bestOppMoveDiff = diff;
-					bestOppNextMove = nextMoveOpp;
-				}
-			}
+                float bestMoveDiff2 = -1000;
 
-			if (bestOppMoveDiff >= bestMoveDiff)
-			{
-				if (bestOppMoveDiff > bestMoveDiff)
-				{
-					validMoves.Clear();
-				}
+                if (isOppCapturingHanging == true)
+                {
+                    List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
-				bestMoveDiff = bestOppMoveDiff;
-				validMoves.Add(nextMove);
-			}
+                    foreach (NextMove nextMove2 in allMoves2)
+                    {
+                        Piece piece2;
+                        coords coords2;
+                        string moveType2 = nextMove2.moveType;
 
-			this.currentBoardState = originalBoardState;
-		}
+                        if (moveType2 == "move")
+                        {
+                            Move mv2 = nextMove2.move;
 
-		System.Random rand = new System.Random();
-		int rndIdx = rand.Next(validMoves.Count);
+                            piece2 = mv2.p;
+                            coords2 = mv2.coords;
+                        }
+                        else
+                        {
+                            PieceAbility pa2 = nextMove2.ability;
 
-		NextMove move = validMoves[rndIdx];
+                            piece2 = pa2.piece;
+                            coords2 = pa2.coords;
+                        }
 
-		if (move.moveType == "move")
-		{
-			move.move.p = getOriginalPieceFromClone(move.move.p);
-		}
-		else
-		{
-			move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
-		}
-		return move;
-	}
+                        UndoMove undo2 = null;
+
+                        if (moveType2 == "move")
+                        {
+                            undo2 = undo_simulatePieceMove(this.currentBoardState, piece2, new coords(coords2.x, coords2.y));
+                        }
+                        else
+                        {
+                            undo2 = undo_simulatePieceAbility(this.currentBoardState, nextMove2.ability);
+                        }
+
+                        List<float> pointsOnBoard = getPointsOnBoardState(this.currentBoardState, true);
+                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                        if (inCheck == true)
+                        {
+                            botPoints -= 100;
+                        }
+
+                        botPoints += getForkValue(this, this.currentBoardState, this.color, piece2);
+
+                        float diff = botPoints - oppPoints;
+                        if (diff > bestMoveDiff2)
+                        {
+                            bestMoveDiff2 = diff;
+                        }
+
+                        undoMove(undo2, this.currentBoardState);
+
+                    }
+                }
+
+                else
+                {
+                    List<float> pointsOnBoard = getPointsOnBoardState(this.currentBoardState, true);
+                    float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                    float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                    bestMoveDiff2 = botPoints - oppPoints;
+                }
+
+                if (bestOppMoveDiff > bestMoveDiff2)
+                {
+                    bestOppMoveDiff = bestMoveDiff2;
+                }
+
+                undoMove(undo_, this.currentBoardState);
+
+                
+            }
+
+            if (bestOppMoveDiff >= bestMoveDiff)
+            {
+                if (bestOppMoveDiff > bestMoveDiff)
+                {
+                    validMoves.Clear();
+                }
+
+                bestMoveDiff = bestOppMoveDiff;
+                validMoves.Add(nextMove);
+            }
+
+            undoMove(undo, this.currentBoardState);
+        }
+
+        System.Random rand = new System.Random();
+        int rndIdx = rand.Next(validMoves.Count);
+
+        NextMove move = validMoves[rndIdx];
+
+        if (move.moveType == "move")
+        {
+            move.move.p = getOriginalPieceFromClone(move.move.p);
+        }
+        else
+        {
+            move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
+        }
+        return move;
+    }
 }

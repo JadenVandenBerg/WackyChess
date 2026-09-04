@@ -22,6 +22,7 @@ public class botMaster : MonoBehaviour
     public GameObject checkmateUI;
     public HelperFunctions helper;
     public AudioSource thinkingBotII;
+    public AudioSource[] bothovenAudio;
     GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
@@ -162,8 +163,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new BotWithAPlot(1); //Botkrieg
-                botBlack = new BalanceBot(-1); //Bot618
+                botWhite = new InequalityBot(1); //Botkrieg
+                botBlack = new YOLOBot(-1); //Bot618
                 /*
                 // For WCSingle
                 int rand = globalDefs.globalRand.Next(1, 3);
@@ -611,7 +612,7 @@ public class botMaster : MonoBehaviour
                 thinkingBotII.Play();
             }
 
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+                var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
@@ -636,6 +637,18 @@ public class botMaster : MonoBehaviour
 
                 movePieceObj = pa.piece;
                 moveCoords = pa.coords;
+            }
+
+            if (currentBot.name == "Bothoven")
+            {
+                foreach (AudioSource audio in bothovenAudio)
+                {
+                    audio.Stop();
+                }
+                foreach (int note in Bothoven.bhNotesToPlay)
+                {
+                    bothovenAudio[note].Play();
+                }
             }
 
             movePieceObj = getOriginalPieceFromClone(movePieceObj);

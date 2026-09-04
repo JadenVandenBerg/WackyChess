@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static BotHelperFunctions;
-using System;
+using static HelperFunctions;
+using static UnityEngine.GraphicsBuffer;
 
 public class ChristopherColumbot : BotTemplate
 {
@@ -20,7 +23,34 @@ public class ChristopherColumbot : BotTemplate
 	override
 	public NextMove nextMove()
 	{
-		List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
+
+        List<string> undiscoveredSquares_ = new List<string>();
+        for (int x = 1; x < 9; x++)
+        {
+            for (int y = 1; y < 9; y++)
+            {
+                string str = "";
+                str += x.ToString();
+                str += y.ToString();
+
+                if (discoveredSquares.Contains(str) == false)
+                {
+                    undiscoveredSquares_.Add(str);
+                }
+            }
+        }
+
+        foreach (string square in undiscoveredSquares_)
+		{
+			string x = square[0].ToString();
+			string y = square[1].ToString();
+			int X = int.Parse(x);
+			int Y = int.Parse(y);
+
+			highlightSquare(findSquare(X, Y), Color.yellow);
+        }
+
+        List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
 
         foreach (Piece piece_ in piecesOnBoard)
 		{
@@ -34,7 +64,11 @@ public class ChristopherColumbot : BotTemplate
 			}
 		}
 
-		float bestMoveDiff = -1000;
+        int xs = discoveredSquares[0][0];
+        int ys = discoveredSquares[0][1];
+        highlightSquare(findSquare(xs, ys), Color.orange);
+
+        float bestMoveDiff = -1000;
 		Dictionary<NextMove, float> validMoves = new Dictionary<NextMove, float>();
 		List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 

@@ -171,6 +171,7 @@ public interface Piece
      * Protective: Moves like a queen when in check //used for flag moves
      * Scaredy: Moves 2 squares when in check //used for flag moves
      * Thief: Steals pieces (not implemented yet)
+     * Reincarnating: Respawns as a different piece
      * PawnShop: Converts pawn to a new random pawn (not implemented yet)
      */
     public PieceState states { get; set; }

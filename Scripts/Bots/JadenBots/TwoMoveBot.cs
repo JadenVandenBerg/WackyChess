@@ -244,7 +244,7 @@ public class TwoMoveBot : BotTemplate
             }
         }
 
-        Debug.Log("Moves Analyzed: " + movesAnalyzed);
+        //Debug.Log("Moves Analyzed: " + movesAnalyzed);
 
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(bestMoveStates.Count);
@@ -259,9 +259,9 @@ public class TwoMoveBot : BotTemplate
             move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
         }
 
-        Debug.Log("Selected Move: " + bestMoveStates[rndIdx].leadingPiece + " to " + bestMoveStates[rndIdx].leadingCoords.x + "," + bestMoveStates[rndIdx].leadingCoords.y + " Diff: " + bestMoveStates[rndIdx].diff);
-        Debug.Log("Move Chain: " + bestMoveStates[rndIdx].moveChain);
-        debug_printBoardState(bestMoveStates[rndIdx].bs);
+        //Debug.Log("Selected Move: " + bestMoveStates[rndIdx].leadingPiece + " to " + bestMoveStates[rndIdx].leadingCoords.x + "," + bestMoveStates[rndIdx].leadingCoords.y + " Diff: " + bestMoveStates[rndIdx].diff);
+        //Debug.Log("Move Chain: " + bestMoveStates[rndIdx].moveChain);
+        //debug_printBoardState(bestMoveStates[rndIdx].bs);
         return move;
     }
 }

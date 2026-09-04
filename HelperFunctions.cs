@@ -454,6 +454,10 @@ public class HelperFunctions : MonoBehaviour
 
     public static bool isJump(Piece piece, coords from, coords to)
     {
+        if (checkState(piece, PieceState.Dematerialized))
+        {
+            return false;
+        }
 
         int dirX, dirY;
 
@@ -1408,7 +1412,7 @@ public class HelperFunctions : MonoBehaviour
                 continue;
             }
 
-            Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position.x + "," + deadPiece.position.y + ")");
+            //Debug.Log(deadPiece.name + " died to collateral on (" + deadPiece.position.x + "," + deadPiece.position.y + ")");
             GameObject dead = deadPiece.go;
             if (deadPiece.lives != 0)
             {
@@ -1483,16 +1487,34 @@ public class HelperFunctions : MonoBehaviour
 
         if (!isOnStartSquare(deadPiece) && !isPieceOnStartSquare(deadPiece))
         {
-            movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
-            //deadPiece.position = deadPiece.startSquare;
-
-            if (online)
+            if (checkState(deadPiece, PieceState.Reincarnating))
             {
-                photonView.RPC("_MovePieceRPC", RpcTarget.All, deadPiece.startSquare, deadPiece.position);
+                Piece newPiece = getRandomPieceInstance(deadPiece.baseType, deadPiece.color);
+
+                initPiece(newPiece, deadPiece.startSquare);
+
+                if (gameData.piecesDict.ContainsKey(deadPiece.go))
+                {
+                    gameData.piecesDict.Remove(deadPiece.go);
+                }
+
+                updateBoardGrid(deadPiece.position, deadPiece, "r");
+                DestroyWrapper(deadPiece.go);
+                deadPiece.alive = 0;
             }
             else
             {
-                movePiece(deadPiece, findSquare(deadPiece.startSquare.x, deadPiece.startSquare.y));
+                movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
+                //deadPiece.position = deadPiece.startSquare;
+
+                if (online)
+                {
+                    photonView.RPC("_MovePieceRPC", RpcTarget.All, deadPiece.startSquare, deadPiece.position);
+                }
+                else
+                {
+                    movePiece(deadPiece, findSquare(deadPiece.startSquare.x, deadPiece.startSquare.y));
+                }
             }
         }
         else
@@ -2136,7 +2158,7 @@ public class HelperFunctions : MonoBehaviour
         }
 
         //There is one piece on square, piece is jockey
-        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && isColorOnSquare(piecesOnSquare, piece.color * 1, true))
+        if (piecesOnSquare.Count == 1 && checkState(piece, PieceState.Jockey) && !isColorOnSquare(piecesOnSquare, piece.color * -1, true))
         {
             return true;
         }
@@ -3437,11 +3459,16 @@ public class HelperFunctions : MonoBehaviour
     }
 
     [PunRPC]
-    public void MovePieceRPC(int[] toMoveCoords, coords coords)
+    public void MovePieceRPC(int[] toMoveCoords, int[] coords)
     {
         GameObject square = findSquare(toMoveCoords[0], toMoveCoords[1]);
         Piece piece = gameData.selectedToMovePiece;
-        movePiece_(piece, coords);
+        movePiece_(piece, intArrToCoords(coords));
+    }
+
+    public static coords intArrToCoords(int[] coords)
+    {
+        return new coords(coords[0], coords[1]);
     }
 
     // 0 = ok
@@ -3819,9 +3846,9 @@ public class HelperFunctions : MonoBehaviour
             }
 
             gameData.selectedToMovePiece = king;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, king.position, new int[] { king.position.x + kingMove, king.position.y });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, coordsToIntArr(king.position), new int[] { king.position.x + kingMove, king.position.y });
             gameData.selectedToMovePiece = rook;
-            photonView.RPC("MovePieceRPC", RpcTarget.All, rook.position, new int[] { rook.position.x + rookMove, rook.position.y });
+            photonView.RPC("MovePieceRPC", RpcTarget.All, coordsToIntArr(rook.position), new int[] { rook.position.x + rookMove, rook.position.y });
 
             gameData.abilitySelected = PieceAbilities.None;
             gameData.selected = null;
@@ -4030,6 +4057,11 @@ public class HelperFunctions : MonoBehaviour
         }
     }
 
+    public static int[] coordsToIntArr(coords coords)
+    {
+        return new int[] { coords.x, coords.y };
+    }
+
     public static void checkPromote(Piece piece, coords coords)
     {
         if (piece.promotesInto != "" && !checkState(piece, PieceState.Dematerialized))
@@ -4174,7 +4206,7 @@ public class HelperFunctions : MonoBehaviour
 
     public (bool death, bool countDeath) performPreMove()
     {
-        //moveSound.Play();
+        if (nonResettables.playAudio) moveSound.Play();
 
         var deathVars = isDeath(gameData.selectedToMovePiece.go, gameData.selected, gameData.selectedToMovePiece, false);
 
@@ -4547,5 +4579,31 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return singleAbilities.ToArray();
+    }
+
+    public static Piece getRandomPieceInstance(string type, int color)
+    {
+        List<Type> pieces = BotHelperFunctions.getAllTypePieces(type, color);
+        System.Random rand = new System.Random();
+
+        int index = rand.Next(pieces.Count);
+
+        Type type_ = pieces[index];
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false, false);
+
+        return piece;
+    }
+
+    public static Piece getRandomSimulatedPieceInstance(string type, int color)
+    {
+        List<Type> pieces = BotHelperFunctions.getAllTypePiecesSimulated(type, color);
+        System.Random rand = new System.Random();
+
+        int index = rand.Next(pieces.Count);
+
+        Type type_ = pieces[index];
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false, true);
+
+        return piece;
     }
 }

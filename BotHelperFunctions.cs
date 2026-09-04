@@ -10,6 +10,7 @@ using System.IO;
 using System.Collections;
 using System.Linq;
 using System.Text;
+using static HelperFunctions;
 
 public class BotHelperFunctions : MonoBehaviour
 {
@@ -61,6 +62,31 @@ public class BotHelperFunctions : MonoBehaviour
         {
 
             Piece piece = (Piece)Activator.CreateInstance(piece_, color, false, false);
+
+            if (piece.baseType == type)
+            {
+                eligiblePieces.Add(piece_);
+            }
+
+            if (piece.go != null)
+            {
+                Destroy(piece.go);
+            }
+        }
+
+        return eligiblePieces;
+    }
+
+    public static List<Type> getAllTypePiecesSimulated(string type, int color)
+    {
+
+        List<Type> allPieces = Lootbox.GetAllPieces();
+        List<Type> eligiblePieces = new List<Type>();
+
+        foreach (var piece_ in allPieces)
+        {
+
+            Piece piece = (Piece)Activator.CreateInstance(piece_, color, false, true);
 
             if (piece.baseType == type)
             {
@@ -185,19 +211,14 @@ public class BotHelperFunctions : MonoBehaviour
         return null;
     }
 
-    public static bool isolatedCheckCanCastle(BotTemplate bot, BoardState bs, int direction)
+    public static bool isolatedCheckCanCastle(BoardState bs, int direction, int color)
     {
         if (direction != -1 && direction != 1)
         {
             return false;
         }
 
-        Piece king = bot.king;
-        if (king == null)
-        {
-            king = isolatedGetKing(bs, bot.color);
-            bot.king = king;
-        }
+        Piece king = isolatedGetKing(bs, color);
 
         if (king == null)
         {
@@ -210,7 +231,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         Piece rook;
-        if (bot.color == 1)
+        if (color == 1)
         {
             rook = direction == -1 ? findPieceOnBoardStateFromPanelCode(bs, "w_r1") : findPieceOnBoardStateFromPanelCode(bs, "w_r2");
         }
@@ -322,16 +343,16 @@ public class BotHelperFunctions : MonoBehaviour
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleLeft))
             {
-                if (!isolatedCheckCanCastle(bot, bs, -1))
+                if (!isolatedCheckCanCastle(bs, -1, color))
                 {
                     continue;
                 }
 
-                Piece king = bot.king == null ? isolatedGetKing(bs, bot.color) : bot.king;
+                Piece king = isolatedGetKing(bs, color);
                 Piece rook;
+                if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r1");
+                else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r1");
 
-                if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r1");
-                else rook = HelperFunctions.findPieceFromPanelCode("b_r1");
                 coords coords = new coords (king.position.x - 2, king.position.y);
                 PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleLeft, coords, null, null, rook);
                 pieceAbilities.Add(castle);
@@ -343,7 +364,7 @@ public class BotHelperFunctions : MonoBehaviour
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleRight))
             {
-                if (!isolatedCheckCanCastle(bot, bs, 1))
+                if (!isolatedCheckCanCastle(bs, 1, color))
                 {
                     continue;
 
@@ -351,11 +372,12 @@ public class BotHelperFunctions : MonoBehaviour
                     //Debug.Break();
                 }
 
-                Piece king = bot.king == null ? isolatedGetKing(bs, bot.color) : bot.king;
+                Piece king = isolatedGetKing(bs, color);
                 Piece rook;
-                if (bot.color == 1) rook = HelperFunctions.findPieceFromPanelCode("w_r2");
-                else rook = HelperFunctions.findPieceFromPanelCode("b_r2");
-                coords coords = new coords (king.position.x - 2, king.position.y);
+                if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r2");
+                else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r2");
+
+                coords coords = new coords (king.position.x + 2, king.position.y);
                 PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleRight, coords, null, null, rook);
                 pieceAbilities.Add(castle);
             }
@@ -1221,6 +1243,11 @@ public class BotHelperFunctions : MonoBehaviour
     public static bool isolatedIsJump(Piece piece, coords from, int toX, int toY, BoardState bs) {
        int dirX, dirY;
 
+        if (checkState(piece, PieceState.Dematerialized))
+        {
+            return false;
+        }
+
         if (from.x > toX)
         {
             dirX = -1;
@@ -1511,7 +1538,7 @@ public class BotHelperFunctions : MonoBehaviour
         return false;
     }
 
-    private static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
+    public static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
     {
         List<Piece>[,] boardGrid = bs.boardGrid;
 
@@ -1663,10 +1690,16 @@ public class BotHelperFunctions : MonoBehaviour
             if (!alreadyExists)
             {
                 square.Add(piece);
-                //Debug.LogWarning("Added " + piece.name + " to " + (coords.x - 1) + "," + (coords.y - 1));
-            }
+                //Debug.LogWarning("Added " + piece.name + " to " + (coords.x + 1) + ", " + (coords.y + 1));
 
-            piece.position = new coords( coords.x + 1, coords.y + 1 );
+                piece.position = new coords(coords.x + 1, coords.y + 1);
+            }
+            else
+            {
+                //Debug.LogError(piece.name + " already exists at: " + (coords.x + 1) + ", " + (coords.y + 1));
+                //debug_printBoardState(boardState);
+                //Debug.Break();
+            }
         }
 
         if (action.ToLower() == "r" || action.ToLower() == "remove")
@@ -1681,41 +1714,36 @@ public class BotHelperFunctions : MonoBehaviour
                 {
                     if (realPos.x == -1)
                     {
-                        Debug.LogError($"Failed remove {piece.name} from {coords.x + 1},{coords.y + 1}. Actual pos {piece.position.x},{piece.position.y}. BoardState pos null");
+                        //Debug.LogError($"Failed remove {piece.name} from {coords.x + 1},{coords.y + 1}. Actual pos {piece.position.x},{piece.position.y}. BoardState pos null");
                     }
                     else
                     {
-                        Debug.LogError($"Failed remove {piece.name} from {coords.x + 1},{coords.y + 1}. Actual pos {piece.position.x},{piece.position.y}. BoardState pos {realPos.x},{realPos.y}");
+                        //Debug.LogError($"Failed remove {piece.name} from {coords.x + 1},{coords.y + 1}. Actual pos {piece.position.x},{piece.position.y}. BoardState pos {realPos.x},{realPos.y}");
                     }
+
+                    //Debug.Break();
                 }
+
                 
             }
             //Debug.LogWarning("Attempted remove of " + ok + " " + piece.name + " on " + (coords.x + 1) + "," + (coords.y + 1));
         }
     }
 
-    public static BoardState copyBoardState(BoardState bs) {
+    public static BoardState copyBoardState(BoardState bs)
+    {
         BoardState copy = new BoardState();
 
-        /*
-        copy.boardGrid = bs.boardGrid.Select(row =>
-            row.Select(tile =>
-                tile.Select(piece => HelperFunctions.clonePiece(piece)).ToList()
-            ).ToList()
-        ).ToList();
-        */
-
-        //copy.boardGrid = bs.boardGrid.Select(x => x.Select(y => new List<Piece>(y)).ToList()).ToList();
         copy.boardGrid = HelperFunctions.initBoardGridNew();
+
         for (int x = 0; x < 8; x++)
         {
             for (int y = 0; y < 8; y++)
             {
-                foreach(Piece piece in bs.boardGrid[x, y])
+                foreach (Piece piece in bs.boardGrid[x, y])
                 {
                     copy.boardGrid[x, y].Add(HelperFunctions.clonePiece(piece));
                 }
-                
             }
         }
 
@@ -1724,28 +1752,23 @@ public class BotHelperFunctions : MonoBehaviour
 
         copy.inCheck = new int[] { bs.inCheck[0], bs.inCheck[1] };
 
-        return copy;
-    }
+        // Clone delayed queue
+        copy.delayedQueue = new DelayedQueue();
 
-    /*
-    public static List<List<List<Piece>>> copyBoardGrid(List<List<List<Piece>>> bg)
-    {
-        List<List<List<Piece>>> copy = HelperFunctions.initBoardGrid();
-        for (int x = 0; x < 8; x++)
+        foreach (PieceMove move in bs.delayedQueue._items)
         {
-            for (int y = 0; y < 8; y++)
-            {
-                foreach (Piece piece in bg[x][y])
-                {
-                    copy[x][y].Add(HelperFunctions.clonePiece(piece));
-                }
+            Piece clonedPiece = null;
 
+            if (move.piece != null)
+            {
+                clonedPiece = getCloneFromOriginalPiece(move.piece,bs.boardGrid);
             }
+
+            copy.delayedQueue.Enqueue(new PieceMove(clonedPiece,new coords(move.coords.x, move.coords.y),move.turnsToRemove));
         }
 
         return copy;
     }
-    */
 
     public static List<Piece>[,] copyBoardGrid(List<Piece>[,] bg)
     {
@@ -1976,6 +1999,33 @@ public class BotHelperFunctions : MonoBehaviour
             coords adjustedKingCoords = new coords(kingCoords.x - 1, kingCoords.y - 1 );
             coords adjustedRookCoords = new coords(rookCoords.x - 1, rookCoords.y - 1 );
 
+            if (secondPiece == null)
+            {
+                string code = piece.color == 1 ? "w_r1" : "b_r1";
+                coords coords_ = piece.color == 1 ? new coords(0, 0) : new coords(0, 7);
+                secondPiece = findPieceOnBoardStateFromPanelCode(bs, code);
+
+                if (secondPiece == null)
+                {
+                    secondPiece = findPieceOnOtherBoardState(bs, code);
+
+                    if (secondPiece == null)
+                    {
+                        List<Piece> pobg = isolatedGetPiecesOnCoordsBoardGrid(coords_.x, coords.y, bs.boardGrid, false);
+                        if (pobg.Count > 0)
+                        {
+                            secondPiece = pobg[0];
+                        }
+                        else
+                        {
+                            //Just give up
+                            //Debug.LogError("Unable to find rook: " + secondPiece);
+                            return bs;
+                        }
+                    }
+                }
+            }
+
             //King
             movePieceBoardState(piece, adjustedKingCoords, bs);
             //Rook
@@ -1994,6 +2044,35 @@ public class BotHelperFunctions : MonoBehaviour
 
             coords adjustedKingCoords = new coords(kingCoords.x - 1, kingCoords.y - 1 );
             coords adjustedRookCoords = new coords(rookCoords.x - 1, rookCoords.y - 1 );
+
+            
+
+            if (secondPiece == null)
+            {
+                string code = piece.color == 1 ? "w_r2" : "b_r2";
+                coords coords_ = piece.color == 1 ? new coords(7, 0) : new coords(7, 7);
+                secondPiece = findPieceOnBoardStateFromPanelCode(bs, code);
+
+                if (secondPiece == null)
+                {
+                    secondPiece = findPieceOnOtherBoardState(bs, code);
+
+                    if (secondPiece == null)
+                    {
+                        List<Piece> pobg = isolatedGetPiecesOnCoordsBoardGrid(coords_.x, coords.y, bs.boardGrid, false);
+                        if (pobg.Count > 0)
+                        {
+                            secondPiece = pobg[0];
+                        }
+                        else
+                        {
+                            //Just give up
+                            //Debug.LogError("Unable to find rook: " + secondPiece);
+                            return bs;
+                        }
+                    }
+                }
+            }
 
             //King
             movePieceBoardState(piece, adjustedKingCoords, bs);
@@ -2449,8 +2528,12 @@ public class BotHelperFunctions : MonoBehaviour
     public static void isolatedDelayedMove(PieceMove pMove, BoardState bs) {
         Piece piece = getCloneFromOriginalPiece(pMove.piece, bs.boardGrid);
         coords coords = pMove.coords;
+        coords = new coords(coords.x - 1, coords.y - 1);
 
-        //TODO might be a problem if delayed piece is dead
+        if (piece == null)
+        {
+            return;
+        }
 
         List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
 
@@ -2481,6 +2564,8 @@ public class BotHelperFunctions : MonoBehaviour
             }
 
             piece.hasMoved = true;
+
+            //Debug.LogWarning("DELAYED COORDS: " + coords.x + "," + coords.y);
             movePieceBoardState(piece, coords, bs);
         }
     }
@@ -2903,14 +2988,31 @@ public class BotHelperFunctions : MonoBehaviour
         updateBoardState(new coords( p.position.x - 1, p.position.y - 1 ), p,"r", bs);
     }
 
-    public static void isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs) {
+    public static void isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs)
+    {
         deadPiece.lives--;
 
-        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs)) {
-            movePieceBoardState(deadPiece, new coords( deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1 ), bs);
+        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs))
+        {
+            if (checkState(deadPiece, PieceState.Reincarnating))
+            {
+                Piece newPiece = getRandomPieceInstance(deadPiece.baseType, deadPiece.color);
+                Destroy(newPiece.go);
+
+                updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
+                updateBoardState(new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), newPiece, "a", bs);
+
+                newPiece.startSquare = deadPiece.startSquare;
+                newPiece.position = deadPiece.startSquare;
+            }
+            else
+            {
+                movePieceBoardState(deadPiece, new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), bs);
+            }
         }
-        else {
-            updateBoardState(new coords( deadPiece.position.x - 1, deadPiece.position.y - 1 ), deadPiece, "r", bs);
+        else
+        {
+            updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
         }
     }
 
@@ -2948,7 +3050,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
     }
 
-    public static void debug_printBoardState(BoardState bs)
+    public static string debug_printBoardState(BoardState bs)
     {
         StringBuilder sb = new StringBuilder();
 
@@ -3001,6 +3103,8 @@ public class BotHelperFunctions : MonoBehaviour
             Debug.LogError("Duplicate Name Found");
             //Debug.Break();
         }
+
+        return sb.ToString();
     }
 
     public static StringBuilder debug_printBoardGrid(List<List<List<Piece>>> bg, bool print, bool useType)
@@ -3142,6 +3246,38 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         return null;
+    }
+
+    public static void validateBoardState(BoardState bs)
+    {
+        Dictionary<string, List<string>> found = new();
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece p in bs.boardGrid[x, y])
+                {
+                    if (!found.ContainsKey(p.name))
+                        found[p.name] = new List<string>();
+
+                    found[p.name].Add(
+                        $"grid={x + 1},{y + 1} pos={p.position.x},{p.position.y}"
+                    );
+                }
+            }
+        }
+
+        foreach (var pair in found)
+        {
+            if (pair.Value.Count > 1)
+            {
+                Debug.LogError(
+                    $"DUPLICATE PIECE {pair.Key}\n" +
+                    string.Join("\n", pair.Value)
+                );
+            }
+        }
     }
 
     public static List<Piece>[,] convertBoardGrid(List<List<List<Piece>>> oldGrid)

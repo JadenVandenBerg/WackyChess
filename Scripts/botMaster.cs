@@ -42,12 +42,14 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = nonResettables.get8RandomBots();
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
-        
-        nonResettables.isBotTournament = false;
-        //SEASON_NAME = "LCC_SEASON1";
-        waitTime = 1.5f;
+
+        nonResettables.isBotTournament = true;
+        //SEASON_NAME = "LCC_SEASON2";
+        waitTime = 0f;
+        nonResettables.playAudio = false;
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
+        nonResettables.postElo = true;
 
         if (nonResettables.isBotTournament)
         {
@@ -55,58 +57,73 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "Botkrieg"
+                    "GamblingBot",
+                    "BlindAsABot",
+                    "TenXRandomBot"
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.RandomBot,
-                    Bots.IdiotBot,
-                    Bots.OnePieceRandomBot,
-                    Bots.TwoMoveBot,
                     Bots.SavageBeastBot,
-                    Bots.Lobotomy,
-                    Bots.HitmanBot,
                     Bots.RestrictorBot,
+                    Bots.TwoMoveBot,
+                    Bots.HitmanBot,
+                    Bots.EqualityBot,
+                    Bots.BottusMaximus,
+                    Bots.ThinkingBotII,
+                    Bots.MigratingBot,
                 };
 
                 List<string> div2 = new List<string>
                 {
+                    Bots.BalanceBot,
+                    Bots.PawnBot,
+                    Bots.SpeedrunnerBot,
                     Bots.BOTential,
-                    Bots.OneMoveBot,
-                    Bots.EqualityBot,
-                    Bots.BotsUnited,
-                    Bots.Lobotomy,
                     Bots.OnePieceRandomBot,
-                    Bots.BotDefender,
-                    Bots.ChristopherColumbot,
+                    Bots.Lobotomy,
+                    Bots.RandomBot,
+                    Bots.IdiotBot,
                 };
 
                 List<string> div3 = new List<string>
                 {
-                    Bots.AdventurousKingBot,
-                    Bots.ShieldBot,
-                    Bots.SavageBeastBot,
-                    Bots.RandomBot,
-                    Bots.BotRoss,
+                    Bots.AssassinBot,
+                    Bots.OneMoveBot,
+                    Bots.BotsUnited,
+                    Bots.BotDefender,
+                    Bots.KamikazeBot,
                     Bots.Bloodbot,
-                    Bots.FiveXRandomBot,
-                    Bots.HitmanBot,
+                    Bots.ChristopherColumbot,
+                    Bots.BOTential,
                 };
 
                 List<string> div4 = new List<string>
                 {
-                    Bots.EqualityBot,
-                    Bots.BotDefender,
-                    Bots.ShieldBot,
-                    Bots.Abilibot,
-                    Bots.IdiotBot,
-                    Bots.FiveXRandomBot,
+                    Bots.AdventurousKingBot,
+                    Bots.HitmanBot,
+                    Bots.SavageBeastBot,
+                    Bots.Lobotomy,
                     Bots.BotRoss,
                     Bots.RandomBot,
+                    Bots.ShieldBot,
+                    Bots.FiveXRandomBot,
                 };
+
+                List<string> div5 = new List<string>
+                {
+                    Bots.BotsUnited,
+                    Bots.ShieldBot,
+                    Bots.Abilibot,
+                    Bots.AdventurousKingBot,
+                    Bots.BotRoss,
+                    Bots.FiveXRandomBot,
+                    Bots.Lobotomy,
+                    Bots.IdiotBot,
+                };
+
 
                 StringBuilder sb = new StringBuilder();
                 foreach (string bot in randomBots)
@@ -114,6 +131,7 @@ public class botMaster : MonoBehaviour
                     sb.Append(bot + " ");
                 }
                 Debug.Log("Starting Tournament With: " + sb);
+                gameOver = false;
 
                 nonResettables.botTournament = new BotTournament(randomBots[0], randomBots[1], randomBots[2], randomBots[3], randomBots[4], randomBots[5], randomBots[6], randomBots[7], true);
 
@@ -128,6 +146,9 @@ public class botMaster : MonoBehaviour
 
                 //Div 4 
                 //nonResettables.botTournament = new BotTournament(div4[0], div4[1], div4[2], div4[3], div4[4], div4[5], div4[6], div4[7], false);
+
+                //Div 5
+                //nonResettables.botTournament = new BotTournament(div5[0], div5[1], div5[2], div5[3], div5[4], div5[5], div5[6], div5[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -135,7 +156,7 @@ public class botMaster : MonoBehaviour
             if (bots.botWhite == "")
             {
                 gameOver = true;
-                yield return null;
+                yield break;
             }
 
             Type botWhiteType = Type.GetType(bots.botWhite + ", Assembly-CSharp");
@@ -144,12 +165,13 @@ public class botMaster : MonoBehaviour
             if (botWhiteType == null || botBlackType == null)
             {
                 gameOver = true;
-                yield return null;
+                yield break;
             }
 
             if (!gameOver)
             {
                 botWhite = (BotTemplate)Activator.CreateInstance(botWhiteType, 1);
+
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         }
@@ -163,22 +185,23 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new InequalityBot(1); //Botkrieg
-                botBlack = new YOLOBot(-1); //Bot618
-                /*
+                botWhite = new BotWithAClock(1);
+                botBlack = new OneMoveBot(-1);
                 // For WCSingle
+                /*
                 int rand = globalDefs.globalRand.Next(1, 3);
                 if (rand == 1)
                 {
-                    botWhite = new HitmanBot(1);
-                    botBlack = new RestrictorBot(-1);
+                    botWhite = new ThinkingBot(1);
+                    botBlack = new LaserBot(-1);
                 }
                 else
                 {
-                    botWhite = new RestrictorBot(1);
-                    botBlack = new HitmanBot(-1);
+                    botWhite = new LaserBot(1);
+                    botBlack = new ThinkingBot(-1);
                 }
                 */
+                
             }
 
             gameData.botWhite = botWhite;
@@ -380,8 +403,88 @@ public class botMaster : MonoBehaviour
                     getPieceTypeInstance("LandmineQueen", -1),
                 };
             }
+            else if (nonResettables.ruleset == "Atomic")
+            {
+                botWhitePawns = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                    getPieceTypeInstance("AtomicPawn", 1),
+                };
+
+                botWhiteRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicRook", 1),
+                    getPieceTypeInstance("AtomicRook", 1),
+                };
+
+                botWhiteBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicBishop", 1),
+                    getPieceTypeInstance("AtomicBishop", 1),
+                };
+                botWhiteKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicKnight", 1),
+                    getPieceTypeInstance("AtomicKnight", 1),
+                };
+                botWhiteKing = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicKing", 1)
+                };
+
+                botWhiteQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicQueen", 1)
+                };
+
+
+                botBlackPawns = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                    getPieceTypeInstance("AtomicPawn", -1),
+                };
+
+                botBlackRooks = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicRook", -1),
+                    getPieceTypeInstance("AtomicRook", -1),
+                };
+
+                botBlackBishops = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicBishop", -1),
+                    getPieceTypeInstance("AtomicBishop", -1),
+                };
+                botBlackKnights = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicKnight", -1),
+                    getPieceTypeInstance("AtomicKnight", -1),
+                };
+                botBlackKing = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicKing", -1),
+                };
+
+                botBlackQueen = new List<Piece>
+                {
+                    getPieceTypeInstance("AtomicQueen", -1),
+                };
+            }
             else //if (nonResettables.ruleset == "Normal")
             {
+
                 botWhitePawns = new List<Piece>
                 {
                     getPieceTypeInstance("Pawn", 1),
@@ -533,6 +636,7 @@ public class botMaster : MonoBehaviour
             helper.updatePointsOnBoard();
 
             yield return null;
+
             started = true;
 
             movesWithoutCapture = 0;
@@ -565,15 +669,21 @@ public class botMaster : MonoBehaviour
         StartCoroutine(BotTurn());
     }
 
-    IEnumerator BotTurn()
+    public static void resetBoardStates(BotTemplate botWhite, BotTemplate botBlack)
     {
-        resetBotPieces(botWhite);
-        resetBotPieces(botBlack);
         botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
         botBlack.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
 
         botWhite.currentBoardState = copyBoardState(botWhite.currentBoardState);
         botBlack.currentBoardState = copyBoardState(botBlack.currentBoardState);
+    }
+
+    IEnumerator BotTurn()
+    {
+        resetBotPieces(botWhite);
+        resetBotPieces(botBlack);
+
+        resetBoardStates(botWhite, botBlack);
 
         BotTemplate currentBot;
         bool valid;
@@ -594,6 +704,15 @@ public class botMaster : MonoBehaviour
 
         NextMove selectedMove = null;
 
+        if (!currentBot.penalty && nonResettables.playAudio)
+        {
+            if (currentBot.name == "Thinking Bot II")
+            {
+                FadeAudio(thinkingBotII, true);
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+
         List<coords> allMoves = HelperFunctions.addToCurrentMoveableCoordsTotal(currentBot.color, true, false, null, true, true);
         Debug.LogWarning("AllMoves: " + allMoves.Count);
         debug_printBoardGrid(gameData.boardGrid, true, false);
@@ -607,19 +726,15 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-            if (currentBot.name == "Thinking Bot II")
-            {
-                thinkingBotII.Play();
-            }
-
                 var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
 
-            if (currentBot.name == "Thinking Bot II")
+            if (currentBot.name == "Thinking Bot II" && nonResettables.playAudio)
             {
-                thinkingBotII.Pause();
+                FadeAudio(thinkingBotII, false);
+                yield return new WaitForSeconds(0.5f);
             }
 
             Move mv = null;
@@ -637,6 +752,40 @@ public class botMaster : MonoBehaviour
 
                 movePieceObj = pa.piece;
                 moveCoords = pa.coords;
+            }
+
+            movePieceObj = getOriginalPieceFromClone(movePieceObj);
+
+            if (movePieceObj == null)
+            {
+
+                helper.addBotMessage(" " + currentBot.name + " has recieved a penalty. Bot sent invalid move.");
+                resetBoardStates(botWhite, botBlack);
+                nextMove = getRandomBotMove(currentBot);
+
+                if (currentBot.color == 1)
+                {
+                    bgs.whitePenalties++;
+                }
+                else
+                {
+                    bgs.blackPenalties++;
+                }
+
+                if (nextMove.moveType == "move")
+                {
+                    mv = nextMove.move;
+
+                    movePieceObj = mv.p;
+                    moveCoords = mv.coords;
+                }
+                else if (nextMove.moveType == "ability")
+                {
+                    pa = nextMove.ability;
+
+                    movePieceObj = pa.piece;
+                    moveCoords = pa.coords;
+                }
             }
 
             if (currentBot.name == "Bothoven")
@@ -748,7 +897,7 @@ public class botMaster : MonoBehaviour
             }
             else
             {
-                //helper.moveSound.Play();
+                if (nonResettables.playAudio) helper.moveSound.Play();
                 var deathVars = helper.executeAbility(selectedMove.ability);
                 death = deathVars.death;
                 check = deathVars.check;
@@ -756,13 +905,16 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-            Debug.Log("MOVE BY " + currentBot.color + " IS INVALID - PERFORMING RANDOM MOVE");
-            helper.addBotMessage(" Move by " + currentBot.name + " is invalid. Performing Random Move");
+            if (!currentBot.penalty)
+            {
+                Debug.Log("MOVE BY " + currentBot.color + " IS INVALID - PERFORMING RANDOM MOVE");
+                helper.addBotMessage(" Move by " + currentBot.name + " is invalid. Performing Random Move");
+            }
 
             if (movePieceObj != null)
             {
                 Debug.Log("Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
-                helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
+                //helper.addBotMessage(" Attempted Move: " + movePieceObj.name + " to " + moveCoords.x + "," + moveCoords.y);
             }
             else
             {
@@ -818,7 +970,7 @@ public class botMaster : MonoBehaviour
                 }
                 else
                 {
-                    //helper.moveSound.Play();
+                    if (nonResettables.playAudio) helper.moveSound.Play();
                     var deathVars = helper.executeAbility(randomMove.ability);
                     death = deathVars.death;
                     check = deathVars.check;
@@ -1003,10 +1155,26 @@ public class botMaster : MonoBehaviour
                 logger.publishLog(SEASON_NAME + "_" + botWhite.name + " vs " + botBlack.name + ".txt");
             }
 
-            if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
+            if (nonResettables.postElo)
+            {
+                if (nonResettables.isBotTournament) nonResettables.postBotMatch(bgs.white, bgs.black, bgs.winnerName);
+            }
+
+            if (bgs.winnerName == "Thinking Bot II" && nonResettables.playAudio)
+            {
+                FadeAudio(thinkingBotII, true);
+                yield return new WaitForSeconds(0.25f);
+            }
 
             yield return new WaitForSeconds(5f);
 
+            if (bgs.winnerName == "Thinking Bot II" && nonResettables.playAudio)
+            {
+                FadeAudio(thinkingBotII, false);
+                yield return new WaitForSeconds(0.25f);
+            }
+
+            gameOver = false;
             HelperFunctions.resetGameVars();
             SceneManager.LoadScene(7);
         }
@@ -1421,6 +1589,55 @@ public class botMaster : MonoBehaviour
 
             File.WriteAllText(fullPath, sb.ToString());
             //System.Diagnostics.Process.Start(fullPath);
+        }
+    }
+
+    private Coroutine fadeCoroutine;
+
+    private void FadeAudio(AudioSource audioSource, bool fadeIn, float duration = 0.25f)
+    {
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+        }
+
+        fadeCoroutine = StartCoroutine(FadeAudioCoroutine(audioSource, fadeIn, duration));
+    }
+
+    private IEnumerator FadeAudioCoroutine(AudioSource audioSource, bool fadeIn, float duration)
+    {
+        if (fadeIn)
+        {
+            audioSource.volume = 0f;
+
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+        }
+
+        float startVolume = audioSource.volume;
+        float targetVolume = fadeIn ? 1f : 0f;
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(
+                startVolume,
+                targetVolume,
+                elapsed / duration
+            );
+
+            yield return null;
+        }
+
+        audioSource.volume = targetVolume;
+
+        if (!fadeIn)
+        {
+            audioSource.Pause();
         }
     }
 }

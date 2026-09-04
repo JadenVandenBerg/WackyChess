@@ -1,47 +1,78 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 using System.Linq;
 using static BotHelperFunctions;
 using static UndoMoveBotHelperFunctions;
+using static HelperFunctions;
+using System;
+using TMPro;
+using UnityEditor;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Photon.Pun;
+using System.IO;
+using System.Collections;
+using System.Text;
 
 
-class MoveState
+public class BlindAsABot : BotTemplate
 {
-    public BoardState bs;
-    public int moveIter = 0;
-    public float diff = 0;
-    public Piece leadingPiece;
-    public coords leadingCoords = new coords(-1, -1);
-    public NextMove leadingNextMove;
-    public string moveChain;
-
-    public MoveState(BoardState bs, int moveIter, float diff, Piece leadingPiece, coords leadingCoords, NextMove leadingNextMove, string moveChain)
-    {
-        this.bs = bs;
-        this.moveIter = moveIter;
-        this.diff = diff;
-        this.leadingPiece = leadingPiece;
-        this.leadingCoords = leadingCoords;
-        this.leadingNextMove = leadingNextMove;
-        this.moveChain = moveChain;
-    }
-}
-
-public class TwoMoveBot : BotTemplate
-{
-    public TwoMoveBot(int botColor)
+    //1 is white, -1 is black
+    public BlindAsABot(int botColor)
     {
         color = botColor;
         pieces = new List<Piece>();
-        name = "Two Move Bot";
+        name = "Blind as a Bot";
 
         choosePieces();
+    }
+
+    public List<string> options = new List<string>{"Left", "Right"};
+    public string vision = "Left";
+
+    private bool filterVision(Piece piece, coords coords)
+    {
+        if (piece == null)
+        {
+            return filterCoords(coords);
+        }
+        
+        if (coords.x == -1)
+        {
+            return filterCoords(piece.position);
+        }
+
+        return filterCoords(coords) && filterCoords(piece.position);
+    }
+
+    private bool filterCoords(coords coords)
+    {
+        if (vision == "Left")
+        {
+            return coords.x < 5;
+        }
+        else
+        {
+            return coords.x >= 5;
+        }
     }
 
     override
     public NextMove nextMove()
     {
+        vision = options[globalDefs.globalRand.Next(options.Count)];
+
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (!filterCoords(new coords(i+1, j+1)))
+                {
+                    highlightSquare(findSquare(i+1, j+1), Color.gray2);
+                }
+            }
+        }
+
         Queue<MoveState> moveStates = new Queue<MoveState>();
 
         resetPiecePositions(null, convertBoardGrid(gameData.boardGrid));
@@ -68,7 +99,8 @@ public class TwoMoveBot : BotTemplate
             if (next.moveIter >= 2)
             {
                 //Debug.Log("NextMoveState Iter >= 2");
-                if (next.diff >= bestDiff) {
+                if (next.diff >= bestDiff)
+                {
 
                     //Debug.Log("next.diff > bestdiff");
                     if (next.diff > bestDiff)
@@ -101,6 +133,11 @@ public class TwoMoveBot : BotTemplate
                 coords coords = nextMoveVars.coords;
                 string moveType = nextMoveVars.moveType;
 
+                if (!filterVision(piece_, coords))
+                {
+                    continue;
+                }
+
                 //Debug.Log("Analyzing Move: " + piece_.name + " to " + coords[0] + ", " + coords[1]);
 
                 UndoMove undo;
@@ -125,6 +162,8 @@ public class TwoMoveBot : BotTemplate
                     Piece pieceOpp = nextMoveOppVars.piece;
                     coords coordsOpp = nextMoveOppVars.coords;
                     string moveTypeOpp = nextMoveOppVars.moveType;
+
+                    
 
                     //Debug.Log("Analyzing Opp Move: " + pieceOpp.name + " to " + coordsOpp[0] + ", " + coordsOpp[1]);
 
@@ -153,6 +192,11 @@ public class TwoMoveBot : BotTemplate
                             Piece pieceResponse = nextMoveResponseVars.piece;
                             coords coordsResponse = nextMoveResponseVars.coords;
                             string moveTypeResponse = nextMoveResponseVars.moveType;
+
+                            if (!filterVision(pieceResponse, coordsResponse))
+                            {
+                                continue;
+                            }
 
                             //Debug.Log("Analyzing Response Move: " + pieceResponse.name + " to " + coordsResponse[0] + ", " + coordsResponse[1]);
 
@@ -240,28 +284,22 @@ public class TwoMoveBot : BotTemplate
 
                     undoMove(undo, next.bs);
                 }
-                
+
             }
         }
 
         //Debug.Log("Moves Analyzed: " + movesAnalyzed);
 
         System.Random rand = new System.Random();
+
+        if (bestMoveStates.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+
         int rndIdx = rand.Next(bestMoveStates.Count);
 
         NextMove move = bestMoveStates[rndIdx].leadingNextMove;
-        if (move.moveType == "move")
-        {
-            move.move.p = getOriginalPieceFromClone(move.move.p);
-        }
-        else
-        {
-            move.ability.piece = getOriginalPieceFromClone(move.ability.piece);
-        }
-
-        //Debug.Log("Selected Move: " + bestMoveStates[rndIdx].leadingPiece + " to " + bestMoveStates[rndIdx].leadingCoords.x + "," + bestMoveStates[rndIdx].leadingCoords.y + " Diff: " + bestMoveStates[rndIdx].diff);
-        //Debug.Log("Move Chain: " + bestMoveStates[rndIdx].moveChain);
-        //debug_printBoardState(bestMoveStates[rndIdx].bs);
         return move;
     }
 }

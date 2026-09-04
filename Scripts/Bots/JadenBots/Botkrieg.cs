@@ -17,14 +17,6 @@ public class Botkrieg : BotTemplate
         choosePieces();
     }
 
-    /* Todo
-    *   Make atomic pieces attempt to blow up the king
-    *   Make landmine pieces go next to the king, checks if possible
-    *   Dematerialize phantom pieces and rematerialize them on the king
-    *   Repeatedly attack opponents pieces with infinite pieces / crook
-    *   Jail the opponents king
-    */
-
     Queue<NextMove> lastFiveMoves = new Queue<NextMove>();
 
     class Botkrieg_info

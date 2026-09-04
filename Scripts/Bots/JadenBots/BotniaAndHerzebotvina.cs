@@ -122,6 +122,11 @@ public class BotniaAndHerzebotvina : BotTemplate
                 undoMove(undo_, this.currentBoardState);
             }
 
+            if (bestMoveOppBS == null)
+            {
+                continue;
+            }
+
             List<NextMove> allMoves_L2 = getAllPossibleBotMovesAndAbilities(this, bestMoveOppBS, this.color);
 
             foreach (NextMove nextMove_L2 in allMoves_L2)

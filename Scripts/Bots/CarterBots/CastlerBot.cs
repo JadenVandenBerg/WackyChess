@@ -52,8 +52,8 @@ public class CastlerBot : BotTemplate
 	{
 		bool castleLeftPossible = true;
 		bool castleRightPossible = true;
-		bool canCastleLeft = isolatedCheckCanCastle(this, this.currentBoardState, -1);
-        bool canCastleRight = isolatedCheckCanCastle(this, this.currentBoardState, 1);
+		bool canCastleLeft = isolatedCheckCanCastle(this.currentBoardState, -1, this.color);
+        bool canCastleRight = isolatedCheckCanCastle(this.currentBoardState, 1, this.color);
 
         List<Piece> piecesOnBoard = getPiecesOnBoardState(this.currentBoardState, this.color);
         List<Piece> piecesOnBoardOpp = getPiecesOnBoardState(this.currentBoardState, this.color * -1);

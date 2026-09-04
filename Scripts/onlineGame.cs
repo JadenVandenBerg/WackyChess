@@ -9,6 +9,7 @@ using UnityEngine.UI;
 using System.Xml.Linq;
 using System.Net.NetworkInformation;
 using Photon.Pun;
+using static HelperFunctions;
 
 public class onlineGame : MonoBehaviour
 {
@@ -227,7 +228,7 @@ public class onlineGame : MonoBehaviour
                     helper.performPreMove();
                     //TODO MOVE DEATH LOGIC TO MOVEPIECE AND MOVE MOVEPIECE TO HELPERFUNCTIONS
 
-                    photonView.RPC("MovePieceRPC", RpcTarget.All, HelperFunctions.findCoords(gameData.selectedToMove), HelperFunctions.findCoords(gameData.selected));
+                    photonView.RPC("MovePieceRPC", RpcTarget.All, coordsToIntArr(findCoords(gameData.selectedToMove)), coordsToIntArr(findCoords(gameData.selected)));
                     //movePiece(gameData.selectedPiece, HelperFunctions.findCoords(gameData.selected));
                 }
             }

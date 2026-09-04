@@ -150,6 +150,6 @@ public class BoardState {
 
 		delayedQueue = tempInfo.delayedQueue;
 
-		BotHelperFunctions.resetPiecePositions(null, convertBoardGrid(gameData.boardGrid));
+		resetPiecePositions(null, convertBoardGrid(gameData.boardGrid));
 	}
 }

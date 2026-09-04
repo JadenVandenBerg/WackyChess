@@ -104,6 +104,7 @@ public static class nonResettables
     public static bool logMatch { get; set; } = false;
     public static string ruleset { get; set; } = "Wacky";
     public static bool debug_highlight { get; set; } = false;
+    public static bool playAudio { get; set; } = false;
 
     public static void calculateElo(Bot botA, Bot botB, string winner)
     {
@@ -365,7 +366,7 @@ public class BotTournament {
     public int round = 1;
     public int match = 1;
 
-    public BotTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight, bool randomize)
+    public BotTournament(string botOne, string botTwo, string botThree, string botFour, string botFive, string botSix, string botSeven, string botEight, bool randomize, int startingRound = 1, int startingMatch = 1)
     {
         List<string> bots = new List<string>()
         {
@@ -385,6 +386,9 @@ public class BotTournament {
         }
 
         competingBots.AddRange(bots);
+
+        round = startingRound;
+        match = startingMatch;
     }
 
     public (string botWhite, string botBlack) nextGame() {

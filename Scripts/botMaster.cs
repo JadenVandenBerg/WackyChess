@@ -58,7 +58,8 @@ public class botMaster : MonoBehaviour
                 {
                     "GamblingBot",
                     "BlindAsABot",
-                    "TenXRandomBot"
+                    "TenXRandomBot",
+                    "BotWithAClock"
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");

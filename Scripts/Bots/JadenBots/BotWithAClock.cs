@@ -146,6 +146,11 @@ public class BotWithAClock : BotTemplate
             coords coords = moveVars.coords;
             string moveType = moveVars.moveType;
 
+            if (depth >= 4 && piece.baseType == "Pawn" && piece.color == this.color)
+            {
+                continue;
+            }
+
             UndoMove undo;
 
             if (moveType == "move")
@@ -334,7 +339,7 @@ public class BotWithAClock : BotTemplate
         float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
 
         int numMoves = 0;
-        if (move < 10 || move >= 30)
+        if (move < 15 || move >= 30)
         {
             numMoves = getAllPossibleBotMovesAndAbilities(this, bs, this.color).Count;
         }

@@ -22,6 +22,7 @@ public class botMaster : MonoBehaviour
     public GameObject checkmateUI;
     public HelperFunctions helper;
     public AudioSource thinkingBotII;
+    public AudioSource[] bothovenAudio;
     GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
@@ -726,7 +727,7 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
+                var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
@@ -785,6 +786,18 @@ public class botMaster : MonoBehaviour
 
                     movePieceObj = pa.piece;
                     moveCoords = pa.coords;
+                }
+            }
+
+            if (currentBot.name == "Bothoven")
+            {
+                foreach (AudioSource audio in bothovenAudio)
+                {
+                    audio.Stop();
+                }
+                foreach (int note in Bothoven.bhNotesToPlay)
+                {
+                    bothovenAudio[note].Play();
                 }
             }
 

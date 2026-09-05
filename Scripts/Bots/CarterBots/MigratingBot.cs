@@ -1,8 +1,10 @@
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using static BotHelperFunctions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using static BotHelperFunctions;
+using static UnityEngine.GraphicsBuffer;
+using static HelperFunctions;
 
 public class MigratingBot : BotTemplate
 {
@@ -22,6 +24,12 @@ public class MigratingBot : BotTemplate
 
     public NextMove nextMove()
     {
+
+        if (targetCoords.x != 0 && targetCoords.y != 0)
+        {
+            highlightSquare(findSquare(targetCoords.x, targetCoords.y), Color.cyan);
+        }
+
         float bestMoveDiff = -1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);

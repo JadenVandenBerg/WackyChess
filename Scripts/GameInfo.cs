@@ -105,11 +105,11 @@ public static class nonResettables
     public static string ruleset { get; set; } = "Wacky";
     public static bool debug_highlight { get; set; } = false;
     public static bool playAudio { get; set; } = false;
+    public static bool postElo { get; set; } = false;
 
     public static void calculateElo(Bot botA, Bot botB, string winner)
     {
-        double expectedScoreA =
-            1.0 / (1.0 + Math.Pow(10, (botB.Elo - botA.Elo) / 400.0));
+        double expectedScoreA = 1.0 / (1.0 + Math.Pow(10, (botB.Elo - botA.Elo) / 400.0));
 
         double scoreA;
 
@@ -184,11 +184,15 @@ public static class nonResettables
                 "BerserkerBot",
                 "HitmanBot",
                 "Bot618",
-                "BotsUtd",
+                "BotsUnited",
                 "MarchingBot",
                 "Botfish",
                 "BotniaAndHerzebotvina",
-                "Botkrieg"
+                "Botkrieg",
+                "ThinkingBotII",
+                "GamblingBot",
+                "BotWithAClock",
+                "BlindAsABot",
             });
         }
 
@@ -207,7 +211,19 @@ public static class nonResettables
                 "BOTential",
                 "LaserBot",
                 "CountingBot",
-                "MigratingBot"
+                "MigratingBot",
+                "BalanceBot",
+                "BotWithAPlot",
+                "MercenaryBot",
+                "SpeedRunnerBot"
+            });
+        }
+
+        if (owner == "Tazel" || owner == "All")
+        {
+            options.AddRange(new List<string> {
+                "SpeedRunnerBot",
+                "LazyBot"
             });
         }
 
@@ -310,6 +326,15 @@ public static class Bots
     public const string Lobotomy = "Lobotomy";
     public const string BotsUnited = "BotsUnited";
     public const string MarchingBot = "MarchingBot";
+
+    public const string ThinkingBotII = "ThinkingBotII";
+    public const string MercenaryBot = "MercenaryBot";
+    public const string Botkrieg = "Botkrieg";
+    public const string Bot618 = "Bot618";
+    public const string BotWithAPlot = "BotWithAPlot";
+    public const string BalanceBot = "BalanceBot";
+    public const string SpeedrunnerBot = "SpeedRunnerBot";
+    public const string LazyBot = "LazyBot";
 }
 
 public static class globalDefs
@@ -577,6 +602,7 @@ public enum PieceState : long
     Stacking = 1L << 34,
     Jailer = 1L << 35,
     Fusion = 1L << 36,
+    Reincarnating = 1L << 37,
 }
 
 public enum PieceAbilities : long

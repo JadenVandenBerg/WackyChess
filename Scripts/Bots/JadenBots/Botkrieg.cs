@@ -17,14 +17,6 @@ public class Botkrieg : BotTemplate
         choosePieces();
     }
 
-    /* Todo
-    *   Make atomic pieces attempt to blow up the king
-    *   Make landmine pieces go next to the king, checks if possible
-    *   Dematerialize phantom pieces and rematerialize them on the king
-    *   Repeatedly attack opponents pieces with infinite pieces / crook
-    *   Jail the opponents king
-    */
-
     Queue<NextMove> lastFiveMoves = new Queue<NextMove>();
 
     class Botkrieg_info
@@ -512,7 +504,7 @@ public class Botkrieg : BotTemplate
                         coords coordsPath = c;
                         if (coordsPath.x == coords.x && coordsPath.y == coords.y)
                         {
-                            Debug.Log("Botkrieg: Phantom Move in Path");
+                            //Debug.Log("Botkrieg: Phantom Move in Path");
 
                             addPointsMoveOne += 6f;
                         }
@@ -538,12 +530,12 @@ public class Botkrieg : BotTemplate
             NextMove bestOppMove = null;
             float bestOppMoveDiff = +1000;
 
-            Debug.LogWarning("Botkrieg: Simulating Piece Move: " + piece + " to " + coords.x + "," + coords.y);
+            //Debug.LogWarning("Botkrieg: Simulating Piece Move: " + piece + " to " + coords.x + "," + coords.y);
 
             // If we do not need to look at more moves (ie. opp king can be exploded)
             if (isOppKingDead(this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Opponents King is Dead");
+                //Debug.Log("Botkrieg: Opponents King is Dead");
 
                 undoMove(undo, this.currentBoardState);
 
@@ -553,20 +545,20 @@ public class Botkrieg : BotTemplate
             // Move point addons
             if (botkrieg_info.all.Contains(piece) && piece.baseType != "King")
             {
-                Debug.Log("Botkrieg: Moving Choice Piece");
+                //Debug.Log("Botkrieg: Moving Choice Piece");
 
                 addPointsMoveOne += 1f;
             }
 
             if (isDematerializedPhantomOnKing(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Phantom Piece On King");
+                //Debug.Log("Botkrieg: Phantom Piece On King");
 
                 addPointsMoveOne += 4f;
 
                 if (isOppKingSurrounded(this.currentBoardState))
                 {
-                    Debug.Log("Botkrieg: Phantom Piece On Surrounded King");
+                    //Debug.Log("Botkrieg: Phantom Piece On Surrounded King");
 
                     addPointsMoveOne += 25f;
                 }
@@ -574,49 +566,49 @@ public class Botkrieg : BotTemplate
 
             if (isAtomicAttackingKingCollateral(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Atomic Piece is Attacking King");
+                //Debug.Log("Botkrieg: Atomic Piece is Attacking King");
 
                 addPointsMoveOne += 8f;
             }
 
             if (isOppKingJailed(this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Opponents King is Jailed");
+                //Debug.Log("Botkrieg: Opponents King is Jailed");
 
                 addPointsMoveOne += 16f;
             }
 
             if (isDematerializedPhantomAttackingKing(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Dematerialized Phantom Attacking King");
+                //Debug.Log("Botkrieg: Dematerialized Phantom Attacking King");
 
                 addPointsMoveOne += 2f;
             }
 
             if (isFreezeBombAttackingKingCollateral(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Freeze Bomb Attacking King");
+                //Debug.Log("Botkrieg: Freeze Bomb Attacking King");
 
                 addPointsMoveOne += 2f;
             }
 
             if (isLandmineAttackingNextToKing(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Landmine Attacking Next to King");
+                //Debug.Log("Botkrieg: Landmine Attacking Next to King");
 
                 addPointsMoveOne += 2f;
             }
 
             if (isLandmineNextToKing(piece, this.currentBoardState))
             {
-                Debug.Log("Botkrieg: Landmine Next to King");
+                //Debug.Log("Botkrieg: Landmine Next to King");
 
                 addPointsMoveOne += 16f;
             }
 
             if (nextMove.moveType == "ability" && nextMove.ability.ability == PieceAbilities.Dematerialize)
             {
-                Debug.Log("Botkrieg: Phantom can Dematerialize");
+                //Debug.Log("Botkrieg: Phantom can Dematerialize");
 
                 addPointsMoveOne += 126f;
             }
@@ -625,13 +617,13 @@ public class Botkrieg : BotTemplate
 
             if (moveInQueue(lastFiveMoves, nextMove))
             {
-                Debug.Log("Botkrieg Move in Last Five");
+                //Debug.Log("Botkrieg Move in Last Five");
                 subtractPointsMoveOne += 4f;
             }
 
             if (moveInQueueTwice(lastFiveMoves, nextMove))
             {
-                Debug.Log("Botkrieg Move in Last Five x2");
+                //Debug.Log("Botkrieg Move in Last Five x2");
                 subtractPointsMoveOne += 20f;
             }
 
@@ -767,7 +759,7 @@ public class Botkrieg : BotTemplate
                 {
                     if (diff > bestL2MoveDiff)
                     {
-                        Debug.LogWarning("Botkrieg: After Move Analysis: " + debugStr + "." + " Total: " + diff);
+                        //Debug.LogWarning("Botkrieg: After Move Analysis: " + debugStr + "." + " Total: " + diff);
 
                         validMoves_L2.Clear();
                     }

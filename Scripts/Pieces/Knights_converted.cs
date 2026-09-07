@@ -3037,3 +3037,335 @@ public class FusionKnight : Piece
         }
     }
 }
+/*
+public class ReincarnatingKnight : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 6;
+    public int rarityLevel { get; set; } = 0;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Knight";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 1;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.Reincarnating;
+    public int collateralType { get; set; } = -1;
+    public coords[] collateral { get; set; } = null;
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Knights/wReincarnatingKnight";
+    public String bImage { get; set; } = "Images/Knights/bReincarnatingKnight";
+    public String name { get; set; } = "ReincarnatingKnight";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public ReincarnatingKnight(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}
+*/
+public class LongForkKnight : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 7;
+    public int rarityLevel { get; set; } = 3;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Knight";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.None;
+    public int collateralType { get; set; } = -1;
+    public coords[] collateral { get; set; } = null;
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { new coords(1, 7), new coords(-1, 7), new coords(7, 1), new coords(-7, 1), new coords(1, -7), new coords(-1, -7), new coords(7, -1), new coords(-7, -1), new coords(1, 6), new coords(-1, 6), new coords(6, 1), new coords(-6, 1), new coords(1, -6), new coords(-1, -6), new coords(6, -1), new coords(-6, -1) };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Knights/wLongForkKnight";
+    public String bImage { get; set; } = "Images/Knights/bLongForkKnight";
+    public String name { get; set; } = "LongForkKnight";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public LongForkKnight(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}
+
+
+public class KnightRider : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 7;
+    public int rarityLevel { get; set; } = 0;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Knight";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.None;
+    public int collateralType { get; set; } = -1;
+    public coords[] collateral { get; set; } = null;
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = {
+        new coords(1, 2), new coords(-1, 2), new coords(2, 1), new coords(-2, 1), new coords(1, -2), new coords(-1, -2), new coords(2, -1), new coords(-2, -1)
+           , new coords(2, 4), new coords(-2, 4), new coords(4, 2), new coords(-4, 2), new coords(2, -4), new coords(-2, -4), new coords(4, -2), new coords(-4, -2)
+           , new coords(3, 6), new coords(-3, 6), new coords(6, 3), new coords(-6, 3), new coords(3, -6), new coords(-3, -6), new coords(6, -3), new coords(-6, -3)
+    };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Knights/wKnightRider";
+    public String bImage { get; set; } = "Images/Knights/bKnightRider";
+    public String name { get; set; } = "KnightRider";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public KnightRider(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}
+
+public class CamelRider : Piece
+{
+    public bool disabled { get; set; } = false;
+    public int color { get; set; } = 1; //1 White, -1 Black
+    public float points { get; set; } = 6;
+    public int rarityLevel { get; set; } = 2;
+    public coords startSquare { get; set; } = new coords(-1, -1);
+    public string baseType { get; set; } = "Knight";
+    public String description { get; set; } = "";
+    public String longDescription { get; set; } = "";
+    public int alive { get; set; } = 1;
+    public int lives { get; set; } = 0;
+    public PieceAbilities abilities { get; set; } = PieceAbilities.None;
+    public PieceState states { get; set; } = PieceState.None;
+    public int collateralType { get; set; } = -1;
+    public coords[] collateral { get; set; } = null;
+    public String promotesInto { get; set; } = "";
+    public int promotingRow { get; set; } = 8;
+    public int canMoveTwice { get; set; } = 0;
+    public int storageLimit { get; set; } = -1;
+    public List<Piece> storage { get; set; } = null;
+    public coords[] moves { get; set; } = { };
+    public coords[] oneTimeMoves { get; set; } = { };
+    public coords[] jumpAttacks { get; set; } = { 
+        new coords(1, 3), new coords(-1, 3), new coords(3, 1), new coords(-3, 1), new coords(1, -3), new coords(-1, -3), new coords(3, -1), new coords(-3, -1),
+        new coords(2, 6), new coords(-2, 6), new coords(6, 2), new coords(-6, 2), new coords(2, -6), new coords(-2, -6), new coords(6, -2), new coords(-6, -2)
+    };
+    public coords[] oneTimeMoveAndAttacks { get; set; } = { };
+    public coords[] murderousAttacks { get; set; } = { };
+    public bool condition { get; set; } = false;
+    public coords[] conditionalAttacks { get; set; } = { };
+    public coords[] moveAndAttacks { get; set; } = { };
+    public coords[] attacks { get; set; } = { };
+    public coords[] flagMove1 { get; set; } = { };
+    public coords[] flagMove2 { get; set; } = { };
+    public coords[] pushMoves { get; set; } = { };
+    public coords[] enPassantMoves { get; set; } = { };
+
+    public coords position { get; set; } = new coords(0, 0);
+    public GameObject go { get; set; } = null;
+    public bool hasMoved { get; set; } = false;
+
+    public String wImage { get; set; } = "Images/Knights/wCamelRider";
+    public String bImage { get; set; } = "Images/Knights/bCamelRider";
+    public String name { get; set; } = "CamelRider";
+
+    public int flag { get; set; } = 0;
+    public string spawnable { get; set; } = "";
+    public int numSpawns { get; set; } = 0;
+
+    public CamelRider(int color, bool online, bool simulated)
+    {
+        if (online)
+        {
+            if (go == null) go = PhotonNetwork.Instantiate("Empty", new Vector2(0, 0), Quaternion.identity);
+            go.name = name;
+        }
+        else if (simulated)
+        {
+            go = null;
+        }
+        else
+        {
+            if (go == null) go = new GameObject();
+            go.name = name;
+        }
+
+        this.color = color;
+
+        if (!simulated)
+        {
+            go.name = name;
+
+            HelperFunctions.UpdateMovesForColor(this);
+
+            Image s = go.AddComponent<Image>();
+            Sprite sp = Resources.Load<Sprite>(color == 1 ? wImage : bImage);
+
+            s.sprite = sp;
+            s.preserveAspect = true;
+        }
+    }
+}

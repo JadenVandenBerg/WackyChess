@@ -413,7 +413,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
     {
         if (coords.x < 0 || coords.y < 0)
         {
-            Debug.Log("NULLL");
+            Debug.LogError("Coords Below 0: " + coords.x + "," + coords.y);
             return null;
         }
 
@@ -820,14 +820,27 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         if (!isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs))
         {
-            UndoMovedPiece undoMove = undo_movePieceBoardState(deadPiece, new coords( deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1 ), bs);
-            undo.addMove(undoMove);
+            if (checkState(deadPiece, PieceState.Reincarnating))
+            {
+                Piece newPiece = getRandomSimulatedPieceInstance(deadPiece.baseType, deadPiece.color);
+
+                updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
+                updateBoardState(new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), newPiece, "a", bs);
+
+                undo_isolatedRemovePiece(deadPiece, bs, undo);
+                undo_isolatedAddPiece(newPiece, bs, undo);
+            }
+            else
+            {
+                UndoMovedPiece undoMove = undo_movePieceBoardState(deadPiece, new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), bs);
+                undo.addMove(undoMove);
+            }
         }
         else
         {
             UndoMovedPiece deadPiece_ = new UndoMovedPiece(deadPiece, new coords(deadPiece.position.x, deadPiece.position.y), new coords(-1, -1), true, false, false);
             undo.addMove(deadPiece_);
-            updateBoardState(new coords( deadPiece.position.x - 1, deadPiece.position.y - 1 ), deadPiece, "r", bs);
+            updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
         }
     }
 
@@ -1281,7 +1294,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
         if (checkState(piece, PieceState.Delayed))
         {
-            PieceMove delayedMove = new PieceMove(piece, new coords( coords.x, coords.y ), 2);
+            PieceMove delayedMove = new PieceMove(piece, new coords( unadjusted.x, unadjusted.y ), 2);
             bs.delayedQueue.Enqueue(delayedMove);
 
             UndoDelayedQueueAction undoDQ = new UndoDelayedQueueAction(delayedMove, PieceAction.RemoveFromQueue);

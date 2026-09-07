@@ -77,6 +77,31 @@ public class BotHelperFunctions : MonoBehaviour
         return eligiblePieces;
     }
 
+    public static List<Type> getAllTypePiecesSimulated(string type, int color)
+    {
+
+        List<Type> allPieces = Lootbox.GetAllPieces();
+        List<Type> eligiblePieces = new List<Type>();
+
+        foreach (var piece_ in allPieces)
+        {
+
+            Piece piece = (Piece)Activator.CreateInstance(piece_, color, false, true);
+
+            if (piece.baseType == type)
+            {
+                eligiblePieces.Add(piece_);
+            }
+
+            if (piece.go != null)
+            {
+                Destroy(piece.go);
+            }
+        }
+
+        return eligiblePieces;
+    }
+
     public static List<coords> isolatedGetCollateralSquares(Piece p, BoardState bs) {
         List<coords> possibleCoords = new List<coords>();
         coords[] collateral = new coords[]
@@ -1513,7 +1538,7 @@ public class BotHelperFunctions : MonoBehaviour
         return false;
     }
 
-    private static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
+    public static bool isolatedIsOppressorOnBoard(BoardState bs, int color)
     {
         List<Piece>[,] boardGrid = bs.boardGrid;
 
@@ -2963,14 +2988,31 @@ public class BotHelperFunctions : MonoBehaviour
         updateBoardState(new coords( p.position.x - 1, p.position.y - 1 ), p,"r", bs);
     }
 
-    public static void isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs) {
+    public static void isolatedHandleMultipleLivesDeath(Piece deadPiece, BoardState bs)
+    {
         deadPiece.lives--;
 
-        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs)) {
-            movePieceBoardState(deadPiece, new coords( deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1 ), bs);
+        if (!HelperFunctions.isOnStartSquare(deadPiece) && !isolatedIsPieceOnStartSquare(deadPiece, bs))
+        {
+            if (checkState(deadPiece, PieceState.Reincarnating))
+            {
+                Piece newPiece = getRandomPieceInstance(deadPiece.baseType, deadPiece.color);
+                Destroy(newPiece.go);
+
+                updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
+                updateBoardState(new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), newPiece, "a", bs);
+
+                newPiece.startSquare = deadPiece.startSquare;
+                newPiece.position = deadPiece.startSquare;
+            }
+            else
+            {
+                movePieceBoardState(deadPiece, new coords(deadPiece.startSquare.x - 1, deadPiece.startSquare.y - 1), bs);
+            }
         }
-        else {
-            updateBoardState(new coords( deadPiece.position.x - 1, deadPiece.position.y - 1 ), deadPiece, "r", bs);
+        else
+        {
+            updateBoardState(new coords(deadPiece.position.x - 1, deadPiece.position.y - 1), deadPiece, "r", bs);
         }
     }
 

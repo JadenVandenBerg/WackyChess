@@ -1483,20 +1483,38 @@ public class HelperFunctions : MonoBehaviour
     {
         deadPiece.lives--;
 
-        //Debug.Log("INFINITE PIECE DIED START SQUARE: " + deadPiece.startSquare.x + "," + deadPiece.startSquare.y + " : " + isOnStartSquare(deadPiece) + " : " + isPieceOnStartSquare(deadPiece));
+        Debug.Log("INFINITE PIECE DIED START SQUARE: " + deadPiece.startSquare.x + "," + deadPiece.startSquare.y + " : " + isOnStartSquare(deadPiece) + " : " + isPieceOnStartSquare(deadPiece));
 
         if (!isOnStartSquare(deadPiece) && !isPieceOnStartSquare(deadPiece))
         {
-            movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
-            //deadPiece.position = deadPiece.startSquare;
-
-            if (online)
+            if (checkState(deadPiece, PieceState.Reincarnating))
             {
-                photonView.RPC("_MovePieceRPC", RpcTarget.All, deadPiece.startSquare, deadPiece.position);
+                Piece newPiece = getRandomPieceInstance(deadPiece.baseType, deadPiece.color);
+
+                initPiece(newPiece, deadPiece.startSquare);
+
+                if (gameData.piecesDict.ContainsKey(deadPiece.go))
+                {
+                    gameData.piecesDict.Remove(deadPiece.go);
+                }
+
+                updateBoardGrid(deadPiece.position, deadPiece, "r");
+                DestroyWrapper(deadPiece.go);
+                deadPiece.alive = 0;
             }
             else
             {
-                movePiece(deadPiece, findSquare(deadPiece.startSquare.x, deadPiece.startSquare.y));
+                movePieceBoardGrid(deadPiece, deadPiece.position, deadPiece.startSquare);
+                //deadPiece.position = deadPiece.startSquare;
+
+                if (online)
+                {
+                    photonView.RPC("_MovePieceRPC", RpcTarget.All, deadPiece.startSquare, deadPiece.position);
+                }
+                else
+                {
+                    movePiece(deadPiece, findSquare(deadPiece.startSquare.x, deadPiece.startSquare.y));
+                }
             }
         }
         else
@@ -4561,5 +4579,31 @@ public class HelperFunctions : MonoBehaviour
         }
 
         return singleAbilities.ToArray();
+    }
+
+    public static Piece getRandomPieceInstance(string type, int color)
+    {
+        List<Type> pieces = BotHelperFunctions.getAllTypePieces(type, color);
+        System.Random rand = new System.Random();
+
+        int index = rand.Next(pieces.Count);
+
+        Type type_ = pieces[index];
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false, false);
+
+        return piece;
+    }
+
+    public static Piece getRandomSimulatedPieceInstance(string type, int color)
+    {
+        List<Type> pieces = BotHelperFunctions.getAllTypePiecesSimulated(type, color);
+        System.Random rand = new System.Random();
+
+        int index = rand.Next(pieces.Count);
+
+        Type type_ = pieces[index];
+        Piece piece = (Piece)Activator.CreateInstance(type_, color, false, true);
+
+        return piece;
     }
 }

@@ -212,6 +212,11 @@ public class BotWithAPlot : BotTemplate
             System.Random rand = new System.Random();
             int rndIdx = rand.Next(validMoves.Count);
 
+            if (validMoves.Count == 0)
+            {
+                return getRandomBotMove(this);
+            }
+
             NextMove move = validMoves[rndIdx];
 
             if (move.moveType == "move")

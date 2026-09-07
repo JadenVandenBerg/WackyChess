@@ -59,7 +59,6 @@ public class PawnBot2 : BotTemplate
             List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
             float bestOppMoveDiff = +1000;
-            NextMove bestOppNextMove;
 
             foreach (NextMove nextMoveOpp in allMovesOpp)
             {

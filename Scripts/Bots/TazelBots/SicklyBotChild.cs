@@ -1219,8 +1219,15 @@ public class SicklyBotChild : BotTemplate
                     if (inCheck(this.currentBoardState, this.color * -1))
                     {
                         bool canblockorcapture = false;
-                        //King cannot be null because we are in check
-                        coords kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        coords kingPos;
+                        if (isolatedGetKing(this.currentBoardState, color) is not null)
+                        {
+                            kingPos = isolatedGetKing(this.currentBoardState, color).position; 
+                        } 
+                        else
+                        {
+                            break;   
+                        }
                         if (moveList[^1].moveType == "move")
                         {
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].move.coords, kingPos);

@@ -23,6 +23,7 @@ public class botMaster : MonoBehaviour
     public HelperFunctions helper;
     public AudioSource thinkingBotII;
     public AudioSource[] bothovenAudio;
+    public int timeForPenalty;
     GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
@@ -43,13 +44,14 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
 
-        nonResettables.isBotTournament = true;
+        nonResettables.isBotTournament = false;
         //SEASON_NAME = "LCC_SEASON2";
-        waitTime = 0f;
+        waitTime = 1f;
         nonResettables.playAudio = false;
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
+        timeForPenalty = 5000; //This is in milliseconds.
 
         if (nonResettables.isBotTournament)
         {
@@ -186,8 +188,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new BotWithAClock(1);
-                botBlack = new OneMoveBot(-1);
+                botWhite = new AmazeingBot(1);
+                botBlack = new LazyBot(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);
@@ -812,7 +814,7 @@ public class botMaster : MonoBehaviour
 
             selectedMove = nextMove;
 
-            if (watchMS > 5000)
+            if (watchMS > timeForPenalty)
             {
                 currentBot.penalty = true;
 

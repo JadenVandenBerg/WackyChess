@@ -335,6 +335,15 @@ public static class Bots
     public const string BalanceBot = "BalanceBot";
     public const string SpeedrunnerBot = "SpeedRunnerBot";
     public const string LazyBot = "LazyBot";
+
+    public const string Bothoven = "Bothoven";
+    public const string YOLOBot = "YOLOBot";
+    public const string OnePointFiveMoveBot = "OnePointFiveMoveBot";
+    public const string NegativeOneMoveBot = "NegativeOneMoveBot";
+    public const string BlindAsABot = "BlindAsABot";
+    public const string BotWithAClock = "BotWithAClock";
+    public const string SicklyBotChild = "SicklyBotChild";
+    public const string GamblingBot = "GamblingBot";
 }
 
 public static class globalDefs

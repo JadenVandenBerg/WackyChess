@@ -32,7 +32,7 @@ public class botMaster : MonoBehaviour
     static string SEASON_NAME;
 
     BotGameStatus bgs = new BotGameStatus();
-    float waitTime;
+    float waitTime = 0.8f;
 
     IEnumerator Start()
     {
@@ -44,10 +44,10 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
 
         nonResettables.isBotTournament = true;
-        //SEASON_NAME = "LCC_SEASON2";
+        //SEASON_NAME = "SEASON6";
         waitTime = 0f;
-        nonResettables.playAudio = false;
-        nonResettables.logMatch = false;
+        nonResettables.playAudio = true;
+        //nonResettables.logMatch = true;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
 
@@ -57,72 +57,80 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
-                    "GamblingBot",
-                    "BlindAsABot",
-                    "TenXRandomBot",
-                    "BotWithAClock"
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.SavageBeastBot,
-                    Bots.RestrictorBot,
+                    Bots.BotniaAndHerzebotvina,
                     Bots.TwoMoveBot,
-                    Bots.HitmanBot,
-                    Bots.EqualityBot,
-                    Bots.BottusMaximus,
-                    Bots.ThinkingBotII,
-                    Bots.MigratingBot,
+                    Bots.ThinkingBot,
+                    Bots.Bloodbot,
+                    Bots.KamikazeBot,
+                    Bots.AssassinBot,
+                    Bots.G2EBot,
+                    Bots.Bot618,
                 };
 
                 List<string> div2 = new List<string>
                 {
-                    Bots.BalanceBot,
-                    Bots.PawnBot,
-                    Bots.SpeedrunnerBot,
-                    Bots.BOTential,
-                    Bots.OnePieceRandomBot,
-                    Bots.Lobotomy,
-                    Bots.RandomBot,
-                    Bots.IdiotBot,
+                    Bots.Botkrieg,
+                    Bots.EqualityBot,
+                    Bots.BottusMaximus,
+                    Bots.LaserBot,
+                    Bots.SavageBeastBot,
+                    Bots.ThinkingBotII,
+                    Bots.ChristopherColumbot,
+                    Bots.MigratingBot,
                 };
 
                 List<string> div3 = new List<string>
                 {
-                    Bots.AssassinBot,
-                    Bots.OneMoveBot,
-                    Bots.BotsUnited,
-                    Bots.BotDefender,
-                    Bots.KamikazeBot,
-                    Bots.Bloodbot,
-                    Bots.ChristopherColumbot,
-                    Bots.BOTential,
+                    Bots.BalanceBot,
+                    Bots.HitmanBot,
+                    Bots.CountingBot,
+                    Bots.PawnBot,
+                    Bots.BotWithAClock,
+                    Bots.OnePointFiveMoveBot,
+                    Bots.GamblingBot,
+                    Bots.SicklyBotChild,
                 };
 
                 List<string> div4 = new List<string>
                 {
-                    Bots.AdventurousKingBot,
-                    Bots.HitmanBot,
-                    Bots.SavageBeastBot,
-                    Bots.Lobotomy,
-                    Bots.BotRoss,
-                    Bots.RandomBot,
-                    Bots.ShieldBot,
-                    Bots.FiveXRandomBot,
+                    Bots.BlindAsABot,
+                    Bots.YOLOBot,
+                    Bots.Bothoven,
+                    Bots.NegativeOneMoveBot,
+                    Bots.BotsUnited,
+                    Bots.OneMoveBot,
+                    Bots.SpeedrunnerBot,
+                    Bots.Abilibot,
                 };
 
                 List<string> div5 = new List<string>
                 {
-                    Bots.BotsUnited,
-                    Bots.ShieldBot,
-                    Bots.Abilibot,
+                    Bots.BotWithAPlot,
+                    Bots.MarchingBot,
+                    Bots.MercenaryBot,
+                    Bots.OnePieceRandomBot,
                     Bots.AdventurousKingBot,
-                    Bots.BotRoss,
-                    Bots.FiveXRandomBot,
-                    Bots.Lobotomy,
+                    Bots.ShieldBot,
+                    Bots.RestrictorBot,
+                    Bots.BotDefender,
+                };
+
+                List<string> div6 = new List<string>
+                {
+                    Bots.LazyBot,
+                    Bots.Botfish,
                     Bots.IdiotBot,
+                    Bots.RandomBot,
+                    Bots.Lobotomy,
+                    Bots.BOTential,
+                    Bots.FiveXRandomBot,
+                    Bots.BotRoss,
                 };
 
 
@@ -150,6 +158,9 @@ public class botMaster : MonoBehaviour
 
                 //Div 5
                 //nonResettables.botTournament = new BotTournament(div5[0], div5[1], div5[2], div5[3], div5[4], div5[5], div5[6], div5[7], false);
+
+                //Div 6
+                //nonResettables.botTournament = new BotTournament(div6[0], div6[1], div6[2], div6[3], div6[4], div6[5], div6[6], div6[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -186,8 +197,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new BotWithAClock(1);
-                botBlack = new OneMoveBot(-1);
+                botWhite = new GamblingBot(1);
+                botBlack = new Bothoven(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);
@@ -1412,6 +1423,9 @@ public class botMaster : MonoBehaviour
         sb.AppendLine(bgs.white + " (White) vs (Black) " + bgs.black);
         sb.AppendLine(bgs.winner + " " + bgs.result);
         sb.AppendLine("The match took " + bgs.numTurns + " turns");
+
+        helper.addBotMessage("This match took " + bgs.numTurns + " turns");
+
         sb.AppendLine("Penalties: " + bgs.white + ": " + bgs.whitePenalties + ", " + bgs.black + ": " + bgs.blackPenalties);
 
         sb.AppendLine(bgs.white + " started with " + bgs.whitePoints + "pts");
@@ -1640,5 +1654,20 @@ public class botMaster : MonoBehaviour
         {
             audioSource.Pause();
         }
+    }
+
+    public void increaseMoveSpeed()
+    {
+        waitTime -= 0.5f;
+
+        if (waitTime < 0)
+        {
+            waitTime = 0f;
+        }
+    }
+
+    public void decreaseMoveSpeed()
+    {
+        waitTime += 0.5f;
     }
 }

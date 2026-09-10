@@ -151,6 +151,11 @@ public class AmazeingBot : BotTemplate
             bool cullMove2 = false;
             foreach (coords mazeWall in mazeWalls)
             {
+                if (HelperFunctions.checkState(piece, PieceState.Portal))
+                {
+                    cullMove = true;
+                    break;
+                }
                 if (coords.x == mazeWall.x && mazeWall.y == coords.y)
                 {
                     cullMove = true;
@@ -258,6 +263,11 @@ public class AmazeingBot : BotTemplate
                         cullMove2 = false;
                         foreach (coords mazeWall in mazeWalls)
                         {
+                            if (HelperFunctions.checkState(piece, PieceState.Portal))
+                            {
+                                cullMove = true;
+                                break;
+                            }
                             if (coords.x == mazeWall.x && mazeWall.y == coords.y)
                             {
                                 cullMove2 = true;
@@ -333,7 +343,7 @@ public class AmazeingBot : BotTemplate
 
         if (validMoves.Count == 0)
         {
-            
+
             System.Random rand2 = new System.Random();
             int rndIdx2 = rand2.Next(allMoves.Count);
             validMoves.Add(allMoves[rndIdx2]);

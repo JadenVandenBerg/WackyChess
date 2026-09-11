@@ -1,1 +1,12 @@
-Virus bot will
+Virus bot will infect the board. 
+Black is full infection, green is partial, purple is like supa mega.
+Virus bot will target enemy pieces that are on infected squares.
+Zombie pieces will leave an infection trail.
+Enemy pieces being captured or dying spreads infection.
+Infected squares each have a chance of spreading, growing and dying.
+Purple squares make whichever piece stands on it go "berserk"
+Berserk pieces will be moved more commonly and spread an infection trail for the next 4-5 turns after that it will were off.
+Explosions spread infections.
+Freezing pieces kill infections.
+Small chance for all of your pieces to drop some infection.
+King will spawn with infection around it.

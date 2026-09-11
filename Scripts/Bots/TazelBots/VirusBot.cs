@@ -6,6 +6,12 @@ using static BotHelperFunctions;
 public class VirusBot : BotTemplate
 {
     int turn = 0;
+    Piece berserkPiece;
+    List<coords> virusT1 = new List<coords>();
+    List<coords> virusT2 = new List<coords>();
+    List<coords> virusT3 = new List<coords>();
+    Color virusGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+    Color virusPurple = new Color(1.0f, 0f, 1.0f, 1.0f);
     //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
@@ -40,6 +46,87 @@ public class VirusBot : BotTemplate
         //public List<Piece> placePieces; //Pieces for abilities with multiple actions. Only hungry for now
         //public List<int[]> placeCoords; //Coords for abilities with multiple actions. Only hungry for now
         //public Piece secondPiece; //The second piece used in abilities. Used for castling/spawning
+
+
+       //
+
+
+        //Start the infection
+        if (turn == 1)
+        {
+            coords KingPos = filterPieces("King", this.pieces)[0].position;
+            virusT2.Add(KingPos);
+        }
+
+        //Spread the infection
+        foreach (coords virus in virusT1)
+        {
+            System.Random infectNum = new System.Random();
+            int value = infectNum.Next(100);
+            if (value <= 10)
+            {
+                //Grow
+                virusT2.Add(virus);
+                virusT1.Remove(virus);
+            }
+            //A little bit of overlap
+            if (value >= 8 && value <= 18)
+            {
+                //Replicate
+                virusT1.Add(new coords(virus.x, virus.y));
+
+            }
+            //Move
+            if (value >= 16 && value <= 32)
+            {
+                virusT1.Add(new coords(virus.x + infectNum.Next(-1, 1), virus.y + infectNum.Next(-1, 1)));
+                virusT1.Remove(virus);
+            }
+            //Die
+            if (value >= 89)
+            {
+                virusT1.Remove(virus);
+            }
+        }
+
+        foreach (coords virus in virusT2)
+        {
+            System.Random infectNum = new System.Random();
+            int value = infectNum.Next(100);
+            if (value <= 10)
+            {
+                //Grow
+                virusT3.Add(virus);
+                virusT2.Remove(virus);
+            }
+            //A little bit of overlap
+            if (value >= 8 && value <= 25)
+            {
+                //Replicate
+                virusT1.Add(new coords(virus.x, virus.y));
+            }
+            //Die
+            if (value >= 97)
+            {
+                virusT1.Remove(virus);
+            }
+        }
+
+        //Show infected squares
+        foreach (coords pos in virusT1)
+        {
+            HelperFunctions.highlightSquare(HelperFunctions.findSquare(pos.x, pos.y), virusGreen);
+        }
+        foreach (coords pos in virusT2)
+        {
+            HelperFunctions.highlightSquare(HelperFunctions.findSquare(pos.x, pos.y), Color.black);
+        }
+        foreach (coords pos in virusT3)
+        {
+            HelperFunctions.highlightSquare(HelperFunctions.findSquare(pos.x, pos.y), virusPurple);
+        }
+
+        
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
         //loop through all moves

@@ -48,7 +48,7 @@ public class VirusBot : BotTemplate
         //public Piece secondPiece; //The second piece used in abilities. Used for castling/spawning
 
 
-       //
+        //
 
 
         //Start the infection
@@ -58,8 +58,12 @@ public class VirusBot : BotTemplate
             virusT2.Add(KingPos);
         }
 
+        List<coords> DvirusT1 = virusT1;
+        List<coords> DvirusT2 = virusT2;
+        List<coords> DvirusT3 = virusT3;
+
         //Spread the infection
-        foreach (coords virus in virusT1)
+        foreach (coords virus in DvirusT1)
         {
             System.Random infectNum = new System.Random();
             int value = infectNum.Next(100);
@@ -89,7 +93,7 @@ public class VirusBot : BotTemplate
             }
         }
 
-        foreach (coords virus in virusT2)
+        foreach (coords virus in DvirusT2)
         {
             System.Random infectNum = new System.Random();
             int value = infectNum.Next(100);
@@ -112,6 +116,18 @@ public class VirusBot : BotTemplate
             }
         }
 
+        foreach (coords virus in DvirusT3)
+        {
+            System.Random infectNum = new System.Random();
+            int value = infectNum.Next(100);
+            //A little bit of overlap
+            if (value <= 25)
+            {
+                //Replicate
+                virusT1.Add(new coords(virus.x, virus.y));
+            }
+        }
+
         //Show infected squares
         foreach (coords pos in virusT1)
         {
@@ -126,7 +142,15 @@ public class VirusBot : BotTemplate
             HelperFunctions.highlightSquare(HelperFunctions.findSquare(pos.x, pos.y), virusPurple);
         }
 
-        
+        List<Piece> hitList = new List<Piece>();
+        //List<Piece> allOppPieces = 
+
+        foreach (coords infectTile in virusT1)
+        {
+
+        }
+
+
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
         //loop through all moves

@@ -120,7 +120,10 @@ public class AmazeingBot : BotTemplate
         //Show walls
         foreach (coords wallpos in mazeWalls)
         {
-            HelperFunctions.highlightSquare(HelperFunctions.findSquare(wallpos.x, wallpos.y), Color.yellow);
+            System.Random rndValue = new System.Random();
+            float rndColorModifier = rndValue.Next(40);
+            Color wallColor = new Color(0.6f, 0.6f, 0.0f + (rndColorModifier / 100), 1.0f);
+            HelperFunctions.highlightSquare(HelperFunctions.findSquare(wallpos.x, wallpos.y), wallColor);
         }
 
         //Loop through all moves

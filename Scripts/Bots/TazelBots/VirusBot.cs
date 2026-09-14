@@ -10,7 +10,6 @@ public class VirusBot : BotTemplate
     List<coords> virusT1 = new List<coords>();
     List<coords> virusT2 = new List<coords>();
     List<coords> virusT3 = new List<coords>();
-    Color virusGreen = new Color(0.0f, 1.0f, 0.0f, 1.0f);
     Color virusPurple = new Color(1.0f, 0f, 1.0f, 1.0f);
     //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
@@ -58,13 +57,11 @@ public class VirusBot : BotTemplate
             virusT2.Add(KingPos);
         }
 
-        List<coords> DvirusT1 = virusT1;
-        List<coords> DvirusT2 = virusT2;
-        List<coords> DvirusT3 = virusT3;
-
         //Spread the infection
-        foreach (coords virus in DvirusT1)
+        for (int i = virusT1.Count - 1; i >= 0; i--)
         {
+            coords virus = virusT1[i];
+
             System.Random infectNum = new System.Random();
             int value = infectNum.Next(100);
             if (value <= 10)
@@ -81,7 +78,7 @@ public class VirusBot : BotTemplate
 
             }
             //Move
-            if (value >= 16 && value <= 32)
+            if (value >= 16 && value <= 46)
             {
                 virusT1.Add(new coords(virus.x + infectNum.Next(-1, 1), virus.y + infectNum.Next(-1, 1)));
                 virusT1.Remove(virus);
@@ -93,18 +90,19 @@ public class VirusBot : BotTemplate
             }
         }
 
-        foreach (coords virus in DvirusT2)
+
+        for (int i = virusT2.Count - 1; i >= 0; i--)
         {
+            coords virus = virusT2[i];
             System.Random infectNum = new System.Random();
             int value = infectNum.Next(100);
-            if (value <= 10)
+            if (value <= 2)
             {
                 //Grow
                 virusT3.Add(virus);
                 virusT2.Remove(virus);
             }
-            //A little bit of overlap
-            if (value >= 8 && value <= 25)
+            if (value >= 4 && value <= 25)
             {
                 //Replicate
                 virusT1.Add(new coords(virus.x, virus.y));
@@ -114,9 +112,10 @@ public class VirusBot : BotTemplate
             {
                 virusT1.Remove(virus);
             }
+
         }
 
-        foreach (coords virus in DvirusT3)
+        foreach (coords virus in virusT3)
         {
             System.Random infectNum = new System.Random();
             int value = infectNum.Next(100);
@@ -131,6 +130,9 @@ public class VirusBot : BotTemplate
         //Show infected squares
         foreach (coords pos in virusT1)
         {
+            System.Random rndValue = new System.Random();
+            float rndColorModifier = rndValue.Next(40);
+            Color virusGreen = new Color(0.0f, 1.0f - (rndColorModifier / 100), 0.0f, 1.0f);
             HelperFunctions.highlightSquare(HelperFunctions.findSquare(pos.x, pos.y), virusGreen);
         }
         foreach (coords pos in virusT2)

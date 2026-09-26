@@ -145,17 +145,31 @@ public class VirusBot : BotTemplate
         }
 
         List<Piece> hitList = new List<Piece>();
-        //List<Piece> allOppPieces = 
+        List<Piece> allOppPieces = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, color * -1);
 
         foreach (coords infectTile in virusT1)
         {
-
+            foreach (Piece oppPiece in allOppPieces)
+            {
+                if (oppPiece.position.x == infectTile.x && oppPiece.position.y == infectTile.y)
+                {
+                    hitList.Add(oppPiece);
+                }
+            }
         }
-
 
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
 
         //loop through all moves
+
+        if (hitList.count > 0)
+        {
+            //Target pieces that are on infected squares
+        }
+        else
+        {
+            //Run normally
+        }
 
         foreach (NextMove nextMove in allMoves)
         {
@@ -284,6 +298,34 @@ public class VirusBot : BotTemplate
         int rndIdx = rand.Next(validMoves.Count);
 
         NextMove move = validMoves[rndIdx];
+
+        if (move.moveType == "move")
+        {
+            foreach (Piece pieceOpp in allOppPieces)
+            {
+                if (move.move.coords.x == pieceOpp.position.x && move.move.coords.y == pieceOpp.position.y)
+                {
+                    virusT1.Add(move.move.coords);
+                }
+            }
+        }
+        else
+        {
+            if (pa.ability == PieceAbilities.Spawn)
+            {
+                virusT1.Add(pa.coords);
+            }
+            else
+            {
+                foreach (Piece pieceOpp in allOppPieces)
+                {
+                    if (move.ability.coords.x == pieceOpp.position.x && move.ability.coords.y == pieceOpp.position.y)
+                    {
+                        virusT1.Add(move.ability.coords);
+                    }
+                }
+            }
+        }
 
         //Get the original piece, you can just copy paste this part (ill probably add this to botMaster.cs later)
         if (move.moveType == "move")

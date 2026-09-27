@@ -21,7 +21,7 @@ public class VirusBot : BotTemplate
         //Initialize variables, do not change anything here but name
         color = botColor;
         pieces = new List<Piece>();
-        name = "Bot Virus";
+        name = "Virus Bot";
 
         //This function populates the pieces variable
         choosePieces();
@@ -150,6 +150,18 @@ public class VirusBot : BotTemplate
                 virusT1.Add(new coords(virus.x - 1, virus.y + 1));
                 virusT3.Remove(virus);
             }
+        }
+
+        int totalInfectedSquares = virusT1.Count + virusT2.Count + virusT3.Count;
+        if (totalInfectedSquares > 15000)
+        {
+            gameData.helper.addBotMessage("Virus dominated the board and starved");
+            virusT1.Clear();
+            virusT2.Clear();
+        }
+        else
+        {
+            gameData.helper.addBotMessage("Virus Bot infected squares: " + totalInfectedSquares.ToString());
         }
 
         //Show infected squares
@@ -304,8 +316,6 @@ public class VirusBot : BotTemplate
 
                         //debug_printBoardState(cloneState_);
 
-                        //Compare the difference of points. If the diff is a new best (in the sense of black made a good move), mark it as best
-                        //In this algorithm, this is considered to be the best move the opponent can make
                         float diff = botPoints - oppPoints;
                         if (diff < bestOppMoveDiff)
                         {
@@ -339,6 +349,7 @@ public class VirusBot : BotTemplate
                 this.currentBoardState = originalBoardState;
             }
 
+            //Could not capture a piece on an infected square
             if (validMoves.Count == 0)
             {
                 double closestDistance = 10000;
@@ -367,33 +378,36 @@ public class VirusBot : BotTemplate
                         coords = pa.coords;
                     }
 
-                    Piece pieceToKill = null;
-                    float highestScore = -1000;
-                    foreach (Piece possiblePTK in hitList)
+                    if (piece.baseType != "Knight" || piece.baseType != "Bishop")
                     {
-                        if (possiblePTK.points > highestScore)
+                        Piece pieceToKill = null;
+                        float highestScore = -1000;
+                        foreach (Piece possiblePTK in hitList)
                         {
-                            highestScore = possiblePTK.points;
-                            pieceToKill = possiblePTK;
+                            if (possiblePTK.points > highestScore)
+                            {
+                                highestScore = possiblePTK.points;
+                                pieceToKill = possiblePTK;
+                            }
                         }
-                    }
 
-                    coords pTKCoords = pieceToKill.position;
-                    double pieceDistance = Math.Sqrt(Math.Pow(coords.y - pTKCoords.y, 2) + Math.Pow(coords.x - pTKCoords.x, 2));
-                    if (pieceDistance < closestDistance)
-                    {
-                        secondClosestDistance = closestDistance;
-                        closestDistance = pieceDistance;
-                        if (savedMove is not null)
+                        coords pTKCoords = pieceToKill.position;
+                        double pieceDistance = Math.Sqrt(Math.Pow(coords.y - pTKCoords.y, 2) + Math.Pow(coords.x - pTKCoords.x, 2));
+                        if (pieceDistance < closestDistance)
                         {
-                            secondSavedMove = savedMove;
+                            secondClosestDistance = closestDistance;
+                            closestDistance = pieceDistance;
+                            if (savedMove is not null)
+                            {
+                                secondSavedMove = savedMove;
+                            }
+                            savedMove = nextmove;
                         }
-                        savedMove = nextmove;
-                    }
-                    else if (pieceDistance < secondClosestDistance)
-                    {
-                        secondClosestDistance = pieceDistance;
-                        secondSavedMove = nextmove;
+                        else if (pieceDistance < secondClosestDistance)
+                        {
+                            secondClosestDistance = pieceDistance;
+                            secondSavedMove = nextmove;
+                        }
                     }
                 }
 

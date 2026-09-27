@@ -2,32 +2,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using static BotHelperFunctions;
+using System.Text.RegularExpressions;
 
-public class Botanist : BotTemplate
+public class SafetyBot : BotTemplate
 {
     int turn = 0;
     //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
-    public Botanist(int botColor)
+    public SafetyBot(int botColor)
     {
         //Initialize variables, do not change anything here but name
         color = botColor;
         pieces = new List<Piece>();
-        name = "Botanist";
-        //This bot is all about promoting
+        name = "Safety Bot";
 
         //This function populates the pieces variable
         choosePieces();
     }
 
     override
+
     public NextMove nextMove()
     {
         turn += 1;
         //Initialize for later
         List<NextMove> validMoves = new List<NextMove>();
+        List<NextMove> protectionMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+        List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
         foreach (NextMove nextMove in allMoves)
         {
@@ -50,23 +53,7 @@ public class Botanist : BotTemplate
                 coords = pa.coords;
             }
 
-            BoardState originalBoardState = this.currentBoardState;
-
-            //Simulate the piece move
-            BoardState cloneState;
-            if (moveType == "move")
-            {
-                cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-            }
-            else
-            {
-                cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
-            }
-            this.currentBoardState = cloneState;
-
-            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
-
-            foreach (NextMove nextMoveOpp in allMovesOpp)
+            foreach (NextMove nextMoveOpp in allMoves)
             {
                 Piece pieceOpp;
                 coords coordsOpp;
@@ -87,13 +74,22 @@ public class Botanist : BotTemplate
                     coordsOpp = pa.coords;
                 }
 
-                //Check if the opposing peice is going to capture me (without simulating)
-                if (coordsOpp.x == coords.x && coordsOpp.y == coords.y)
+                if (piece.position.x == coordsOpp.x && piece.position.y == coordsOpp.y)
                 {
-
+                    validMoves.Add(nextMove);
+                    gameData.helper.addBotMessage("Protection Move Executed");
                 }
-            }
 
+            }
+        }
+
+
+        if (validMoves.Count == 0)
+        {
+            System.Random rand0 = new System.Random();
+            int rndIdx0 = rand0.Next(allMoves.Count);
+            validMoves.Add(allMoves[rndIdx0]);
+            gameData.helper.addBotMessage("Random Move Executed");
         }
 
         //Pick a random move from our list of tied moves

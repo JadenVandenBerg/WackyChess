@@ -51,7 +51,7 @@ public class botMaster : MonoBehaviour
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
-        timeForPenalty = 10000; //This is in milliseconds.
+        timeForPenalty = 5000; //This is in milliseconds.
 
         if (nonResettables.isBotTournament)
         {
@@ -188,7 +188,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new LazyBot(1);
+                botWhite = new AmazeingBot(1);
                 botBlack = new VirusBot(-1);
                 // For WCSingle
                 /*

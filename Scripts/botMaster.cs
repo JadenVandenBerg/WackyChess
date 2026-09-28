@@ -189,7 +189,7 @@ public class botMaster : MonoBehaviour
             {
                 //Replace these with your bots if it is a tournament
                 botWhite = new AmazeingBot(1);
-                botBlack = new VirusBot(-1);
+                botBlack = new AggroBot(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);

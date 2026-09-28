@@ -454,7 +454,7 @@ public class SpeedRunnerBot : BotTemplate
                 //The main peice can use materialize, unfreeze and spawn
                 if (piece.name == mainPiece.name)
                 {
-                    if (pa.ability == PieceAbilities.Spawn | pa.ability == PieceAbilities.Dematerialize | HelperFunctions.checkState(piece, PieceState.Frozen))
+                    if (pa.ability == PieceAbilities.Spawn || pa.ability == PieceAbilities.Dematerialize || HelperFunctions.checkState(piece, PieceState.Frozen))
                     {
                         validMoves.Add(nextMove);
                     }

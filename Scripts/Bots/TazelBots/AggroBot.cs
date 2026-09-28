@@ -6,13 +6,9 @@ using System.Text.RegularExpressions;
 using System;
 
 //To do: 
-// Push pawns in endgame
-// Move good pieces if they are in danger
-// Use spawn abilities in the development stage
-// Make picture
-// TEST (against better bots that stupid maze bot)
-// Better at checking in endgame (Maybe lattermate)
-// Maybe make it ditch jailers pieces when capturing ungaurded peices
+// Fix moving good pieces into danger, I think this is because of edge cases
+// Fix random edgecases
+// Maybe lattermate functionality
 // Make it accept trades if it has higher points (capture gaurded peices 2)
 
 public class AggroBot : BotTemplate
@@ -47,6 +43,8 @@ public class AggroBot : BotTemplate
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
         List<NextMove> tierZeroMove = new List<NextMove>();
         List<float> pieceScoresT0 = new List<float>();
+        List<NextMove> tierProtMove = new List<NextMove>();
+        List<float> pieceScoresTProt = new List<float>();
 
         int bestPiece = 0;
         int secondBestPiece = 0;
@@ -72,7 +70,7 @@ public class AggroBot : BotTemplate
                         currentPieceValue += 15;
                         hasSoloPiece = true;
                     }
-                    else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize))
+                    else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && piece.baseType != "Knight")
                     {
                         currentPieceValue += 8;
                         hasSoloPiece = true;
@@ -92,7 +90,7 @@ public class AggroBot : BotTemplate
                         hasSoloPiece = true;
 
                     }
-                    else if (piece.collateralType == 1 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false)
+                    else if (piece.collateralType == 1 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false && piece.baseType != "Knight")
                     {
                         currentPieceValue += 9;
                         hasSoloPiece = true;
@@ -126,8 +124,9 @@ public class AggroBot : BotTemplate
                     {
                         currentPieceValue -= 6;
                     }
-
-                    if (HelperFunctions.checkState(oppKing, PieceState.Frozen) || HelperFunctions.checkState(oppKing, PieceState.Depressed) || HelperFunctions.checkState(oppKing, PieceState.Delayed))
+                    //If the opposing king can't really move and the turn is past 15
+                    //Maybe update the turn thing to points on board
+                    if ((HelperFunctions.checkState(oppKing, PieceState.Frozen) || HelperFunctions.checkState(oppKing, PieceState.Depressed) || HelperFunctions.checkState(oppKing, PieceState.Delayed)) && turn > 14)
                     {
                         hasSoloPiece = true;
                     }
@@ -141,11 +140,6 @@ public class AggroBot : BotTemplate
                     }
                 }
             }
-        }
-
-        if (hasSoloPiece == true)
-        {
-            gameData.helper.addBotMessage("Swaggy Piece Detected");
         }
 
         bool stuckRook = false;
@@ -183,6 +177,10 @@ public class AggroBot : BotTemplate
                         {
                             validMoves.Add(nextMove);
                         }
+                        else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && HelperFunctions.checkState(piece, PieceState.Dematerialized) == true && oppKingPos.x == coords.x && oppKingPos.y == coords.y)
+                        {
+                            validMoves.Add(nextMove);
+                        }
                         else if (HelperFunctions.checkState(piece, PieceState.Frozen))
                         {
                             validMoves.Add(nextMove);
@@ -211,15 +209,30 @@ public class AggroBot : BotTemplate
                             }
                         }
 
-                        if (repetition == false)
+                        if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
                         {
-                            double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2));
-                            double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));
-                            if (pieceDistanceToKing < closestDistanceToKing)
+                            if (coords.x == oppKingPos.x && piece.position.x != oppKingPos.x)
                             {
-                                validMoves.Clear();
                                 validMoves.Add(nextMove);
-                                closestDistanceToKing = pieceDistanceToKing;
+                            }
+                            else if (coords.y == oppKingPos.y && piece.position.y != oppKingPos.y)
+                            {
+                                validMoves.Add(nextMove);
+                            }
+                        }
+                        else
+                        {
+                            if (repetition == false)
+                            {
+                                double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2));
+                                double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));
+
+                                if (pieceDistanceToKing < closestDistanceToKing)
+                                {
+                                    validMoves.Clear();
+                                    validMoves.Add(nextMove);
+                                    closestDistanceToKing = pieceDistanceToKing;
+                                }
                             }
                         }
                     }
@@ -360,15 +373,17 @@ public class AggroBot : BotTemplate
             }
         }
 
+        //Protect pieces in danger (only if they are good enough)
         if (validMoves.Count == 0)
         {
-            //Snag them ungaurded pieces
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
+            List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, this.color * -1);
+
             foreach (NextMove nextMove in allMoves)
             {
                 Piece piece;
                 coords coords;
                 string moveType = nextMove.moveType;
-                bool cull = false;
 
                 if (moveType == "move")
                 {
@@ -383,6 +398,115 @@ public class AggroBot : BotTemplate
 
                     piece = pa.piece;
                     coords = pa.coords;
+                }
+
+                bool currentSquareSafe = true;
+                bool moveToSquareSafe = true;
+                float deadPiecepts = 0;
+                if (piece.points > 3)
+                {
+                    foreach (NextMove oppMove in allMovesOpp)
+                    {
+                        Piece pieceOpp;
+                        coords coordsOpp;
+                        string moveTypeOpp = oppMove.moveType;
+
+                        if (moveTypeOpp == "move")
+                        {
+                            Move mv = oppMove.move;
+
+                            pieceOpp = mv.p;
+                            coordsOpp = mv.coords;
+                        }
+                        else // moveType == "ability" guarenteed
+                        {
+                            PieceAbility pa = oppMove.ability;
+
+                            pieceOpp = pa.piece;
+                            coordsOpp = pa.coords;
+                        }
+
+                        if (coordsOpp.x == piece.position.x && coordsOpp.y == piece.position.y)
+                        {
+                            currentSquareSafe = false;
+                        }
+                        else if (coordsOpp.x == coords.x && coordsOpp.y == coords.y)
+                        {
+                            moveToSquareSafe = false;
+                        }
+                        foreach (Piece oppPiece in allPiecesOpp)
+                        {
+                            if (oppPiece.position.x == coords.x && oppPiece.position.y == coords.y)
+                            {
+                                deadPiecepts += oppPiece.points;
+                            }
+                        }
+                    }
+                }
+                if (moveToSquareSafe == true && currentSquareSafe == false)
+                {
+                    tierProtMove.Add(nextMove);
+                    float pointVal = piece.points + deadPiecepts;
+                    pieceScoresTProt.Add(pointVal);
+                }
+            }
+            //Be wary, this does not account for protected pieces
+            //Add one simulation aswell.
+            float highest = -1000;
+            for (int i = tierProtMove.Count - 1; i >= 0; i--)
+            {
+                NextMove bestMove = tierProtMove[i];
+                float moveScore = pieceScoresTProt[i];
+                if (moveScore > highest)
+                {
+                    highest = moveScore;
+                    validMoves.Clear();
+                    validMoves.Add(bestMove);
+                }
+            }
+        }
+
+        if (validMoves.Count == 0)
+        {
+            //Snag them ungaurded pieces
+            //To Do:
+            //Check if my piece is gaurded. If it is, ignore king attacks
+            foreach (NextMove nextMove in allMoves)
+            {
+                Piece piece;
+                coords coords;
+                string moveType = nextMove.moveType;
+                bool cull = false;
+                //bool jailing = false;
+                //float jailPiecePts = 0;
+                //Maybe add jailing support later
+
+                if (moveType == "move")
+                {
+                    Move mv = nextMove.move;
+
+                    piece = mv.p;
+                    coords = mv.coords;
+                }
+                else // moveType == "ability" guarenteed
+                {
+                    PieceAbility pa = nextMove.ability;
+
+                    piece = pa.piece;
+                    coords = pa.coords;
+                }
+
+                //If it currently has a piece in jail, don't move
+                List<Piece> allPiecesOppBeforeSim = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, this.color * -1);
+                foreach (Piece oppPiece in allPiecesOppBeforeSim)
+                {
+                    coords oppPos = oppPiece.position;
+                    if (oppPos.x == coords.x && oppPos.y == coords.y)
+                    {
+                        cull = true;
+                        //jailing = true;
+                        //jailPiecePts = oppPiece.points;
+                    }
                 }
 
                 BoardState originalBoardState = this.currentBoardState;
@@ -400,6 +524,7 @@ public class AggroBot : BotTemplate
 
                 List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
                 List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(cloneState, this.color * -1);
+                List<NextMove> allMoves2nd = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color);
 
                 foreach (NextMove oppMove in allMovesOpp)
                 {
@@ -437,6 +562,47 @@ public class AggroBot : BotTemplate
                             tierZeroMove.Add(nextMove);
                             pieceScoresT0.Add(oppPiece.points);
 
+                        }
+                    }
+
+                    //If I can kill the king here, it is check.
+                    foreach (NextMove nextMove2nd in allMoves2nd)
+                    {
+                        coords coords2nd;
+                        string moveType2nd = nextMove2nd.moveType;
+
+                        if (moveType == "move")
+                        {
+                            Move mv = nextMove2nd.move;
+                            if (nextMove2nd.move is not null)
+                            {
+                                coords2nd = mv.coords; //This line is null for some reason
+                                //gameData.helper.addBotMessage("Coords is not null");
+                            }
+                            else
+                            {
+                                coords2nd = new coords(0, 0);
+                            }
+                        }
+                        else // moveType == "ability" guarenteed
+                        {
+                            PieceAbility pa = nextMove2nd.ability;
+                            if (nextMove2nd.ability is not null)
+                            {
+                                coords2nd = pa.coords;
+                            }
+                            else
+                            {
+                                coords2nd = new coords(0, 0);
+                            }
+                        }
+
+                        if (coords2nd.x == oppKingPos.x && coords2nd.y == oppKingPos.y)
+                        {
+                            tierZeroMove.Add(nextMove);
+                            pieceScoresT0.Add(15);
+                            //Check has a value of 15 points because
+                            //I can generally do any other move right after
                         }
                     }
                 }
@@ -644,6 +810,14 @@ public class AggroBot : BotTemplate
                         if (nextMove == lastLastMove)
                         {
                             cull = true;
+                        }
+                    }
+
+                    if (moveType != "move")
+                    {
+                        if (HelperFunctions.checkAbility(piece, PieceAbilities.Spawn))
+                        {
+                            validMoves.Add(nextMove);
                         }
                     }
 

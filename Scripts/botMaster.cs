@@ -188,7 +188,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new AmazeingBot(1);
+                botWhite = new OneMoveBot(1);
                 botBlack = new AggroBot(-1);
                 // For WCSingle
                 /*

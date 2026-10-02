@@ -437,7 +437,50 @@ public class AggroBot : BotTemplate
                         {
                             if (oppPiece.position.x == coords.x && oppPiece.position.y == coords.y)
                             {
-                                deadPiecepts += oppPiece.points;
+                                BoardState cloneState;
+                                if (moveType == "move")
+                                {
+                                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                                }
+                                else
+                                {
+                                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+                                }
+
+                                List<NextMove> allMovesOppCloneState = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+
+                                bool safe = true;
+                                foreach (NextMove cloneOppMove in allMovesOppCloneState)
+                                {
+                                    Piece pieceOppClone;
+                                    coords coordsOppClone;
+                                    string moveTypeOppClone = cloneOppMove.moveType;
+
+                                    if (moveTypeOppClone == "move")
+                                    {
+                                        Move mv = cloneOppMove.move;
+
+                                        pieceOppClone = mv.p;
+                                        coordsOppClone = mv.coords;
+                                    }
+                                    else // moveType == "ability" guarenteed
+                                    {
+                                        PieceAbility pa = cloneOppMove.ability;
+
+                                        pieceOppClone = pa.piece;
+                                        coordsOppClone = pa.coords;
+                                    }
+
+                                    if (coordsOppClone.x == coords.x && coordsOppClone.y == coords.y)
+                                    {
+                                        safe = false;
+                                    }
+
+                                }
+                                if (safe == true)
+                                {
+                                    deadPiecepts += oppPiece.points;
+                                }
                             }
                         }
                     }
@@ -449,8 +492,7 @@ public class AggroBot : BotTemplate
                     pieceScoresTProt.Add(pointVal);
                 }
             }
-            //Be wary, this does not account for protected pieces
-            //Add one simulation aswell.
+
             float highest = -1000;
             for (int i = tierProtMove.Count - 1; i >= 0; i--)
             {
@@ -500,7 +542,7 @@ public class AggroBot : BotTemplate
                 foreach (Piece oppPiece in allPiecesOppBeforeSim)
                 {
                     coords oppPos = oppPiece.position;
-                    if (oppPos.x == coords.x && oppPos.y == coords.y)
+                    if (oppPos.x == coords.x && oppPos.y == coords.y && HelperFunctions.checkState(piece, PieceState.Dematerialized) == false)
                     {
                         cull = true;
                         //jailing = true;
@@ -548,7 +590,56 @@ public class AggroBot : BotTemplate
 
                     if (coords.x == badCoords.x && coords.y == badCoords.y)
                     {
-                        cull = true;
+                        if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false)
+                        {
+                            BoardState cloneStateOppKing;
+                            if (moveTypeOpp == "move")
+                            {
+                                cloneStateOppKing = simulatePieceMove(this, this.currentBoardState, badPiece, badCoords);
+                            }
+                            else
+                            {
+                                cloneStateOppKing = simulatePieceAbility(this, this.currentBoardState, oppMove.ability);
+                            }
+
+                            bool pieceProtected = false;
+                            List<NextMove> allMoves3rd = getAllPossibleBotMovesAndAbilities(this, cloneStateOppKing, this.color);
+                            foreach (NextMove simMove in allMoves3rd)
+                            {
+                                Piece simPiece;
+                                coords simCoords;
+                                string moveTypeSim = simMove.moveType;
+
+                                if (moveTypeSim == "move")
+                                {
+                                    Move mv = simMove.move;
+
+                                    simPiece = mv.p;
+                                    simCoords = mv.coords;
+                                }
+                                else // moveType == "ability" guarenteed
+                                {
+                                    PieceAbility pa = simMove.ability;
+
+                                    simPiece = pa.piece;
+                                    simCoords = pa.coords;
+                                }
+
+                                if (simCoords.x == oppKingPos.x && simCoords.y == oppKingPos.y)
+                                {
+                                    pieceProtected = true;
+                                }
+                            }
+
+                            if (pieceProtected == false)
+                            {
+                                cull = true;
+                            }
+                        }
+                        else if (badPiece.baseType != "King")
+                        {
+                            cull = true;
+                        }
                     }
                 }
 

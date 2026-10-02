@@ -6,12 +6,16 @@ using System.Text.RegularExpressions;
 using System;
 
 //To do: 
-// Fix moving good pieces into danger, I think this is because of edge cases
-// Fix random edgecases
-// Maybe lattermate functionality
-// Make it accept trades if it has higher points (capture gaurded peices 2)
+// Fix up the speedrunner code at the start, make it so it won't put the pieces in danger unless its a landmine near the king.
+// Maybe lattermate functionality // yesa
+// Sometimes blunders pretty hard
+// Hungry pieces barf and mess everything up
+// Speedrunenr ghost rook no work
+// Rook bug STILL HAPPENS therefore lastmove thing does not work.   
 
-public class AggroBot : BotTemplate
+//Consider not pushing I think I made it worse fixing edgecases
+
+public class ExperiBot : BotTemplate
 {
     bool hasSoloPiece;
     Piece mainPiece;
@@ -20,10 +24,9 @@ public class AggroBot : BotTemplate
     int turn = 0;
     NextMove lastMove = null;
     NextMove lastLastMove = null;
-    //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
-    public AggroBot(int botColor)
+    public ExperiBot(int botColor)
     {
         //Initialize variables, do not change anything here but name
         color = botColor;
@@ -67,10 +70,10 @@ public class AggroBot : BotTemplate
                     }
                     else if (HelperFunctions.checkState(piece, PieceState.Combustable))
                     {
-                        currentPieceValue += 15;
+                        currentPieceValue += 5;
                         hasSoloPiece = true;
                     }
-                    else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && piece.baseType != "Knight")
+                    else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && piece.baseType != "Knight" && piece.baseType != "Pawn" && piece.baseType != "Bishop")
                     {
                         currentPieceValue += 8;
                         hasSoloPiece = true;
@@ -98,6 +101,7 @@ public class AggroBot : BotTemplate
                     else if (piece.collateralType == 2 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false)
                     {
                         currentPieceValue += 7;
+                        hasSoloPiece = true;
                     }
                     if (piece.baseType == "Misc")
                     {
@@ -109,11 +113,11 @@ public class AggroBot : BotTemplate
                     }
                     else if (piece.baseType == "Bishop")
                     {
-                        currentPieceValue += 3;
+                        currentPieceValue += 2;
                     }
                     else if (piece.baseType == "Rook")
                     {
-                        currentPieceValue += 2;
+                        currentPieceValue += 3;
                     }
                     else if (piece.baseType == "Knight")
                     {
@@ -126,10 +130,10 @@ public class AggroBot : BotTemplate
                     }
                     //If the opposing king can't really move and the turn is past 15
                     //Maybe update the turn thing to points on board
-                    if ((HelperFunctions.checkState(oppKing, PieceState.Frozen) || HelperFunctions.checkState(oppKing, PieceState.Depressed) || HelperFunctions.checkState(oppKing, PieceState.Delayed)) && turn > 14)
-                    {
-                        hasSoloPiece = true;
-                    }
+                    //if ((HelperFunctions.checkState(oppKing, PieceState.Frozen) || HelperFunctions.checkState(oppKing, PieceState.Depressed) || HelperFunctions.checkState(oppKing, PieceState.Delayed)) && turn > 14)
+                    //{
+                    //    hasSoloPiece = true;
+                    //}
 
                     if (currentPieceValue > bestPiece)
                     {
@@ -142,9 +146,36 @@ public class AggroBot : BotTemplate
             }
         }
 
+        foreach (NextMove nextMove in allMoves)
+        {
+            Piece piece;
+            coords coords;
+            string moveType = nextMove.moveType;
+
+            if (moveType == "move")
+            {
+                Move mv = nextMove.move;
+                piece = mv.p;
+                coords = mv.coords;
+            }
+            else
+            {
+                PieceAbility pa = nextMove.ability;
+
+                piece = pa.piece;
+                coords = pa.coords;
+            }
+
+            if (moveType != "move" && HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && HelperFunctions.checkState(piece, PieceState.Dematerialized) && (oppKingPos.x == coords.x) && (oppKingPos.y == coords.y))
+            {
+                gameData.helper.addBotMessage("Kill");
+                validMoves.Add(nextMove);
+            }
+        }
+
         bool stuckRook = false;
         coords piece2move = new coords(0, 0);
-        if (hasSoloPiece == true)
+        if (hasSoloPiece == true && validMoves.Count == 0)
         {
             double closestDistanceToKing = 1000;
 
@@ -177,10 +208,6 @@ public class AggroBot : BotTemplate
                         {
                             validMoves.Add(nextMove);
                         }
-                        else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && HelperFunctions.checkState(piece, PieceState.Dematerialized) == true && oppKingPos.x == coords.x && oppKingPos.y == coords.y)
-                        {
-                            validMoves.Add(nextMove);
-                        }
                         else if (HelperFunctions.checkState(piece, PieceState.Frozen))
                         {
                             validMoves.Add(nextMove);
@@ -209,15 +236,19 @@ public class AggroBot : BotTemplate
                             }
                         }
 
-                        if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
+                        if (HelperFunctions.checkState(piece, PieceState.Dematerialized)) //Does Dematerialized check work?
                         {
-                            if (coords.x == oppKingPos.x && piece.position.x != oppKingPos.x)
+                            if (piece.baseType == "Rook" || piece.baseType == "Queen")
                             {
-                                validMoves.Add(nextMove);
-                            }
-                            else if (coords.y == oppKingPos.y && piece.position.y != oppKingPos.y)
-                            {
-                                validMoves.Add(nextMove);
+                                gameData.helper.addBotMessage("Ghost code running");
+                                if (coords.x == oppKingPos.x && piece.position.x != oppKingPos.x)
+                                {
+                                    validMoves.Add(nextMove);
+                                }
+                                if (coords.y == oppKingPos.y && piece.position.y != oppKingPos.y)
+                                {
+                                    validMoves.Add(nextMove);
+                                }
                             }
                         }
                         else
@@ -438,7 +469,50 @@ public class AggroBot : BotTemplate
                         {
                             if (oppPiece.position.x == coords.x && oppPiece.position.y == coords.y)
                             {
-                                deadPiecepts += oppPiece.points;
+                                BoardState cloneState;
+                                if (moveType == "move")
+                                {
+                                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                                }
+                                else
+                                {
+                                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+                                }
+
+                                List<NextMove> allMovesOppCloneState = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+
+                                bool safe = true;
+                                foreach (NextMove cloneOppMove in allMovesOppCloneState)
+                                {
+                                    Piece pieceOppClone;
+                                    coords coordsOppClone;
+                                    string moveTypeOppClone = cloneOppMove.moveType;
+
+                                    if (moveTypeOppClone == "move")
+                                    {
+                                        Move mv = cloneOppMove.move;
+
+                                        pieceOppClone = mv.p;
+                                        coordsOppClone = mv.coords;
+                                    }
+                                    else // moveType == "ability" guarenteed
+                                    {
+                                        PieceAbility pa = cloneOppMove.ability;
+
+                                        pieceOppClone = pa.piece;
+                                        coordsOppClone = pa.coords;
+                                    }
+
+                                    if (coordsOppClone.x == coords.x && coordsOppClone.y == coords.y)
+                                    {
+                                        safe = false;
+                                    }
+
+                                }
+                                if (safe == true)
+                                {
+                                    deadPiecepts += oppPiece.points;
+                                }
                             }
                         }
                     }
@@ -450,8 +524,7 @@ public class AggroBot : BotTemplate
                     pieceScoresTProt.Add(pointVal);
                 }
             }
-            //Be wary, this does not account for protected pieces
-            //Add one simulation aswell.
+
             float highest = -1000;
             for (int i = tierProtMove.Count - 1; i >= 0; i--)
             {
@@ -501,7 +574,7 @@ public class AggroBot : BotTemplate
                 foreach (Piece oppPiece in allPiecesOppBeforeSim)
                 {
                     coords oppPos = oppPiece.position;
-                    if (oppPos.x == coords.x && oppPos.y == coords.y)
+                    if (oppPos.x == coords.x && oppPos.y == coords.y && HelperFunctions.checkState(piece, PieceState.Dematerialized) == false)
                     {
                         cull = true;
                         //jailing = true;
@@ -549,7 +622,56 @@ public class AggroBot : BotTemplate
 
                     if (coords.x == badCoords.x && coords.y == badCoords.y)
                     {
-                        cull = true;
+                        if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false)
+                        {
+                            BoardState cloneStateOppKing;
+                            if (moveTypeOpp == "move")
+                            {
+                                cloneStateOppKing = simulatePieceMove(this, this.currentBoardState, badPiece, badCoords);
+                            }
+                            else
+                            {
+                                cloneStateOppKing = simulatePieceAbility(this, this.currentBoardState, oppMove.ability);
+                            }
+
+                            bool pieceProtected = false;
+                            List<NextMove> allMoves3rd = getAllPossibleBotMovesAndAbilities(this, cloneStateOppKing, this.color);
+                            foreach (NextMove simMove in allMoves3rd)
+                            {
+                                Piece simPiece;
+                                coords simCoords;
+                                string moveTypeSim = simMove.moveType;
+
+                                if (moveTypeSim == "move")
+                                {
+                                    Move mv = simMove.move;
+
+                                    simPiece = mv.p;
+                                    simCoords = mv.coords;
+                                }
+                                else // moveType == "ability" guarenteed
+                                {
+                                    PieceAbility pa = simMove.ability;
+
+                                    simPiece = pa.piece;
+                                    simCoords = pa.coords;
+                                }
+
+                                if (simCoords.x == oppKingPos.x && simCoords.y == oppKingPos.y)
+                                {
+                                    pieceProtected = true;
+                                }
+                            }
+
+                            if (pieceProtected == false)
+                            {
+                                cull = true;
+                            }
+                        }
+                        else if (badPiece.baseType != "King")
+                        {
+                            cull = true;
+                        }
                     }
                 }
 
@@ -612,6 +734,141 @@ public class AggroBot : BotTemplate
             {
                 NextMove bestMove = tierZeroMove[i];
                 float moveScore = pieceScoresT0[i];
+                if (moveScore > highest)
+                {
+                    highest = moveScore;
+                    validMoves.Clear();
+                    validMoves.Add(bestMove);
+                }
+            }
+        }
+
+        //Protect pieces in danger (only if they are good enough)
+        if (validMoves.Count == 0)
+        {
+            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
+            List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, this.color * -1);
+
+            foreach (NextMove nextMove in allMoves)
+            {
+                Piece piece;
+                coords coords;
+                string moveType = nextMove.moveType;
+
+                if (moveType == "move")
+                {
+                    Move mv = nextMove.move;
+
+                    piece = mv.p;
+                    coords = mv.coords;
+                }
+                else // moveType == "ability" guarenteed
+                {
+                    PieceAbility pa = nextMove.ability;
+
+                    piece = pa.piece;
+                    coords = pa.coords;
+                }
+
+                bool currentSquareSafe = true;
+                bool moveToSquareSafe = true;
+                float deadPiecepts = 0;
+                if (piece.baseType == "Pawn")
+                {
+                    foreach (NextMove oppMove in allMovesOpp)
+                    {
+                        Piece pieceOpp;
+                        coords coordsOpp;
+                        string moveTypeOpp = oppMove.moveType;
+
+                        if (moveTypeOpp == "move")
+                        {
+                            Move mv = oppMove.move;
+
+                            pieceOpp = mv.p;
+                            coordsOpp = mv.coords;
+                        }
+                        else // moveType == "ability" guarenteed
+                        {
+                            PieceAbility pa = oppMove.ability;
+
+                            pieceOpp = pa.piece;
+                            coordsOpp = pa.coords;
+                        }
+
+                        if (coordsOpp.x == piece.position.x && coordsOpp.y == piece.position.y)
+                        {
+                            currentSquareSafe = false;
+                        }
+                        else if (coordsOpp.x == coords.x && coordsOpp.y == coords.y)
+                        {
+                            moveToSquareSafe = false;
+                        }
+                        foreach (Piece oppPiece in allPiecesOpp)
+                        {
+                            if (oppPiece.position.x == coords.x && oppPiece.position.y == coords.y)
+                            {
+                                BoardState cloneState;
+                                if (moveType == "move")
+                                {
+                                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                                }
+                                else
+                                {
+                                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+                                }
+
+                                List<NextMove> allMovesOppCloneState = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+
+                                bool safe = true;
+                                foreach (NextMove cloneOppMove in allMovesOppCloneState)
+                                {
+                                    Piece pieceOppClone;
+                                    coords coordsOppClone;
+                                    string moveTypeOppClone = cloneOppMove.moveType;
+
+                                    if (moveTypeOppClone == "move")
+                                    {
+                                        Move mv = cloneOppMove.move;
+
+                                        pieceOppClone = mv.p;
+                                        coordsOppClone = mv.coords;
+                                    }
+                                    else // moveType == "ability" guarenteed
+                                    {
+                                        PieceAbility pa = cloneOppMove.ability;
+
+                                        pieceOppClone = pa.piece;
+                                        coordsOppClone = pa.coords;
+                                    }
+
+                                    if (coordsOppClone.x == coords.x && coordsOppClone.y == coords.y)
+                                    {
+                                        safe = false;
+                                    }
+
+                                }
+                                if (safe == true)
+                                {
+                                    deadPiecepts += oppPiece.points;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (moveToSquareSafe == true && currentSquareSafe == false)
+                {
+                    tierProtMove.Add(nextMove);
+                    float pointVal = piece.points + deadPiecepts;
+                    pieceScoresTProt.Add(pointVal);
+                }
+            }
+
+            float highest = -1000;
+            for (int i = tierProtMove.Count - 1; i >= 0; i--)
+            {
+                NextMove bestMove = tierProtMove[i];
+                float moveScore = pieceScoresTProt[i];
                 if (moveScore > highest)
                 {
                     highest = moveScore;
@@ -773,13 +1030,13 @@ public class AggroBot : BotTemplate
 
         if (validMoves.Count == 0)
         {
-            int randTotal = 11 + turn;
+            int randTotal = 11;// + turn;
             System.Random randNum = new System.Random();
             int randomFireEmoji = randNum.Next(randTotal);
 
             if (randomFireEmoji <= developChance)
             {
-                developChance -= 1;
+                //developChance -= 1;
                 foreach (NextMove nextMove in allMoves)
                 {
                     //Move pawns into wall formation
@@ -926,116 +1183,111 @@ public class AggroBot : BotTemplate
                     //Maybe add something here later
                 }
             }
-            else
-            {
-                float bestMoveDiff = -1000;
-                foreach (NextMove nextMove in allMoves)
-                {
-                    Piece piece;
-                    coords coords;
-                    string moveType = nextMove.moveType;
-                    if (moveType == "move")
-                    {
-                        Move mv = nextMove.move;
-
-                        piece = mv.p;
-                        coords = mv.coords;
-                    }
-                    else
-                    {
-                        PieceAbility pa = nextMove.ability;
-
-                        piece = pa.piece;
-                        coords = pa.coords;
-                    }
-
-                    BoardState originalBoardState = this.currentBoardState;
-
-                    BoardState cloneState;
-                    if (moveType == "move")
-                    {
-                        cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-                    }
-                    else
-                    {
-                        cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
-                    }
-                    this.currentBoardState = cloneState;
-
-                    List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
-
-                    NextMove bestOppNextMove;
-                    float bestOppMoveDiff = +1000;
-
-                    foreach (NextMove nextMoveOpp in allMovesOpp)
-                    {
-                        Piece pieceOpp;
-                        coords coordsOpp;
-
-                        string moveTypeOpp = nextMoveOpp.moveType;
-
-                        if (moveTypeOpp == "move")
-                        {
-                            Move mv = nextMoveOpp.move;
-
-                            pieceOpp = mv.p;
-                            coordsOpp = mv.coords;
-                        }
-                        else
-                        {
-                            PieceAbility pa = nextMoveOpp.ability;
-
-                            pieceOpp = pa.piece;
-                            coordsOpp = pa.coords;
-                        }
-
-                        BoardState originalBoardState_ = this.currentBoardState;
-                        BoardState cloneState_;
-                        if (moveTypeOpp == "move")
-                        {
-                            cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-                        }
-                        else
-                        {
-                            cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-                        }
-                        this.currentBoardState = originalBoardState_;
-
-                        List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
-                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                        float diff = botPoints - oppPoints;
-                        if (diff < bestOppMoveDiff)
-                        {
-                            bestOppMoveDiff = diff;
-                            bestOppNextMove = nextMoveOpp;
-                        }
-                    }
-
-                    if (bestOppMoveDiff >= bestMoveDiff)
-                    {
-                        if (bestOppMoveDiff > bestMoveDiff)
-                        {
-                            validMoves.Clear();
-                        }
-
-                        bestMoveDiff = bestOppMoveDiff;
-                        validMoves.Add(nextMove);
-                    }
-                    this.currentBoardState = originalBoardState;
-                }
-            }
-
         }
+
+
 
         //Idk how this even happend bro just do a random move
         if (validMoves.Count == 0)
         {
-            System.Random rand0 = new System.Random();
-            int rndIdx0 = rand0.Next(allMoves.Count);
-            validMoves.Add(allMoves[rndIdx0]);
-            gameData.helper.addBotMessage("AggroBot didn't return a move, executing random move instead");
+            gameData.helper.addBotMessage("AggroBot didn't return a move, executing one move bot move instead");
+            float bestMoveDiff = -1000;
+            foreach (NextMove nextMove in allMoves)
+            {
+                Piece piece;
+                coords coords;
+                string moveType = nextMove.moveType;
+                if (moveType == "move")
+                {
+                    Move mv = nextMove.move;
+
+                    piece = mv.p;
+                    coords = mv.coords;
+                }
+                else
+                {
+                    PieceAbility pa = nextMove.ability;
+
+                    piece = pa.piece;
+                    coords = pa.coords;
+                }
+
+                BoardState originalBoardState = this.currentBoardState;
+
+                BoardState cloneState;
+                if (moveType == "move")
+                {
+                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                }
+                else
+                {
+                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+                }
+                this.currentBoardState = cloneState;
+
+                List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+
+                NextMove bestOppNextMove;
+                float bestOppMoveDiff = +1000;
+
+                foreach (NextMove nextMoveOpp in allMovesOpp)
+                {
+                    Piece pieceOpp;
+                    coords coordsOpp;
+
+                    string moveTypeOpp = nextMoveOpp.moveType;
+
+                    if (moveTypeOpp == "move")
+                    {
+                        Move mv = nextMoveOpp.move;
+
+                        pieceOpp = mv.p;
+                        coordsOpp = mv.coords;
+                    }
+                    else
+                    {
+                        PieceAbility pa = nextMoveOpp.ability;
+
+                        pieceOpp = pa.piece;
+                        coordsOpp = pa.coords;
+                    }
+
+                    BoardState originalBoardState_ = this.currentBoardState;
+                    BoardState cloneState_;
+                    if (moveTypeOpp == "move")
+                    {
+                        cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
+                    }
+                    else
+                    {
+                        cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
+                    }
+                    this.currentBoardState = originalBoardState_;
+
+                    List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
+                    float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                    float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                    float diff = botPoints - oppPoints;
+                    if (diff < bestOppMoveDiff)
+                    {
+                        bestOppMoveDiff = diff;
+                        bestOppNextMove = nextMoveOpp;
+                    }
+                }
+
+                if (bestOppMoveDiff >= bestMoveDiff)
+                {
+                    if (bestOppMoveDiff > bestMoveDiff)
+                    {
+                        validMoves.Clear();
+                    }
+
+                    bestMoveDiff = bestOppMoveDiff;
+                    validMoves.Add(nextMove);
+                }
+                this.currentBoardState = originalBoardState;
+            }
         }
 
         //Pick a random move from our list of tied moves

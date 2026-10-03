@@ -74,7 +74,7 @@ public class CastlerBot : BotTemplate
 			rookR = findPieceOnBoardStateFromPanelCode(this.currentBoardState, "b_r2");
 		}
 
-		if (rookL.alive == 0)
+		if (rookL == null)
 		{
 			castleLeftPossible = false;
 		}
@@ -86,7 +86,7 @@ public class CastlerBot : BotTemplate
             }
         }
 
-        if (rookR.alive == 0)
+        if (rookR == null)
         {
             castleRightPossible = false;
         }

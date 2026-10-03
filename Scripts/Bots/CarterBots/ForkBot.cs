@@ -1,8 +1,9 @@
-using System.Collections.Generic;
-using UnityEngine;
+/*using System.Collections.Generic;
 using System.Linq;
-using static UndoMoveBotHelperFunctions;
+using UnityEditor;
+using UnityEngine;
 using static BotHelperFunctions;
+using static UndoMoveBotHelperFunctions;
 
 public class ForkBot : BotTemplate
 {
@@ -14,25 +15,28 @@ public class ForkBot : BotTemplate
 		choosePieces();
 	}
 
-    private List<Piece> getHanging(BotTemplate bot, BoardState bs, int color)
+    private List<Piece> getHangingPawns(BotTemplate bot, BoardState bs, int color)
     {
-        List<Piece> hangingPieces = new List<Piece>();
+        List<Piece> hangingPawns = new List<Piece>();
         List<Piece> piecesOnBoard = getPiecesOnBoardState(bs, color);
 
         foreach (Piece piece in piecesOnBoard)
         {
-            List<Piece> guards = getGuards(this, bs, color, piece.position);
-            List<Piece> attackers = getGuards(this, bs, color * -1, piece.position);
-
-            if (guards.Count == 0 && attackers.Count > 0)
+            if (piece.baseType == "Pawn")
             {
-                if (piece.points > 0)
+                List<Piece> guards = getGuards(this, bs, color, piece.position);
+                List<Piece> attackers = getGuards(this, bs, color * -1, piece.position);
+
+                if (guards.Count == 0 && attackers.Count > 0)
                 {
-                    hangingPieces.Add(piece);
+                    if (piece.points > 0)
+                    {
+                        hangingPawns.Add(piece);
+                    }
                 }
             }
         }
-        return hangingPieces;
+        return hangingPawns;
     }
 
 	private List<Piece> getGuards(BotTemplate bot, BoardState bs, int color, coords coords)
@@ -145,6 +149,10 @@ public class ForkBot : BotTemplate
 
     public NextMove nextMove()
     {
+        bool baitSet = false;
+        coords baitPosition;
+        baitPosition.x = -1;
+        baitPosition.y = -1;
         float bestMoveDiff = -1000;
         List<NextMove> validMoves = new List<NextMove>();
         List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
@@ -193,147 +201,82 @@ public class ForkBot : BotTemplate
 
             bool inCheck = getGuards(this, this.currentBoardState, this.color * -1, kingPos).Count > 0;
 
-            List<Piece> hanging = getHanging(this, this.currentBoardState, this.color);
+            List<Piece> hangingPawns = getHangingPawns(this, this.currentBoardState, this.color);
 
-            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
+			if (hangingPawns.Count == 1)
+			{
+				List<Piece> hangingPawnAttackers = getGuards(this, this.currentBoardState, this.color * -1, hangingPawns[0].position);
 
-            float bestOppMoveDiff = +1000;
-            NextMove bestOppNextMove;
+				if (hangingPawnAttackers.Count == 1)
+				{
+					if (hangingPawnAttackers[0].points > 2)
+					{
+						baitSet = true;
+                        baitPosition = hangingPawns[0].position;
+					}
+				}
+			}
 
-            foreach (NextMove nextMoveOpp in allMovesOpp)
-            {
-                Piece pieceOpp;
-                coords coordsOpp;
+			if (baitSet == true)
+			{
+                List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
 
-                string moveTypeOpp = nextMoveOpp.moveType;
+                float bestOppMoveDiff = +1000;
 
-                if (moveTypeOpp == "move")
+                foreach (NextMove nextMoveOpp in allMovesOpp)
                 {
-                    Move mv = nextMoveOpp.move;
+                    Piece pieceOpp;
+                    coords coordsOpp;
 
-                    pieceOpp = mv.p;
-                    coordsOpp = mv.coords;
-                }
-                else
-                {
-                    PieceAbility pa = nextMoveOpp.ability;
+                    string moveTypeOpp = nextMoveOpp.moveType;
 
-                    pieceOpp = pa.piece;
-                    coordsOpp = pa.coords;
-                }
-
-                UndoMove undo_ = null;
-
-                if (moveTypeOpp == "move")
-                {
-                    undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
-                }
-                else
-                {
-                    undo_ = undo_simulatePieceAbility(this.currentBoardState, nextMoveOpp.ability);
-                }
-
-                bool isOppCapturingHanging = false;
-
-                foreach (Piece hungPiece in hanging)
-                {
-                    if (hungPiece.position.x == coordsOpp.x && hungPiece.position.y == coordsOpp.y)
+                    if (moveTypeOpp == "move")
                     {
-                        isOppCapturingHanging = true;
+                        Move mv = nextMoveOpp.move;
+
+                        pieceOpp = mv.p;
+                        coordsOpp = mv.coords;
                     }
-                }
-
-                float bestMoveDiff2 = -1000;
-
-                if (isOppCapturingHanging == true)
-                {
-                    List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
-
-                    foreach (NextMove nextMove2 in allMoves2)
+                    else
                     {
-                        Piece piece2;
-                        coords coords2;
-                        string moveType2 = nextMove2.moveType;
+                        PieceAbility pa = nextMoveOpp.ability;
 
-                        if (moveType2 == "move")
-                        {
-                            Move mv2 = nextMove2.move;
-
-                            piece2 = mv2.p;
-                            coords2 = mv2.coords;
-                        }
-                        else
-                        {
-                            PieceAbility pa2 = nextMove2.ability;
-
-                            piece2 = pa2.piece;
-                            coords2 = pa2.coords;
-                        }
-
-                        UndoMove undo2 = null;
-
-                        if (moveType2 == "move")
-                        {
-                            undo2 = undo_simulatePieceMove(this.currentBoardState, piece2, new coords(coords2.x, coords2.y));
-                        }
-                        else
-                        {
-                            undo2 = undo_simulatePieceAbility(this.currentBoardState, nextMove2.ability);
-                        }
-
-                        List<float> pointsOnBoard = getPointsOnBoardState(this.currentBoardState, true);
-                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                        if (inCheck == true)
-                        {
-                            botPoints -= 100;
-                        }
-
-                        botPoints += getForkValue(this, this.currentBoardState, this.color, piece2);
-
-                        float diff = botPoints - oppPoints;
-                        if (diff > bestMoveDiff2)
-                        {
-                            bestMoveDiff2 = diff;
-                        }
-
-                        undoMove(undo2, this.currentBoardState);
-
+                        pieceOpp = pa.piece;
+                        coordsOpp = pa.coords;
                     }
+
+                    UndoMove undo_ = null;
+
+                    if (moveTypeOpp == "move")
+                    {
+                        undo_ = undo_simulatePieceMove(this.currentBoardState, pieceOpp, new coords(coordsOpp.x, coordsOpp.y));
+                    }
+                    else
+                    {
+                        undo_ = undo_simulatePieceAbility(this.currentBoardState, nextMoveOpp.ability);
+                    }
+
+                    if (bestOppMoveDiff > bestMoveDiff2)
+                    {
+                        bestOppMoveDiff = bestMoveDiff2;
+                    }
+
+                    undoMove(undo_, this.currentBoardState);
                 }
 
-                else
+                if (bestOppMoveDiff >= bestMoveDiff)
                 {
-                    List<float> pointsOnBoard = getPointsOnBoardState(this.currentBoardState, true);
-                    float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                    float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                    if (bestOppMoveDiff > bestMoveDiff)
+                    {
+                        validMoves.Clear();
+                    }
 
-                    bestMoveDiff2 = botPoints - oppPoints;
+                    bestMoveDiff = bestOppMoveDiff;
+                    validMoves.Add(nextMove);
                 }
 
-                if (bestOppMoveDiff > bestMoveDiff2)
-                {
-                    bestOppMoveDiff = bestMoveDiff2;
-                }
-
-                undoMove(undo_, this.currentBoardState);
-
-                
+                undoMove(undo, this.currentBoardState);
             }
-
-            if (bestOppMoveDiff >= bestMoveDiff)
-            {
-                if (bestOppMoveDiff > bestMoveDiff)
-                {
-                    validMoves.Clear();
-                }
-
-                bestMoveDiff = bestOppMoveDiff;
-                validMoves.Add(nextMove);
-            }
-
-            undoMove(undo, this.currentBoardState);
         }
 
         System.Random rand = new System.Random();
@@ -352,3 +295,4 @@ public class ForkBot : BotTemplate
         return move;
     }
 }
+*/

@@ -4,19 +4,19 @@ using System.Linq;
 using static BotHelperFunctions;
 using System;
 
-public class AmazeingBot : BotTemplate
+public class BotOnPot : BotTemplate
 {
     int turn = 0;
     List<coords> mazeWalls = new List<coords>();
     //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
-    public AmazeingBot(int botColor)
+    public BotOnPot(int botColor)
     {
         //Initialize variables, do not change anything here but name
         color = botColor;
         pieces = new List<Piece>();
-        name = "Amazeing Bot";
+        name = "Bot on pot";
 
         //This function populates the pieces variable
         choosePieces();
@@ -151,6 +151,7 @@ public class AmazeingBot : BotTemplate
             }
 
             bool cullMove = false;
+            bool cullMove2 = false;
             foreach (coords mazeWall in mazeWalls)
             {
                 if (HelperFunctions.checkState(piece, PieceState.Portal))
@@ -177,6 +178,7 @@ public class AmazeingBot : BotTemplate
                 }
             }
 
+            NextMove bestOppNextMove;
             float bestOppMoveDiff = +1000;
 
             BoardState originalBoardState = this.currentBoardState;
@@ -239,13 +241,90 @@ public class AmazeingBot : BotTemplate
                         cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
                     }
 
+                    List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+                    BoardState originalBoardState2 = this.currentBoardState;
+
+                    foreach (NextMove nextMove2 in allMoves2)
+                    {
+                        moveType = nextMove2.moveType;
+
+                        if (moveType == "move")
+                        {
+                            Move mv = nextMove2.move;
+
+                            piece = mv.p;
+                            coords = mv.coords;
+                        }
+                        else // moveType == "ability" guarenteed
+                        {
+                            PieceAbility pa = nextMove2.ability;
+
+                            piece = pa.piece;
+                            coords = pa.coords;
+                        }
+
+                        cullMove2 = false;
+                        foreach (coords mazeWall in mazeWalls)
+                        {
+                            if (HelperFunctions.checkState(piece, PieceState.Portal))
+                            {
+                                cullMove = true;
+                                break;
+                            }
+                            if (coords.x == mazeWall.x && mazeWall.y == coords.y)
+                            {
+                                cullMove2 = true;
+                            }
+                            List<coords> line = GetLinePoints(piece.position, coords);
+                            foreach (coords pos in line)
+                            {
+                                if (pos.x == mazeWall.x && mazeWall.y == pos.y)
+                                {
+                                    cullMove2 = true;
+                                    break;
+                                }
+                            }
+                            if (cullMove2 == true)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (cullMove2 == false)
+                        {
+                            BoardState cloneState2;
+                            if (moveType == "move")
+                            {
+                                cloneState2 = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                            }
+                            else
+                            {
+                                cloneState2 = simulatePieceAbility(this, this.currentBoardState, nextMove2.ability);
+                            }
+                            this.currentBoardState = cloneState2;
+
+                            List<float> pointsOnBoard = getPointsOnBoardState(cloneState2, true);
+                            float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                            float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                            float diff = botPoints - oppPoints;
+                            if (diff < bestOppMoveDiff)
+                            {
+                                bestOppMoveDiff = diff;
+                                bestOppNextMove = nextMoveOpp;
+                            }
+
+                            this.currentBoardState = originalBoardState2;
+                        }
+                    }
+
                     this.currentBoardState = originalBoardState_;
                 }
             }
 
             //Now back to the outer loop, if the move we checked, assuming the opponent makes the best move, is better than the current best, save it
             //If it is tied also save it
-            if (cullMove == false)
+            if (cullMove == false && cullMove2 == false)
             {
                 if (bestOppMoveDiff >= bestMoveDiff)
                 {

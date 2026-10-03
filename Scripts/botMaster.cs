@@ -45,10 +45,10 @@ public class botMaster : MonoBehaviour
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
 
         nonResettables.isBotTournament = false;
-        //SEASON_NAME = "LCC_SEASON2";
-        waitTime = 1f;
+        //SEASON_NAME = "ACC_SEASON4";
+        waitTime = 0f;
         nonResettables.playAudio = false;
-        nonResettables.logMatch = false;
+        nonResettables.logMatch = true;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
         timeForPenalty = 5000; //This is in milliseconds.
@@ -59,68 +59,72 @@ public class botMaster : MonoBehaviour
             {
                 List<string> forceNames = new List<string>
                 {
+                    "ColinMcBot",
+                    "Botgrabber",
+                    "BotByTheBook",
+                    "AbsobotZero"
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.BotniaAndHerzebotvina,
-                    Bots.TwoMoveBot,
                     Bots.ThinkingBot,
-                    Bots.Bloodbot,
-                    Bots.KamikazeBot,
-                    Bots.AssassinBot,
+                    Bots.PawnBot,
+                    Bots.BotniaAndHerzebotvina,
+                    Bots.HitmanBot,
+                    Bots.BottusMaximus,
+                    Bots.SavageBeastBot,
                     Bots.G2EBot,
-                    Bots.Bot618,
+                    Bots.OnePieceRandomBot,
                 };
 
                 List<string> div2 = new List<string>
                 {
-                    Bots.Botkrieg,
+                    Bots.Bloodbot,
+                    Bots.FiveXRandomBot,
+                    Bots.TwoMoveBot,
+                    Bots.Abilibot,
                     Bots.EqualityBot,
-                    Bots.BottusMaximus,
+                    Bots.BotsUnited,
+                    Bots.Botkrieg,
                     Bots.LaserBot,
-                    Bots.SavageBeastBot,
-                    Bots.ThinkingBotII,
-                    Bots.ChristopherColumbot,
-                    Bots.MigratingBot,
                 };
 
                 List<string> div3 = new List<string>
                 {
-                    Bots.BalanceBot,
-                    Bots.HitmanBot,
-                    Bots.CountingBot,
-                    Bots.PawnBot,
-                    Bots.BotWithAClock,
-                    Bots.OnePointFiveMoveBot,
+                    Bots.NegativeOneMoveBot,
                     Bots.GamblingBot,
-                    Bots.SicklyBotChild,
+                    Bots.MarchingBot,
+                    Bots.BotDefender,
+                    Bots.Bothoven,
+                    Bots.RestrictorBot,
+                    Bots.BOTential,
+                    Bots.RandomBot,
                 };
 
                 List<string> div4 = new List<string>
                 {
-                    Bots.BlindAsABot,
-                    Bots.YOLOBot,
-                    Bots.Bothoven,
-                    Bots.NegativeOneMoveBot,
-                    Bots.BotsUnited,
+                    Bots.AssassinBot,
+                    Bots.ShieldBot,
+                    Bots.AdventurousKingBot,
                     Bots.OneMoveBot,
-                    Bots.SpeedrunnerBot,
-                    Bots.Abilibot,
+                    Bots.CountingBot,
+                    Bots.Lobotomy,
+                    Bots.BotRoss,
+                    Bots.IdiotBot,
                 };
 
                 List<string> div5 = new List<string>
                 {
-                    Bots.BotWithAPlot,
-                    Bots.MarchingBot,
-                    Bots.MercenaryBot,
                     Bots.OnePieceRandomBot,
-                    Bots.AdventurousKingBot,
                     Bots.ShieldBot,
-                    Bots.RestrictorBot,
-                    Bots.BotDefender,
+                    Bots.BotRoss,
+                    Bots.FiveXRandomBot,
+                    Bots.AdventurousKingBot,
+                    Bots.BotsUnited,
+                    Bots.Lobotomy,
+                    Bots.IdiotBot,
                 };
 
                 List<string> div6 = new List<string>
@@ -199,23 +203,22 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new AmazeingBot(1);
-                botBlack = new LazyBot(-1);
+                botWhite = new Egbot(1);
+                botBlack = new OneMoveBot(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);
                 if (rand == 1)
                 {
-                    botWhite = new ThinkingBot(1);
-                    botBlack = new LaserBot(-1);
+                    botWhite = new BotByTheBook(1);
+                    botBlack = new Botfish(-1);
                 }
                 else
                 {
-                    botWhite = new LaserBot(1);
-                    botBlack = new ThinkingBot(-1);
+                    botWhite = new Botfish(1);
+                    botBlack = new BotByTheBook(-1);
                 }
                 */
-                
             }
 
             gameData.botWhite = botWhite;
@@ -634,6 +637,9 @@ public class botMaster : MonoBehaviour
             botBlack.king = gameData.blackKing;
 
             botWhite.currentBoardState.refresh(convertBoardGrid(gameData.boardGrid));
+
+            gameData.startingBoardState = copyBoardState(botWhite.currentBoardState);
+
             List<float> points = getPointsOnBoardState(botWhite.currentBoardState, false);
             bgs.whitePoints = points[0];
             bgs.blackPoints = points[1];
@@ -658,6 +664,7 @@ public class botMaster : MonoBehaviour
             turn = 1;
             gameOver = false;
             kingDead = false;
+            gameData.lastBotMove = null;
         }
     }
 
@@ -740,7 +747,7 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
@@ -851,6 +858,7 @@ public class botMaster : MonoBehaviour
             {
                 valid = botValidateAbility(pa, currentBot);
             }
+            gameData.lastBotMove = nextMove;
 
             movePieceObj = getOriginalPieceFromClone(movePieceObj);
 
@@ -960,6 +968,7 @@ public class botMaster : MonoBehaviour
                 }
 
                 movePieceObj = getOriginalPieceFromClone(movePieceObj);
+                gameData.lastBotMove = randomMove;
 
                 gameData.selected = HelperFunctions.findSquare(moveCoords.x, moveCoords.y);
                 gameData.selectedToMove = HelperFunctions.findSquare(movePieceObj.position.x, movePieceObj.position.y);

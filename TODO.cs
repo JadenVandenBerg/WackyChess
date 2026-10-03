@@ -23,7 +23,6 @@
 //Refactor
 
 //Optimize
-//Use structs instead of int[] and int[,]
 
 //Pieces IMG
 /*

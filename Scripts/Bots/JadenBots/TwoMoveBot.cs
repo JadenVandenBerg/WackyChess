@@ -249,6 +249,11 @@ public class TwoMoveBot : BotTemplate
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(bestMoveStates.Count);
 
+        if (bestMoveStates.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+
         NextMove move = bestMoveStates[rndIdx].leadingNextMove;
         if (move.moveType == "move")
         {

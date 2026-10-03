@@ -48,6 +48,8 @@ public static class gameData
     public static BotTemplate botBlack { get; set; } = null;
     public static bool isBotMatch { get; set; } = false;
     public static HelperFunctions helper { get; set; } = null;
+    public static NextMove lastBotMove { get; set; } = null;
+    public static BoardState startingBoardState { get; set; } = null;
 }
 
 public static class tempInfo
@@ -193,6 +195,10 @@ public static class nonResettables
                 "GamblingBot",
                 "BotWithAClock",
                 "BlindAsABot",
+                "ColinMcBot",
+                "Botgrabber",
+                "BotByTheBook",
+                "AbsobotZero"
             });
         }
 
@@ -214,8 +220,7 @@ public static class nonResettables
                 "MigratingBot",
                 "BalanceBot",
                 "BotWithAPlot",
-                "MercenaryBot",
-                "SpeedRunnerBot"
+                "MercenaryBot"
             });
         }
 
@@ -614,6 +619,7 @@ public enum PieceState : long
     Reincarnating = 1L << 37,
 }
 
+[Flags]
 public enum PieceAbilities : long
 {
     None = 0,

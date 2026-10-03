@@ -23,6 +23,7 @@ public class botMaster : MonoBehaviour
     public HelperFunctions helper;
     public AudioSource thinkingBotII;
     public AudioSource[] bothovenAudio;
+    public int timeForPenalty;
     GameLogger logger = new GameLogger();
 
     BotTemplate botWhite;
@@ -45,11 +46,12 @@ public class botMaster : MonoBehaviour
 
         nonResettables.isBotTournament = false;
         //SEASON_NAME = "LCC_SEASON2";
-        waitTime = 1.5f;
+        waitTime = 1f;
         nonResettables.playAudio = false;
         nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
+        timeForPenalty = 5000; //This is in milliseconds.
 
         if (nonResettables.isBotTournament)
         {
@@ -59,7 +61,8 @@ public class botMaster : MonoBehaviour
                 {
                     "GamblingBot",
                     "BlindAsABot",
-                    "TenXRandomBot"
+                    "TenXRandomBot",
+                    "BotWithAClock"
                 };
 
                 List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
@@ -175,9 +178,9 @@ public class botMaster : MonoBehaviour
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         }
-        
+
         if (!gameOver)
-        { 
+        {
             gameData.playMode = "BotvBot";
             gameData.turn = 1;
             gameData.board = board2;
@@ -185,8 +188,8 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new WeightingBot(1);
-                botBlack = new SelfishBot(-1);
+                botWhite = new OneMoveBot(1);
+                botBlack = new AggroBot(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);
@@ -201,7 +204,7 @@ public class botMaster : MonoBehaviour
                     botBlack = new ThinkingBot(-1);
                 }
                 */
-                
+
             }
 
             gameData.botWhite = botWhite;
@@ -590,22 +593,22 @@ public class botMaster : MonoBehaviour
                 bgs.blackPieces.Add(wp.name.Replace(" ", string.Empty) + " (" + wp.points + ")");
             }
 
-            HelperFunctions.initPiece(botBlackPawns[0], new coords ( 1, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[1], new coords ( 2, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[2], new coords ( 3, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[3], new coords ( 4, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[4], new coords ( 5, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[5], new coords ( 6, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[6], new coords ( 7, 7 ));
-            HelperFunctions.initPiece(botBlackPawns[7], new coords ( 8, 7 ));
-            HelperFunctions.initPiece(botBlackRooks[0], new coords ( 1, 8 ));
-            HelperFunctions.initPiece(botBlackRooks[1], new coords ( 8, 8 ));
-            HelperFunctions.initPiece(botBlackBishops[0], new coords ( 3, 8 ));
-            HelperFunctions.initPiece(botBlackBishops[1], new coords ( 6, 8 ));
-            HelperFunctions.initPiece(botBlackKnights[0], new coords ( 2, 8 ));
-            HelperFunctions.initPiece(botBlackKnights[1], new coords ( 7, 8 ));
-            HelperFunctions.initPiece(botBlackQueen[0], new coords ( 4, 8 ));
-            HelperFunctions.initPiece(botBlackKing[0], new coords ( 5, 8 ));
+            HelperFunctions.initPiece(botBlackPawns[0], new coords(1, 7));
+            HelperFunctions.initPiece(botBlackPawns[1], new coords(2, 7));
+            HelperFunctions.initPiece(botBlackPawns[2], new coords(3, 7));
+            HelperFunctions.initPiece(botBlackPawns[3], new coords(4, 7));
+            HelperFunctions.initPiece(botBlackPawns[4], new coords(5, 7));
+            HelperFunctions.initPiece(botBlackPawns[5], new coords(6, 7));
+            HelperFunctions.initPiece(botBlackPawns[6], new coords(7, 7));
+            HelperFunctions.initPiece(botBlackPawns[7], new coords(8, 7));
+            HelperFunctions.initPiece(botBlackRooks[0], new coords(1, 8));
+            HelperFunctions.initPiece(botBlackRooks[1], new coords(8, 8));
+            HelperFunctions.initPiece(botBlackBishops[0], new coords(3, 8));
+            HelperFunctions.initPiece(botBlackBishops[1], new coords(6, 8));
+            HelperFunctions.initPiece(botBlackKnights[0], new coords(2, 8));
+            HelperFunctions.initPiece(botBlackKnights[1], new coords(7, 8));
+            HelperFunctions.initPiece(botBlackQueen[0], new coords(4, 8));
+            HelperFunctions.initPiece(botBlackKing[0], new coords(5, 8));
 
             gameData.whiteRooks.Add(botWhiteRooks[0]);
             gameData.whiteRooks.Add(botWhiteRooks[1]);
@@ -726,7 +729,7 @@ public class botMaster : MonoBehaviour
         }
         else
         {
-                var watch = System.Diagnostics.Stopwatch.StartNew();
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             NextMove nextMove = currentBot.nextMove();
             watch.Stop();
             watchMS = watch.ElapsedMilliseconds;
@@ -811,7 +814,7 @@ public class botMaster : MonoBehaviour
 
             selectedMove = nextMove;
 
-            if (watchMS > 5000)
+            if (watchMS > timeForPenalty)
             {
                 currentBot.penalty = true;
 
@@ -833,7 +836,8 @@ public class botMaster : MonoBehaviour
             if (nextMove.moveType == "move")
             {
                 valid = botValidateMove(movePieceObj, moveCoords);
-            } else
+            }
+            else
             {
                 valid = botValidateAbility(pa, currentBot);
             }
@@ -1033,15 +1037,18 @@ public class botMaster : MonoBehaviour
             subsequentChecks += 0.5f;
         }
 
-        if (!countDeath && check == 0) {
+        if (!countDeath && check == 0)
+        {
             movesWithoutCapture++;
             subsequentChecks = 0;
         }
-        else if (countDeath) {
+        else if (countDeath)
+        {
             movesWithoutCapture = 0;
             subsequentChecks = 0;
         }
-        else if (check == 1) {
+        else if (check == 1)
+        {
             checkLastTurn = true;
         }
 
@@ -1106,7 +1113,7 @@ public class botMaster : MonoBehaviour
                         //Debug.Break();
                     }
                 }
-                
+
                 else if (!kingDead)
                 {
                     //Debug.Break();
@@ -1184,7 +1191,8 @@ public class botMaster : MonoBehaviour
         HelperFunctions.resetBoardColours();
     }
 
-    public bool botValidateMove(Piece piece, coords coords) {
+    public bool botValidateMove(Piece piece, coords coords)
+    {
         if (piece == null || coords.x == -1)
         {
             return false;
@@ -1192,7 +1200,8 @@ public class botMaster : MonoBehaviour
 
         List<coords> moves = HelperFunctions.addMovesToCurrentMoveableCoords(piece);
 
-        if (HelperFunctions.isInList(moves, coords, false)) {
+        if (HelperFunctions.isInList(moves, coords, false))
+        {
             return true;
         }
 

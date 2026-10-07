@@ -203,7 +203,7 @@ public class botMaster : MonoBehaviour
             if (!nonResettables.isBotTournament)
             {
                 //Replace these with your bots if it is a tournament
-                botWhite = new Egbot(1);
+                botWhite = new SicklyBotChild(1);
                 botBlack = new OneMoveBot(-1);
                 // For WCSingle
                 /*

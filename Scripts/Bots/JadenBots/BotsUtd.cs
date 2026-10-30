@@ -59,34 +59,42 @@ public class BotsUnited : BotTemplate
 
         if (bot == "RandomBot")
         {
+            gameData.helper.addBotMessage(" Random Bot is making a move");
             return RandomBot_nextMove();
         }
         else if(bot == "BerserkerBot")
         {
+            gameData.helper.addBotMessage(" Berserker Bot is making a move");
             return BerserkerBot_nextMove();
         }
         else if (bot == "KamikazeBot")
         {
+            gameData.helper.addBotMessage(" Kamikaze Bot is making a move");
             return KamikazeBot_nextMove();
         }
         else if (bot == "ThinkingBot")
         {
+            gameData.helper.addBotMessage(" Thinking Bot is making a move");
             return ThinkingBot_nextMove();
         }
         else if (bot == "SavageBeastBot")
         {
+            gameData.helper.addBotMessage(" Savage Beastbot is making a move");
             return SavageBeastBot_nextMove();
         }
         else if (bot == "Bloodbot")
         {
+            gameData.helper.addBotMessage(" Bloodbot is making a move");
             return Bloodbot_nextMove();
         }
         else if (bot == "G2EBot")
         {
+            gameData.helper.addBotMessage(" G2 E-Bot is making a move");
             return G2EBot_nextMove();
         }
         else if (bot == "Lobotomy")
         {
+            gameData.helper.addBotMessage(" Lobotomy is making a move");
             return Lobotomy_nextMove();
         }
 
@@ -2682,6 +2690,11 @@ public class BotsUnited : BotTemplate
 
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves_L2.Count);
+
+        if (validMoves_L2.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
 
         NextMove move = validMoves_L2[rndIdx];
 

@@ -30,7 +30,7 @@ public class GamblingBot : BotTemplate
     {
         moves += 1;
 
-        if (moves == 1 && gameData.helper != null)
+        if ((moves % 8 == 0 || moves == 1) && gameData.helper != null)
         {
             gameData.helper.addBotMessage(" Gambling Bot is looking at " + MOVES_PERCENTAGE + "% of depth " + DEPTH + " moves.");
         }

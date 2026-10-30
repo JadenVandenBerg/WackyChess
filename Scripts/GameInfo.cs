@@ -102,6 +102,8 @@ public static class nonResettables
 {
     public static BotTournamentSmall botTournamentSmall { get; set; } = null;
     public static BotTournament botTournament { get; set; } = null;
+    public static BotTournamentDuos botTournamentDuos { get; set; } = null;
+    public static bool isDuos { get; set; } = false;
     public static bool isBotTournament { get; set; } = false;
     public static bool logMatch { get; set; } = false;
     public static string ruleset { get; set; } = "Wacky";
@@ -162,7 +164,7 @@ public static class nonResettables
         return botName;
     }
 
-    public static List<string> get8RandomBots(List<string> forceNames, string owner)
+    public static List<string> getXRandomBots(List<string> forceNames, string owner, int num)
     {
         List<string> options = new List<string>();
 
@@ -193,12 +195,15 @@ public static class nonResettables
                 "Botkrieg",
                 "ThinkingBotII",
                 "GamblingBot",
-                "BotWithAClock",
+                //"BotWithAClock",
                 "BlindAsABot",
                 "ColinMcBot",
                 "Botgrabber",
                 "BotByTheBook",
-                "AbsobotZero"
+                "AbsobotZero",
+                "Egbot",
+                "TenXRandomBot",
+                "Coinbot",
             });
         }
 
@@ -242,7 +247,7 @@ public static class nonResettables
 
         System.Random rng = new System.Random();
 
-        for (int i = 0; i < 8 - forceNames.Count && options.Count > 0; i++)
+        for (int i = 0; i < num - forceNames.Count && options.Count > 0; i++)
         {
             int index = rng.Next(options.Count);
             result.Add(options[index]);
@@ -252,13 +257,29 @@ public static class nonResettables
         return result;
     }
 
+    public static int getTeamElo(BotTeam team)
+    {
+        string path = @"C:\Users\Jay\Projects\WC_React\wc_react\public\data.json";
+
+        List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(File.ReadAllText(path));
+
+        string botAName = team.botA;
+        string botBName = team.botB;
+
+        botAName = fixBotName(botAName);
+        botBName = fixBotName(botBName);
+
+        Bot botA = bots.First(b => b.Name == botAName);
+        Bot botB = bots.First(b => b.Name == botBName);
+
+        return (int) ((botA.Elo + botB.Elo) / 2);
+    }
+
     public static void postBotMatch(string botAName, string botBName, string winner)
     {
         string path = @"C:\Users\Jay\Projects\WC_React\wc_react\public\data.json";
 
-        List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(
-            File.ReadAllText(path)
-        );
+        List<Bot> bots = JsonConvert.DeserializeObject<List<Bot>>(File.ReadAllText(path));
 
         Debug.Log(botAName + " : " + botBName);
 
@@ -287,10 +308,7 @@ public static class nonResettables
             botA.LossesTotal++;
         }
 
-        File.WriteAllText(
-            path,
-            JsonConvert.SerializeObject(bots, Formatting.Indented)
-        );
+        File.WriteAllText(path,JsonConvert.SerializeObject(bots, Formatting.Indented));
     }
 }
 
@@ -349,6 +367,15 @@ public static class Bots
     public const string BotWithAClock = "BotWithAClock";
     public const string SicklyBotChild = "SicklyBotChild";
     public const string GamblingBot = "GamblingBot";
+
+    public const string VirusBot = "VirusBot";
+    public const string WeightingBot = "WeightingBot";
+    public const string BotByTheBook = "BotByTheBook";
+    public const string BerserkerBot = "BerserkerBot";
+    public const string AggroBot = "AggroBot";
+    public const string BotThatDoesStuff = "BotThatDoesStuff";
+    public const string AmazeingBot = "AmazeingBot";
+    public const string ColinMcBot = "ColinMcBot";
 }
 
 public static class globalDefs
@@ -398,6 +425,141 @@ public class BotGameStatus
     public int blackPenalties = 0;
 
     public int numTurns = 0;
+}
+
+public class BotTeam
+{
+    public string botA;
+    public string botB;
+
+    public int turn = 0;
+    public int teamStartingElo;
+    public int teamElo;
+
+    public BotTemplate botAInstance = null;
+    public BotTemplate botBInstance = null;
+
+    public BotTeam(string A, string B)
+    {
+        botA = A;
+        botB = B;
+    }
+}
+
+public class BotTournamentDuos
+{
+    public List<string> competingBots = new List<string>();
+    public int round = 1;
+    public int match = 1;
+    public int division = 0;
+
+    public List<BotTeam> teams = new List<BotTeam>();
+
+    //TODO add division splitting
+    public BotTournamentDuos(List<string> bots, int startingRound = 1, int startingMatch = 1)
+    {
+        while (bots.Count > 0)
+        {
+            string botA = bots[globalDefs.globalRand.Next(bots.Count)];
+            bots.Remove(botA);
+
+            string botB = bots[globalDefs.globalRand.Next(bots.Count)];
+            bots.Remove(botB);
+
+            BotTeam bt = new BotTeam(botA, botB);
+
+            bt.teamStartingElo = nonResettables.getTeamElo(bt);
+            bt.teamElo = bt.teamStartingElo;
+
+            teams.Add(bt);
+        }
+
+        round = startingRound;
+        match = startingMatch;
+    }
+
+    public (BotTeam teamWhite, BotTeam teamBlack) nextGame()
+    {
+        if (round > 7)
+        {
+            return (null, null);
+        }
+        var (botOne_, botTwo_) = botTournamentMatches[round - 1][match - 1];
+        BotTeam botOne = teams[botOne_ - 1];
+        BotTeam botTwo = teams[botTwo_ - 1];
+
+        match++;
+        if (match > 4)
+        {
+            match = 1;
+            round++;
+        }
+
+        System.Random rand = new System.Random();
+        int randNumber = rand.Next(1, 3);
+
+        if (randNumber == 1)
+        {
+            return (botOne, botTwo);
+        }
+        else
+        {
+            return (botTwo, botOne);
+        }
+    }
+
+    public static readonly List<(int botOne, int botTwo)[]> botTournamentMatches = new List<(int botOne, int botTwo)[]>
+    {
+        new (int botOne, int botTwo)[]
+        {
+            (1, 8),
+            (2, 7),
+            (3, 6),
+            (4, 5)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 5),
+            (2, 6),
+            (3, 7),
+            (4, 8)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 6),
+            (2, 5),
+            (3, 8),
+            (4, 7)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 2),
+            (3, 4),
+            (5, 6),
+            (7, 8)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 7),
+            (2, 4),
+            (3, 5),
+            (6, 8)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 4),
+            (2, 3),
+            (5, 8),
+            (6, 7)
+        },
+        new (int botOne, int botTwo)[]
+        {
+            (1, 3),
+            (2, 8),
+            (4, 6),
+            (5, 7)
+        },
+    };
 }
 
 public class BotTournament {

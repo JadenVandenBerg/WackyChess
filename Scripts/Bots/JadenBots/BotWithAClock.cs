@@ -224,7 +224,7 @@ public class BotWithAClock : BotTemplate
 
         undoMove(undo, this.currentBoardState);
 
-        return score;
+        return (float) score;
     }
 
     private float alphaBeta(int depth, float alpha, float beta, bool maximizing)

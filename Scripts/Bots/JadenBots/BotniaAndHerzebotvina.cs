@@ -170,6 +170,11 @@ public class BotniaAndHerzebotvina : BotTemplate
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves_L2.Count);
 
+        if (validMoves_L2.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+
         NextMove move = validMoves_L2[rndIdx];
 
         lastFiveMoves.Enqueue(move);

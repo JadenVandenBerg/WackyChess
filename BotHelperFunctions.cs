@@ -14,19 +14,19 @@ using static HelperFunctions;
 
 public class BotHelperFunctions : MonoBehaviour
 {
-	public static List<Piece> getPiecesTypeRandom(string type, int color) {
+    public static List<Piece> getPiecesTypeRandom(string type, int color) {
         List<Type> pieces = getAllTypePieces(type, color);
 
         List<Piece> selected = new List<Piece>();
 
-		int count = 2;
+        int count = 2;
 
-		if (type == "Pawn") {
-			count = 8;
-		}
-		else if (type == "Queen" || type == "King") {
-			count = 1;
-		}
+        if (type == "Pawn") {
+            count = 8;
+        }
+        else if (type == "Queen" || type == "King") {
+            count = 1;
+        }
 
         System.Random rand = new System.Random();
 
@@ -42,7 +42,7 @@ public class BotHelperFunctions : MonoBehaviour
         }
 
         return selected;
-	}
+    }
 
     public static Piece getPieceTypeInstance(string type, int color)
     {
@@ -147,13 +147,13 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     public static List<Piece> filterPieces(string type, List<Piece> pieces) {
-    	List<Piece> filteredPieces = new List<Piece>();
+        List<Piece> filteredPieces = new List<Piece>();
 
-    	foreach (var piece in pieces) {
+        foreach (var piece in pieces) {
             if (piece.baseType == type) {
-    			filteredPieces.Add(piece);
-    		}
-    	}
+                filteredPieces.Add(piece);
+            }
+        }
 
         return filteredPieces;
     }
@@ -310,7 +310,7 @@ public class BotHelperFunctions : MonoBehaviour
         List<Piece> pieces = getPiecesOnBoardState(bs, color);
         List<PieceAbility> pieceAbilities = new List<PieceAbility>();
 
-        foreach(Piece piece in pieces) {
+        foreach (Piece piece in pieces) {
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Vomit))
             {
@@ -363,7 +363,7 @@ public class BotHelperFunctions : MonoBehaviour
                     pieceAbilities.Add(castle);
                 }
 
-                
+
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Unfreeze))
@@ -506,7 +506,7 @@ public class BotHelperFunctions : MonoBehaviour
         {
             this.piece = piece;
             this.ability = ability;
-            this.coords = new coords( coords.x, coords.y );
+            this.coords = new coords(coords.x, coords.y);
             this.placePieces = placePieces;
             this.placeCoords = placeCoords;
             this.secondPiece = secondPiece;
@@ -664,7 +664,7 @@ public class BotHelperFunctions : MonoBehaviour
             totalMoves.Add(new PieceMoveList(piece, moves));
         }
 
-        foreach(PieceMoveList pml in totalMoves)
+        foreach (PieceMoveList pml in totalMoves)
         {
             Piece piece_ = pml.piece;
             List<coords> _mL = pml.moves;
@@ -736,7 +736,7 @@ public class BotHelperFunctions : MonoBehaviour
             }
         }
 
-        foreach(PieceAbility pa in allAbilitiesBot)
+        foreach (PieceAbility pa in allAbilitiesBot)
         {
             NextMove pieceAbility = new NextMove(pa);
             allMoves.Add(pieceAbility);
@@ -899,7 +899,7 @@ public class BotHelperFunctions : MonoBehaviour
         return allMoves;
     }
 
-    private static void isolatedIterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, BoardState bs, coords[] moveType, bool check, List<coords> allMoves, bool theoretical, bool onlyKills)
+    public static void isolatedIterateThroughPieceMoves(Func<Piece, bool, bool, bool, List<Piece>, bool> comparator, Piece piece, BoardState bs, coords[] moveType, bool check, List<coords> allMoves, bool theoretical, bool onlyKills)
     {
         if (HelperFunctions.checkState(piece, PieceState.Frozen) || HelperFunctions.checkState(piece, PieceState.Jailed))
         {
@@ -927,7 +927,7 @@ public class BotHelperFunctions : MonoBehaviour
             //Portal
             //int[] oldCoords = new int[] { moveType[i, 0] + piece.position.x, moveType[i, 1] + piece.position.y };
             int oldCoordsX, oldCoordsY;
-            
+
             oldCoordsX = moveType[i].x + piece.position.x;
             oldCoordsY = moveType[i].y + piece.position.y;
 
@@ -1078,7 +1078,7 @@ public class BotHelperFunctions : MonoBehaviour
                 }
                 //TODO maybe add check functionality
                 //if (piece.name == "w_k1" || piece.name == "b_k1") Debug.Log("MOVE SIM " + newPosX + "," + newPosY + " J: " + jump + " PIN: " + pieceIsNull + " PID: " + pieceIsDiffColour + " POC: " + piecesOnCoords.Count);
-                
+
             }
         }
     }
@@ -1234,7 +1234,7 @@ public class BotHelperFunctions : MonoBehaviour
     }
 
     public static bool isolatedIsJump(Piece piece, coords from, int toX, int toY, BoardState bs) {
-       int dirX, dirY;
+        int dirX, dirY;
 
         if (checkState(piece, PieceState.Dematerialized))
         {
@@ -1336,7 +1336,7 @@ public class BotHelperFunctions : MonoBehaviour
                 //List<Piece> piecesOnCoords = isolatedGetPiecesOnCoordsBoardGrid(newX - 1, newY - 1, bs.boardGrid, false);
 
                 //if (piecesOnCoords.Count > 0) {
-                   //break;
+                //break;
                 //}
 
                 if (!isolatedPieceCanJumpOver(newX - 1, newY - 1, bs.boardGrid, piece))
@@ -1375,7 +1375,7 @@ public class BotHelperFunctions : MonoBehaviour
 
             return false;
         }
- 
+
         return true;
     }
 
@@ -1636,11 +1636,11 @@ public class BotHelperFunctions : MonoBehaviour
             return;
         }
 
-        coords position = new coords( piece.position.x - 1, piece.position.y - 1 );
+        coords position = new coords(piece.position.x - 1, piece.position.y - 1);
 
         updateBoardState(position, piece, "r", boardState);
         updateBoardState(coords, piece, "a", boardState);
-        piece.position = new coords( coords.x + 1, coords.y + 1 );
+        piece.position = new coords(coords.x + 1, coords.y + 1);
         piece.hasMoved = true;
     }
 
@@ -1658,18 +1658,18 @@ public class BotHelperFunctions : MonoBehaviour
                     if (piece.name == targetPiece.name)
                     {
                         // Return as 1-based coords
-                        return new coords ( x + 1, y + 1 );
+                        return new coords(x + 1, y + 1);
                     }
                 }
             }
         }
 
-        return new coords (-1, -1);
+        return new coords(-1, -1);
     }
 
     public static void updateBoardState(coords coords, Piece piece, String action, BoardState boardState)
     {
-        if (coords.x < 0 || coords.y < 0)
+        if (coords.x < 0 || coords.y < 0 || coords.x > 7 || coords.y > 7)
         {
             return;
         }
@@ -3287,6 +3287,7 @@ public class BotHelperFunctions : MonoBehaviour
                     $"DUPLICATE PIECE {pair.Key}\n" +
                     string.Join("\n", pair.Value)
                 );
+                Debug.Break();
             }
         }
     }

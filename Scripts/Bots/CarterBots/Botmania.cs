@@ -8,8 +8,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using static BotHelperFunctions;
 using static UndoMoveBotHelperFunctions;
-using static UnityEditor.Progress;
-using static UnityEngine.Audio.ProcessorInstance;
 
 
 public class Botmania : BotTemplate

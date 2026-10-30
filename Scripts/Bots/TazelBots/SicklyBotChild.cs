@@ -1038,7 +1038,12 @@ public class SicklyBotChild : BotTemplate
                         checkOccured = true;
                         bool canblockorcapture = false;
                         //King cannot be null because we are in check
-                        coords kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        Piece king = isolatedGetKing(this.currentBoardState, color);
+                        if (king == null)
+                        {
+                            return getRandomBotMove(this);
+                        }
+                        coords kingPos = king.position;
                         if (moveList[^1].moveType == "move")
                         {
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].move.coords, kingPos);

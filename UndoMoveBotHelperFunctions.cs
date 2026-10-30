@@ -661,9 +661,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 removeAbility(piece, PieceAbilities.Spawn);
             }
 
-            UndoMovedPiece mp = new UndoMovedPiece(spawned, new coords(-1, -1), new coords(coords.x, coords.y), false, true, false);
-            undo.addMove(mp);
-            updateBoardState(adjustedCoords, spawned, "a", bs_);
+            //UndoMovedPiece mp = new UndoMovedPiece(spawned, new coords(-1, -1), new coords(coords.x, coords.y), false, true, false);
+            //undo.addMove(mp);
+            spawned.position = new coords(coords.x + 1, coords.y + 1);
+            undo_isolatedAddPiece(spawned, bs_, undo);
+            //updateBoardState(adjustedCoords, spawned, "a", bs_);
         }
         else if (ability == PieceAbilities.Spit)
         {
@@ -958,6 +960,11 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         int idx = rand.Next(numPieces);
                         numPieces--;
 
+                        if (idx >= placePieces.Count)
+                        {
+                            continue;
+                        }
+
                         Piece p_ = placePieces[idx];
                         placePieces.Remove(p_);
 
@@ -1075,7 +1082,6 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
             undo_isolatedRemovePiece(original, bs, undo);
             undo_isolatedAddPiece(clone, bs, undo);
-            skipUndoMoveDeath = true;
         }
 
         //Jailer
@@ -1112,7 +1118,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                 undo_isolatedRemovePiece(deadPiece, bs, undo);
 
                 Piece shieldPawn = Spawnables.create("ShieldPawn", attackerPiece.color * -1, true);
-                shieldPawn.position = deadPiece.position;
+                shieldPawn.position = new coords(deadPiece.position.x - 1, deadPiece.position.y - 1);
 
                 undo_isolatedAddPiece(shieldPawn, bs, undo);
 
@@ -1337,7 +1343,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
             stackingStates |= deathVars.stackingStates;
         }
 
-
+        /*
         if (bs.delayedQueue == null)
         {
             bs.delayedQueue = new DelayedQueue();
@@ -1380,6 +1386,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
             return undo;
         }
+        */
 
         List<Piece> piecesOnSquare = isolatedGetPiecesOnCoordsBoardGrid(piece.position.x - 1, piece.position.y - 1, bs.boardGrid, false);
         foreach (Piece pieceOnSquare in piecesOnSquare)

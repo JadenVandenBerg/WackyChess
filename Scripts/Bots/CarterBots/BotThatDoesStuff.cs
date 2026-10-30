@@ -6,8 +6,6 @@ using UnityEngine;
 using static BotHelperFunctions;
 using static HelperFunctions;
 using static UndoMoveBotHelperFunctions;
-using static UnityEditor.Progress;
-using static UnityEngine.GraphicsBuffer;
 
 public class BotThatDoesStuff : BotTemplate
 {

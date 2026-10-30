@@ -309,6 +309,11 @@ public class ThinkingBotII : BotTemplate
         System.Random rand = new System.Random();
         int rndIdx = rand.Next(validMoves.Count);
 
+        if (validMoves.Count == 0)
+        {
+            return getRandomBotMove(this);
+        }
+
         NextMove move = validMoves[rndIdx];
 
         lastFiveMoves.Enqueue(move);

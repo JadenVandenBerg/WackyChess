@@ -1093,7 +1093,6 @@ public class HelperFunctions : MonoBehaviour
         List<BotHelperFunctions.PieceAbility> pieceAbilities = BotHelperFunctions.getAllPossibleBotAbilities(bot, bs, color);
 
         List<BotHelperFunctions.PieceAbility> acceptedAbilities = new List<BotHelperFunctions.PieceAbility>();
-        Debug.Log(pieceAbilities.Count);
         foreach(BotHelperFunctions.PieceAbility pa in pieceAbilities)
         {
             Piece piece = pa.piece;
@@ -1898,6 +1897,11 @@ public class HelperFunctions : MonoBehaviour
     public static bool checkAbility(Piece piece, PieceAbilities ability)
     {
         return (piece.abilities & ability) != 0;
+    }
+
+    public static bool checkAbilityStrict(PieceAbilities abilities, PieceAbilities ability)
+    {
+        return (abilities & ability) != 0;
     }
 
     public static bool checkStateOnSquare(List<Piece> piecesOnSquare, PieceState state)
@@ -2745,7 +2749,7 @@ public class HelperFunctions : MonoBehaviour
                     throw new ArgumentException("Bad Piece");
             }
 
-            int rand = globalDefs.globalRand.Next(1, 10001);
+            int rand = globalDefs.globalRand.Next(1, 1000000001);
 
             if (simulated || !simulated) piece.name = "simulated_" + piece.name + "_" + rand;
 
@@ -4128,8 +4132,18 @@ public class HelperFunctions : MonoBehaviour
         coords coords = pMove.coords;
 
         GameObject square = findSquare(coords.x, coords.y);
+        List<Piece> pieces = getPiecesOnBoard();
+        bool found = false;
+        foreach(Piece p in pieces)
+        {
+            if (p.name == pMove.piece.name)
+            {
+                found = true;
+                break;
+            }
+        }
 
-        if (true/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
+        if (found/*!getColorsOnSquare(square, true).Contains(piece.color)*/) {
             bool death;
             bool countDeath;
             GameObject selectedToMoveGo = null;
@@ -4635,5 +4649,14 @@ public class HelperFunctions : MonoBehaviour
         Piece piece = (Piece)Activator.CreateInstance(type_, color, false, true);
 
         return piece;
+    }
+
+    public static int colorToIdx(int color)
+    {
+        if (color == 1)
+        {
+            return 0;
+        }
+        return 1;
     }
 }

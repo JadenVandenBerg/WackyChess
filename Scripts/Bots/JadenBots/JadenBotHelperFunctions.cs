@@ -12,7 +12,7 @@ using System.Linq;
 using System.Reflection;
 using static HelperFunctions;
 using static BotHelperFunctions;
-
+using static UndoMoveBotHelperFunctions;
 
 public class JadenBotHelperFunctions : MonoBehaviour
 {
@@ -210,7 +210,7 @@ public class JadenBotHelperFunctions : MonoBehaviour
         return l;
     }
 
-    public static List<float> Jay_getPointsOnBoardState_simple(BoardState bs, bool isKingWorthMore, int color)
+    public static List<float> Jay_getPointsOnBoardState_simple(BoardState bs, bool isKingWorthMore, int color, bool calcStacking)
     {
         if (bs == null)
         {
@@ -249,9 +249,13 @@ public class JadenBotHelperFunctions : MonoBehaviour
 
                     if (piece.baseType == "King")
                     {
-                        if (checkState(piece, PieceState.Jailed) || checkState(piece, PieceState.Frozen))
+                        if (checkState(piece, PieceState.Jailed))
                         {
                             pts += 80;
+                        }
+                        else if (checkState(piece, PieceState.Frozen))
+                        {
+                            pts += 95;
                         }
                         else
                         {
@@ -280,6 +284,11 @@ public class JadenBotHelperFunctions : MonoBehaviour
                         pts = basePts * piece.numSpawns;
                     }
 
+                    if (checkState(piece, PieceState.Stacking) && calcStacking)
+                    {
+                        pts = Jay_calcStackingPoints(piece);
+                    }
+
                     if (piece.color == 1)
                     {
                         wCount += pts;
@@ -300,6 +309,47 @@ public class JadenBotHelperFunctions : MonoBehaviour
         return l;
     }
 
+    public static float Jay_calcStackingPoints(Piece p)
+    {
+        float points = 1f;
+
+        foreach(coords c in p.moves)
+        {
+            points += 0.1f;
+        }
+        foreach (coords c in p.oneTimeMoves)
+        {
+            points += 0.05f;
+        }
+        foreach (coords c in p.oneTimeMoveAndAttacks)
+        {
+            points += 0.1f;
+        }
+        foreach (coords c in p.attacks)
+        {
+            points += 0.3f;
+        }
+        foreach (coords c in p.jumpAttacks)
+        {
+            points += 0.6f;
+        }
+        foreach (coords c in p.moveAndAttacks)
+        {
+            points += 0.6f;
+        }
+        foreach (coords c in p.murderousAttacks)
+        {
+            points += 0.3f;
+        }
+
+        if (p.baseType == "King")
+        {
+            points = points * 5;
+        }
+
+        return points;
+    }
+ 
     public static int Jay_getPawnPromotionPotential(int color, BoardState bs)
     {
         int score = 0;
@@ -571,6 +621,11 @@ public class JadenBotHelperFunctions : MonoBehaviour
 
     public static bool Jay_moveInQueue(Queue<NextMove> moves, NextMove move)
     {
+        if (move == null)
+        {
+            return false;
+        }
+
         foreach (NextMove m in moves)
         {
             if (m.moveType != move.moveType)
@@ -638,5 +693,220 @@ public class JadenBotHelperFunctions : MonoBehaviour
         }
 
         return false;
+    }
+
+    public static int Jay_getDevelopment(BoardState bs, int color)
+    {
+        int score = 8;
+
+        List<Piece> pieces = getPiecesOnBoardState(bs, color);
+
+        foreach (Piece p in pieces)
+        {
+            if (p.baseType == "Pawn" || p.baseType == "King")
+            {
+                continue;
+            }
+
+            if (p.position.x == p.startSquare.x && p.position.y == p.startSquare.y)
+            {
+                score--;
+            }
+        }
+
+        return score;
+    }
+
+    public static List<NextMove> Jay_getAllLegalMovesAndAbilities(BotTemplate bot, BoardState bs, int color)
+    {
+        bool isCheck = Jay_isCheck(bot, bs, color);
+
+        List<NextMove> allMoves = Jay_getAllPossibleBotMovesAndAbilitiesWithCheck(bot, bs, color, isCheck);
+        List<NextMove> acceptedMoves = new List<NextMove>();
+
+        foreach (NextMove nm in allMoves)
+        {
+            var moveVars = getNextMoveVars(nm);
+            Piece p = moveVars.piece;
+            coords c = moveVars.coords;
+            string moveType = moveVars.moveType;
+            //Debug.LogError("Egbot: Testing Move " + p + " to " + c.x + c.y + "");
+
+            if (isCheck)
+            {
+                if (checkState(p, PieceState.Depressed))
+                {
+                    continue;
+                }
+            }
+
+            UndoMove undo;
+            if (moveType == "move")
+            {
+                undo = undo_simulatePieceMove(bs, p, c);
+            }
+            else
+            {
+                undo = undo_simulatePieceAbility(bs, nm.ability);
+            }
+
+            if (!Jay_isCheck(bot, bs, color))
+            {
+                acceptedMoves.Add(nm);
+            }
+
+            undoMove(undo, bs);
+        }
+
+        return acceptedMoves;
+    }
+
+    public static List<NextMove> Jay_getAllPossibleBotMovesAndAbilitiesWithCheck(BotTemplate bot, BoardState bs, int color, bool isCheck)
+    {
+        //resetPiecePositions(null, bs.boardGrid);
+        //bs = copyBoardState(bs);
+
+        var botMoves = Jay_getAllPossibleBotMovesWithCheck(bot, bs, color, isCheck);
+
+        List<PieceMoveList> allMovesBot = botMoves.pieceMoveList;
+        List<PieceAbility> allAbilitiesBot = botMoves.piecesAbilities;
+
+        List<NextMove> allMoves = new List<NextMove>();
+
+        foreach (PieceMoveList pml in allMovesBot)
+        {
+            Piece piece = pml.piece;
+            List<coords> _mL = pml.moves;
+
+            foreach (coords coords in _mL)
+            {
+                Move mv = new Move(piece, coords);
+                NextMove pieceMove = new NextMove(mv);
+
+                allMoves.Add(pieceMove);
+            }
+        }
+
+        foreach (PieceAbility pa in allAbilitiesBot)
+        {
+            NextMove pieceAbility = new NextMove(pa);
+            allMoves.Add(pieceAbility);
+        }
+
+        return allMoves;
+    }
+
+    public static (List<PieceMoveList> pieceMoveList, List<PieceAbility> piecesAbilities) Jay_getAllPossibleBotMovesWithCheck(BotTemplate bot, BoardState bs, int color, bool isCheck)
+    {
+        List<PieceMoveList> totalMoves = new List<PieceMoveList>();
+
+        List<Piece> pieces = getPiecesOnBoardState(bs, color);
+
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            Piece piece = pieces[i];
+
+            List<coords> moves = Jay_getIsolatedStatePieceMovesWithCheck(piece, bs, false, isCheck);
+
+            if (moves != null && moves.Count > 0)
+            {
+                totalMoves.Add(new PieceMoveList(piece, moves));
+            }
+        }
+
+        List<PieceAbility> pieceAbilities = getAllPossibleBotAbilities(bot, bs, color);
+
+        return (totalMoves, pieceAbilities);
+    }
+
+    public static List<coords> Jay_getIsolatedStatePieceMovesWithCheck(Piece piece, BoardState bs, bool theoretical, bool check)
+    {
+        List<coords> allMoves = new List<coords>();
+
+        List<Piece>[,] boardGrid = bs.boardGrid;
+
+        //todo maybe forcestayturn
+
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveComparator, piece, bs, piece.moves, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.moveAndAttacks, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.attacksComparator, piece, bs, piece.attacks, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMovesComparator, piece, bs, piece.oneTimeMoves, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.oneTimeMoveAndAttacksComparator, piece, bs, piece.oneTimeMoveAndAttacks, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.murderousAttacksComparator, piece, bs, piece.murderousAttacks, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.conditionalAttacksComparator, piece, bs, piece.conditionalAttacks, check, allMoves, theoretical, false);
+        isolatedIterateThroughPieceMoves(HelperFunctions.jumpAttacksComparator, piece, bs, piece.jumpAttacks, check, allMoves, theoretical, false);
+
+        //TODO fix dependentMoves for isolated state
+        //piece.dependentMovesSet();
+        //isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.dependentAttacks, check, allMoves);
+
+        //piece.interactiveMovesSet();
+        //isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.interactiveAttacks, check, allMoves);
+
+        HelperFunctions.updatePieceFlags(piece, check);
+        if (piece.flag == 1)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove1, check, allMoves, theoretical, false);
+        }
+        else if (piece.flag == 2)
+        {
+            isolatedIterateThroughPieceMoves(HelperFunctions.moveAndAttacksComparator, piece, bs, piece.flagMove2, check, allMoves, theoretical, false);
+        }
+
+        return allMoves;
+    }
+
+    public static bool Jay_isCheck(BotTemplate bot, BoardState bs, int color)
+    {
+        Piece king = isolatedGetKing(bs, color);
+
+        if (king == null)
+        {
+            return true;
+        }
+
+        List<NextMove> allOppKills = getAllPossibleBotAttacksAndAbilities(bot, bs, color * -1);
+
+        foreach(NextMove nm in allOppKills)
+        {
+            var moveVars = getNextMoveVars(nm);
+            Piece p = moveVars.piece;
+            coords c = moveVars.coords;
+            string moveType = moveVars.moveType;
+
+            if (moveType == "move")
+            {
+                if (checkState(p, PieceState.Dematerialized))
+                {
+                    continue;
+                }
+
+                if (king.position.x == c.x && king.position.y == c.y)
+                {
+                    //Debug.LogError("Egbot: Opponent Move " + p + " to " + (c.x) + (c.y) + " is causing a check");
+                    //Debug.Break();
+                    return true;
+                }
+            }
+            else if (moveType == "ability")
+            {
+                if (checkAbilityStrict(nm.ability.ability, PieceAbilities.Materialize))
+                {
+                    if (Jay_areCoordsEqual(nm.ability.coords, king.position))
+                    {
+                        //Debug.LogError("MATERIALIZING ON KING");
+                        //Debug.Break();
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static bool Jay_areCoordsEqual(coords a, coords b)
+    {
+        return a.x == b.x && a.y == b.y;
     }
 }

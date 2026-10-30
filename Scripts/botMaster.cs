@@ -44,99 +44,110 @@ public class botMaster : MonoBehaviour
         //and replace it with
         //List<string> randomBots = new List<string>{"fsaf", "asd", "asdad", "asdasd", "asdad", "asda", "asdad", "ads"};
 
-        nonResettables.isBotTournament = false;
-        //SEASON_NAME = "ACC_SEASON4";
-        waitTime = 0f;
+        nonResettables.isBotTournament = true;
+        nonResettables.isDuos = false;
+        //SEASON_NAME = "WCTourney_S5";
+        waitTime = 0;
         nonResettables.playAudio = false;
-        nonResettables.logMatch = true;
+        nonResettables.logMatch = false;
         nonResettables.ruleset = "Wacky";
         nonResettables.postElo = true;
         timeForPenalty = 5000; //This is in milliseconds.
 
-        if (nonResettables.isBotTournament)
+        if (nonResettables.isBotTournament && !nonResettables.isDuos)
         {
             if (nonResettables.botTournament == null)
             {
                 List<string> forceNames = new List<string>
                 {
-                    "ColinMcBot",
-                    "Botgrabber",
-                    "BotByTheBook",
-                    "AbsobotZero"
+                    "Egbot",
+                    "Coinbot"
                 };
 
-                List<string> randomBots = nonResettables.get8RandomBots(forceNames, "Jaden");
+                List<string> randomBots = nonResettables.getXRandomBots(forceNames, "Jaden", 8);
 
                 List<string> div1 = new List<string>
                 {
-                    Bots.ThinkingBot,
-                    Bots.PawnBot,
-                    Bots.BotniaAndHerzebotvina,
-                    Bots.HitmanBot,
                     Bots.BottusMaximus,
                     Bots.SavageBeastBot,
                     Bots.G2EBot,
-                    Bots.OnePieceRandomBot,
+                    Bots.Abilibot,
+                    Bots.ChristopherColumbot,
+                    Bots.AssassinBot,
+                    Bots.Botfish,
+                    Bots.ShieldBot,
                 };
 
                 List<string> div2 = new List<string>
                 {
+                    Bots.AggroBot,
+                    Bots.AmazeingBot,
+                    Bots.MarchingBot,
+                    Bots.BotRoss,
+                    Bots.AdventurousKingBot,
                     Bots.Bloodbot,
-                    Bots.FiveXRandomBot,
-                    Bots.TwoMoveBot,
-                    Bots.Abilibot,
-                    Bots.EqualityBot,
-                    Bots.BotsUnited,
-                    Bots.Botkrieg,
-                    Bots.LaserBot,
+                    Bots.RestrictorBot,
+                    Bots.BOTential,
                 };
 
                 List<string> div3 = new List<string>
                 {
-                    Bots.NegativeOneMoveBot,
-                    Bots.GamblingBot,
-                    Bots.MarchingBot,
-                    Bots.BotDefender,
-                    Bots.Bothoven,
-                    Bots.RestrictorBot,
-                    Bots.BOTential,
-                    Bots.RandomBot,
+                    Bots.BotsUnited,
+                    Bots.BotThatDoesStuff,
+                    Bots.WeightingBot,
+                    Bots.Bot618,
+                    Bots.AmazeingBot,
+                    Bots.BerserkerBot,
+                    Bots.VirusBot,
+                    Bots.SicklyBotChild,
                 };
 
                 List<string> div4 = new List<string>
                 {
-                    Bots.AssassinBot,
-                    Bots.ShieldBot,
-                    Bots.AdventurousKingBot,
-                    Bots.OneMoveBot,
-                    Bots.CountingBot,
-                    Bots.Lobotomy,
-                    Bots.BotRoss,
-                    Bots.IdiotBot,
+                    Bots.NegativeOneMoveBot,
+                    Bots.PawnBot,
+                    Bots.HitmanBot,
+                    Bots.OnePieceRandomBot,
+                    Bots.GamblingBot,
+                    Bots.MigratingBot,
+                    Bots.LazyBot,
+                    Bots.RestrictorBot,
                 };
 
                 List<string> div5 = new List<string>
                 {
-                    Bots.OnePieceRandomBot,
-                    Bots.ShieldBot,
-                    Bots.BotRoss,
-                    Bots.FiveXRandomBot,
-                    Bots.AdventurousKingBot,
-                    Bots.BotsUnited,
-                    Bots.Lobotomy,
-                    Bots.IdiotBot,
+                    Bots.BalanceBot,
+                    Bots.BotWithAPlot,
+                    Bots.BotDefender,
+                    Bots.EqualityBot,
+                    Bots.Bothoven,
+                    Bots.CountingBot,
+                    Bots.SpeedrunnerBot,
+                    Bots.RandomBot,
                 };
 
                 List<string> div6 = new List<string>
                 {
-                    Bots.LazyBot,
-                    Bots.Botfish,
-                    Bots.IdiotBot,
-                    Bots.RandomBot,
-                    Bots.Lobotomy,
+                    Bots.ShieldBot,
                     Bots.BOTential,
                     Bots.FiveXRandomBot,
                     Bots.BotRoss,
+                    Bots.AdventurousKingBot,
+                    Bots.MarchingBot,
+                    Bots.Lobotomy,
+                    Bots.IdiotBot,
+                };
+                
+                List<string> div7 = new List<string>
+                {
+                    Bots.BotDefender,
+                    Bots.Bothoven,
+                    Bots.BOTential,
+                    Bots.AdventurousKingBot,
+                    Bots.BotRoss,
+                    Bots.IdiotBot,
+                    Bots.RandomBot,
+                    Bots.Lobotomy,
                 };
 
 
@@ -167,6 +178,9 @@ public class botMaster : MonoBehaviour
 
                 //Div 6
                 //nonResettables.botTournament = new BotTournament(div6[0], div6[1], div6[2], div6[3], div6[4], div6[5], div6[6], div6[7], false);
+
+                //Div 7
+                //nonResettables.botTournament = new BotTournament(div7[0], div7[1], div7[2], div7[3], div7[4], div7[5], div7[6], div7[7], false);
             }
 
             var bots = nonResettables.botTournament.nextGame();
@@ -193,6 +207,13 @@ public class botMaster : MonoBehaviour
                 botBlack = (BotTemplate)Activator.CreateInstance(botBlackType, -1);
             }
         }
+        else if (nonResettables.isBotTournament && nonResettables.isDuos)
+        {
+            if (nonResettables.botTournamentDuos == null)
+            {
+                nonResettables.botTournamentDuos = new BotTournamentDuos(nonResettables.getXRandomBots(null, "Jaden", 16));
+            }
+        }
 
         if (!gameOver)
         {
@@ -204,19 +225,19 @@ public class botMaster : MonoBehaviour
             {
                 //Replace these with your bots if it is a tournament
                 botWhite = new Egbot(1);
-                botBlack = new OneMoveBot(-1);
+                botBlack = new BotniaAndHerzebotvina(-1);
                 // For WCSingle
                 /*
                 int rand = globalDefs.globalRand.Next(1, 3);
                 if (rand == 1)
                 {
-                    botWhite = new BotByTheBook(1);
-                    botBlack = new Botfish(-1);
+                    botWhite = new Botkrieg(1);
+                    botBlack = new ThinkingBot(-1);
                 }
                 else
                 {
-                    botWhite = new Botfish(1);
-                    botBlack = new BotByTheBook(-1);
+                    botWhite = new ThinkingBot(1);
+                    botBlack = new Botkrieg(-1);
                 }
                 */
             }

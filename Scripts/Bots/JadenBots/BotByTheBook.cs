@@ -714,7 +714,7 @@ public class BotByTheBook : BotTemplate
                             undo_3 = undo_simulatePieceAbility(this.currentBoardState, nextMove_3.ability);
                         }
 
-                        List<float> pob = Jay_getPointsOnBoardState_simple(currentBoardState, true, color);
+                        List<float> pob = Jay_getPointsOnBoardState_simple(currentBoardState, true, color, false);
 
                         float botPoints = this.color == 1 ? pob[0] : pob[1];
                         float oppPoints = this.color == -1 ? pob[0] : pob[1];
@@ -768,7 +768,7 @@ public class BotByTheBook : BotTemplate
 
                     if (allMovesOpp_L2.Count == 0)
                     {
-                        List<float> pob = Jay_getPointsOnBoardState_simple(bestMoveOppBS, true, color);
+                        List<float> pob = Jay_getPointsOnBoardState_simple(bestMoveOppBS, true, color, false);
 
                         float botPoints = this.color == 1 ? pob[0] : pob[1];
                         float oppPoints = this.color == -1 ? pob[0] : pob[1];
@@ -808,7 +808,7 @@ public class BotByTheBook : BotTemplate
                                 undo_L2_opp = undo_simulatePieceAbility(bestMoveOppBS, nextMove_L2_opp.ability);
                             }
 
-                            List<float> pob_l2 = Jay_getPointsOnBoardState_simple(bestMoveOppBS, true, color);
+                            List<float> pob_l2 = Jay_getPointsOnBoardState_simple(bestMoveOppBS, true, color, false);
 
                             float botPoints_l2 = this.color == 1 ? pob_l2[0] : pob_l2[1];
                             float oppPoints_l2 = this.color == -1 ? pob_l2[0] : pob_l2[1];

@@ -63,6 +63,40 @@ public class Both : BotTemplate
             coords = pa.coords;
         }
 
+        if (HelperFunctions.checkState(piece, PieceState.Medusa))
+        {
+            foreach (Piece oppPiece in allPiecesOpp)
+            {
+                if (coords.x == oppPiece.position.x && coords.y == oppPiece.position.y)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.CaptureTheFlag))
+        {
+            if (this.color == 1)
+            {
+                if (coords.y < 3)
+                {
+                    invinsible = true;
+                }
+            }
+            else
+            {
+                if (coords.y > 6)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.Crook) || HelperFunctions.checkState(piece, PieceState.Dematerialized) || piece.collateralType == 1) //Change to piece states and such do the same for protect function
+        {
+            invinsible = true;
+        }
+
         if (!invinsible)
         {
             foreach (NextMove oppMove in allMovesOpp)
@@ -195,33 +229,24 @@ public class Both : BotTemplate
 
         foreach (NextMove killShot in allMoves)
         {
-            Piece piece;
-            coords coords;
-            string moveType = killShot.moveType;
-
-            if (moveType == "move")
+            if (checkForSafeMove(this.currentBoardState, killShot))
             {
-                Move mv = killShot.move;
+                BoardState cloneState = simulateMove(this.currentBoardState, killShot);
+                List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color);
 
-                piece = mv.p;
-                coords = mv.coords;
+                foreach (NextMove simMove in allMoves2)
+                {
+                    if (checkForSafeMove(cloneState, simMove))
+                    {
+                        BoardState cloneState2 = simulateMove(cloneState, simMove);
+                        List<NextMove> allMoves3 = getAllPossibleBotMovesAndAbilities(this, cloneState2, this.color);
+                        if (isolatedGetKing(cloneState2, this.color * -1) is null)
+                        {
+                            validMoves.Add(killShot);
+                        }
+                    }
+                }
             }
-            else
-            {
-                PieceAbility pa = killShot.ability;
-
-                piece = pa.piece;
-                coords = pa.coords;
-            }
-
-            BoardState cloneState = simulateMove(this.currentBoardState, killShot);
-            List<NextMove> allMoves2 = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color);
-
-            foreach (NextMove simMove in allMoves2)
-            {
-                //Nothing for now
-            }
-
         }
 
         if (turn != 1 && validMoves.Count == 0)

@@ -8,8 +8,6 @@ using System.Diagnostics;
 using System.Net.NetworkInformation;
 
 //To Do:
-//Don't check if it is safe for invinsable pieces. (Capture the flag, infinite, crook)
-//Add a medusa check, medusa is always safe after a capture
 //Add insentive for the bot to move forward and develop
 
 //we need trading and ghost piece support
@@ -161,7 +159,36 @@ public class Bottom : BotTemplate
             coords = pa.coords;
         }
 
-        if (false) //Change to piece states and such do the same for protect function
+        if (HelperFunctions.checkState(piece, PieceState.Medusa))
+        {
+            foreach (Piece oppPiece in allPiecesOpp)
+            {
+                if (coords.x == oppPiece.position.x && coords.y == oppPiece.position.y)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.CaptureTheFlag))
+        {
+            if (this.color == 1)
+            {
+                if (coords.y < 3)
+                {
+                    invinsible = true;
+                }
+            }
+            else
+            {
+                if (coords.y > 6)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.Crook) || HelperFunctions.checkState(piece, PieceState.Dematerialized) || piece.collateralType == 1) //Change to piece states and such do the same for protect function
         {
             invinsible = true;
         }

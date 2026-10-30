@@ -25,7 +25,7 @@ public class SicklyBotChild : BotTemplate
     float penaltyTimer = 4800;
     bool checkOccured = false;
 
-    //Aim for four and a half seconds as a 500ms safty net
+    //Aim for four and an eighth seconds as a 200ms safty net
     List<Piece> piecesList = new List<Piece>();
     List<NextMove> moveList = new List<NextMove>();
     List<string> moveTypeList = new List<string>();
@@ -47,16 +47,16 @@ public class SicklyBotChild : BotTemplate
     public NextMove runAcceptableLine(BoardState currentBoardstate)
     {
         int num = 0;
-        List<Color> colors = new() {Color.orange, Color.yellow, Color.blue, Color.purple, Color.black};
-        foreach(NextMove listmove in moveList)
+        List<Color> colors = new() { Color.orange, Color.yellow, Color.blue, Color.purple, Color.black };
+        foreach (NextMove listmove in moveList)
         {
             if (listmove.moveType == "move")
             {
-                HelperFunctions.highlightSquare(HelperFunctions.findSquare(listmove.move.coords.x, listmove.move.coords.y), colors[num]); 
-            } 
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(listmove.move.coords.x, listmove.move.coords.y), colors[num]);
+            }
             else
             {
-                HelperFunctions.highlightSquare(HelperFunctions.findSquare(listmove.ability.coords.x, listmove.ability.coords.y), colors[num]); 
+                HelperFunctions.highlightSquare(HelperFunctions.findSquare(listmove.ability.coords.x, listmove.ability.coords.y), colors[num]);
             }
             num += 1;
         }
@@ -670,7 +670,16 @@ public class SicklyBotChild : BotTemplate
                         checkOccured = true;
                         bool canblockorcapture = false;
                         //King cannot be null because we are in check
-                        coords kingPos = isolatedGetKing(this.currentBoardState, color).position;
+
+                        coords kingPos;
+                        if (isolatedGetKing(this.currentBoardState, color) is not null)
+                        {
+                            kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        }
+                        else
+                        {
+                            break;
+                        }
                         if (moveList[^1].moveType == "move")
                         {
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].move.coords, kingPos);
@@ -853,7 +862,16 @@ public class SicklyBotChild : BotTemplate
                         checkOccured = true;
                         bool canblockorcapture = false;
                         //King cannot be null because we are in check
-                        coords kingPos = isolatedGetKing(this.currentBoardState, color).position;
+
+                        coords kingPos;
+                        if (isolatedGetKing(this.currentBoardState, color) is not null)
+                        {
+                            kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        }
+                        else
+                        {
+                            break;
+                        }
                         if (moveList[^1].moveType == "move")
                         {
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].move.coords, kingPos);
@@ -1038,7 +1056,17 @@ public class SicklyBotChild : BotTemplate
                         checkOccured = true;
                         bool canblockorcapture = false;
                         //King cannot be null because we are in check
-                        coords kingPos = isolatedGetKing(this.currentBoardState, color).position;
+
+                        coords kingPos;
+                        if (isolatedGetKing(this.currentBoardState, color) is not null)
+                        {
+                            kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        }
+                        else
+                        {
+                            break;
+                        }
+
                         if (moveList[^1].moveType == "move")
                         {
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].move.coords, kingPos);
@@ -1052,7 +1080,6 @@ public class SicklyBotChild : BotTemplate
                         }
                         else
                         {
-                            //King cannot be null because we are in check
                             List<coords> pieceCoords = GetLinePoints(moveList[^1].ability.coords, kingPos);
                             foreach (coords listcoords in pieceCoords)
                             {
@@ -1062,6 +1089,8 @@ public class SicklyBotChild : BotTemplate
                                 }
                             }
                         }
+
+
                         if (pieceOpp4.baseType == "King" || canblockorcapture == true)
                         {
                             BoardState originalBoardState3_ = this.currentBoardState;
@@ -1222,11 +1251,11 @@ public class SicklyBotChild : BotTemplate
                         coords kingPos;
                         if (isolatedGetKing(this.currentBoardState, color) is not null)
                         {
-                            kingPos = isolatedGetKing(this.currentBoardState, color).position; 
-                        } 
+                            kingPos = isolatedGetKing(this.currentBoardState, color).position;
+                        }
                         else
                         {
-                            break;   
+                            break;
                         }
                         if (moveList[^1].moveType == "move")
                         {

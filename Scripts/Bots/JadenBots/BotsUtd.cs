@@ -836,7 +836,7 @@ public class BotsUnited : BotTemplate
         List<NextMove> allMovesOpp = new List<NextMove>();
         foreach (Piece p in allPiecesOpp)
         {
-            List<NextMove> allPieceMovesOpp = getAllPossibleBotPieceAttacks(bs, p);
+            List<NextMove> allPieceMovesOpp = getAllPossibleBotPieceAttacks(bs, p, false);
             allMovesOpp.AddRange(allPieceMovesOpp);
         }
 

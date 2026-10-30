@@ -314,106 +314,86 @@ public class BotHelperFunctions : MonoBehaviour
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Vomit))
             {
-                if (piece.storage != null && piece.storage.Count < 1)
+
+                if (piece.storage != null && piece.storage.Count >= 1)
                 {
-                    continue;
+                    List<Piece> placePieces = new List<Piece>();
+
+                    foreach (Piece storedPiece in piece.storage)
+                    {
+                        placePieces.Add(storedPiece);
+                    }
+
+                    List<coords> possibleCoords = isolatedGetCollateralSquares(piece, bs);
+
+                    if (possibleCoords.Count > 0)
+                    {
+                        PieceAbility vomit = new PieceAbility(piece, PieceAbilities.Vomit, piece.position, placePieces, possibleCoords, null);
+                        pieceAbilities.Add(vomit);
+                    }
                 }
-                else if (piece.storage == null)
-                {
-                    continue;
-                }
-
-                List<Piece> placePieces = new List<Piece>();
-
-                foreach (Piece storedPiece in piece.storage)
-                {
-                    placePieces.Add(storedPiece);
-                }
-
-                List<coords> possibleCoords = isolatedGetCollateralSquares(piece, bs);
-
-                if (possibleCoords.Count == 0)
-                {
-                    continue;
-                }
-
-                PieceAbility vomit = new PieceAbility(piece, PieceAbilities.Vomit, piece.position, placePieces, possibleCoords, null);
-                pieceAbilities.Add(vomit);
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleLeft))
             {
-                if (!isolatedCheckCanCastle(bs, -1, color))
+                if (isolatedCheckCanCastle(bs, -1, color))
                 {
-                    continue;
+                    Piece king = isolatedGetKing(bs, color);
+                    Piece rook;
+                    if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r1");
+                    else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r1");
+
+                    coords coords = new coords(king.position.x - 2, king.position.y);
+                    PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleLeft, coords, null, null, rook);
+                    pieceAbilities.Add(castle);
                 }
-
-                Piece king = isolatedGetKing(bs, color);
-                Piece rook;
-                if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r1");
-                else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r1");
-
-                coords coords = new coords (king.position.x - 2, king.position.y);
-                PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleLeft, coords, null, null, rook);
-                pieceAbilities.Add(castle);
-
-                //Debug.LogError("Can Castle: " + king.color + " -> " + king.position.x + "," + king.position.y + " -> " + rook.position.x + "," + rook.position.y);
-                //Debug.Log(isolatedArePiecesInBetweenSquaresHorizontal(king.position.x, king.position.y, rook.position.x, rook.position.y, bs));
-                //Debug.Break();
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.CastleRight))
             {
-                if (!isolatedCheckCanCastle(bs, 1, color))
+                if (isolatedCheckCanCastle(bs, 1, color))
                 {
-                    continue;
+                    Piece king = isolatedGetKing(bs, color);
+                    Piece rook;
+                    if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r2");
+                    else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r2");
 
-                    //Debug.LogError("Can Castle");
-                    //Debug.Break();
+                    coords coords = new coords(king.position.x + 2, king.position.y);
+                    PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleRight, coords, null, null, rook);
+                    pieceAbilities.Add(castle);
                 }
 
-                Piece king = isolatedGetKing(bs, color);
-                Piece rook;
-                if (color == 1) rook = findPieceOnBoardStateFromPanelCode(bs, "w_r2");
-                else rook = findPieceOnBoardStateFromPanelCode(bs, "b_r2");
-
-                coords coords = new coords (king.position.x + 2, king.position.y);
-                PieceAbility castle = new PieceAbility(king, PieceAbilities.CastleRight, coords, null, null, rook);
-                pieceAbilities.Add(castle);
+                
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Unfreeze))
             {
-                if (!HelperFunctions.checkState(piece, PieceState.Frozen))
+                if (HelperFunctions.checkState(piece, PieceState.Frozen))
                 {
-                    continue;
+                    PieceAbility unFreeze = new PieceAbility(piece, PieceAbilities.Unfreeze, piece.position, null, null, null);
+                    pieceAbilities.Add(unFreeze);
                 }
-
-                PieceAbility unFreeze = new PieceAbility(piece, PieceAbilities.Unfreeze, piece.position, null, null, null);
-                pieceAbilities.Add(unFreeze);
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Freeze))
             {
-                if (!isolatedIsPieceSurroundingColor(piece, piece.color * -1, bs))
+                if (isolatedIsPieceSurroundingColor(piece, piece.color * -1, bs))
                 {
-                    continue;
-                }
-
-                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                {
-                    int posX = piece.position.x + dirX - 1;
-                    int posY = piece.position.y + dirY - 1;
-
-                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
-
-                    List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
-                    foreach (Piece p_ in piecesOnDir)
+                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
                     {
-                        if (p_.color != piece.color && !HelperFunctions.checkState(p_, PieceState.Frozen))
+                        int posX = piece.position.x + dirX - 1;
+                        int posY = piece.position.y + dirY - 1;
+
+                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
+
+                        List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
+                        foreach (Piece p_ in piecesOnDir)
                         {
-                            PieceAbility freeze = new PieceAbility(piece, PieceAbilities.Freeze, new coords( posX + 1, posY + 1 ), null, null, p_);
-                            pieceAbilities.Add(freeze);
+                            if (p_.color != piece.color && !HelperFunctions.checkState(p_, PieceState.Frozen))
+                            {
+                                PieceAbility freeze = new PieceAbility(piece, PieceAbilities.Freeze, new coords(posX + 1, posY + 1), null, null, p_);
+                                pieceAbilities.Add(freeze);
+                            }
                         }
                     }
                 }
@@ -426,70 +406,62 @@ public class BotHelperFunctions : MonoBehaviour
                     continue;
                 }
 
-                if (isolatedAreSurroundingSquaresFull(piece, bs))
+                if (piece.numSpawns > 0 && !isolatedAreSurroundingSquaresFull(piece, bs))
                 {
-                    continue;
-                }
-
-                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                {
-                    int posX = piece.position.x + dirX - 1;
-                    int posY = piece.position.y + dirY - 1;
-
-                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
-
-                    List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
-                    if (piecesOnDir.Count > 0)
+                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
                     {
-                        continue;
-                    }
+                        int posX = piece.position.x + dirX - 1;
+                        int posY = piece.position.y + dirY - 1;
 
-                    PieceAbility spawn = new PieceAbility(piece, PieceAbilities.Spawn, new coords( posX + 1, posY + 1 ), null, null, null);
-                    pieceAbilities.Add(spawn);
+                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
+
+                        List<Piece> piecesOnDir = isolatedGetPiecesOnCoordsBoardGrid(posX, posY, bs.boardGrid, false);
+                        if (piecesOnDir.Count > 0)
+                        {
+                            continue;
+                        }
+
+                        PieceAbility spawn = new PieceAbility(piece, PieceAbilities.Spawn, new coords(posX + 1, posY + 1), null, null, null);
+                        pieceAbilities.Add(spawn);
+                    }
                 }
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Spit))
             {
-                if (piece.storage == null || (piece.storage != null && piece.storage.Count <= 0))
+                if (!(piece.storage == null || (piece.storage != null && piece.storage.Count <= 0)))
                 {
-                    continue;
-                }
+                    foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
+                    {
+                        int posX = piece.position.x + dirX - 1;
+                        int posY = piece.position.y + dirY - 1;
 
-                foreach (var (dirX, dirY) in globalDefs.globalDirectionsNoZero)
-                {
-                    int posX = piece.position.x + dirX - 1;
-                    int posY = piece.position.y + dirY - 1;
+                        if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
 
-                    if (!HelperFunctions.checkBounds(posX + 1, posY + 1)) continue;
+                        //Debug.Log("NEW SPIT FOUND: " + piece.name + " -> " + piece.storage.x.name + "");
 
-                    //Debug.Log("NEW SPIT FOUND: " + piece.name + " -> " + piece.storage.x.name + "");
-
-                    PieceAbility spit = new PieceAbility(piece, PieceAbilities.Spit, new coords( posX + 1, posY + 1 ), null, null, piece.storage[0]);
-                    pieceAbilities.Add(spit);
+                        PieceAbility spit = new PieceAbility(piece, PieceAbilities.Spit, new coords(posX + 1, posY + 1), null, null, piece.storage[0]);
+                        pieceAbilities.Add(spit);
+                    }
                 }
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize))
             {
-                if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
+                if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
                 {
-                    continue;
+                    PieceAbility dematerialize = new PieceAbility(piece, PieceAbilities.Dematerialize, piece.position, null, null, null);
+                    pieceAbilities.Add(dematerialize);
                 }
-
-                PieceAbility dematerialize = new PieceAbility(piece, PieceAbilities.Dematerialize, piece.position, null, null, null);
-                pieceAbilities.Add(dematerialize);
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Materialize))
             {
-                if (!HelperFunctions.checkState(piece, PieceState.Dematerialized))
+                if (HelperFunctions.checkState(piece, PieceState.Dematerialized))
                 {
-                    continue;
+                    PieceAbility materialize = new PieceAbility(piece, PieceAbilities.Materialize, piece.position, null, null, null);
+                    pieceAbilities.Add(materialize);
                 }
-
-                PieceAbility materialize = new PieceAbility(piece, PieceAbilities.Materialize, piece.position, null, null, null);
-                pieceAbilities.Add(materialize);
             }
 
             if (HelperFunctions.checkAbility(piece, PieceAbilities.Split))
@@ -709,12 +681,12 @@ public class BotHelperFunctions : MonoBehaviour
         return allMoves;
     }
 
-    public static List<NextMove> getAllPossibleBotPieceAttacks(BoardState bs, Piece piece)
+    public static List<NextMove> getAllPossibleBotPieceAttacks(BoardState bs, Piece piece, bool theoretical)
     {
         List<PieceMoveList> totalMoves = new List<PieceMoveList>();
 
         List<NextMove> allMoves = new List<NextMove>();
-        List<coords> moves = getIsolatedStatePieceAttacks(piece, bs, false, false);
+        List<coords> moves = getIsolatedStatePieceAttacks(piece, bs, theoretical, false);
 
         if (moves != null && moves.Count > 0)
         {
@@ -823,6 +795,25 @@ public class BotHelperFunctions : MonoBehaviour
                     {
                         pieces.Add(p);
                     }
+                }
+            }
+        }
+
+        return pieces;
+    }
+
+    public static List<Piece> getAllPiecesOnBoardState(BoardState bs)
+    {
+        List<Piece> pieces = new List<Piece>();
+        List<Piece>[,] boardGrid = bs.boardGrid;
+
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                foreach (Piece p in boardGrid[x, y])
+                {
+                    pieces.Add(p);
                 }
             }
         }
@@ -1212,10 +1203,12 @@ public class BotHelperFunctions : MonoBehaviour
             }
             else if (piecesOnCoordsCount == 1 && allPiggyback && colorOnlyOnCoords)
             {
-                if (!HelperFunctions.checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+                if (!HelperFunctions.checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King"
+                && !checkState(piece, PieceState.Shield))
                 {
                     crowdingElegible = true;
                 }
+
 
                 if (HelperFunctions.checkState(piecesOnCoords[0], PieceState.Piggyback) && piecesOnCoords[0].baseType == "King")
                 {
@@ -1959,6 +1952,7 @@ public class BotHelperFunctions : MonoBehaviour
                     HelperFunctions.removeState(p_, PieceState.Jailed);
 
                     updateBoardState(coords__, p_, "a", bs);
+                    isolatedCheckPromote(p_, bs);
 
                     piece.storage.Remove(p_);
                 }
@@ -1986,6 +1980,7 @@ public class BotHelperFunctions : MonoBehaviour
                     HelperFunctions.removeState(p_, PieceState.Jailed);
 
                     updateBoardState(c_, p_, "a", bs);
+                    isolatedCheckPromote(p_, bs);
 
                     piece.storage.Remove(p_);
                 }
@@ -2113,6 +2108,7 @@ public class BotHelperFunctions : MonoBehaviour
             updateBoardState(adjustedCoords, secondPiece, "a", bs);
 
             HelperFunctions.removeState(secondPiece, PieceState.Jailed);
+            isolatedCheckPromote(secondPiece, bs);
 
             piece.storage.Remove(secondPiece);
         }
@@ -2671,6 +2667,7 @@ public class BotHelperFunctions : MonoBehaviour
 
                             HelperFunctions.removeState(p_, PieceState.Jailed);
                             updateBoardState(coords__, p_, "a", bs);
+                            isolatedCheckPromote(p_, bs);
 
                             piece.storage.Remove(p_);
                         }
@@ -2696,6 +2693,7 @@ public class BotHelperFunctions : MonoBehaviour
                             //Debug.LogWarning("_ Simulating Vomiting on adjusted cords: " + c_[0] + "," + c_.y);
 
                             updateBoardState(c_, p_, "a", bs);
+                            isolatedCheckPromote(p_, bs);
                             HelperFunctions.removeState(p_, PieceState.Jailed);
 
                             piece.storage.Remove(p_);
@@ -2832,7 +2830,21 @@ public class BotHelperFunctions : MonoBehaviour
                     }
 
                     List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
-                    isolatedCollateralDeath(pieces, bs);
+                    
+                    if (nonResettables.ruleset == "Atomic")
+                    {
+                        foreach (Piece p in new List<Piece>(pieces))
+                        {
+                            if (p.baseType != "Pawn")
+                            {
+                                isolatedCollateralDeath(pieceToList(p), bs);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        isolatedCollateralDeath(pieces, bs);
+                    }
                 }
             }
 
@@ -2840,6 +2852,7 @@ public class BotHelperFunctions : MonoBehaviour
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
+                    isolatedCollateralDeath(HelperFunctions.pieceToList(deadPiece), bs);
                     return;
                 }
 
@@ -3091,8 +3104,6 @@ public class BotHelperFunctions : MonoBehaviour
                 }
             }
         }
-
-
 
         sb.AppendLine("White Total: " + w + "Black Total: " + b);
 

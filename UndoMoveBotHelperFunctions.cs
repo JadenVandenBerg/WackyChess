@@ -479,6 +479,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     undo.addStorage(barf);
 
                     updateBoardState(coords__, p_, "a", bs_);
+                    undo_isolatedCheckPromote(p_, bs_, undo, false);
 
                     UndoState pieceJailedFix = new UndoState(p_, p_.states);
                     undo.addState(pieceJailedFix);
@@ -505,6 +506,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                     undo.addStorage(barf);
 
                     updateBoardState(c_, p_, "a", bs_);
+                    undo_isolatedCheckPromote(p_, bs_, undo, false);
 
                     UndoState pieceJailedFix = new UndoState(p_, p_.states);
                     undo.addState(pieceJailedFix);
@@ -957,7 +959,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         numPieces--;
 
                         Piece p_ = placePieces[idx];
-                        placePieces.RemoveAll(p => p.name == p_.name);
+                        placePieces.Remove(p_);
 
                         coords coords__ = new coords( coords_.x - 1, coords_.y - 1 );
 
@@ -966,6 +968,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         undo.addStorage(barf);
 
                         updateBoardState(coords__, p_, "a", bs);
+                        undo_isolatedCheckPromote(p_, bs, undo, false);
 
                         UndoState pieceJailedFix = new UndoState(p_, p_.states);
                         undo.addState(pieceJailedFix);
@@ -992,6 +995,7 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
                         undo.addStorage(barf);
 
                         updateBoardState(gridCoords, p_, "a", bs);
+                        undo_isolatedCheckPromote(p_, bs, undo, false);
 
                         UndoState pieceJailedFix = new UndoState(p_, p_.states);
                         undo.addState(pieceJailedFix);
@@ -1141,13 +1145,27 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
 
                     //List<Piece> pieces = new List<Piece>(isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false));
                     List<Piece> pieces = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
-                    undo_isolatedCollateralDeath(pieces, bs, undo);
+                    if (nonResettables.ruleset == "Atomic")
+                    {
+                        foreach(Piece p in new List<Piece>(pieces))
+                        {
+                            if (p.baseType != "Pawn")
+                            {
+                                undo_isolatedCollateralDeath(pieceToList(p), bs, undo);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        undo_isolatedCollateralDeath(pieces, bs, undo);
+                    }
                 }
             }
             else if (attackerPiece.collateralType == 2)
             {
                 if (isolatedIsPieceSurroundingState(deadPiece, PieceState.Defuser, bs))
                 {
+                    undo_isolatedCollateralDeath(pieceToList(deadPiece), bs, undo);
                     return (stackingStates, attackerDied);
                 }
 
@@ -1232,6 +1250,66 @@ public class UndoMoveBotHelperFunctions : MonoBehaviour
         UndoMovedPiece ump = new UndoMovedPiece(p, new coords(-1, -1), new coords(p.position.x, p.position.y), false, true, false);
         undo.addMove(ump);
         updateBoardState(new coords( p.position.x - 1, p.position.y - 1 ), p, "a", bs);
+    }
+
+    public static UndoMove undo_simpleSimulatePieceMove(BoardState bs, Piece piece, coords coords)
+    {
+        // Init undo move
+        UndoMove undo = new UndoMove();
+
+        coords = new coords(coords.x - 1, coords.y - 1);
+
+        List<Piece> toKill = isolatedGetPiecesOnCoordsBoardGrid(coords.x, coords.y, bs.boardGrid, false);
+        foreach(Piece p_ in new List<Piece>(toKill))
+        {
+            undo_isolatedRemovePiece(p_, bs, undo);
+        }
+
+        UndoMovedPiece mp = undo_movePieceBoardState(piece, coords, bs);
+        undo.addMove(mp);
+
+        undo_isolatedCheckPromote(piece, bs, undo, true);
+
+        return undo;
+    }
+
+    public static bool areBoardStatesEqual(BoardState bs1, BoardState bs2)
+    {
+        List<Piece>[,] boardGrid1 = bs1.boardGrid;
+        List<Piece>[,] boardGrid2 = bs2.boardGrid;
+
+        debug_printBoardState(bs1);
+        debug_printBoardState(bs2);
+
+        for (int i = 0; i < 8; i++)
+        {
+            for(int j = 0; j < 8; j++)
+            {
+                List<Piece> pieces1 = isolatedGetPiecesOnCoordsBoardGrid(i, j, boardGrid1, false);
+                List<Piece> pieces2 = isolatedGetPiecesOnCoordsBoardGrid(i, j, boardGrid2, false);
+
+                foreach (Piece piece1_ in pieces1)
+                {
+                    bool found = false;
+                    foreach (Piece piece2_ in pieces2)
+                    {
+                        if (piece1_.name == piece2_.name)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        Debug.Log(piece1_.name + " not found");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
     public static UndoMove undo_simulatePieceMove(BoardState bs, Piece piece, coords coords)

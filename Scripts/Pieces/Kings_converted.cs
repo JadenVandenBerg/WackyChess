@@ -2226,7 +2226,7 @@ public class RulebreakerKing : Piece
         }
     }
 }
-
+/*
 public class DelayedKing : Piece
 {
     public bool disabled { get; set; } = false;
@@ -2305,7 +2305,7 @@ public class DelayedKing : Piece
         }
     }
 }
-
+*/
 public class FreezeBombKing : Piece
 {
     public bool disabled { get; set; } = false;

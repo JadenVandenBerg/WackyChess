@@ -9,6 +9,7 @@ public class GamblingBot : BotTemplate
 {
     int DEPTH = 0;
     int MOVES_PERCENTAGE = 0;
+    int moves = 0;
 
     public GamblingBot(int botColor)
     {
@@ -27,6 +28,17 @@ public class GamblingBot : BotTemplate
     override
     public NextMove nextMove()
     {
+        moves += 1;
+
+        if (moves == 1 && gameData.helper != null)
+        {
+            gameData.helper.addBotMessage(" Gambling Bot is looking at " + MOVES_PERCENTAGE + "% of depth " + DEPTH + " moves.");
+        }
+        else if (gameData.helper == null)
+        {
+            moves -= 1;
+        }
+
         if (DEPTH == 1)
         {
             return depth_1_nextMove();

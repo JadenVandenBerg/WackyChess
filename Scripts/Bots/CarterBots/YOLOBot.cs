@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using static BotHelperFunctions;
-using static UnityEditor.Progress;
 
 public class YOLOBot : BotTemplate
 {

@@ -1093,6 +1093,7 @@ public class HelperFunctions : MonoBehaviour
         List<BotHelperFunctions.PieceAbility> pieceAbilities = BotHelperFunctions.getAllPossibleBotAbilities(bot, bs, color);
 
         List<BotHelperFunctions.PieceAbility> acceptedAbilities = new List<BotHelperFunctions.PieceAbility>();
+        Debug.Log(pieceAbilities.Count);
         foreach(BotHelperFunctions.PieceAbility pa in pieceAbilities)
         {
             Piece piece = pa.piece;
@@ -1109,6 +1110,7 @@ public class HelperFunctions : MonoBehaviour
 
             if (king == null)
             {
+                //Debug.LogWarning("King is null");
                 BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
                 continue;
             }
@@ -1116,6 +1118,7 @@ public class HelperFunctions : MonoBehaviour
             bool check = isCheck_(king, afterBS);
             BotHelperFunctions.resetPiecePositions(afterBS, BotHelperFunctions.convertBoardGrid(gameData.boardGrid));
 
+            //Debug.LogWarning("King is in check? " + check);
             if (!check)
             {
                 acceptedAbilities.Add(pa);
@@ -1756,7 +1759,21 @@ public class HelperFunctions : MonoBehaviour
                     if (!square) continue;
 
                     List<Piece> pieces = new List<Piece>(getPiecesOnSquareBoardGrid(square));
-                    collateralDeath(pieces);
+
+                    if (nonResettables.ruleset == "Atomic")
+                    {
+                        foreach (Piece p in pieces)
+                        {
+                            if (p.baseType != "Pawn")
+                            {
+                                collateralDeath(pieceToList(p));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        collateralDeath(pieces);
+                    }
                 }
             }
 
@@ -1764,6 +1781,7 @@ public class HelperFunctions : MonoBehaviour
             {
                 if (isPieceSurroundingState(deadPiece, PieceState.Defuser))
                 {
+                    collateralDeath(pieceToList(deadPiece));
                     return;
                 }
 
@@ -2151,7 +2169,8 @@ public class HelperFunctions : MonoBehaviour
                 }
             }
 
-            if (!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+            if ((!checkState(piece, PieceState.CaptureTheFlag) && piece.baseType != "King")
+                && !checkState(piece, PieceState.Shield))
             {
                 return true;
             }
@@ -3208,11 +3227,13 @@ public class HelperFunctions : MonoBehaviour
                     Debug.LogWarning("Vomiting on adjusted cords: " + coords_.x + "," + coords_.y);
 
                     updateBoardGrid(coords_, p_, "a");
-                    
+
+
                     restorePieceImageToBoard(p_);
 
                     removeState(p_, PieceState.Jailed);
                     reinitPiece(p_, coords_);
+                    checkPromote(p_, p_.position);
 
                     piece.storage.Remove(p_);
                 }
@@ -3227,6 +3248,11 @@ public class HelperFunctions : MonoBehaviour
             {
                 foreach (Piece p_ in new List<Piece>(piece.storage))
                 {
+                    if (p_.go == null)
+                    {
+                        continue;
+                    }
+
                     System.Random rand = new System.Random();
                     int idx = rand.Next(numCoords); numCoords--;
 
@@ -3241,6 +3267,7 @@ public class HelperFunctions : MonoBehaviour
 
                     removeState(p_, PieceState.Jailed);
                     reinitPiece(p_, c_);
+                    checkPromote(p_, p_.position);
 
                     piece.storage.Remove(p_);
                 }
@@ -3352,6 +3379,7 @@ public class HelperFunctions : MonoBehaviour
             restorePieceImageToBoard(storagePiece);
             removeState(storagePiece, PieceState.Jailed);
             reinitPiece(storagePiece, coords);
+            checkPromote(storagePiece, storagePiece.position);
 
             updateBoardGrid(coords, storagePiece, "a");
 
@@ -3798,6 +3826,8 @@ public class HelperFunctions : MonoBehaviour
                     updateBoardGrid(findCoords(s), p, "a");
                     restorePieceImageToBoard(p);
                     reinitPiece(p, findCoords(s));
+
+                    checkPromote(p, p.position);
 
                     gameData.selectedPiece.storage.Remove(p);
                 }

@@ -5,17 +5,7 @@ using static BotHelperFunctions;
 using System.Text.RegularExpressions;
 using System;
 
-//To do: 
-// Fix up the speedrunner code at the start, make it so it won't put the pieces in danger unless its a landmine near the king.
-// Maybe lattermate functionality // yesa
-// Sometimes blunders pretty hard
-// Hungry pieces barf and mess everything up
-// Speedrunenr ghost rook no work
-// Rook bug STILL HAPPENS therefore lastmove thing does not work.   
-
-//Consider not pushing I think I made it worse fixing edgecases
-
-public class ExperiBot : BotTemplate
+public class DoomedBot : BotTemplate
 {
     bool hasSoloPiece;
     Piece mainPiece;
@@ -24,390 +14,386 @@ public class ExperiBot : BotTemplate
     int turn = 0;
     NextMove lastMove = null;
     NextMove lastLastMove = null;
+    List<string> appliedCurses = new List<string>();
+    List<string> availableCurses = new List<string>();
+    List<string> allCurses = new List<string>();
+    List<Piece> petrifiedPieces = new List<Piece>();
+    List<coords> mazeWalls = new List<coords>();
+
+    //The constructor, this function gets called when a new bot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
-    public ExperiBot(int botColor)
+    public DoomedBot(int botColor)
     {
         //Initialize variables, do not change anything here but name
         color = botColor;
         pieces = new List<Piece>();
-        name = "Aggro Bot";
+        name = "Doomed Bot";
+
+        //Populate Lists
+        allCurses.Add("petrification");
+        allCurses.Add("the beast");
+        allCurses.Add("the labrynth");
+        //allCurses.Add("the dead");
+        //allCurses.Add("darkness");
+        //allCurses.Add("the plague");
+        //allCurses.Add("remorse");
+        //allCurses.Add("hopelessness");
+
+        availableCurses = allCurses;
 
         //This function populates the pieces variable
         choosePieces();
+    }
+
+    public BoardState simulateMove(BoardState bs, NextMove nextMove)
+    {
+        BoardState cloneState;
+        if (nextMove.moveType == "move")
+        {
+            cloneState = simulatePieceMove(this, bs, nextMove.move.p, nextMove.move.coords);
+        }
+        else
+        {
+            cloneState = simulatePieceAbility(this, bs, nextMove.ability);
+        }
+        return cloneState;
+    }
+
+    public static List<coords> GetLinePoints(coords p1, coords p2)
+    {
+        List<coords> positions = new List<coords>();
+
+        int x1 = p1.x;
+        int y1 = p1.y;
+        int x2 = p2.x;
+        int y2 = p2.y;
+
+        int dx = Math.Abs(x2 - x1);
+        int dy = Math.Abs(y2 - y1);
+
+        int sx = (x1 < x2) ? 1 : -1;
+        int sy = (y1 < y2) ? 1 : -1;
+
+        int err = dx - dy;
+
+        while (true)
+        {
+            positions.Add(new coords(x1, y1));
+
+            if (x1 == x2 && y1 == y2) break;
+
+            int e2 = 2 * err;
+
+            if (e2 > -dy)
+            {
+                err -= dy;
+                x1 += sx;
+            }
+
+            if (e2 < dx)
+            {
+                err += dx;
+                y1 += sy;
+            }
+        }
+
+        return positions;
+    }
+
+    public List<NextMove> getMoves(BoardState bs)
+    {
+        List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, bs, this.color);
+        return allMoves;
+    }
+
+    public List<NextMove> getOppMoves(BoardState bs)
+    {
+        List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, bs, this.color * -1);
+        return allMovesOpp;
+    }
+    public bool checkForSafeMove(BoardState bs, NextMove nextMove)
+    {
+        Piece oppKing = filterPieces("King", this.opponentPieces)[0];
+        coords oppKingPos = oppKing.position;
+        List<NextMove> allMovesOpp = getOppMoves(bs);
+        List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(bs, this.color * -1);
+        Piece piece;
+        coords coords;
+        string moveType = nextMove.moveType;
+        bool cull = false;
+        bool invinsible = false;
+
+        if (moveType == "move")
+        {
+            Move mv = nextMove.move;
+
+            piece = mv.p;
+            coords = mv.coords;
+        }
+        else
+        {
+            PieceAbility pa = nextMove.ability;
+
+            piece = pa.piece;
+            coords = pa.coords;
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.Medusa))
+        {
+            foreach (Piece oppPiece in allPiecesOpp)
+            {
+                if (coords.x == oppPiece.position.x && coords.y == oppPiece.position.y)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.CaptureTheFlag))
+        {
+            if (this.color == 1)
+            {
+                if (coords.y < 3)
+                {
+                    invinsible = true;
+                }
+            }
+            else
+            {
+                if (coords.y > 6)
+                {
+                    invinsible = true;
+                }
+            }
+        }
+
+        if (HelperFunctions.checkState(piece, PieceState.Crook) || HelperFunctions.checkState(piece, PieceState.Dematerialized) || piece.collateralType == 1) //Change to piece states and such do the same for protect function
+        {
+            invinsible = true;
+        }
+
+        if (!invinsible)
+        {
+            foreach (NextMove oppMove in allMovesOpp)
+            {
+                Piece badPiece;
+                coords badCoords;
+                string moveTypeOpp = oppMove.moveType;
+
+                if (moveTypeOpp == "move")
+                {
+                    Move mv = oppMove.move;
+
+                    badPiece = mv.p;
+                    badCoords = mv.coords;
+                }
+                else
+                {
+                    PieceAbility pa = oppMove.ability;
+
+                    badPiece = pa.piece;
+                    badCoords = pa.coords;
+                }
+
+                if (badPiece is null)
+                {
+                    cull = true;
+                }
+                if (coords.x == badCoords.x && coords.y == badCoords.y && cull == false)
+                {
+                    if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false)
+                    {
+                        BoardState cloneStateOppKing;
+                        if (moveTypeOpp == "move")
+                        {
+                            cloneStateOppKing = simulatePieceMove(this, this.currentBoardState, badPiece, badCoords);
+                        }
+                        else
+                        {
+                            cloneStateOppKing = simulatePieceAbility(this, this.currentBoardState, oppMove.ability);
+                        }
+
+                        bool pieceProtected = false;
+                        List<NextMove> allMoves3rd = getMoves(bs);
+                        foreach (NextMove simMove in allMoves3rd)
+                        {
+                            Piece simPiece;
+                            coords simCoords;
+                            string moveTypeSim = simMove.moveType;
+
+                            if (moveTypeSim == "move")
+                            {
+                                Move mv = simMove.move;
+
+                                simPiece = mv.p;
+                                simCoords = mv.coords;
+                            }
+                            else
+                            {
+                                PieceAbility pa = simMove.ability;
+
+                                simPiece = pa.piece;
+                                simCoords = pa.coords;
+                            }
+
+                            if (simCoords.x == oppKingPos.x && simCoords.y == oppKingPos.y)
+                            {
+                                pieceProtected = true;
+                            }
+                        }
+
+                        if (pieceProtected == false)
+                        {
+                            cull = true;
+                        }
+                    }
+                    else if (badPiece.baseType != "King")
+                    {
+                        cull = true;
+                    }
+                }
+            }
+
+            if (cull == false)
+            {
+                BoardState clonestate = simulateMove(bs, nextMove);
+                List<NextMove> allMovesOpp2 = getOppMoves(bs);
+
+                foreach (NextMove oppMove in allMovesOpp2)
+                {
+                    Piece badPiece;
+                    coords badCoords;
+                    string moveTypeOpp = oppMove.moveType;
+
+                    if (moveTypeOpp == "move")
+                    {
+                        Move mv = oppMove.move;
+
+                        badPiece = mv.p;
+                        badCoords = mv.coords;
+                    }
+                    else
+                    {
+                        PieceAbility pa = oppMove.ability;
+
+                        badPiece = pa.piece;
+                        badCoords = pa.coords;
+                    }
+
+                    if (badCoords.x == coords.x && badCoords.y == coords.y)
+                    {
+                        cull = true;
+                    }
+                }
+            }
+        }
+
+        return !cull;
     }
 
     override
     public NextMove nextMove()
     {
         turn += 1;
+
+        if (turn == 1)
+        {
+            int loopsSinceWall = 0;
+            for (int i = 1; i < 9; i++) //x
+            {
+                for (int j = 3; j < 7; j++) //y
+                {
+                    int chance = 0; int total = 5;
+                    if (mazeWalls.Count > 0)
+                    {
+                        if (mazeWalls[mazeWalls.Count - 1].x == i && mazeWalls[mazeWalls.Count - 1].y == j - 1)
+                        {
+                            total += 2;
+                        }
+                    }
+                    chance += loopsSinceWall;
+
+                    System.Random rand4maze = new System.Random();
+                    int rndNum = rand4maze.Next(total);
+                    if (rndNum <= chance)
+                    {
+                        mazeWalls.Add(new coords(i, j));
+                        loopsSinceWall = -1;
+                    }
+                    else
+                    {
+                        loopsSinceWall++;
+                    }
+                }
+            }
+        }
+
+        //Curse stuff:
+        System.Random randCurse = new System.Random();
+        int randomNum = randCurse.Next(100);
+
+        if (randomNum < 10)
+        {
+            //Give a curse
+            int randomNum2 = randCurse.Next(availableCurses.Count);
+            appliedCurses.Add(availableCurses[randomNum2]);
+            gameData.helper.addBotMessage("DoomedBot has been cursed by the curse of " + availableCurses[randomNum2] + ".");
+            availableCurses.Remove(availableCurses[randomNum2]);
+        }
+
+        foreach (string curse in appliedCurses)
+        {
+            if (curse == allCurses[0] || curse == allCurses[1])
+            {
+                foreach (Piece piece in petrifiedPieces)
+                {
+                    Color color = new Color(0.6f, 0.6f, 0.0f, 1.0f); //This is yellowish rn not grey it should be grey.
+                    HelperFunctions.highlightSquare(HelperFunctions.findSquare(piece.position.x, piece.position.y), color);
+                }
+            }
+
+            if (curse == allCurses[2])
+            {
+                //Show Walls
+                foreach (coords wallpos in mazeWalls)
+                {
+                    System.Random rndValue = new System.Random();
+                    float rndColorModifier = rndValue.Next(40);
+                    Color wallColor = new Color(0.6f, 0.6f, 0.0f + (rndColorModifier / 100), 1.0f);
+                    HelperFunctions.highlightSquare(HelperFunctions.findSquare(wallpos.x, wallpos.y), wallColor);
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         //Initialize for later
         List<NextMove> validMoves = new List<NextMove>();
-        List<NextMove> allMoves = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color);
+        List<NextMove> allMoves = getMoves(this.currentBoardState);
         List<NextMove> tierZeroMove = new List<NextMove>();
         List<float> pieceScoresT0 = new List<float>();
         List<NextMove> tierProtMove = new List<NextMove>();
         List<float> pieceScoresTProt = new List<float>();
 
-        int bestPiece = 0;
-        int secondBestPiece = 0;
-        bool hasSoloPiece = false;
         //Get enemy king's position
         Piece oppKing = filterPieces("King", this.opponentPieces)[0];
         coords oppKingPos = oppKing.position;
-        //Loop through all pieces and get main piece
-        foreach (Piece piece in pieces)
-        {
-            int currentPieceValue = 0;
-            if (piece.baseType != "King" & !HelperFunctions.checkState(piece, PieceState.Jailed))
-            {
-                if (piece.position.x == oppKingPos.x & piece.position.y == oppKingPos.y) { }
-                else
-                {
-                    if (piece.lives == -1)
-                    {
-                        currentPieceValue += 6;
-                    }
-                    else if (HelperFunctions.checkState(piece, PieceState.Combustable))
-                    {
-                        currentPieceValue += 5;
-                        hasSoloPiece = true;
-                    }
-                    else if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && piece.baseType != "Knight" && piece.baseType != "Pawn" && piece.baseType != "Bishop")
-                    {
-                        currentPieceValue += 8;
-                        hasSoloPiece = true;
-                    }
-                    else if (HelperFunctions.checkState(piece, PieceState.Medusa))
-                    {
-                        currentPieceValue += 16;
-                        hasSoloPiece = true;
-                    }
-                    else if (HelperFunctions.checkState(piece, PieceState.Delayed))
-                    {
-                        currentPieceValue -= 8;
-                    }
-                    else if (piece.collateralType == 0 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false)
-                    {
-                        currentPieceValue += 10;
-                        hasSoloPiece = true;
-
-                    }
-                    else if (piece.collateralType == 1 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false && piece.baseType != "Knight")
-                    {
-                        currentPieceValue += 9;
-                        hasSoloPiece = true;
-                    }
-                    else if (piece.collateralType == 2 && HelperFunctions.checkState(oppKing, PieceState.Defuser) == false)
-                    {
-                        currentPieceValue += 7;
-                        hasSoloPiece = true;
-                    }
-                    if (piece.baseType == "Misc")
-                    {
-                        currentPieceValue += 5;
-                    }
-                    if (piece.baseType == "Queen")
-                    {
-                        currentPieceValue += 4;
-                    }
-                    else if (piece.baseType == "Bishop")
-                    {
-                        currentPieceValue += 2;
-                    }
-                    else if (piece.baseType == "Rook")
-                    {
-                        currentPieceValue += 3;
-                    }
-                    else if (piece.baseType == "Knight")
-                    {
-                        currentPieceValue += 1;
-
-                    }
-                    else if (piece.baseType == "Pawn")
-                    {
-                        currentPieceValue -= 6;
-                    }
-                    //If the opposing king can't really move and the turn is past 15
-                    //Maybe update the turn thing to points on board
-                    //if ((HelperFunctions.checkState(oppKing, PieceState.Frozen) || HelperFunctions.checkState(oppKing, PieceState.Depressed) || HelperFunctions.checkState(oppKing, PieceState.Delayed)) && turn > 14)
-                    //{
-                    //    hasSoloPiece = true;
-                    //}
-
-                    if (currentPieceValue > bestPiece)
-                    {
-                        secondBestPiece = bestPiece;
-                        bestPiece = currentPieceValue;
-                        secondPiece = mainPiece;
-                        mainPiece = piece;
-                    }
-                }
-            }
-        }
-
-        foreach (NextMove nextMove in allMoves)
-        {
-            Piece piece;
-            coords coords;
-            string moveType = nextMove.moveType;
-
-            if (moveType == "move")
-            {
-                Move mv = nextMove.move;
-                piece = mv.p;
-                coords = mv.coords;
-            }
-            else
-            {
-                PieceAbility pa = nextMove.ability;
-
-                piece = pa.piece;
-                coords = pa.coords;
-            }
-
-            if (moveType != "move" && HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && HelperFunctions.checkState(piece, PieceState.Dematerialized) && (oppKingPos.x == coords.x) && (oppKingPos.y == coords.y))
-            {
-                gameData.helper.addBotMessage("Kill");
-                validMoves.Add(nextMove);
-            }
-        }
-
-        bool stuckRook = false;
-        coords piece2move = new coords(0, 0);
-        if (hasSoloPiece == true && validMoves.Count == 0)
-        {
-            double closestDistanceToKing = 1000;
-
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-                bool repetition = false;
-
-                if (moveType == "move")
-                {
-                    Move mv = nextMove.move;
-                    piece = mv.p;
-                    coords = mv.coords;
-                }
-                else
-                {
-                    PieceAbility pa = nextMove.ability;
-
-                    piece = pa.piece;
-                    coords = pa.coords;
-                }
-
-                if (piece.name == mainPiece.name)
-                {
-                    if (moveType != "move")
-                    {
-                        if (HelperFunctions.checkAbility(piece, PieceAbilities.Dematerialize) && HelperFunctions.checkState(piece, PieceState.Dematerialized) == false)
-                        {
-                            validMoves.Add(nextMove);
-                        }
-                        else if (HelperFunctions.checkState(piece, PieceState.Frozen))
-                        {
-                            validMoves.Add(nextMove);
-                        }
-                    }
-                    else
-                    {
-                        if (lastLastMove is not null)
-                        {
-                            if (nextMove == lastLastMove)
-                            {
-                                //Stuck
-                                repetition = true;
-                                if (piece.baseType == "Rook")
-                                {
-                                    stuckRook = true;
-                                    if (this.color == 1)
-                                    {
-                                        piece2move = new coords(coords.x, coords.y + 1);
-                                    }
-                                    else
-                                    {
-                                        piece2move = new coords(coords.x, coords.y - 1);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (HelperFunctions.checkState(piece, PieceState.Dematerialized)) //Does Dematerialized check work?
-                        {
-                            if (piece.baseType == "Rook" || piece.baseType == "Queen")
-                            {
-                                gameData.helper.addBotMessage("Ghost code running");
-                                if (coords.x == oppKingPos.x && piece.position.x != oppKingPos.x)
-                                {
-                                    validMoves.Add(nextMove);
-                                }
-                                if (coords.y == oppKingPos.y && piece.position.y != oppKingPos.y)
-                                {
-                                    validMoves.Add(nextMove);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (repetition == false)
-                            {
-                                double pieceDistanceToKing = Math.Sqrt(Math.Pow(coords.y - oppKingPos.y, 2) + Math.Pow(coords.x - oppKingPos.x, 2));
-                                double curretPieceDistanceToKing = Math.Sqrt(Math.Pow(piece.position.y - oppKingPos.y, 2) + Math.Pow(piece.position.x - oppKingPos.x, 2));
-
-                                if (pieceDistanceToKing < closestDistanceToKing)
-                                {
-                                    validMoves.Clear();
-                                    validMoves.Add(nextMove);
-                                    closestDistanceToKing = pieceDistanceToKing;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (validMoves.Count == 0 && hasSoloPiece == true)
-        {
-            double furthestDistance = 1000;
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-
-                if (moveType == "move")
-                {
-                    Move mv = nextMove.move;
-                    piece = mv.p;
-                    coords = mv.coords;
-                }
-                else
-                {
-                    PieceAbility pa = nextMove.ability;
-
-                    piece = pa.piece;
-                    coords = pa.coords;
-                }
-
-                if (stuckRook == true)
-                {
-                    if (coords.x == piece2move.x && coords.y == piece2move.y)
-                    {
-                        validMoves.Add(nextMove);
-                    }
-                }
-                else
-                {
-                    if (mainPiece.baseType == "Rook")
-                    {
-                        if (piece.position.x == mainPiece.position.x)
-                        {
-                            if (piece.color == -1)
-                            {
-                                if (coords.y - 8 > furthestDistance)
-                                {
-                                    validMoves.Add(nextMove);
-                                    furthestDistance = coords.y - 8;
-                                }
-                                else if (coords.y == furthestDistance)
-                                {
-                                    validMoves.Add(nextMove);
-                                }
-                            }
-                            else if (piece.color == 1)
-                            {
-                                if (coords.y > furthestDistance)
-                                {
-                                    validMoves.Add(nextMove);
-                                    furthestDistance = coords.y;
-                                }
-                                else if (coords.y == furthestDistance)
-                                {
-                                    validMoves.Add(nextMove);
-                                }
-                            }
-                        }
-                    }
-                    else if (mainPiece.baseType == "Bishop" | mainPiece.baseType == "Queen")
-                    {
-                        if (piece.color == 1 & piece.position.y - 1 == mainPiece.position.y)
-                        {
-                            if (piece.position.x + 1 == mainPiece.position.x | piece.position.x - 1 == mainPiece.position.x)
-                            {
-                                if (piece.color == -1)
-                                {
-                                    if (coords.y - 8 > furthestDistance)
-                                    {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        furthestDistance = coords.y - 8;
-                                    }
-                                    else if (coords.y == furthestDistance)
-                                    {
-                                        validMoves.Add(nextMove);
-                                    }
-                                }
-                                else if (piece.color == 1)
-                                {
-                                    if (coords.y > furthestDistance)
-                                    {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        furthestDistance = coords.y;
-                                    }
-                                    else if (coords.y == furthestDistance)
-                                    {
-                                        validMoves.Add(nextMove);
-                                    }
-                                }
-                            }
-                        }
-                        else if (piece.color == -1 & piece.position.y + 1 == mainPiece.position.y)
-                        {
-                            if (piece.position.x + 1 == mainPiece.position.x | piece.position.x - 1 == mainPiece.position.x)
-                            {
-                                if (piece.color == -1)
-                                {
-                                    if (coords.y - 8 > furthestDistance)
-                                    {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        furthestDistance = coords.y - 8;
-                                    }
-                                    else if (coords.y == furthestDistance)
-                                    {
-                                        validMoves.Add(nextMove);
-                                    }
-                                }
-                                else if (piece.color == 1)
-                                {
-                                    if (coords.y > furthestDistance)
-                                    {
-                                        validMoves.Clear();
-                                        validMoves.Add(nextMove);
-                                        furthestDistance = coords.y;
-                                    }
-                                    else if (coords.y == furthestDistance)
-                                    {
-                                        validMoves.Add(nextMove);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
         //Protect pieces in danger (only if they are good enough)
         if (validMoves.Count == 0)
         {
-            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
+            List<NextMove> allMovesOpp = getOppMoves(this.currentBoardState);
             List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, this.color * -1);
 
             foreach (NextMove nextMove in allMoves)
@@ -479,7 +465,7 @@ public class ExperiBot : BotTemplate
                                     cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
                                 }
 
-                                List<NextMove> allMovesOppCloneState = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+                                List<NextMove> allMovesOppCloneState = getOppMoves(cloneState);
 
                                 bool safe = true;
                                 foreach (NextMove cloneOppMove in allMovesOppCloneState)
@@ -595,9 +581,9 @@ public class ExperiBot : BotTemplate
                     cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
                 }
 
-                List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+                List<NextMove> allMovesOpp = getOppMoves(cloneState);
                 List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(cloneState, this.color * -1);
-                List<NextMove> allMoves2nd = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color);
+                List<NextMove> allMoves2nd = getMoves(cloneState);
 
                 foreach (NextMove oppMove in allMovesOpp)
                 {
@@ -622,7 +608,12 @@ public class ExperiBot : BotTemplate
 
                     if (coords.x == badCoords.x && coords.y == badCoords.y)
                     {
-                        if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false)
+                        if (badPiece is null)
+                        {
+                            cull = true;
+                            gameData.helper.addBotMessage("Crisis Averted!");
+                        }
+                        if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false && cull == false)
                         {
                             BoardState cloneStateOppKing;
                             if (moveTypeOpp == "move")
@@ -635,7 +626,7 @@ public class ExperiBot : BotTemplate
                             }
 
                             bool pieceProtected = false;
-                            List<NextMove> allMoves3rd = getAllPossibleBotMovesAndAbilities(this, cloneStateOppKing, this.color);
+                            List<NextMove> allMoves3rd = getMoves(cloneStateOppKing);
                             foreach (NextMove simMove in allMoves3rd)
                             {
                                 Piece simPiece;
@@ -734,141 +725,6 @@ public class ExperiBot : BotTemplate
             {
                 NextMove bestMove = tierZeroMove[i];
                 float moveScore = pieceScoresT0[i];
-                if (moveScore > highest)
-                {
-                    highest = moveScore;
-                    validMoves.Clear();
-                    validMoves.Add(bestMove);
-                }
-            }
-        }
-
-        //Protect pieces in danger (only if they are good enough)
-        if (validMoves.Count == 0)
-        {
-            List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, this.currentBoardState, this.color * -1);
-            List<Piece> allPiecesOpp = BotHelperFunctions.getPiecesOnBoardState(this.currentBoardState, this.color * -1);
-
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-
-                if (moveType == "move")
-                {
-                    Move mv = nextMove.move;
-
-                    piece = mv.p;
-                    coords = mv.coords;
-                }
-                else // moveType == "ability" guarenteed
-                {
-                    PieceAbility pa = nextMove.ability;
-
-                    piece = pa.piece;
-                    coords = pa.coords;
-                }
-
-                bool currentSquareSafe = true;
-                bool moveToSquareSafe = true;
-                float deadPiecepts = 0;
-                if (piece.baseType == "Pawn")
-                {
-                    foreach (NextMove oppMove in allMovesOpp)
-                    {
-                        Piece pieceOpp;
-                        coords coordsOpp;
-                        string moveTypeOpp = oppMove.moveType;
-
-                        if (moveTypeOpp == "move")
-                        {
-                            Move mv = oppMove.move;
-
-                            pieceOpp = mv.p;
-                            coordsOpp = mv.coords;
-                        }
-                        else // moveType == "ability" guarenteed
-                        {
-                            PieceAbility pa = oppMove.ability;
-
-                            pieceOpp = pa.piece;
-                            coordsOpp = pa.coords;
-                        }
-
-                        if (coordsOpp.x == piece.position.x && coordsOpp.y == piece.position.y)
-                        {
-                            currentSquareSafe = false;
-                        }
-                        else if (coordsOpp.x == coords.x && coordsOpp.y == coords.y)
-                        {
-                            moveToSquareSafe = false;
-                        }
-                        foreach (Piece oppPiece in allPiecesOpp)
-                        {
-                            if (oppPiece.position.x == coords.x && oppPiece.position.y == coords.y)
-                            {
-                                BoardState cloneState;
-                                if (moveType == "move")
-                                {
-                                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-                                }
-                                else
-                                {
-                                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
-                                }
-
-                                List<NextMove> allMovesOppCloneState = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
-
-                                bool safe = true;
-                                foreach (NextMove cloneOppMove in allMovesOppCloneState)
-                                {
-                                    Piece pieceOppClone;
-                                    coords coordsOppClone;
-                                    string moveTypeOppClone = cloneOppMove.moveType;
-
-                                    if (moveTypeOppClone == "move")
-                                    {
-                                        Move mv = cloneOppMove.move;
-
-                                        pieceOppClone = mv.p;
-                                        coordsOppClone = mv.coords;
-                                    }
-                                    else // moveType == "ability" guarenteed
-                                    {
-                                        PieceAbility pa = cloneOppMove.ability;
-
-                                        pieceOppClone = pa.piece;
-                                        coordsOppClone = pa.coords;
-                                    }
-
-                                    if (coordsOppClone.x == coords.x && coordsOppClone.y == coords.y)
-                                    {
-                                        safe = false;
-                                    }
-
-                                }
-                                if (safe == true)
-                                {
-                                    deadPiecepts += oppPiece.points;
-                                }
-                            }
-                        }
-                    }
-                }
-                if (moveToSquareSafe == true && currentSquareSafe == false)
-                {
-                    tierProtMove.Add(nextMove);
-                    float pointVal = piece.points + deadPiecepts;
-                    pieceScoresTProt.Add(pointVal);
-                }
-            }
-
-            float highest = -1000;
-            for (int i = tierProtMove.Count - 1; i >= 0; i--)
-            {
-                NextMove bestMove = tierProtMove[i];
-                float moveScore = pieceScoresTProt[i];
                 if (moveScore > highest)
                 {
                     highest = moveScore;
@@ -1030,13 +886,13 @@ public class ExperiBot : BotTemplate
 
         if (validMoves.Count == 0)
         {
-            int randTotal = 11;// + turn;
+            int randTotal = 11 + turn;
             System.Random randNum = new System.Random();
             int randomFireEmoji = randNum.Next(randTotal);
 
             if (randomFireEmoji <= developChance)
             {
-                //developChance -= 1;
+                developChance -= 1;
                 foreach (NextMove nextMove in allMoves)
                 {
                     //Move pawns into wall formation
@@ -1094,7 +950,7 @@ public class ExperiBot : BotTemplate
                             cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
                         }
 
-                        List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+                        List<NextMove> allMovesOpp = getOppMoves(cloneState);
 
                         foreach (NextMove oppMove in allMovesOpp)
                         {
@@ -1142,7 +998,7 @@ public class ExperiBot : BotTemplate
                             cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
                         }
 
-                        List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
+                        List<NextMove> allMovesOpp = getOppMoves(cloneState);
 
                         foreach (NextMove oppMove in allMovesOpp)
                         {
@@ -1183,111 +1039,116 @@ public class ExperiBot : BotTemplate
                     //Maybe add something here later
                 }
             }
+            else
+            {
+                float bestMoveDiff = -1000;
+                foreach (NextMove nextMove in allMoves)
+                {
+                    Piece piece;
+                    coords coords;
+                    string moveType = nextMove.moveType;
+                    if (moveType == "move")
+                    {
+                        Move mv = nextMove.move;
+
+                        piece = mv.p;
+                        coords = mv.coords;
+                    }
+                    else
+                    {
+                        PieceAbility pa = nextMove.ability;
+
+                        piece = pa.piece;
+                        coords = pa.coords;
+                    }
+
+                    BoardState originalBoardState = this.currentBoardState;
+
+                    BoardState cloneState;
+                    if (moveType == "move")
+                    {
+                        cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
+                    }
+                    else
+                    {
+                        cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
+                    }
+                    this.currentBoardState = cloneState;
+
+                    List<NextMove> allMovesOpp = getOppMoves(cloneState);
+
+                    NextMove bestOppNextMove;
+                    float bestOppMoveDiff = +1000;
+
+                    foreach (NextMove nextMoveOpp in allMovesOpp)
+                    {
+                        Piece pieceOpp;
+                        coords coordsOpp;
+
+                        string moveTypeOpp = nextMoveOpp.moveType;
+
+                        if (moveTypeOpp == "move")
+                        {
+                            Move mv = nextMoveOpp.move;
+
+                            pieceOpp = mv.p;
+                            coordsOpp = mv.coords;
+                        }
+                        else
+                        {
+                            PieceAbility pa = nextMoveOpp.ability;
+
+                            pieceOpp = pa.piece;
+                            coordsOpp = pa.coords;
+                        }
+
+                        BoardState originalBoardState_ = this.currentBoardState;
+                        BoardState cloneState_;
+                        if (moveTypeOpp == "move")
+                        {
+                            cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
+                        }
+                        else
+                        {
+                            cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
+                        }
+                        this.currentBoardState = originalBoardState_;
+
+                        List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
+                        float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
+                        float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
+
+                        float diff = botPoints - oppPoints;
+                        if (diff < bestOppMoveDiff)
+                        {
+                            bestOppMoveDiff = diff;
+                            bestOppNextMove = nextMoveOpp;
+                        }
+                    }
+
+                    if (bestOppMoveDiff >= bestMoveDiff)
+                    {
+                        if (bestOppMoveDiff > bestMoveDiff)
+                        {
+                            validMoves.Clear();
+                        }
+
+                        bestMoveDiff = bestOppMoveDiff;
+                        validMoves.Add(nextMove);
+                    }
+                    this.currentBoardState = originalBoardState;
+                }
+            }
+
         }
-
-
 
         //Idk how this even happend bro just do a random move
         if (validMoves.Count == 0)
         {
-            gameData.helper.addBotMessage("AggroBot didn't return a move, executing one move bot move instead");
-            float bestMoveDiff = -1000;
-            foreach (NextMove nextMove in allMoves)
-            {
-                Piece piece;
-                coords coords;
-                string moveType = nextMove.moveType;
-                if (moveType == "move")
-                {
-                    Move mv = nextMove.move;
-
-                    piece = mv.p;
-                    coords = mv.coords;
-                }
-                else
-                {
-                    PieceAbility pa = nextMove.ability;
-
-                    piece = pa.piece;
-                    coords = pa.coords;
-                }
-
-                BoardState originalBoardState = this.currentBoardState;
-
-                BoardState cloneState;
-                if (moveType == "move")
-                {
-                    cloneState = simulatePieceMove(this, this.currentBoardState, piece, coords);
-                }
-                else
-                {
-                    cloneState = simulatePieceAbility(this, this.currentBoardState, nextMove.ability);
-                }
-                this.currentBoardState = cloneState;
-
-                List<NextMove> allMovesOpp = getAllPossibleBotMovesAndAbilities(this, cloneState, this.color * -1);
-
-                NextMove bestOppNextMove;
-                float bestOppMoveDiff = +1000;
-
-                foreach (NextMove nextMoveOpp in allMovesOpp)
-                {
-                    Piece pieceOpp;
-                    coords coordsOpp;
-
-                    string moveTypeOpp = nextMoveOpp.moveType;
-
-                    if (moveTypeOpp == "move")
-                    {
-                        Move mv = nextMoveOpp.move;
-
-                        pieceOpp = mv.p;
-                        coordsOpp = mv.coords;
-                    }
-                    else
-                    {
-                        PieceAbility pa = nextMoveOpp.ability;
-
-                        pieceOpp = pa.piece;
-                        coordsOpp = pa.coords;
-                    }
-
-                    BoardState originalBoardState_ = this.currentBoardState;
-                    BoardState cloneState_;
-                    if (moveTypeOpp == "move")
-                    {
-                        cloneState_ = simulatePieceMove(this, this.currentBoardState, pieceOpp, coordsOpp);
-                    }
-                    else
-                    {
-                        cloneState_ = simulatePieceAbility(this, this.currentBoardState, nextMoveOpp.ability);
-                    }
-                    this.currentBoardState = originalBoardState_;
-
-                    List<float> pointsOnBoard = getPointsOnBoardState(cloneState_, true);
-                    float botPoints = this.color == 1 ? pointsOnBoard[0] : pointsOnBoard[1];
-                    float oppPoints = this.color == -1 ? pointsOnBoard[0] : pointsOnBoard[1];
-
-                    float diff = botPoints - oppPoints;
-                    if (diff < bestOppMoveDiff)
-                    {
-                        bestOppMoveDiff = diff;
-                        bestOppNextMove = nextMoveOpp;
-                    }
-                }
-
-                if (bestOppMoveDiff >= bestMoveDiff)
-                {
-                    if (bestOppMoveDiff > bestMoveDiff)
-                    {
-                        validMoves.Clear();
-                    }
-
-                    bestMoveDiff = bestOppMoveDiff;
-                    validMoves.Add(nextMove);
-                }
-                this.currentBoardState = originalBoardState;
-            }
+            System.Random rand0 = new System.Random();
+            int rndIdx0 = rand0.Next(allMoves.Count);
+            validMoves.Add(allMoves[rndIdx0]);
+            gameData.helper.addBotMessage("DoomedBot didn't return a move, executing random move instead");
         }
 
         //Pick a random move from our list of tied moves

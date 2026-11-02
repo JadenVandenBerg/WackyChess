@@ -13,33 +13,32 @@ using System.Net.NetworkInformation;
 //Optimize
 //Make the rest of the bot  
 
-public class MitsushiMiamboto : BotTemplate
+public class MasushiMiaboto : BotTemplate
 {
     bool hasSoloPiece;
     Piece mainPiece;
     Piece secondPiece;
-    int developChance = 15;
     List<Piece> piecesList = new List<Piece>();
     List<NextMove> moveList = new List<NextMove>();
     List<string> moveTypeList = new List<string>();
-    bool run = true;
+    //bool run = true;
     int turn = 0;
     NextMove lastMove = null;
     NextMove lastLastMove = null;
 
     //Maybe move this somewhere else
-    bool acceptableLineFound = false;
-    float penaltyTimer = 4800;
+    //bool acceptableLineFound = false;
+    //float penaltyTimer = 4800;
 
     //The constructor, this function gets called when a new OneMoveBot is initialized
     //Ie. BotTemplate botWhite = new OneMoveBot(1);
     //1 is white, -1 is black
-    public MitsushiMiamboto(int botColor)
+    public MasushiMiaboto(int botColor)
     {
         //Initialize variables, do not change anything here but name
         color = botColor;
         pieces = new List<Piece>();
-        name = "Mitsushi Miamboto";
+        name = "Masushi Miaboto";
 
         //This function populates the pieces variable
         choosePieces();
@@ -129,8 +128,8 @@ public class MitsushiMiamboto : BotTemplate
                 UnityEngine.Debug.Log("Coords: " + move.ability.coords.x.ToString() + ", " + move.ability.coords.y.ToString() + " Piece: " + move.ability.piece);
             }
         }
-        run = true;
-        acceptableLineFound = false;
+        //run = true;
+        //acceptableLineFound = false;
         float bestMoveDiff = -1000;
         List<NextMove> filterList = new List<NextMove>();
         List<NextMove> validMovesSecondLayer = new List<NextMove>();
@@ -367,6 +366,8 @@ public class MitsushiMiamboto : BotTemplate
         //make sure you set the boardstate you want to "this.currentBoardState" before calling
         //Now works with main piece stuff
         //Consider making it return a boardstate too for optimization
+
+        //Upgrade with bottom code
 
         List<NextMove> validMoves = new List<NextMove>();
         List<BoardState> validClonestates = new List<BoardState>();
@@ -830,6 +831,7 @@ public class MitsushiMiamboto : BotTemplate
         List<NextMove> moves = attackUnguardedOrCheck();
         List<NextMove> moreMoves = protect();
         //Add weights to the two above functions
+        //Consider ditching them and just doing all the moves
         foreach (NextMove varWithMoveInTheName139 in moreMoves) { moves.Add(varWithMoveInTheName139); }
         //moreMoves = nextFunc();
         foreach (NextMove nextMove in moves)

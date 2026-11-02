@@ -216,7 +216,11 @@ public class Bottom : BotTemplate
                     badCoords = pa.coords;
                 }
 
-                if (coords.x == badCoords.x && coords.y == badCoords.y)
+                if (badPiece is null)
+                {
+                    cull = true;
+                }
+                if (coords.x == badCoords.x && coords.y == badCoords.y && cull == false)
                 {
                     if (badPiece.baseType == "King" && HelperFunctions.checkState(badPiece, PieceState.Delayed) == false)
                     {
@@ -300,7 +304,6 @@ public class Bottom : BotTemplate
                     if (badCoords.x == coords.x && badCoords.y == coords.y)
                     {
                         cull = true;
-                        gameData.helper.addBotMessage("Sim worx");
                     }
                 }
             }

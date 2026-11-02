@@ -137,7 +137,7 @@ public class botMaster : MonoBehaviour
                     Bots.Lobotomy,
                     Bots.IdiotBot,
                 };
-                
+
                 List<string> div7 = new List<string>
                 {
                     Bots.BotDefender,
